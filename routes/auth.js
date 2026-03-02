@@ -96,12 +96,12 @@ router.post("/verify-2fa", async (req, res) => {
       token: token,
       window: 1
     });
-    console.log(verified)
+    console.log("VERIFIED LOG",verified)
 console.log(
   speakeasy.totp({
     secret: user.twoFactorSecret,
     encoding: "base32"
-  })
+  }),"OTP"
 );
     if (verified !== true) {
       return res.status(400).json({
