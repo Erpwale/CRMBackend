@@ -70,46 +70,59 @@ router.post("/login", async (req, res) => {
 
 // ✅ Verify 2FA Token
 router.post("/verify-2fa", async (req, res) => {
-  const { token, tempToken } = req.body;
-
-  if (!tempToken)
-    return res.status(400).json({ message: "Session expired" });
-
-  let decoded;
-
   try {
-    decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+    const { token, tempToken } = req.body;
+
+    if (!token || !tempToken)
+      return res.status(400).json({ message: "Missing data" });
+
+    // Verify temporary session
+    const decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id);
+
+    if (!user || !user.twoFactorSecret) {
+      return res.status(400).json({ message: "2FA not configured" });
+    }
+
+    // STRICT 6-digit validation
+    if (!/^\d{6}$/.test(token)) {
+      return res.status(400).json({ message: "Invalid format" });
+    }
+
+    const verified = speakeasy.totp({
+      secret: user.twoFactorSecret,
+      encoding: "base32",
+      token: token,
+      window: 1
+    });
+
+    if (verified !== true) {
+      return res.status(400).json({
+        message: "Invalid authentication code"
+      });
+    }
+
+    // Enable 2FA only after successful verification
+    user.isTwoFactorEnabled = true;
+    await user.save();
+
+    const finalToken = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    return res.json({
+      message: "Login successful",
+      token: finalToken
+    });
+
   } catch (err) {
-    return res.status(401).json({ message: "Invalid session" });
+    return res.status(401).json({
+      message: "Session expired or invalid"
+    });
   }
-
-  const user = await User.findById(decoded.id);
-  if (!user || !user.twoFactorSecret)
-    return res.status(400).json({ message: "2FA not setup properly" });
-
-  const verified = speakeasy.totp({
-    secret: user.twoFactorSecret,
-    encoding: "base32",
-    token,
-    window: 1
-  });
-
-  if (!verified)
-    return res.status(400).json({ message: "Invalid authentication code" });
-
-  user.isTwoFactorEnabled = true;
-  await user.save();
-
-  const finalToken = jwt.sign(
-    { id: user._id },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
-  );
-
-  res.json({
-    message: "Login successful",
-    token: finalToken
-  });
 });
 
 module.exports = router;
