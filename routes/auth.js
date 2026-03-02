@@ -21,6 +21,7 @@ router.post("/register", async (req, res) => {
     });
     res.json({ message: "User Registered" });
   } catch (err) {
+    console.log(err)
     res.status(400).json({ message: "Email already exists" });
   }
 });
