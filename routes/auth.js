@@ -33,13 +33,19 @@ router.post("/login", async (req, res) => {
 
   const user = await User.findOne({ email });
   if (!user)
-    return res.status(400).json({ message: "User not found" });
+    return res.status(400).json({ message: "Invalid credentials" });
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch)
-    return res.status(400).json({ message: "Invalid password" });
+    return res.status(400).json({ message: "Invalid credentials" });
 
-  // If 2FA not enabled → Setup QR
+  // Generate temporary 2FA token
+  const tempToken = jwt.sign(
+    { id: user._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "5m" } // valid only 5 mins
+  );
+
   if (!user.isTwoFactorEnabled) {
     const secret = speakeasy.generateSecret({ length: 20 });
 
@@ -50,44 +56,59 @@ router.post("/login", async (req, res) => {
 
     return res.json({
       require2FASetup: true,
-      qrCode
+      qrCode,
+      tempToken
     });
   }
 
-  // If already enabled → Ask for token
   return res.json({
-    require2FAVerification: true
+    require2FAVerification: true,
+    tempToken
   });
 });
 
 
 // ✅ Verify 2FA Token
 router.post("/verify-2fa", async (req, res) => {
-  const { email, token } = req.body;
+  const { token, tempToken } = req.body;
 
-  const user = await User.findOne({ email });
+  if (!tempToken)
+    return res.status(400).json({ message: "Session expired" });
+
+  let decoded;
+
+  try {
+    decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid session" });
+  }
+
+  const user = await User.findById(decoded.id);
+  if (!user || !user.twoFactorSecret)
+    return res.status(400).json({ message: "2FA not setup properly" });
 
   const verified = speakeasy.totp({
     secret: user.twoFactorSecret,
     encoding: "base32",
-    token
+    token,
+    window: 1
   });
 
   if (!verified)
-    return res.status(400).json({ message: "Invalid code" });
+    return res.status(400).json({ message: "Invalid authentication code" });
 
   user.isTwoFactorEnabled = true;
   await user.save();
 
-  const jwtToken = jwt.sign(
+  const finalToken = jwt.sign(
     { id: user._id },
     process.env.JWT_SECRET,
     { expiresIn: "1d" }
   );
 
   res.json({
-    message: "Login Successful",
-    token: jwtToken
+    message: "Login successful",
+    token: finalToken
   });
 });
 
