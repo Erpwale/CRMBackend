@@ -72,6 +72,7 @@ router.post("/login", async (req, res) => {
 router.post("/verify-2fa", async (req, res) => {
   try {
     const { token, tempToken } = req.body;
+    console.log("Code",token);
 
     if (!token || !tempToken)
       return res.status(400).json({ message: "Missing data" });
