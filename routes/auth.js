@@ -94,7 +94,7 @@ router.post("/verify-2fa", async (req, res) => {
       secret: user.twoFactorSecret,
       encoding: "base32",
       token: token,
-      window: 1
+      window: 2
     });
     console.log("VERIFIED LOG",verified)
 console.log(
