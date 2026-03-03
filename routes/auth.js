@@ -91,12 +91,14 @@ router.post("/verify-2fa", async (req, res) => {
       return res.status(400).json({ message: "Invalid format" });
     }
 
-    const verified = speakeasy.totp({
-      secret: user.twoFactorSecret,
-      encoding: "base32",
-      token: token,
-      window: 2
-    });
+    const verified = speakeasy.totp.verify({
+  secret: user.twoFactorSecret,
+  encoding: "base32",
+  token: token,
+  window: 2
+});
+
+console.log("VERIFIED LOG:", verified);
     console.log("VERIFIED LOG",verified)
   const currentCode = speakeasy.totp({
     secret: user.twoFactorSecret,
