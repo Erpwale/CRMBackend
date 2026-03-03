@@ -97,12 +97,12 @@ router.post("/verify-2fa", async (req, res) => {
       window: 2
     });
     console.log("VERIFIED LOG",verified)
-console.log(
-  speakeasy.totp({
+  const currentCode = speakeasy.totp({
     secret: user.twoFactorSecret,
     encoding: "base32"
-  }),"OTP"
-);
+  });
+
+  console.log("Correct Code Should Be:", currentCode);
     if (verified !== true) {
       return res.status(400).json({
         message: "Invalid authentication code"
