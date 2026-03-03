@@ -26,8 +26,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-
-// ✅ Login Step 1 (Check email & password)
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -39,14 +37,14 @@ router.post("/login", async (req, res) => {
   if (!isMatch)
     return res.status(400).json({ message: "Invalid credentials" });
 
-  // Generate temporary 2FA token
   const tempToken = jwt.sign(
     { id: user._id },
     process.env.JWT_SECRET,
-    { expiresIn: "5m" } // valid only 5 mins
+    { expiresIn: "5m" }
   );
 
-  if (!user.isTwoFactorEnabled) {
+  // ✅ Generate secret only once
+  if (!user.twoFactorSecret) {
     const secret = speakeasy.generateSecret({ length: 20 });
 
     user.twoFactorSecret = secret.base32;
@@ -61,6 +59,7 @@ router.post("/login", async (req, res) => {
     });
   }
 
+  // If secret already exists → just verify
   return res.json({
     require2FAVerification: true,
     tempToken
