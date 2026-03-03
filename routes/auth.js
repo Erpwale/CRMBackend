@@ -4,25 +4,51 @@ const jwt = require("jsonwebtoken");
 const speakeasy = require("speakeasy");
 const QRCode = require("qrcode");
 const User = require("../models/User");
-
+const { authMiddleware, adminOnly } = require("../middleware/auth");
 const router = express.Router();
 
 
-// ✅ Register
-router.post("/register", async (req, res) => {
-  const { email, password } = req.body;
+router.post("/register", authMiddleware, adminOnly, async (req, res) => {
+  const { email, password, confirmPassword, role } = req.body;
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  if (!email || !password || !confirmPassword)
+    return res.status(400).json({ message: "All fields required" });
+
+  // Email lowercase
+  const formattedEmail = email.toLowerCase().trim();
+
+  // Check password match
+  if (password !== confirmPassword)
+    return res.status(400).json({ message: "Passwords do not match" });
+
+  // Strong password validation
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+  if (!passwordRegex.test(password))
+    return res.status(400).json({
+      message:
+        "Password must contain 8+ characters, uppercase, lowercase, number & special symbol"
+    });
 
   try {
+    const existingUser = await User.findOne({ email: formattedEmail });
+    if (existingUser)
+      return res.status(400).json({ message: "Email already exists" });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = await User.create({
-      email,
-      password: hashedPassword
+      email: formattedEmail,
+      password: hashedPassword,
+      role: role || "user"
     });
-    res.json({ message: "User Registered" });
+
+    res.json({ message: "User Registered Successfully" });
+
   } catch (err) {
-    console.log(err)
-    res.status(400).json({ message: "Email already exists" });
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
