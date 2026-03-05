@@ -8,7 +8,7 @@ const { authMiddleware, adminOnly } = require("../middleware/auth");
 const router = express.Router();
 
 
-router.post("/register", authMiddleware, adminOnly, async (req, res) => {
+router.post("/register" async (req, res) => {
   const { email, password, confirmPassword, role } = req.body;
 
   if (!email || !password || !confirmPassword)
