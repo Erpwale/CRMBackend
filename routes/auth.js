@@ -64,10 +64,7 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ message: "Invalid credentials" });
 
   const tempToken = jwt.sign(
-    { id: user._id,
-      namee: user.name,
-      role: user.role
-     },
+    { id: user._id},
     process.env.JWT_SECRET,
     { expiresIn: "5m" }
   );
@@ -145,7 +142,10 @@ console.log("VERIFIED LOG:", verified);
     await user.save();
 
     const finalToken = jwt.sign(
-      { id: user._id },
+      { id: user._id,
+         name: user.name,
+      role: user.role
+       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
