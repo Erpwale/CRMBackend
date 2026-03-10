@@ -9,9 +9,9 @@ const router = express.Router();
 
 
 router.post("/register", async (req, res) => {
-  const { email, password, confirmPassword, role } = req.body;
+  const { name, email, password, confirmPassword, role } = req.body;
 
-  if (!email || !password || !confirmPassword)
+  if (!email || !password || !confirmPassword|| !name)
     return res.status(400).json({ message: "All fields required" });
 
   // Email lowercase
@@ -64,7 +64,10 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ message: "Invalid credentials" });
 
   const tempToken = jwt.sign(
-    { id: user._id },
+    { id: user._id,
+      namee: user.name,
+      role: user.role
+     },
     process.env.JWT_SECRET,
     { expiresIn: "5m" }
   );
