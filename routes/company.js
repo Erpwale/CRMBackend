@@ -1,0 +1,130 @@
+const express = require("express");
+const Company = require("../models/Company");
+const { authMiddleware, adminOnly } = require("../middleware/auth");
+
+const router = express.Router();
+
+
+// CREATE COMPANY
+router.post("/create-company", authMiddleware, async (req, res) => {
+  try {
+    const {
+      companyName,
+      source,
+      companyType,
+      businessLine,
+      businessType,
+      noOfLocation,
+      noOfEmployee,
+      noOfTallyUser,
+      turnover,
+      address,
+      primaryContact,
+      tallyLicense,
+      remark
+    } = req.body;
+
+    if (!companyName || !primaryContact?.contactNumber || !primaryContact?.contactEmail) {
+      return res.status(400).json({ message: "Required fields missing" });
+    }
+
+    // Check unique contact number
+    const existingNumber = await Company.findOne({
+      "primaryContact.contactNumber": primaryContact.contactNumber
+    });
+
+    if (existingNumber) {
+      return res.status(400).json({
+        message: "Contact number already exists"
+      });
+    }
+
+    // Check unique email
+    const existingEmail = await Company.findOne({
+      "primaryContact.contactEmail": primaryContact.contactEmail
+    });
+
+    if (existingEmail) {
+      return res.status(400).json({
+        message: "Contact email already exists"
+      });
+    }
+
+    const company = await Company.create({
+      companyName,
+      source,
+      companyType,
+      businessLine,
+      businessType,
+      noOfLocation,
+      noOfEmployee,
+      noOfTallyUser,
+      turnover,
+      address,
+      primaryContact,
+      tallyLicense,
+      remark,
+      createdBy: req.user.id
+    });
+
+    res.json({
+      message: "Company created successfully",
+      company
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+
+// GET USER COMPANIES
+router.get("/my-companies", authMiddleware, async (req, res) => {
+  try {
+
+    const companies = await Company.find({
+      createdBy: req.user.id
+    });
+
+    res.json(companies);
+
+  } catch (err) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+
+// ADMIN GET ALL COMPANIES
+router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
+  try {
+
+    const companies = await Company.find()
+      .populate("createdBy", "name email role");
+
+    res.json(companies);
+
+  } catch (err) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+
+// GET SINGLE COMPANY
+router.get("/company/:id", authMiddleware, async (req, res) => {
+  try {
+
+    const company = await Company.findById(req.params.id);
+
+    if (!company)
+      return res.status(404).json({ message: "Company not found" });
+
+    res.json(company);
+
+  } catch (err) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+
+module.exports = router;
