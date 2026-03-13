@@ -77,7 +77,89 @@ router.post("/create-company", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
+// Update Company
+router.put("/update-company/:id", authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    const {
+      companyName,
+      source,
+      companyType,
+      businessLine,
+      businessType,
+      noOfLocation,
+      noOfEmployee,
+      noOfTallyUser,
+      turnover,
+      address,
+      primaryContact,
+      tallyLicense,
+      remark
+    } = req.body;
+
+    if (!companyName || !primaryContact?.contactNumber || !primaryContact?.contactEmail) {
+      return res.status(400).json({ message: "Required fields missing" });
+    }
+
+    // check contact number but ignore current company
+    const existingNumber = await Company.findOne({
+      "primaryContact.contactNumber": primaryContact.contactNumber,
+      _id: { $ne: id }
+    });
+
+    if (existingNumber) {
+      return res.status(400).json({
+        message: "Contact number already exists"
+      });
+    }
+
+    // check email but ignore current company
+    const existingEmail = await Company.findOne({
+      "primaryContact.contactEmail": primaryContact.contactEmail,
+      _id: { $ne: id }
+    });
+
+    if (existingEmail) {
+      return res.status(400).json({
+        message: "Contact email already exists"
+      });
+    }
+
+    const updatedCompany = await Company.findByIdAndUpdate(
+      id,
+      {
+        companyName,
+        source,
+        companyType,
+        businessLine,
+        businessType,
+        noOfLocation,
+        noOfEmployee,
+        noOfTallyUser,
+        turnover,
+        address,
+        primaryContact,
+        tallyLicense,
+        remark
+      },
+      { new: true }
+    );
+
+    if (!updatedCompany) {
+      return res.status(404).json({ message: "Company not found" });
+    }
+
+    res.json({
+      message: "Company updated successfully",
+      company: updatedCompany
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
 
 // GET USER COMPANIES
 router.get("/my-companies", authMiddleware, async (req, res) => {
