@@ -44,7 +44,7 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       !primaryContact?.contactNumber ||
       !primaryContact?.contactEmail ||
       !primaryContact?.designation ||
-      !tallyLicense ||
+     
       
     ) {
       return res.status(400).json({
