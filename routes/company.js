@@ -45,7 +45,7 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       !primaryContact?.contactEmail ||
       !primaryContact?.designation ||
       !tallyLicense ||
-      !remark
+      
     ) {
       return res.status(400).json({
         message: "All fields are required"
