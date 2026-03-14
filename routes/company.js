@@ -8,6 +8,8 @@ const router = express.Router();
 // CREATE COMPANY
 router.post("/create-company", authMiddleware, async (req, res) => {
   try {
+    console.log(req.body);
+    
     const {
       companyName,
       source,
