@@ -18,7 +18,7 @@ const companySchema = new mongoose.Schema(
   turnover: String,
 
   address: {
-    line1: String,
+    line1: String,  
     zone: String,
     sector: String,
     city: String,

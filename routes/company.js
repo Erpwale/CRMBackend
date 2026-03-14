@@ -31,7 +31,6 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       !companyType ||
       !businessLine ||
       !businessType ||
-      !noOfLocation ||
       !noOfEmployee ||
       !noOfTallyUser ||
       !turnover ||
