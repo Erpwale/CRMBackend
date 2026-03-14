@@ -56,7 +56,11 @@ const companySchema = new mongoose.Schema(
     tssDate: Date,
     location: String
   },
-
+ status: {
+    type: String,
+    enum: ["live", "not live"],
+    default: "not live"
+  },
   remark: String,
 
   createdBy: {
