@@ -56,10 +56,18 @@ router.post("/create-company", authMiddleware, async (req, res) => {
     const existingNumber = await Company.findOne({
       "primaryContact.contactNumber": primaryContact.contactNumber
     });
+    const existingCompany = await Company.findOne({
+      "companyName": companyName
+    });
 
     if (existingNumber) {
       return res.status(400).json({
-        message: "Contact number already exists"
+        message: `Contact number already exists. Company: ${existingNumber.companyName} created by ${existingNumber.createdBy?.name}`
+      });
+    }
+    if (existingCompany) {
+      return res.status(400).json({
+        message: `Company name already exists Company: ${existingNumber.companyName} created by ${existingNumber.createdBy?.name}`
       });
     }
 
