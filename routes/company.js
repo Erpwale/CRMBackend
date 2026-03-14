@@ -54,11 +54,13 @@ router.post("/create-company", authMiddleware, async (req, res) => {
 
     // Check unique contact number
     const existingNumber = await Company.findOne({
-      "primaryContact.contactNumber": primaryContact.contactNumber
-    });
-    const existingCompany = await Company.findOne({
-      "companyName": companyName
-    });
+  "primaryContact.contactNumber": primaryContact.contactNumber
+}).populate("createdBy", "name");
+
+const existingCompany = await Company.findOne({
+  companyName: companyName
+}).populate("createdBy", "name");
+
 
     if (existingNumber) {
       return res.status(400).json({
