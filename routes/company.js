@@ -58,7 +58,7 @@ router.post("/create-company", authMiddleware, async (req, res) => {
 }).populate("createdBy", "name");
 
 const existingCompany = await Company.findOne({
-  companyName: companyName
+  "companyName": companyName
 }).populate("createdBy", "name");
 
 
