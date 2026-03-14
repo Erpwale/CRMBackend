@@ -24,8 +24,31 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       remark
     } = req.body;
 
-    if (!companyName || !primaryContact?.contactNumber || !primaryContact?.contactEmail) {
-      return res.status(400).json({ message: "Required fields missing" });
+    // Required fields validation
+    if (
+      !companyName ||
+      !source ||
+      !companyType ||
+      !businessLine ||
+      !businessType ||
+      !noOfLocation ||
+      !noOfEmployee ||
+      !noOfTallyUser ||
+      !turnover ||
+      !address?.line1 ||
+      !address?.city ||
+      !address?.state ||
+      !address?.pincode ||
+      !primaryContact?.name ||
+      !primaryContact?.contactNumber ||
+      !primaryContact?.contactEmail ||
+      !primaryContact?.designation ||
+      !tallyLicense ||
+      !remark
+    ) {
+      return res.status(400).json({
+        message: "All fields are required"
+      });
     }
 
     // Check unique contact number
