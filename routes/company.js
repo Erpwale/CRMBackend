@@ -67,11 +67,11 @@ const existingCompany = await Company.findOne({
         message: `Contact number already exists. Company: ${existingNumber.companyName} created by ${existingNumber.createdBy.name}`
       });
     }
-    if (existingCompany) {
-      return res.status(400).json({
-        message: `Company name already exists Company: ${existingNumber.companyName} created by ${existingNumber.createdBy.name}`
-      });
-    }
+   if (existingCompany) {
+  return res.status(400).json({
+    message: `Company name already exists. Company: ${existingCompany.companyName} created by ${existingCompany.createdBy?.name}`
+  });
+}
 
     // Check unique email
     const existingEmail = await Company.findOne({
