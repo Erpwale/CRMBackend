@@ -30,7 +30,11 @@ const companySchema = new mongoose.Schema(
   },
 
   primaryContact: {
-    name: String,
+    name: {
+      type:String,
+       required: true,
+    unique: true
+  }
 
     contactNumber: {
       type: String,
