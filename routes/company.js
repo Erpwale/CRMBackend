@@ -4,7 +4,17 @@ const { authMiddleware, adminOnly } = require("../middleware/auth");
 
 const router = express.Router();
 
-
+if (Array.isArray(tallyLicense)) {
+  for (let lic of tallyLicense) {
+    if (lic.srNo) {
+      if (!lic.licenseType || !lic.tss || !lic.location || !lic.contact) {
+        return res.status(400).json({
+          message: "If Tally Sr. No is entered, License Type, TSS, Location and Contact are required"
+        });
+      }
+    }
+  }
+}
 // CREATE COMPANY
 router.post("/create-company", authMiddleware, async (req, res) => {
   try {
