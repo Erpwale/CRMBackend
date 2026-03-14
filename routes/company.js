@@ -43,7 +43,7 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       !primaryContact?.name ||
       !primaryContact?.contactNumber ||
       !primaryContact?.contactEmail ||
-      !primaryContact?.designation ||
+      !primaryContact?.designation
      
       
     ) {
