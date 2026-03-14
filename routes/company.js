@@ -62,12 +62,12 @@ router.post("/create-company", authMiddleware, async (req, res) => {
 
     if (existingNumber) {
       return res.status(400).json({
-        message: `Contact number already exists. Company: ${existingNumber.companyName} created by ${existingNumber.createdBy?.name}`
+        message: `Contact number already exists. Company: ${existingNumber.companyName} created by ${existingNumber.createdBy.name}`
       });
     }
     if (existingCompany) {
       return res.status(400).json({
-        message: `Company name already exists Company: ${existingNumber.companyName} created by ${existingNumber.createdBy?.name}`
+        message: `Company name already exists Company: ${existingNumber.companyName} created by ${existingNumber.createdBy.name}`
       });
     }
 
