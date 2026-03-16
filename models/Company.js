@@ -50,13 +50,14 @@ const companySchema = new mongoose.Schema(
     designation: String,
   },
 
-  tallyLicense: {
-    srNo: String,
-    licenseType: String,
-    tssDate: Date,
-    location: String
-  },
- status: {
+ tallyLicense: [
+    {
+      srNo: String,
+      licenseType: String,
+      tssDate: Date,
+      location: String
+    }
+  ],us: {
     type: String,
     enum: ["live", "not live"],
     default: "not live"
