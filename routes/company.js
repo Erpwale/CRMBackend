@@ -96,7 +96,7 @@ const existingCompany = await Company.findOne({
       turnover,
       address,
       primaryContact,
-      tallyLicense,
+     tallyLicense = [], 
       remark,
       createdBy: req.user.id
     });
@@ -128,7 +128,7 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
       turnover,
       address,
       primaryContact,
-      tallyLicense,
+      tallyLicense = [],   // default array
       remark
     } = req.body;
 
@@ -136,7 +136,19 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
       return res.status(400).json({ message: "Required fields missing" });
     }
 
-    // check contact number but ignore current company
+    // Check duplicate company name (ignore current company)
+    const existingCompany = await Company.findOne({
+      companyName,
+      _id: { $ne: id }
+    });
+
+    if (existingCompany) {
+      return res.status(400).json({
+        message: "Company name already exists"
+      });
+    }
+
+    // Check duplicate contact number
     const existingNumber = await Company.findOne({
       "primaryContact.contactNumber": primaryContact.contactNumber,
       _id: { $ne: id }
@@ -148,7 +160,7 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
       });
     }
 
-    // check email but ignore current company
+    // Check duplicate email
     const existingEmail = await Company.findOne({
       "primaryContact.contactEmail": primaryContact.contactEmail,
       _id: { $ne: id }
@@ -174,10 +186,10 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
         turnover,
         address,
         primaryContact,
-        tallyLicense,
+        tallyLicense,   // array of licenses
         remark
       },
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!updatedCompany) {

@@ -60,12 +60,11 @@ router.post("/create",authMiddleware, async (req, res) => {
 
     // Create activity
     const activity = new Activity({
-      type,
-      date,
-      regarding,
-      details,
-      contactId,
-      nextFollowupDate,
+    type,
+    regarding,
+      activityDetails,
+      contactNumber,
+      nextFollowupDate
       createdBy: req.user.id
     });
 
