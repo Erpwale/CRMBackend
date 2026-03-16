@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Activity = require("../models/activityModel");
+const Contact = require("../models/Contact");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 
 router.post("/create", authMiddleware, async (req, res) => {
