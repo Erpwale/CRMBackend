@@ -3,8 +3,11 @@ const router = express.Router();
 const Activity = require("../models/activityModel");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 
-router.post("/create",authMiddleware, async (req, res) => {
+router.post("/create", authMiddleware, async (req, res) => {
   try {
+
+    console.log("BODY:", req.body);
+    console.log("USER:", req.user);
 
     const {
       type,
@@ -36,7 +39,7 @@ router.post("/create",authMiddleware, async (req, res) => {
       details: activityDetails,
       contactId: contact._id,
       nextFollowupDate,
-      createdBy: req.user.id
+      createdBy: req.user?.id
     });
 
     res.status(201).json({
@@ -45,11 +48,13 @@ router.post("/create",authMiddleware, async (req, res) => {
     });
 
   } catch (error) {
+    console.error("Activity Error:", error);
+
     res.status(500).json({
       success: false,
       message: error.message
     });
-  } 
+  }
 });
 
 router.get("/all", authMiddleware, async (req, res) => {
