@@ -163,7 +163,7 @@ console.log("VERIFIED LOG:", verified);
     });
   }
 });
-router.get("/users", authMiddleware, adminOnly, async (req, res) => {
+router.get("/users", authMiddleware, async (req, res) => {
   try {
     const users = await User.find().select("-password");
     res.json(users);
