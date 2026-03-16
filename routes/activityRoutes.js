@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Activity = require("../models/activityModel");
-const authMiddleware = require("../middlewares/authMiddleware");
+const { authMiddleware, adminOnly } = require("../middleware/auth");
 
 router.post("/create", authMiddleware, async (req, res) => {
   try {
