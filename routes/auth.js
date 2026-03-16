@@ -123,14 +123,7 @@ router.post("/verify-2fa", async (req, res) => {
   window: 2
 });
 
-router.get("/users", authMiddleware, adminOnly, async (req, res) => {
-  try {
-    const users = await User.find().select("-password");
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching users" });
-  }
-});
+
 
 console.log("VERIFIED LOG:", verified);
     console.log("VERIFIED LOG",verified)
@@ -168,6 +161,14 @@ console.log("VERIFIED LOG:", verified);
     return res.status(401).json({
       message: "Session expired or invalid"
     });
+  }
+});
+router.get("/users", authMiddleware, adminOnly, async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching users" });
   }
 });
 
