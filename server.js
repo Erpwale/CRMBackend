@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/company", require("./routes/company.js"));
 app.use("/api/contact", require("./routes/contact.js"));
-app.use("/api/activity", require("./routes/activity.js"));
+app.use("/api/activity", require("./routes/activityRoutes.js"));
 
 
 app.listen(process.env.PORT, () => {
