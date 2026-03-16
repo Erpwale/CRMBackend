@@ -13,13 +13,22 @@ router.post("/create", authMiddleware, async (req, res) => {
 
     // Check duplicate contact by mobile/email
     const existingContact = await Contact.findOne({
-      $or: [{ mobile }, { email }]
+      $or: [{ mobile }]
+    }).populate("companyId", "companyName");
+    const existingMail = await Contact.findOne({
+      $or: [ { email }]
     }).populate("companyId", "companyName");
 
     if (existingContact) {
       return res.status(400).json({
         success: false,
         message: `Contact already exists in company: ${existingContact.companyId?.companyName}`
+      });
+    }
+    if (existingMail) {
+      return res.status(400).json({
+        success: false,
+        message: `email already exists in company: ${existingContact.companyId?.companyName}`
       });
     }
 
