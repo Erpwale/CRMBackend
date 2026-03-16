@@ -44,12 +44,7 @@ router.post("/create",authMiddleware, async (req, res) => {
       data: activity
     });
 
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  } (error) {
+  }  (error) {
 
       message: error.message
     
