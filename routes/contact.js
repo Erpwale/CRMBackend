@@ -32,7 +32,7 @@ router.post("/create", authMiddleware, async (req, res) => {
 
 
 // FETCH CONTACTS
-router.get("/:companyId", auth, async (req, res) => {
+router.get("/:companyId", authMiddleware, async (req, res) => {
   try {
 
     const contacts = await Contact.find({
@@ -52,7 +52,7 @@ router.get("/:companyId", auth, async (req, res) => {
 
 
 // UPDATE CONTACT
-router.put("/update/:id", auth, async (req, res) => {
+router.put("/update/:id", authMiddleware, async (req, res) => {
   try {
 
     const contact = await Contact.findByIdAndUpdate(
@@ -75,7 +75,7 @@ router.put("/update/:id", auth, async (req, res) => {
 
 
 // DELETE CONTACT
-router.delete("/delete/:id", auth, async (req, res) => {
+router.delete("/delete/:id", authMiddleware, async (req, res) => {
   try {
 
     await Contact.findByIdAndDelete(req.params.id);
