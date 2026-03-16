@@ -35,11 +35,11 @@ router.post("/create", authMiddleware, async (req, res) => {
     }
 
     // ---------- EMAIL VALIDATION ----------
-    if (!/\S+@\S+\.\S+/.test(email)) {
+   if (!/\S+@\S+\.\S+/.test(email)) {
       return res.status(400).json({
-        success: false
-         message: "Email Must be @ "
-        });
+        success: false,
+        message: "Invalid email format"
+      });
     }
     // Check duplicate contact by mobile/email
     const existingContact = await Contact.findOne({
