@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const Contact = require("../models/Contact");
-const auth = require("../middleware/auth");
+const { authMiddleware, adminOnly } = require("../middleware/auth");
+
 
 
 
 // CREATE CONTACT
-router.post("/create", auth, async (req, res) => {
+router.post("/create", authMiddleware, async (req, res) => {
   try {
 
     const contact = new Contact({
