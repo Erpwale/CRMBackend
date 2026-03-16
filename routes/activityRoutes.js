@@ -44,11 +44,12 @@ router.post("/create",authMiddleware, async (req, res) => {
       data: activity
     });
 
-  }  (error) {
-
+  } catch (error) {
+    res.status(500).json({
+      success: false,
       message: error.message
-    
-  }
+    });
+  } 
 });
 
 router.get("/all", authMiddleware, async (req, res) => {
