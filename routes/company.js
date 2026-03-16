@@ -22,7 +22,7 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       turnover,
       address,
       primaryContact,
-      tallyLicense,
+      tallyLicense=[],
       remark
     } = req.body;
 
@@ -96,7 +96,7 @@ const existingCompany = await Company.findOne({
       turnover,
       address,
       primaryContact,
-     tallyLicense = [], 
+     tallyLicense , 
       remark,
       createdBy: req.user.id
     });

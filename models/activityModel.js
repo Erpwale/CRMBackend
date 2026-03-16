@@ -8,11 +8,6 @@ const activitySchema = new mongoose.Schema(
     required: true
   },
 
-  date: {
-    type: String,
-    required: true
-  },
-
   regarding: {
     type: String,
     required: true,

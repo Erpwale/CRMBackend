@@ -5,79 +5,51 @@ const { authMiddleware, adminOnly } = require("../middleware/auth");
 
 router.post("/create",authMiddleware, async (req, res) => {
   try {
+
     const {
       type,
-    regarding,
+      regarding,
       activityDetails,
       contactNumber,
       nextFollowupDate
     } = req.body;
 
-    // Validation
-    if (!type) {
+    if (!type || !regarding || !activityDetails || !contactNumber) {
       return res.status(400).json({
         success: false,
-        message: "Activity type is required"
+        message: "Required fields missing"
       });
     }
 
-    const allowedTypes = ["Call", "Email", "Meeting", "Demo", "FollowUp"];
+    const contact = await Contact.findOne({ mobile: contactNumber });
 
-    if (!allowedTypes.includes(type)) {
-      return res.status(400).json({
+    if (!contact) {
+      return res.status(404).json({
         success: false,
-        message: "Invalid activity type"
+        message: "Contact not found"
       });
     }
 
-    if (!date) {
-      return res.status(400).json({
-        success: false,
-        message: "Date is required"
-      });
-    }
-
-    if (!regarding || regarding.trim() === "") {
-      return res.status(400).json({
-        success: false,
-        message: "Regarding field is required"
-      });
-    }
-
-    if (!details || details.trim() === "") {
-      return res.status(400).json({
-        success: false,
-        message: "Activity details are required"
-      });
-    }
-
-    if (!contactId) {
-      return res.status(400).json({
-        success: false,
-        message: "Contact is required"
-      });
-    }
-
-    // Create activity
-    const activity = new Activity({
-    type,
-    regarding,
-      activityDetails,
-      contactNumber,
-      nextFollowupDate
+    const activity = await Activity.create({
+      type,
+      regarding,
+      details: activityDetails,
+      contactId: contact._id,
+      nextFollowupDate,
       createdBy: req.user.id
->>>>>>> 622bbd3307f295a1a22a467f102f62acfd940c6e
     });
-
-    await activity.save();
 
     res.status(201).json({
       success: true,
-      message: "Activity created successfully",
       data: activity
     });
 
   } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  } (error) {
 
       message: error.message
     
