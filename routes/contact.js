@@ -9,7 +9,7 @@ const { authMiddleware, adminOnly } = require("../middleware/auth");
 // CREATE CONTACT
 router.post("/create", authMiddleware, async (req, res) => {
   try {
-    const {name, mobile, email, primary, companyId } = req.body;
+    const {name,designation , mobile, email, primary, companyId } = req.body;
 // ---------- REQUIRED FIELD VALIDATION ----------
     if (!name || !mobile || !email || !designation) {
       return res.status(400).json({
