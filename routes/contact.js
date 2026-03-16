@@ -10,11 +10,39 @@ const { authMiddleware, adminOnly } = require("../middleware/auth");
 router.post("/create", authMiddleware, async (req, res) => {
   try {
     const { mobile, email, primary, companyId } = req.body;
+// ---------- REQUIRED FIELD VALIDATION ----------
+    if (!name || !mobile || !email || !designation) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required"
+      });
+    }
 
+    // ---------- NAME VALIDATION ----------
+    if (!/^[A-Za-z\s]+$/.test(name)) {
+      return res.status(400).json({
+        success: false,
+        message: "Name must contain only letters"
+      });
+    }
+
+    // ---------- MOBILE VALIDATION ----------
+    if (!/^[0-9]{10}$/.test(mobile)) {
+      return res.status(400).json({
+        success: false,
+        message: "Mobile number must be exactly 10 digits"
+      });
+    }
+
+    // ---------- EMAIL VALIDATION ----------
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return res.status(400).json({
+        success: false
     // Check duplicate contact by mobile/email
     const existingContact = await Contact.findOne({
       $or: [{ mobile }]
     }).populate("companyId", "companyName");
+
     const existingMail = await Contact.findOne({
       $or: [ { email }]
     }).populate("companyId", "companyName");
