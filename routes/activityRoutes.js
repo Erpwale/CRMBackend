@@ -8,7 +8,7 @@ router.post("/create",authMiddleware, async (req, res) => {
     const {
       type,
     regarding,
-      details,
+      activityDetails,
       contactNumber,
       nextFollowupDate
     } = req.body;
