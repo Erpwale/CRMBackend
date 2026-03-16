@@ -3,7 +3,7 @@ const router = express.Router();
 const Activity = require("../models/activityModel");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 
-router.post("/create", authMiddleware, async (req, res) => {
+router.post("/create",authMiddleware, async (req, res) => {
   try {
     const {
       type,
