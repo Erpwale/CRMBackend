@@ -66,6 +66,7 @@ router.post("/create",authMiddleware, async (req, res) => {
       contactNumber,
       nextFollowupDate
       createdBy: req.user.id
+>>>>>>> 622bbd3307f295a1a22a467f102f62acfd940c6e
     });
 
     await activity.save();
