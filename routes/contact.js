@@ -9,15 +9,11 @@ const { authMiddleware, adminOnly } = require("../middleware/auth");
 // CREATE CONTACT
 router.post("/create", authMiddleware, async (req, res) => {
   try {
+    const { mobile, email, primary, companyId } = req.body;
 
-    const { mobile, email } = req.body;
-
-    // Check duplicate contact
+    // Check duplicate contact by mobile/email
     const existingContact = await Contact.findOne({
-      $or: [
-        { mobile: mobile },
-        { email: email }
-      ]
+      $or: [{ mobile }, { email }]
     }).populate("companyId", "companyName");
 
     if (existingContact) {
@@ -25,6 +21,21 @@ router.post("/create", authMiddleware, async (req, res) => {
         success: false,
         message: `Contact already exists in company: ${existingContact.companyId?.companyName}`
       });
+    }
+
+    // Check if primary contact already exists in the company
+    if (primary) {
+      const existingPrimary = await Contact.findOne({
+        companyId,
+        primary: true
+      });
+
+      if (existingPrimary) {
+        return res.status(400).json({
+          success: false,
+          message: `Primary contact already exists: ${existingPrimary.name}`
+        });
+      }
     }
 
     const contact = new Contact({
@@ -45,7 +56,6 @@ router.post("/create", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
-
 
 
 // FETCH CONTACTS
