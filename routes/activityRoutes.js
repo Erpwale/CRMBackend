@@ -86,6 +86,7 @@ router.get("/company/:companyId", authMiddleware, async (req, res) => {
     const { companyId } = req.params;
 
     const activities = await Activity.find({ companyId })
+     .populate("contactId", "name mobile email")
       .populate("createdBy", "name email")
       .sort({ createdAt: -1 });
 
