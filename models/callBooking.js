@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const calbooking = new mongoose.Schema(
+const callBooking = new mongoose.Schema(
   {
     companyId: {
       type: mongoose.Schema.Types.ObjectId,
