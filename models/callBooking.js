@@ -55,4 +55,4 @@ const calbooking = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("CallBokking", callbooking);
+module.exports = mongoose.model("CallBokking", callBooking);
