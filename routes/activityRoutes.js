@@ -40,6 +40,7 @@ router.post("/create", authMiddleware, async (req, res) => {
       details: activityDetails,
       contactId: contact._id,
       nextFollowupDate,
+       companyId: contact.companyId, // ✅ ADD THIS
       createdBy: req.user?.id
     });
 

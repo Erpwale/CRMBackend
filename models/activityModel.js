@@ -24,6 +24,12 @@ const activitySchema = new mongoose.Schema(
     ref: "Contact",
     required: true
   },
+    companyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Company",
+    required: true
+  },
+
 
   nextFollowupDate: {
     type: String
