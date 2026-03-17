@@ -137,16 +137,8 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
     }
 
     // Check duplicate company name (ignore current company)
-    const existingCompany = await Company.findOne({
-      companyName,
-      _id: { $ne: id }
-    });
-
-    if (existingCompany) {
-      return res.status(400).json({
-        message: "Company name already exists"
-      });
-    }
+    
+  
 
     // Check duplicate contact number
     const existingNumber = await Company.findOne({
