@@ -8,7 +8,7 @@ const callBooking = new mongoose.Schema(
       required: true,
     },
 
-    allocateTo: {
+    userList: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
@@ -45,7 +45,7 @@ const callBooking = new mongoose.Schema(
       default: "Low",
     },
 
-    userList: String,
+    allocateTo: String,
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
