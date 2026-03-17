@@ -17,6 +17,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/company", require("./routes/company.js"));
 app.use("/api/contact", require("./routes/contact.js"));
 app.use("/api/activity", require("./routes/activityRoutes.js"));
+app.use("/api/callBooking", require("./routes/CallBolkinRoute.js"));
 
 
 app.listen(process.env.PORT, () => {
