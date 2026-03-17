@@ -55,7 +55,8 @@ const companySchema = new mongoose.Schema(
       srNo: String,
       licenseType: String,
       tssDate: Date,
-      location: String
+      location: String,
+      name:String
     }
   ],us: {
     type: String,
