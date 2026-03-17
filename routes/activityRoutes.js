@@ -79,6 +79,29 @@ router.get("/all", authMiddleware, async (req, res) => {
     });
   }
 });
+// GET ACTIVITIES BY COMPANY
+router.get("/company/:companyId", authMiddleware, async (req, res) => {
+  try {
+    const { companyId } = req.params;
+
+    const activities = await Activity.find({ companyId })
+      .populate("createdBy", "name email")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: activities.length,
+      activities
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching activities"
+    });
+  }
+});
 router.get("/:id", authMiddleware, async (req, res) => {
   try {
 
