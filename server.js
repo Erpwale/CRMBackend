@@ -47,6 +47,7 @@ app.use("/api/company", require("./routes/company.js"));
 app.use("/api/contact", require("./routes/contact.js"));
 app.use("/api/activity", require("./routes/activityRoutes.js"));
 app.use("/api/callBooking", require("./routes/CallBolkinRoute.js"));
+global.io = io; // ✅ ADD THIS
 
 // ❗ VERY IMPORTANT: export io
 module.exports = { io };

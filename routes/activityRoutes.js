@@ -45,13 +45,19 @@ router.post("/create", authMiddleware, async (req, res) => {
       companyId: contact.companyId, // ✅ already correct
       createdBy: req.user?.id
     });
-const populatedActivity = await Activity.findById(activity._id)
+    const populatedActivity = await Activity.findById(activity._id)
       .populate("contactId", "name")
       .populate("createdBy", "name");
 
     // 🔥🔥🔥 ADD THIS (MOST IMPORTANT)
+  
     const companyId = contact.companyId.toString();
-    io.to(companyId).emit("activityAdded", activity);
+
+    if (global.io) {
+      global.io.to(companyId).emit("activityAdded", populatedActivity);
+      } else {
+  console.log("❌ Socket not initialized");
+      }
 
     // ✅ response
     res.status(201).json({
