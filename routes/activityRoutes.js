@@ -4,7 +4,7 @@ const Activity = require("../models/activityModel");
 const Contact = require("../models/Contact");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const { io } = require("../server");
-const { io } = require("../server"); // ✅ import socket
+
 
 router.post("/create", authMiddleware, async (req, res) => {
   try {
