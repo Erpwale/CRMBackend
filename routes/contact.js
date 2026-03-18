@@ -56,12 +56,12 @@ router.post("/create", authMiddleware, async (req, res) => {
         message: `Contact already exists in company: ${existingContact.companyId?.companyName}`
       });
     }
-    if (existingMail) {
-      return res.status(400).json({
-        success: false,
-        message: `email already exists in company: ${existingContact.companyId?.companyName}`
-      });
-    }
+ if (existingMail) {
+  return res.status(400).json({
+    success: false,
+    message: `email already exists in company: ${existingContact.companyId?.companyName}`
+  });
+}
 
     // Check if primary contact already exists in the company
     if (primary) {
@@ -82,6 +82,7 @@ router.post("/create", authMiddleware, async (req, res) => {
       ...req.body,
       createdBy: req.user.id
     });
+    await contact.save();
     const populatedContact = await Contact.findById(contact._id)
       .populate("companyId", "companyName");
 
