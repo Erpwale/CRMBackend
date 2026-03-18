@@ -87,9 +87,13 @@ router.post("/create", authMiddleware, async (req, res) => {
       .populate("companyId", "companyName");
 
     // 🔥 REAL-TIME EMIT (AFTER SAVE)
-    const roomId = companyId.toString();
+    const companyId = companyId.toString();
 
-    io.to(roomId).emit("contactUpdated", populatedContact);
+   if (global.io) {
+      global.io.to(companyId).emit("activityAdded", populatedActivity);
+      } else {
+  console.log("❌ Socket not initialized");
+      }
 
 
     res.status(201).json({
