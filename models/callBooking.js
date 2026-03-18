@@ -30,7 +30,7 @@ const callBooking = new mongoose.Schema(
 
     priority: {
       type: String,
-      enum: ["Free", "Paid"],
+      enum: ["ASC","Free", "Paid"],
       default: "Free",
     },
 
