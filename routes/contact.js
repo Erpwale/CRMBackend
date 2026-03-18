@@ -3,7 +3,7 @@ const router = express.Router();
 const Contact = require("../models/Contact");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 
-
+const { io } = require("../server");
 
 
 // CREATE CONTACT
@@ -82,8 +82,14 @@ router.post("/create", authMiddleware, async (req, res) => {
       ...req.body,
       createdBy: req.user.id
     });
+    const populatedContact = await Contact.findById(contact._id)
+      .populate("companyId", "companyName");
 
-    await contact.save();
+    // 🔥 REAL-TIME EMIT (AFTER SAVE)
+    const roomId = companyId.toString();
+
+    io.to(roomId).emit("contactUpdated", populatedContact);
+
 
     res.status(201).json({
       success: true,

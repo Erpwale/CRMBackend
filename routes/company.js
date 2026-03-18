@@ -1,7 +1,7 @@
 const express = require("express");
 const Company = require("../models/Company");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
-
+const { io } = require("../server");
 const router = express.Router();
 
 
@@ -187,6 +187,8 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
     if (!updatedCompany) {
       return res.status(404).json({ message: "Company not found" });
     }
+    const companyId = updatedCompany._id.toString();
+    io.to(companyId).emit("companyUpdated", company);
 
     res.json({
       message: "Company updated successfully",

@@ -3,6 +3,8 @@ const router = express.Router();
 const Activity = require("../models/activityModel");
 const Contact = require("../models/Contact");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
+const { io } = require("../server");
+const { io } = require("../server"); // ✅ import socket
 
 router.post("/create", authMiddleware, async (req, res) => {
   try {
@@ -40,10 +42,18 @@ router.post("/create", authMiddleware, async (req, res) => {
       details: activityDetails,
       contactId: contact._id,
       nextFollowupDate,
-       companyId: contact.companyId, // ✅ ADD THIS
+      companyId: contact.companyId, // ✅ already correct
       createdBy: req.user?.id
     });
+const populatedActivity = await Activity.findById(activity._id)
+      .populate("contactId", "name")
+      .populate("createdBy", "name");
 
+    // 🔥🔥🔥 ADD THIS (MOST IMPORTANT)
+    const companyId = contact.companyId.toString();
+    io.to(companyId).emit("activityAdded", activity);
+
+    // ✅ response
     res.status(201).json({
       success: true,
       data: activity
@@ -129,6 +139,8 @@ router.get("/:id", authMiddleware, async (req, res) => {
     });
   }
 });
+
+
 router.put("/update/:id", authMiddleware, async (req, res) => {
   try {
 
@@ -152,6 +164,7 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
       });
     }
 
+    // ✅ update fields
     activity.type = type || activity.type;
     activity.date = date || activity.date;
     activity.regarding = regarding || activity.regarding;
@@ -160,6 +173,10 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
     activity.nextFollowupDate = nextFollowupDate || activity.nextFollowupDate;
 
     await activity.save();
+
+    // 🔥🔥🔥 REAL-TIME EMIT
+    const companyId = activity.companyId.toString();
+    io.to(companyId).emit("activityUpdated", activity);
 
     res.status(200).json({
       success: true,
