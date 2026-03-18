@@ -49,7 +49,7 @@ app.use("/api/activity", require("./routes/activityRoutes.js"));
 app.use("/api/callBooking", require("./routes/CallBolkinRoute.js"));
 
 // ❗ VERY IMPORTANT: export io
-module.exports.io = io;
+module.exports = { io };
 
 // ✅ Start server (IMPORTANT: use server.listen)
 server.listen(process.env.PORT, () => {
