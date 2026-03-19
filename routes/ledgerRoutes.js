@@ -1,0 +1,150 @@
+
+const express = require("express");
+const Ledger = require("Ledger");
+
+
+const router = express.Router();
+
+/* ================= VALIDATION ================= */
+
+const isValidGSTIN = (gstin) =>
+  /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{3}$/.test(gstin);
+
+const isValidPAN = (pan) =>
+  /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan);
+
+const isValidTAN = (tan) =>
+  /^[A-Z]{4}[0-9]{5}[A-Z]{1}$/.test(tan);
+
+const isValidMSME = (msme) =>
+  /^UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}$/.test(msme);
+
+/* ================= CREATE LEDGER ================= */
+
+router.post("/", async (req, res) => {
+  try {
+    const { companyId, companyName, gstin, pan, tan, msme } = req.body;
+
+    if (!companyId || !companyName || !gstin || !pan) {
+      return res.status(400).json({ message: "Required fields missing" });
+    }
+
+    // 🔥 Company-wise duplicate check
+    const existing = await Ledger.findOne({
+      companyId,
+      $or: [{ gstin }, { pan }, { tan }, { msme }],
+    });
+
+    if (existing) {
+      if (existing.gstin === gstin)
+        return res.status(400).json({ message: "GSTIN exists in this company" });
+
+      if (existing.pan === pan)
+        return res.status(400).json({ message: "PAN exists in this company" });
+
+      if (existing.tan === tan)
+        return res.status(400).json({ message: "TAN exists in this company" });
+
+      if (existing.msme === msme)
+        return res.status(400).json({ message: "MSME exists in this company" });
+    }
+
+    const ledger = await Ledger.create({
+      companyId,
+      companyName,
+      gstin,
+      pan,
+      tan,
+      msme,
+    });
+
+    res.status(201).json({ message: "Ledger created", data: ledger });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/* ================= CHECK DUPLICATE ================= */
+
+router.post("/check-duplicate", async (req, res) => {
+  try {
+    const { gstin, pan, tan, msme } = req.body;
+
+    const existing = await Ledger.findOne({
+      $or: [{ gstin }, { pan }, { tan }, { msme }],
+    });
+
+    if (!existing) {
+      return res.json({ exists: false });
+    }
+
+    if (existing.gstin === gstin)
+      return res.json({ exists: true, field: "GSTIN" });
+
+    if (existing.pan === pan)
+      return res.json({ exists: true, field: "PAN" });
+
+    if (existing.tan === tan)
+      return res.json({ exists: true, field: "TAN" });
+
+    if (existing.msme === msme)
+      return res.json({ exists: true, field: "MSME" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.get("/company/:companyId", async (req, res) => {
+  try {
+    const { companyId } = req.params;
+
+    const ledgers = await Ledger.find({ companyId }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: ledgers.length,
+      data: ledgers,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+router.get("/", async (req, res) => {
+  try {
+    const ledgers = await Ledger.find().sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: ledgers.length,
+      data: ledgers,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+router.get("/:companyId/:id", async (req, res) => {
+  try {
+    const { companyId, id } = req.params;
+
+    const ledger = await Ledger.findOne({
+      _id: id,
+      companyId: companyId,
+    });
+
+    if (!ledger) {
+      return res.status(404).json({
+        success: false,
+        message: "Ledger not found for this company",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: ledger,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+export default router;
