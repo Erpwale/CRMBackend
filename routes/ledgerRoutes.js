@@ -17,6 +17,7 @@ router.post("/", async (req, res) => {
       companyId,
       companyName,
       contactId,
+      contactName,
       contactEmail,
       contactMobile,
       address1,
@@ -37,7 +38,7 @@ router.post("/", async (req, res) => {
     if (
       !companyId || !companyName || !gstin || !pan ||
       !contactId || !contactEmail || !address1 || !state ||
-      !district || !city || !pincode || !gstType
+      !district || !city || !pincode || !gstType|| !contactName
     ) {
       return res.status(400).json({ message: "Required fields missing" });
     }
@@ -98,6 +99,7 @@ router.post("/", async (req, res) => {
       companyName,
       contactId,
       contactEmail,
+      contactName,
       contactMobile,
       address1,
       address2,

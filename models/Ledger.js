@@ -20,6 +20,7 @@ const ledgerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Contact",
     },
+    contactName: String,
     contactMobile: String,
     contactEmail: String,
 
