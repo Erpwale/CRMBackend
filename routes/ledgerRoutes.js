@@ -24,7 +24,8 @@ const isValidMSME = (msme) =>
 router.post("/", async (req, res) => {
   try {
     const { companyId, companyName, gstin, pan, tan, msme } = req.body;
-
+    console.log(companyId,companyName,gstin,pan,tan,msme);
+    
     if (!companyId || !companyName || !gstin || !pan) {
       return res.status(400).json({ message: "Required fields missing" });
     }
