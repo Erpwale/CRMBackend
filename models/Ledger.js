@@ -44,4 +44,4 @@ const ledgerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Ledger", ledgerSchema);
+module.exports = mongoose.model("Ledger", ledgerSchema);
