@@ -7,30 +7,72 @@ const router = express.Router();
 
 /* ================= VALIDATION ================= */
 
-const isValidGSTIN = (gstin) =>
-  /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{3}$/.test(gstin);
 
-const isValidPAN = (pan) =>
-  /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan);
-
-const isValidTAN = (tan) =>
-  /^[A-Z]{4}[0-9]{5}[A-Z]{1}$/.test(tan);
-
-const isValidMSME = (msme) =>
-  /^UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}$/.test(msme);
 
 /* ================= CREATE LEDGER ================= */
 
 router.post("/", async (req, res) => {
   try {
-    const { companyId, companyName, gstin, pan, tan, msme } = req.body;
-    console.log(companyId,companyName,gstin,pan,tan,msme);
-    
-    if (!companyId || !companyName || !gstin || !pan) {
+    const {
+      companyId,
+      companyName,
+      contactId,
+      contactEmail,
+      contactMobile,
+      address1,
+      address2,
+      address3,
+      state,
+      district,
+      city,
+      pincode,
+      gstType,
+      gstin,
+      pan,
+      tan,
+      msme,
+    } = req.body;
+
+    // ✅ REQUIRED CHECK
+    if (
+      !companyId || !companyName || !gstin || !pan ||
+      !contactId || !contactEmail || !address1 || !state ||
+      !district || !city || !pincode || !gstType
+    ) {
       return res.status(400).json({ message: "Required fields missing" });
     }
 
-    // 🔥 Company-wise duplicate check
+    // ✅ VALIDATION FUNCTIONS
+    const isValidGSTIN = (gstin) =>
+      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{3}$/.test(gstin);
+
+    const isValidPAN = (pan) =>
+      /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan);
+
+    const isValidTAN = (tan) =>
+      /^[A-Z]{4}[0-9]{5}[A-Z]{1}$/.test(tan);
+
+    const isValidMSME = (msme) =>
+      /^UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}$/.test(msme);
+
+    // ✅ APPLY VALIDATION
+    if (!isValidGSTIN(gstin)) {
+      return res.status(400).json({ message: "Invalid GSTIN format" });
+    }
+
+    if (!isValidPAN(pan)) {
+      return res.status(400).json({ message: "Invalid PAN format" });
+    }
+
+    if (tan && !isValidTAN(tan)) {
+      return res.status(400).json({ message: "Invalid TAN format" });
+    }
+
+    if (msme && !isValidMSME(msme)) {
+      return res.status(400).json({ message: "Invalid MSME format" });
+    }
+
+    // 🔥 DUPLICATE CHECK
     const existing = await Ledger.findOne({
       companyId,
       $or: [{ gstin }, { pan }, { tan }, { msme }],
@@ -50,9 +92,21 @@ router.post("/", async (req, res) => {
         return res.status(400).json({ message: "MSME exists in this company" });
     }
 
+    // ✅ SAVE ALL FIELDS (IMPORTANT FIX)
     const ledger = await Ledger.create({
       companyId,
       companyName,
+      contactId,
+      contactEmail,
+      contactMobile,
+      address1,
+      address2,
+      address3,
+      state,
+      district,
+      city,
+      pincode,
+      gstType,
       gstin,
       pan,
       tan,
@@ -60,6 +114,7 @@ router.post("/", async (req, res) => {
     });
 
     res.status(201).json({ message: "Ledger created", data: ledger });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
