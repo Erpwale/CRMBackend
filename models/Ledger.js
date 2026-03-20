@@ -8,28 +8,52 @@ const ledgerSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+
     companyName: {
       type: String,
       required: true,
       trim: true,
     },
+
+    // ✅ CONTACT DETAILS
+    contactId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Contact",
+    },
+    contactMobile: String,
+    contactEmail: String,
+
+    // ✅ ADDRESS
+    address1: String,
+    address2: String,
+    address3: String,
+    state: String,
+    district: String,
+    city: String,
+    pincode: String,
+
+    // ✅ GST DETAILS
+    gstType: String,
     gstin: {
       type: String,
       required: true,
       uppercase: true,
       trim: true,
     },
+
     pan: {
       type: String,
       required: true,
       uppercase: true,
       trim: true,
     },
+
     tan: {
       type: String,
       uppercase: true,
       trim: true,
     },
+
     msme: {
       type: String,
       uppercase: true,
