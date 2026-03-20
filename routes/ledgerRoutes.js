@@ -147,4 +147,4 @@ router.get("/:companyId/:id", async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
