@@ -1,6 +1,6 @@
 
 const express = require("express");
-const Ledger = require("Ledger");
+const Ledger = require("../models/Ledger");
 
 
 const router = express.Router();
