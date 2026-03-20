@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
     const {
       companyId,
       companyName,
-      contactId,
+  
       contactName,
       contactEmail,
       contactMobile,
@@ -36,8 +36,7 @@ router.post("/", async (req, res) => {
 
     // ✅ REQUIRED CHECK
     if (
-      !companyId || !companyName || !gstin || !pan ||
-      !contactId || !contactEmail || !address1 || !state ||
+      !companyId || !companyName || !gstin || !pan || !contactEmail || !address1 || !state ||
       !district || !city || !pincode || !gstType|| !contactName
     ) {
       return res.status(400).json({ message: "Required fields missing" });
@@ -97,7 +96,7 @@ router.post("/", async (req, res) => {
     const ledger = await Ledger.create({
       companyId,
       companyName,
-      contactId,
+      
       contactEmail,
       contactName,
       contactMobile,
