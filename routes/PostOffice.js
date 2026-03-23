@@ -2,21 +2,30 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const fs = require("fs");
+const path = require("path");
 const csv = require("csv-parser");
-const PostOffice  = require("../models/PostOfficeModel.js"); // your model
+const PostOffice = require("../models/PostOfficeModel");
 
 // File upload setup
 const upload = multer({ dest: "uploads/" });
 
+/**
+ * ✅ Import CSV (upload OR local file)
+ */
+router.post("/import-csv", upload.single("file"), async (req, res) => {
+  try {
+    const filePath = req.file
+      ? req.file.path
+      : path.join(__dirname, "../data/pincode.csv");
 
-// ✅ CSV Upload API
-router.get("/import-csv", async (req, res) => {
-  let batch = [];
-  const BATCH_SIZE = 1000;
+    let batch = [];
+    const BATCH_SIZE = 1000;
 
-  fs.createReadStream("data/pincode.csv")
-    .pipe(csv())
-    .on("data", async (data) => {
+    const stream = fs.createReadStream(filePath).pipe(csv());
+
+    stream.on("data", async (data) => {
+      stream.pause(); // 🛑 prevent async issues
+
       batch.push({
         circlename: data.circlename,
         regionname: data.regionname,
@@ -31,8 +40,7 @@ router.get("/import-csv", async (req, res) => {
         longitude: parseFloat(data.longitude),
       });
 
-      // 🔥 Insert when batch full
-      if (batch.length === BATCH_SIZE) {
+      if (batch.length >= BATCH_SIZE) {
         try {
           await PostOffice.insertMany(batch, { ordered: false });
           batch = [];
@@ -40,50 +48,87 @@ router.get("/import-csv", async (req, res) => {
           console.log("Batch error:", err.message);
         }
       }
-    })
-    .on("end", async () => {
+
+      stream.resume(); // ▶ resume
+    });
+
+    stream.on("end", async () => {
       try {
-        // insert remaining data
         if (batch.length > 0) {
           await PostOffice.insertMany(batch, { ordered: false });
         }
 
-        res.json({ message: "✅ 50k data imported successfully" });
+        // 🧹 delete uploaded file (optional)
+        if (req.file) fs.unlinkSync(req.file.path);
+
+        res.json({ message: "✅ CSV imported successfully" });
       } catch (err) {
         res.status(500).json({ error: err.message });
       }
     });
+
+    stream.on("error", (err) => {
+      res.status(500).json({ error: err.message });
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Get all states
+/**
+ * ✅ Get all states
+ */
 router.get("/states", async (req, res) => {
-  const data = await PostOffice.distinct("statename"); // ✅ FIX
-  res.json(data);
+  try {
+    const data = await PostOffice.distinct("statename");
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Get districts
+/**
+ * ✅ Get districts by state
+ */
 router.get("/districts/:state", async (req, res) => {
-  const data = await PostOffice.distinct("district", {
-    statename: req.params.state, // ✅ FIX
-  });
-  res.json(data);
+  try {
+    const data = await PostOffice.distinct("district", {
+      statename: { $regex: new RegExp(`^${req.params.state}$`, "i") },
+    });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Get cities
+/**
+ * ✅ Get cities by district
+ */
 router.get("/cities/:district", async (req, res) => {
-  const data = await PostOffice.distinct("officename", { // ✅ FIX
-    district: req.params.district,
-  });
-  res.json(data);
+  try {
+    const data = await PostOffice.distinct("officename", {
+      district: { $regex: new RegExp(`^${req.params.district}$`, "i") },
+    });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Get pincode
+/**
+ * ✅ Get pincode by city
+ */
 router.get("/pincode/:city", async (req, res) => {
-  const data = await PostOffice.find({
-    officename: req.params.city, // ✅ FIX
-  });
-  res.json(data);
-});
+  try {
+    const data = await PostOffice.find({
+      officename: { $regex: new RegExp(`^${req.params.city}$`, "i") },
+    }).limit(50); // 🚀 limit for performance
 
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router;
