@@ -10,8 +10,8 @@ const upload = multer({ dest: "uploads/" });
 
 
 // ✅ CSV Upload API
-router.post("/upload-csv", upload.single("file"), async (req, res) => {
-    const results = [];
+router.get("/import-csv", async (req, res) => {
+  const results = [];
 
   fs.createReadStream("data/pincode.csv") // 👈 direct path
     .pipe(csv())
