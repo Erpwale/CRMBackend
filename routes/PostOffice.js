@@ -11,9 +11,9 @@ const upload = multer({ dest: "uploads/" });
 
 // ✅ CSV Upload API
 router.post("/upload-csv", upload.single("file"), async (req, res) => {
-  const results = [];
+    const results = [];
 
-  fs.createReadStream(req.file.path)
+  fs.createReadStream("data/pincode.csv") // 👈 direct path
     .pipe(csv())
     .on("data", (data) => {
       results.push({
@@ -26,9 +26,7 @@ router.post("/upload-csv", upload.single("file"), async (req, res) => {
     .on("end", async () => {
       try {
         await Location.insertMany(results);
-        fs.unlinkSync(req.file.path); // delete uploaded file
-
-        res.json({ message: "✅ CSV uploaded & data saved" });
+        res.json({ message: "✅ CSV imported successfully" });
       } catch (err) {
         res.status(500).json({ error: err.message });
       }
