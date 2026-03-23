@@ -158,7 +158,19 @@ router.post("/check-duplicate", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+router.put("/ledger/:id", async (req, res) => {
+  try {
+    const updated = await Ledger.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
 
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 router.get("/company/:companyId", async (req, res) => {
   try {
     const { companyId } = req.params;
