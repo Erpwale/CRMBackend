@@ -47,4 +47,32 @@ router.get("/import-csv", async (req, res) => {
     });
 });
 
+// Get all states
+router.get("/states", async (req, res) => {
+  const data = await Location.distinct("state");
+  res.json(data);
+});
+
+// Get districts by state
+router.get("/districts/:state", async (req, res) => {
+  const data = await Location.distinct("district", {
+    state: req.params.state,
+  });
+  res.json(data);
+});
+
+// Get cities by district
+router.get("/cities/:district", async (req, res) => {
+  const data = await Location.distinct("city", {
+    district: req.params.district,
+  });
+  res.json(data);
+});
+
+// Get pincode by city
+router.get("/pincode/:city", async (req, res) => {
+  const data = await Location.find({ city: req.params.city });
+  res.json(data);
+});
+
 module.exports = router;
