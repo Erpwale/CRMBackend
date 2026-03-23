@@ -83,7 +83,7 @@ router.get("/pincode/:city", async (req, res) => {
     officename: req.params.city, // ✅ FIX
   });
   res.json(data);
-});son(data);
+});
 
 
 module.exports = router;
