@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const fs = require("fs");
 const csv = require("csv-parser");
-const Location = require("../models/PostOfficeModel.js"); // your model
+const PostOffice  = require("../models/PostOfficeModel.js"); // your model
 
 // File upload setup
 const upload = multer({ dest: "uploads/" });
@@ -18,16 +18,23 @@ router.get("/import-csv", async (req, res) => {
     .pipe(csv())
     .on("data", async (data) => {
       batch.push({
-        state: data.statename,
-        district: data.district,
-        city: data.officename,
+        circlename: data.circlename,
+        regionname: data.regionname,
+        divisionname: data.divisionname,
+        officename: data.officename,
         pincode: Number(data.pincode),
+        officetype: data.officetype,
+        delivery: data.delivery,
+        district: data.district,
+        statename: data.statename,
+        latitude: parseFloat(data.latitude),
+        longitude: parseFloat(data.longitude),
       });
 
-      // Insert batch
+      // 🔥 Insert when batch full
       if (batch.length === BATCH_SIZE) {
         try {
-          await Location.insertMany(batch, { ordered: false });
+          await PostOffice.insertMany(batch, { ordered: false });
           batch = [];
         } catch (err) {
           console.log("Batch error:", err.message);
@@ -36,11 +43,12 @@ router.get("/import-csv", async (req, res) => {
     })
     .on("end", async () => {
       try {
+        // insert remaining data
         if (batch.length > 0) {
-          await Location.insertMany(batch, { ordered: false });
+          await PostOffice.insertMany(batch, { ordered: false });
         }
 
-        res.json({ message: "✅ Filtered 50k data imported successfully" });
+        res.json({ message: "✅ 50k data imported successfully" });
       } catch (err) {
         res.status(500).json({ error: err.message });
       }
@@ -49,13 +57,13 @@ router.get("/import-csv", async (req, res) => {
 
 // Get all states
 router.get("/states", async (req, res) => {
-  const data = await Location.distinct("state");
+  const data = await PostOffice .distinct("state");
   res.json(data);
 });
 
 // Get districts by state
 router.get("/districts/:state", async (req, res) => {
-  const data = await Location.distinct("district", {
+  const data = await PostOffice .distinct("district", {
     state: req.params.state,
   });
   res.json(data);
@@ -63,7 +71,7 @@ router.get("/districts/:state", async (req, res) => {
 
 // Get cities by district
 router.get("/cities/:district", async (req, res) => {
-  const data = await Location.distinct("city", {
+  const data = await PostOffice .distinct("city", {
     district: req.params.district,
   });
   res.json(data);
@@ -71,7 +79,7 @@ router.get("/cities/:district", async (req, res) => {
 
 // Get pincode by city
 router.get("/pincode/:city", async (req, res) => {
-  const data = await Location.find({ city: req.params.city });
+  const data = await PostOffice .find({ city: req.params.city });
   res.json(data);
 });
 
