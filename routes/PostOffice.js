@@ -57,13 +57,13 @@ router.get("/import-csv", async (req, res) => {
 
 // Get all states
 router.get("/states", async (req, res) => {
-  const data = await PostOffice .distinct("state");
+  const data = await PostOffice.distinct("state");
   res.json(data);
 });
 
 // Get districts by state
 router.get("/districts/:state", async (req, res) => {
-  const data = await PostOffice .distinct("district", {
+  const data = await PostOffice.distinct("district", {
     state: req.params.state,
   });
   res.json(data);
@@ -71,7 +71,7 @@ router.get("/districts/:state", async (req, res) => {
 
 // Get cities by district
 router.get("/cities/:district", async (req, res) => {
-  const data = await PostOffice .distinct("city", {
+  const data = await PostOffice.distinct("city", {
     district: req.params.district,
   });
   res.json(data);
@@ -79,7 +79,7 @@ router.get("/cities/:district", async (req, res) => {
 
 // Get pincode by city
 router.get("/pincode/:city", async (req, res) => {
-  const data = await PostOffice .find({ city: req.params.city });
+  const data = await PostOffice.find({ city: req.params.city });
   res.json(data);
 });
 
