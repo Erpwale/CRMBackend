@@ -84,6 +84,6 @@ router.get("/pincode/:city", async (req, res) => {
   });
   res.json(data);
 });son(data);
-});
+
 
 module.exports = router;
