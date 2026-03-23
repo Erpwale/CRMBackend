@@ -45,20 +45,28 @@ router.post("/", async (req, res) => {
     // ✅ VALIDATION FUNCTIONS
     const isValidGSTIN = (gstin) =>
       /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{3}$/.test(gstin);
+    
 
-    const isValidPAN = (pan) =>
-      /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan);
+   const isValidPAN = (pan) =>
+  /^[A-Z]{3}[PCGHABFTJL][A-Z][0-9]{4}[A-Z]$/.test(pan);
 
-    const isValidTAN = (tan) =>
-      /^[A-Z]{4}[0-9]{5}[A-Z]{1}$/.test(tan);
+ const isValidTAN = (tan) =>
+  /^[A-Z]{3}[A-Z][0-9]{5}[A-Z]$/.test(tan);
 
-    const isValidMSME = (msme) =>
-      /^UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}$/.test(msme);
+   const isValidMSME = (msme) =>
+  /^UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}$/.test(msme);
 
     // ✅ APPLY VALIDATION
     if (!isValidGSTIN(gstin)) {
       return res.status(400).json({ message: "Invalid GSTIN format" });
     }
+    const gstPan = gstin.substring(2, 12);
+
+if (gstPan !== pan) {
+  return res.status(400).json({
+    message: "PAN does not match GSTIN",
+  });
+}
 
     if (!isValidPAN(pan)) {
       return res.status(400).json({ message: "Invalid PAN format" });
