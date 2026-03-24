@@ -1,17 +1,10 @@
 const mongoose = require("mongoose");
 
 const PostOfficeSchema = new mongoose.Schema({
-  circlename: String,
-  regionname: String,
-  divisionname: String,
-  officename: String,
+  officename: String, // city
   pincode: Number,
-  officetype: String,
-  delivery: String,
   district: String,
   statename: String,
-  latitude: Number,
-  longitude: Number,
 });
 
 // 🚀 Indexes for fast queries

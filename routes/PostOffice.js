@@ -18,38 +18,29 @@ router.post("/import-csv", upload.single("file"), async (req, res) => {
       ? req.file.path
       : path.join(__dirname, "../data/pincode.csv");
 
-    let batch = [];
     const BATCH_SIZE = 1000;
+    let batch = [];
 
     const stream = fs.createReadStream(filePath).pipe(csv());
 
     stream.on("data", async (data) => {
-      stream.pause(); // 🛑 prevent async issues
+      stream.pause();
 
+      // ✅ Clean mapping from CSV
       batch.push({
-        circlename: data.circlename,
-        regionname: data.regionname,
-        divisionname: data.divisionname,
-        officename: data.officename,
+        officename: data.City?.trim().toLowerCase(),
         pincode: Number(data.pincode),
-        officetype: data.officetype,
-        delivery: data.delivery,
-        district: data.district,
-        statename: data.statename,
-        latitude: parseFloat(data.latitude),
-        longitude: parseFloat(data.longitude),
+        district: data.district?.trim().toLowerCase(),
+        statename: data.statename?.trim().toLowerCase(),
       });
 
+      // ✅ Batch insert
       if (batch.length >= BATCH_SIZE) {
-        try {
-          await PostOffice.insertMany(batch, { ordered: false });
-          batch = [];
-        } catch (err) {
-          console.log("Batch error:", err.message);
-        }
+        await PostOffice.insertMany(batch, { ordered: false });
+        batch = [];
       }
 
-      stream.resume(); // ▶ resume
+      stream.resume();
     });
 
     stream.on("end", async () => {
@@ -58,7 +49,7 @@ router.post("/import-csv", upload.single("file"), async (req, res) => {
           await PostOffice.insertMany(batch, { ordered: false });
         }
 
-        // 🧹 delete uploaded file (optional)
+        // delete uploaded file
         if (req.file) fs.unlinkSync(req.file.path);
 
         res.json({ message: "✅ CSV imported successfully" });
@@ -75,6 +66,7 @@ router.post("/import-csv", upload.single("file"), async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 /**
  * ✅ Get all states
