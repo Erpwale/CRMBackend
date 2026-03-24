@@ -188,7 +188,7 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Company not found" });
     }
     const companyId = updatedCompany._id.toString();
-    io.to(companyId).emit("companyUpdated", company);
+    global.io.to(companyId).emit("companyUpdated", company);
 
     res.json({
       message: "Company updated successfully",
