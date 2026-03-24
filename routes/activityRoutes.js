@@ -20,12 +20,46 @@ router.post("/create", authMiddleware, async (req, res) => {
       nextFollowupDate
     } = req.body;
 
-    if (!type || !regarding || !activityDetails || !contactNumber) {
-      return res.status(400).json({
-        success: false,
-        message: "Required fields missing"
-      });
-    }
+    if (!type) {
+  return res.status(400).json({
+    success: false,
+    message: "Please select type"
+  });
+}
+
+if (!regarding) {
+  return res.status(400).json({
+    success: false,
+    message: "Please enter regarding"
+  });
+}
+
+if (!activityDetails) {
+  return res.status(400).json({
+    success: false,
+    message: "Please write details"
+  });
+}
+
+if (!contactNumber) {
+  return res.status(400).json({
+    success: false,
+    message: "Please select contact number"
+  });
+}
+    if (regarding.length < 60 || regarding.length > 150) {
+  return res.status(400).json({
+    success: false,
+    message: "Regarding must be between 60 and 150 characters"
+  });
+}
+
+if (activityDetails.length < 100 || activityDetails.length > 450) {
+  return res.status(400).json({
+    success: false,
+    message: "Activity details must be between 100 and 450 characters"
+  });
+}
 
     const contact = await Contact.findOne({ mobile: contactNumber });
 
