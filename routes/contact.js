@@ -59,8 +59,7 @@ router.post("/create", authMiddleware, async (req, res) => {
  if (existingMail) {
   return res.status(400).json({
     success: false,
-    message: `email already exists in company: ${existingContact.companyId?.companyName}`
-  });
+message: `Email already exists in company: ${existingMail.companyId?.companyName}`  });
 }
 
     // Check if primary contact already exists in the company
