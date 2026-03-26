@@ -160,6 +160,7 @@ router.post("/check-duplicate", async (req, res) => {
 });
 router.put("/ledger/:id", async (req, res) => {
   try {
+    console.log("gg",req)
     const updated = await Ledger.findByIdAndUpdate(
       req.params.id,
       req.body,
