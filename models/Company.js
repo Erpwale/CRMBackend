@@ -22,6 +22,7 @@ const companySchema = new mongoose.Schema(
     zone: String,
     sector: String,
     city: String,
+    district:String,
     state: String,
     pincode: String,
     country:String

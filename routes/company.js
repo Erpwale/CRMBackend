@@ -37,6 +37,7 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       !turnover ||
       !address?.line1 ||
       !address?.city ||
+      !address?.district ||
       !address?.state ||
       !address?.pincode ||
       !primaryContact?.name ||
