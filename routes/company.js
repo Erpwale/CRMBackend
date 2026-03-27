@@ -237,9 +237,9 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
 router.get("/my-companies", authMiddleware, async (req, res) => {
   try {
 
-    const companies = await Company.find({
-      createdBy: req.user.id
-    });
+ const companies = await Company.find({
+  createdBy: req.user.id
+}).populate("primaryContact");
 
     res.json(companies);
 
