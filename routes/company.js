@@ -96,7 +96,7 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       email: primaryContact.contactEmail,
       designation: primaryContact.designation,
       primary: true,
-      autoMail: true
+    
     });
 
     // ✅ STEP 3: LINK CONTACT TO COMPANY
