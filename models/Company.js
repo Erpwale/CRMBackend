@@ -27,12 +27,10 @@ const companySchema = new mongoose.Schema(
     country:String
   },
 
-  primaryContact: {
-    name: {
-      type:String,
-       required: true,
-    unique: true
-  },
+primaryContact: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Contact"
+}
 
     contactNumber: {
       type: String,

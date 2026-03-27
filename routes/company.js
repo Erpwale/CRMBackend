@@ -2,7 +2,7 @@ const express = require("express");
 const Company = require("../models/Company");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const router = express.Router();
-
+const Contact = require("../models/Contact");
 
 // CREATE COMPANY
 router.post("/create-company", authMiddleware, async (req, res) => {
@@ -99,6 +99,29 @@ const existingCompany = await Company.findOne({
       remark,
       createdBy: req.user.id
     });
+    const existingContact = await Contact.findOne({
+  $or: [
+    { mobile: primaryContact.contactNumber },
+    { email: primaryContact.contactEmail }
+  ]
+});
+
+if (existingContact) {
+  return res.status(400).json({
+    message: "Contact already exists in contact table"
+  });
+}
+   await Contact.findOneAndUpdate(
+  { companyId: id, primary: true },
+  {
+    name: primaryContact.name,
+    mobile: primaryContact.contactNumber,
+    email: primaryContact.contactEmail,
+    designation: primaryContact.designation,
+    primary: true
+  },
+  { upsert: true, new: true }
+);
 
     res.json({
       message: "Company created successfully",
@@ -182,6 +205,28 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
       },
       { new: true, runValidators: true }
     );
+    const existingContact = await Contact.findOne({
+  $or: [
+    { mobile: primaryContact.contactNumber },
+    { email: primaryContact.contactEmail }
+  ]
+});
+
+if (existingContact) {
+  return res.status(400).json({
+    message: "Contact already exists in contact table"
+  });
+}
+    await Contact.findOneAndUpdate(
+  { companyId: id, primary: true },
+  {
+    name: primaryContact.name,
+    mobile: primaryContact.contactNumber,
+    email: primaryContact.contactEmail,
+    designation: primaryContact.designation,
+     primary: !existingPrimary
+  }
+);
 
     if (!updatedCompany) {
       return res.status(404).json({ message: "Company not found" });
