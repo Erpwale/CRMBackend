@@ -40,8 +40,8 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       !address?.state ||
       !address?.pincode ||
       !primaryContact?.name ||
-      !primaryContact?.contactNumber ||
-      !primaryContact?.contactEmail ||
+      !primaryContact?.mobile ||
+      !primaryContact?.email ||
       !primaryContact?.designation
     ) {
       return res.status(400).json({
@@ -60,8 +60,8 @@ router.post("/create-company", authMiddleware, async (req, res) => {
     // ✅ CHECK DUPLICATE CONTACT (Contact Table)
     const existingContact = await Contact.findOne({
       $or: [
-        { mobile: primaryContact.contactNumber },
-        { email: primaryContact.contactEmail }
+        { mobile: primaryContact.mobile },
+        { email: primaryContact.email }
       ]
     });
 
@@ -92,8 +92,8 @@ router.post("/create-company", authMiddleware, async (req, res) => {
     const contact = await Contact.create({
       companyId: company._id,
       name: primaryContact.name,
-      mobile: primaryContact.contactNumber,
-      email: primaryContact.contactEmail,
+      mobile: primaryContact.mobile,
+      email: primaryContact.email,
       designation: primaryContact.designation,
       primary: true,
     
@@ -142,8 +142,8 @@ console.log(req.body);
     if (
       !companyName ||
       !primaryContact?.name ||
-      !primaryContact?.contactNumber ||
-      !primaryContact?.contactEmail
+      !primaryContact?.mobile ||
+      !primaryContact?.email
     ) {
       return res.status(400).json({ message: "Required fields missing" });
     }
@@ -157,8 +157,8 @@ console.log(req.body);
     // ✅ CHECK DUPLICATE CONTACT (exclude current company contact)
     const existingContact = await Contact.findOne({
       $or: [
-        { mobile: primaryContact.contactNumber },
-        { email: primaryContact.contactEmail }
+        { mobile: primaryContact.mobile },
+        { email: primaryContact.email }
       ],
       companyId: { $ne: id }
     });
@@ -198,8 +198,8 @@ console.log(req.body);
     if (contact) {
       // update existing
       contact.name = primaryContact.name;
-      contact.mobile = primaryContact.contactNumber;
-      contact.email = primaryContact.contactEmail;
+      contact.mobile = primaryContact.mobile;
+      contact.email = primaryContact.email;
       contact.designation = primaryContact.designation;
       await contact.save();
     } else {
@@ -207,8 +207,8 @@ console.log(req.body);
       contact = await Contact.create({
         companyId: id,
         name: primaryContact.name,
-        mobile: primaryContact.contactNumber,
-        email: primaryContact.contactEmail,
+        mobile: primaryContact.mobile,
+        email: primaryContact.email,
         designation: primaryContact.designation,
         primary: true
       });
