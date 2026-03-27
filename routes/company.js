@@ -241,7 +241,10 @@ router.get("/my-companies", authMiddleware, async (req, res) => {
 
  const companies = await Company.find({
   createdBy: req.user.id
-}).populate("primaryContact");
+}).populate({
+    path: "primaryContact",
+    match: { primary: true }
+  });
 
     res.json(companies);
 
@@ -272,7 +275,10 @@ router.get("/company/:id", authMiddleware, async (req, res) => {
 
     const company = await Company.findById(req.params.id)
     .populate("createdBy", "name email")
-     .populate("primaryContact");
+     .populate({
+    path: "primaryContact",
+    match: { primary: true }
+  });
 
     if (!company)
       return res.status(404).json({ message: "Company not found" });
