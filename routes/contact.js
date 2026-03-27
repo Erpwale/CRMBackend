@@ -131,23 +131,29 @@ router.get("/:companyId", authMiddleware, async (req, res) => {
 // UPDATE CONTACT
 router.put("/update/:id", authMiddleware, async (req, res) => {
   try {
+    const { mobile, email, companyId } = req.body;
 
-    const { mobile, email } = req.body;
-
-    // Check duplicate except current contact
+    // Find duplicate contact (excluding current one)
     const existingContact = await Contact.findOne({
       _id: { $ne: req.params.id },
       $or: [
         { mobile: mobile },
         { email: email }
       ]
-    }).populate("companyId", "companyName");
+    });
 
     if (existingContact) {
-      return res.status(400).json({
-        success: false,
-        message: `Contact already exists in company: ${existingContact.companyId?.companyName}`
-      });
+      // Check if companyId is same
+      if (existingContact.companyId.toString() !== companyId) {
+        const populatedContact = await Contact.findById(existingContact._id)
+          .populate("companyId", "companyName");
+
+        return res.status(400).json({
+          success: false,
+          message: `Contact already exists in another company: ${populatedContact.companyId?.companyName}`
+        });
+      }
+      // else → same company → allow update
     }
 
     const contact = await Contact.findByIdAndUpdate(
