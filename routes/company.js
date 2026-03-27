@@ -20,6 +20,7 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       noOfTallyUser,
       turnover,
       address,
+        primaryContact,   
       tallyLicense=[],
       remark
     } = req.body;
@@ -147,6 +148,7 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
       noOfTallyUser,
       turnover,
       address,
+        primaryContact,   
       tallyLicense = [],   // default array
       remark
     } = req.body;
