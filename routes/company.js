@@ -8,7 +8,7 @@ const Contact = require("../models/Contact");
 router.post("/create-company", authMiddleware, async (req, res) => {
   try {
     console.log(req.body);
-    
+
     const {
       companyName,
       source,
@@ -20,12 +20,12 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       noOfTallyUser,
       turnover,
       address,
-        primaryContact,   
-      tallyLicense=[],
+      primaryContact,
+      tallyLicense = [],
       remark
     } = req.body;
 
-    // Required fields validation
+    // ✅ VALIDATION
     if (
       !companyName ||
       !source ||
@@ -43,46 +43,35 @@ router.post("/create-company", authMiddleware, async (req, res) => {
       !primaryContact?.contactNumber ||
       !primaryContact?.contactEmail ||
       !primaryContact?.designation
-     
-      
     ) {
       return res.status(400).json({
         message: "All fields are required"
       });
     }
 
-    // Check unique contact number
-    const existingNumber = await Company.findOne({
-  "primaryContact.contactNumber": primaryContact.contactNumber
-}).populate("createdBy", "name");
-
-const existingCompany = await Company.findOne({
-  "companyName": companyName
-}).populate("createdBy", "name");
-
-
-    if (existingNumber) {
+    // ✅ CHECK DUPLICATE COMPANY
+    const existingCompany = await Company.findOne({ companyName });
+    if (existingCompany) {
       return res.status(400).json({
-        message: `Contact number already exists. Company: ${existingNumber.companyName} created by ${existingNumber.createdBy.name}`
+        message: `Company name already exists`
       });
     }
-   if (existingCompany) {
-  return res.status(400).json({
-    message: `Company name already exists. Company: ${existingCompany.companyName} created by ${existingCompany.createdBy?.name}`
-  });
-}
 
-    // Check unique email
-    const existingEmail = await Company.findOne({
-      "primaryContact.contactEmail": primaryContact.contactEmail
+    // ✅ CHECK DUPLICATE CONTACT (Contact Table)
+    const existingContact = await Contact.findOne({
+      $or: [
+        { mobile: primaryContact.contactNumber },
+        { email: primaryContact.contactEmail }
+      ]
     });
 
-    if (existingEmail) {
+    if (existingContact) {
       return res.status(400).json({
-        message: "Contact email already exists"
+        message: "Contact already exists"
       });
     }
 
+    // ✅ STEP 1: CREATE COMPANY (WITHOUT primaryContact)
     const company = await Company.create({
       companyName,
       source,
@@ -94,42 +83,37 @@ const existingCompany = await Company.findOne({
       noOfTallyUser,
       turnover,
       address,
-     tallyLicense , 
+      tallyLicense,
       remark,
       createdBy: req.user.id
     });
-    const existingContact = await Contact.findOne({
-  $or: [
-    { mobile: primaryContact.contactNumber },
-    { email: primaryContact.contactEmail }
-  ]
-});
 
-if (existingContact) {
-  return res.status(400).json({
-    message: "Contact already exists in contact table"
-  });
-}
-   await Contact.findOneAndUpdate(
-  { companyId: id, primary: true },
-  {
-    name: primaryContact.name,
-    mobile: primaryContact.contactNumber,
-    email: primaryContact.contactEmail,
-    designation: primaryContact.designation,
-    primary: true
-  },
-  { upsert: true, new: true }
-);
+    // ✅ STEP 2: CREATE CONTACT
+    const contact = await Contact.create({
+      companyId: company._id,
+      name: primaryContact.name,
+      mobile: primaryContact.contactNumber,
+      email: primaryContact.contactEmail,
+      designation: primaryContact.designation,
+      primary: true,
+      autoMail: true
+    });
 
-    res.json({
+    // ✅ STEP 3: LINK CONTACT TO COMPANY
+    company.primaryContact = contact._id;
+    await company.save();
+
+    // ✅ RESPONSE
+    res.status(201).json({
       message: "Company created successfully",
       company
     });
 
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({
+      message: "Server Error"
+    });
   }
 });
 // Update Company
@@ -148,43 +132,43 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
       noOfTallyUser,
       turnover,
       address,
-        primaryContact,   
-      tallyLicense = [],   // default array
+      primaryContact,
+      tallyLicense = [],
       remark
     } = req.body;
 
-    if (!companyName || !primaryContact?.contactNumber || !primaryContact?.contactEmail) {
+    // ✅ VALIDATION
+    if (
+      !companyName ||
+      !primaryContact?.name ||
+      !primaryContact?.contactNumber ||
+      !primaryContact?.contactEmail
+    ) {
       return res.status(400).json({ message: "Required fields missing" });
     }
 
-    // Check duplicate company name (ignore current company)
-    
-  
+    // ✅ CHECK COMPANY EXISTS
+    const company = await Company.findById(id);
+    if (!company) {
+      return res.status(404).json({ message: "Company not found" });
+    }
 
-    // Check duplicate contact number
-    const existingNumber = await Company.findOne({
-      "primaryContact.contactNumber": primaryContact.contactNumber,
-      _id: { $ne: id }
+    // ✅ CHECK DUPLICATE CONTACT (exclude current company contact)
+    const existingContact = await Contact.findOne({
+      $or: [
+        { mobile: primaryContact.contactNumber },
+        { email: primaryContact.contactEmail }
+      ],
+      companyId: { $ne: id }
     });
 
-    if (existingNumber) {
+    if (existingContact) {
       return res.status(400).json({
-        message: "Contact number already exists"
+        message: "Contact already exists for another company"
       });
     }
 
-    // Check duplicate email
-    const existingEmail = await Company.findOne({
-      "primaryContact.contactEmail": primaryContact.contactEmail,
-      _id: { $ne: id }
-    });
-
-    if (existingEmail) {
-      return res.status(400).json({
-        message: "Contact email already exists"
-      });
-    }
-
+    // ✅ UPDATE COMPANY (without contact fields)
     const updatedCompany = await Company.findByIdAndUpdate(
       id,
       {
@@ -198,41 +182,46 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
         noOfTallyUser,
         turnover,
         address,
-        tallyLicense,   // array of licenses
+        tallyLicense,
         remark
       },
       { new: true, runValidators: true }
     );
-    const existingContact = await Contact.findOne({
-  $or: [
-    { mobile: primaryContact.contactNumber },
-    { email: primaryContact.contactEmail }
-  ]
-});
 
-if (existingContact) {
-  return res.status(400).json({
-    message: "Contact already exists in contact table"
-  });
-}
-    await Contact.findOneAndUpdate(
-  { companyId: id, primary: true },
-  {
-    name: primaryContact.name,
-    mobile: primaryContact.contactNumber,
-    email: primaryContact.contactEmail,
-    designation: primaryContact.designation,
-     primary: !existingPrimary
-  }
-);
+    // ✅ UPDATE PRIMARY CONTACT
+    let contact = await Contact.findOne({
+      companyId: id,
+      primary: true
+    });
 
-    if (!updatedCompany) {
-      return res.status(404).json({ message: "Company not found" });
+    if (contact) {
+      // update existing
+      contact.name = primaryContact.name;
+      contact.mobile = primaryContact.contactNumber;
+      contact.email = primaryContact.contactEmail;
+      contact.designation = primaryContact.designation;
+      await contact.save();
+    } else {
+      // create if not exists
+      contact = await Contact.create({
+        companyId: id,
+        name: primaryContact.name,
+        mobile: primaryContact.contactNumber,
+        email: primaryContact.contactEmail,
+        designation: primaryContact.designation,
+        primary: true
+      });
     }
-   const companyId = updatedCompany._id.toString();
 
-// emit correct data
-global.io.to(companyId).emit("companyUpdated", updatedCompany);
+    // ✅ LINK CONTACT TO COMPANY (important)
+    updatedCompany.primaryContact = contact._id;
+    await updatedCompany.save();
+
+    // ✅ SOCKET EMIT
+    const companyId = updatedCompany._id.toString();
+    global.io.to(companyId).emit("companyUpdated", updatedCompany);
+
+    // ✅ RESPONSE
     res.json({
       message: "Company updated successfully",
       company: updatedCompany
