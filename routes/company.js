@@ -272,18 +272,22 @@ router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
 // GET SINGLE COMPANY
 router.get("/company/:id", authMiddleware, async (req, res) => {
   try {
-
     const company = await Company.findById(req.params.id)
-    .populate("createdBy", "name email")
-     .populate({
-    path: "primaryContact",
-    match: { primary: true }
-  });
+      .populate("createdBy", "name email");
 
     if (!company)
       return res.status(404).json({ message: "Company not found" });
 
-    res.json(company);
+    // ✅ Get primary contact from Contact table
+    const primaryContact = await Contact.findOne({
+      companyId: req.params.id,
+      primary: true
+    }).select("name email mobile designation");
+
+    res.json({
+      ...company.toObject(),
+      primaryContact
+    });
 
   } catch (err) {
     res.status(500).json({ message: "Server Error" });
