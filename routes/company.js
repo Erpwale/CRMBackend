@@ -268,7 +268,9 @@ router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
 router.get("/company/:id", authMiddleware, async (req, res) => {
   try {
 
-    const company = await Company.findById(req.params.id).populate("createdBy", "name email"); ;
+    const company = await Company.findById(req.params.id).
+    .populate("createdBy", "name email")
+     .populate("primaryContact");
 
     if (!company)
       return res.status(404).json({ message: "Company not found" });
