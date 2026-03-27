@@ -30,23 +30,7 @@ const companySchema = new mongoose.Schema(
 primaryContact: {
   type: mongoose.Schema.Types.ObjectId,
   ref: "Contact"
-}
-
-    contactNumber: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-
-    contactEmail: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true
-    },
-
-    designation: String,
-  },
+},
 
  tallyLicense: [
     {
