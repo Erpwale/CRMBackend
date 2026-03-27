@@ -136,6 +136,7 @@ router.put("/update-company/:id", authMiddleware, async (req, res) => {
       tallyLicense = [],
       remark
     } = req.body;
+console.log(req.body);
 
     // ✅ VALIDATION
     if (
