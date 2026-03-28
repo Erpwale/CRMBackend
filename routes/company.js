@@ -238,21 +238,31 @@ console.log(req.body);
 // GET USER COMPANIES
 router.get("/my-companies", authMiddleware, async (req, res) => {
   try {
+    const companies = await Company.find({
+      createdBy: req.user.id
+    });
 
- const companies = await Company.find({
-  createdBy: req.user.id
-}).populate({
-    path: "primaryContact",
-    match: { primary: true }
-  });
+    // 🔥 attach primary contact to each company
+    const result = await Promise.all(
+      companies.map(async (company) => {
+        const primaryContact = await Contact.findOne({
+          companyId: company._id,
+          primary: true
+        }).select("name email mobile designation");
 
-    res.json(companies);
+        return {
+          ...company.toObject(),
+          primaryContact
+        };
+      })
+    );
+
+    res.json(result);
 
   } catch (err) {
     res.status(500).json({ message: "Server Error" });
   }
 });
-
 
 // ADMIN GET ALL COMPANIES
 router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
