@@ -162,7 +162,14 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
       { new: true }
     );
 
-    const Roomid = companyId.toString();
+    cconst updatedContact = await Contact.findByIdAndUpdate(
+  req.params.id,
+  req.body,
+  { new: true }
+).populate("companyId", "companyName");
+
+// 🔥 ADD THIS
+const Roomid = companyId.toString();
 
 if (global.io) {
   global.io.to(Roomid).emit("contactUpdated", updatedContact);
