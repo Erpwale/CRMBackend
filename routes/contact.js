@@ -131,64 +131,45 @@ router.get("/:companyId", authMiddleware, async (req, res) => {
 // UPDATE CONTACT
 router.put("/update/:id", authMiddleware, async (req, res) => {
   try {
-    const { mobile, email, companyId, primary } = req.body;
+    const { primary, companyId, replacePrimary } = req.body;
 
-    // 🔁 Duplicate check (same as yours)
-    const existingContact = await Contact.findOne({
-      _id: { $ne: req.params.id },
-      $or: [{ mobile }, { email }]
-    });
-
-    if (existingContact) {
-      if (existingContact.companyId.toString() !== companyId) {
-        const populatedContact = await Contact.findById(existingContact._id)
-          .populate("companyId", "companyName");
-
-        return res.status(400).json({
-          success: false,
-          message: `Contact already exists in another company: ${populatedContact.companyId?.companyName}`
-        });
-      }
-    }
-
-    // 🚨 PRIMARY CHECK (ADD THIS)
+    // 🔥 Check if another primary exists
     if (primary) {
       const existingPrimary = await Contact.findOne({
-        _id: { $ne: req.params.id },
         companyId,
-        primary: true
+        primary: true,
+        _id: { $ne: req.params.id }
       });
 
       if (existingPrimary) {
-        return res.status(400).json({
-          success: false,
-          message: "Only one primary contact is allowed for this company"
-        });
+        if (!replacePrimary) {
+          return res.status(400).json({
+            message: `Primary contact already exists (${existingPrimary.name})`
+          });
+        }
+
+        // ✅ Make old primary false
+        await Contact.updateOne(
+          { _id: existingPrimary._id },
+          { $set: { primary: false } }
+        );
       }
     }
 
-    // ✅ UPDATE
-    const updatedContact = await Contact.findByIdAndUpdate(
+    // ✅ Update current contact
+    const updated = await Contact.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
-    ).populate("companyId", "companyName");
-
-    // 🔥 SOCKET
-    const Roomid = companyId.toString();
-    if (global.io) {
-      global.io.to(Roomid).emit("contactUpdated", updatedContact);
-    }
+    );
 
     res.json({
-      success: true,
       message: "Contact updated successfully",
-      data: updatedContact
+      data: updated
     });
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+  } catch (err) {
+    res.status(500).json({ message: "Error updating contact" });
   }
 });
 
