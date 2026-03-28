@@ -131,8 +131,9 @@ router.get("/:companyId", authMiddleware, async (req, res) => {
 // UPDATE CONTACT
 router.put("/update/:id", authMiddleware, async (req, res) => {
   try {
-    const { mobile, email, companyId } = req.body;
+    const { mobile, email, companyId, primary } = req.body;
 
+    // 🔁 Duplicate check (same as yours)
     const existingContact = await Contact.findOne({
       _id: { $ne: req.params.id },
       $or: [{ mobile }, { email }]
@@ -150,16 +151,31 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
       }
     }
 
-    // ✅ ONLY ONE UPDATE
+    // 🚨 PRIMARY CHECK (ADD THIS)
+    if (primary) {
+      const existingPrimary = await Contact.findOne({
+        _id: { $ne: req.params.id },
+        companyId,
+        primary: true
+      });
+
+      if (existingPrimary) {
+        return res.status(400).json({
+          success: false,
+          message: "Only one primary contact is allowed for this company"
+        });
+      }
+    }
+
+    // ✅ UPDATE
     const updatedContact = await Contact.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     ).populate("companyId", "companyName");
 
-    // 🔥 SOCKET EMIT
+    // 🔥 SOCKET
     const Roomid = companyId.toString();
-
     if (global.io) {
       global.io.to(Roomid).emit("contactUpdated", updatedContact);
     }
