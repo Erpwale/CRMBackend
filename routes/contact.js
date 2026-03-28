@@ -133,17 +133,12 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
   try {
     const { mobile, email, companyId } = req.body;
 
-    // Find duplicate contact (excluding current one)
     const existingContact = await Contact.findOne({
       _id: { $ne: req.params.id },
-      $or: [
-        { mobile: mobile },
-        { email: email }
-      ]
+      $or: [{ mobile }, { email }]
     });
 
     if (existingContact) {
-      // Check if companyId is same
       if (existingContact.companyId.toString() !== companyId) {
         const populatedContact = await Contact.findById(existingContact._id)
           .populate("companyId", "companyName");
@@ -153,32 +148,26 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
           message: `Contact already exists in another company: ${populatedContact.companyId?.companyName}`
         });
       }
-      // else → same company → allow update
     }
 
-    const contact = await Contact.findByIdAndUpdate(
+    // ✅ ONLY ONE UPDATE
+    const updatedContact = await Contact.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
-    );
+    ).populate("companyId", "companyName");
 
-    cconst updatedContact = await Contact.findByIdAndUpdate(
-  req.params.id,
-  req.body,
-  { new: true }
-).populate("companyId", "companyName");
+    // 🔥 SOCKET EMIT
+    const Roomid = companyId.toString();
 
-// 🔥 ADD THIS
-const Roomid = companyId.toString();
-
-if (global.io) {
-  global.io.to(Roomid).emit("contactUpdated", updatedContact);
-}
+    if (global.io) {
+      global.io.to(Roomid).emit("contactUpdated", updatedContact);
+    }
 
     res.json({
       success: true,
       message: "Contact updated successfully",
-      data: contact
+      data: updatedContact
     });
 
   } catch (error) {
@@ -186,24 +175,5 @@ if (global.io) {
     res.status(500).json({ message: "Server Error" });
   }
 });
-
-
-
-// DELETE CONTACT
-router.delete("/delete/:id", authMiddleware, async (req, res) => {
-  try {
-
-    await Contact.findByIdAndDelete(req.params.id);
-
-    res.json({
-      success: true,
-      message: "Contact deleted"
-    });
-
-  } catch (error) {
-    res.status(500).json({ message: "Server Error" });
-  }
-});
-
 
 module.exports = router;
