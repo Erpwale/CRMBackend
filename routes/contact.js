@@ -162,6 +162,12 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
       { new: true }
     );
 
+    const Roomid = companyId.toString();
+
+if (global.io) {
+  global.io.to(Roomid).emit("contactUpdated", updatedContact);
+}
+
     res.json({
       success: true,
       message: "Contact updated successfully",
