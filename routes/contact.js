@@ -100,10 +100,15 @@ router.post("/create", authMiddleware, async (req, res) => {
     if (global.io && companyId) {
       global.io.to(companyId).emit("contactUpdated", newContact);
     }
-  catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message
+   // 🔥 EMIT EVENT (SAFE)
+    if (global.io && companyId) {
+      global.io.to(companyId).emit("contactUpdated", newContact);
+    }
+
+    // ✅ RESPONSE (MANDATORY)
+    res.status(201).json({
+      success: true,
+      data: newContact
     });
   }
 });
