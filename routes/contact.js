@@ -91,7 +91,7 @@ message: `Email already exists in company: ${existingMail.companyId?.companyName
       .populate("companyId", "companyName");
  
  
-      const companyId = contact.companyId.toString();
+      
       console.log("company ID" , companyId)
 
     if (global.io) {
