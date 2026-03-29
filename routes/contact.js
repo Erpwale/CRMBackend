@@ -97,7 +97,8 @@ router.post("/create", authMiddleware, async (req, res) => {
     });
 // 🔥 EMIT EVENT
 global.io.to(companyId).emit("contactUpdated", newContact);
-  } catch (err) {
+  
+  catch (err) {
     res.status(500).json({
       success: false,
       message: err.message
