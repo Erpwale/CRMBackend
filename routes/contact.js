@@ -7,7 +7,6 @@ const { io } = require("../server");
 
 
 // CREATE CONTACT
-// CREATE CONTACT
 router.post("/create", authMiddleware, async (req, res) => {
   try {
     const {
@@ -96,19 +95,12 @@ router.post("/create", authMiddleware, async (req, res) => {
       primary,
       companyId
     });
-
-    // 🔥 EMIT EVENT (SAFE)
+// 🔥 EMIT EVENT
+   // 🔥 EMIT EVENT (SAFE)
     if (global.io && companyId) {
       global.io.to(companyId).emit("contactUpdated", newContact);
     }
-
-    // ✅ RESPONSE (MANDATORY)
-    res.status(201).json({
-      success: true,
-      data: newContact
-    });
-
-  } catch (err) {
+  catch (err) {
     res.status(500).json({
       success: false,
       message: err.message
