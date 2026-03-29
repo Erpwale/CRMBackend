@@ -95,7 +95,9 @@ message: `Email already exists in company: ${existingMail.companyId?.companyName
       console.log("company ID" , companyId)
 
     if (global.io) {
-      global.io.to(companyId).emit("activityAdded", populatedContact);
+      console.log("Socket  initialized",populatedContact);
+      global.io.to(companyId).emit("contactUpdated", populatedContact);
+      console.log("Socket  contactUpdated",contactUpdated);
       } else {
   console.log("❌ Socket not initialized");
       }
