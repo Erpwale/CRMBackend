@@ -96,10 +96,7 @@ router.post("/create", authMiddleware, async (req, res) => {
       companyId
     });
 // 🔥 EMIT EVENT
-   // 🔥 EMIT EVENT (SAFE)
-    if (global.io && companyId) {
-      global.io.to(companyId).emit("contactUpdated", newContact);
-    }
+ 
    // 🔥 EMIT EVENT (SAFE)
     if (global.io && companyId) {
       global.io.to(companyId).emit("contactUpdated", newContact);
