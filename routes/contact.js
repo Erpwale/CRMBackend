@@ -97,7 +97,7 @@ message: `Email already exists in company: ${existingMail.companyId?.companyName
     if (global.io) {
       console.log("Socket  initialized",populatedContact);
       global.io.to(companyId).emit("contactUpdated", populatedContact);
-      console.log("Socket  contactUpdated",contactUpdated);
+     
       } else {
   console.log("❌ Socket not initialized");
       }
@@ -109,7 +109,7 @@ message: `Email already exists in company: ${existingMail.companyId?.companyName
     });
 
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.status(500).json({ message: "Server Error" });
   }
 });
