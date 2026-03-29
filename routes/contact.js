@@ -96,12 +96,7 @@ router.post("/create", authMiddleware, async (req, res) => {
       companyId
     });
 // 🔥 EMIT EVENT
- global.io.to("contactUpdated", { companyId });
-    res.status(201).json({
-      success: true,
-      data: newContact
-    });
-
+global.io.to(companyId).emit("contactUpdated", newContact);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -167,7 +162,7 @@ if (primary) {
       req.body,
       { new: true }
     );
-     global.io.to.emit("contactUpdated", { companyId });
+   global.io.to(companyId).emit("contactUpdated", newContact);
 
     res.json({
       message: "Contact updated successfully",
