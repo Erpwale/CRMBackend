@@ -90,15 +90,6 @@ message: `Email already exists in company: ${existingMail.companyId?.companyName
     const populatedContact = await Contact.findById(contact._id)
       .populate("companyId", "companyName");
 
-    // 🔥 REAL-TIME EMIT (AFTER SAVE)
-    const Roomid = companyId.toString();
-
-   if (global.io) {
-     global.io.to(Roomid).emit("contactUpdated", populatedContact);
-      } else {
-  console.log("❌ Socket not initialized");
-      }
-
 
     res.status(201).json({
       success: true,
