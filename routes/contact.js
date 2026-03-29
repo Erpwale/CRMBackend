@@ -89,7 +89,10 @@ message: `Email already exists in company: ${existingMail.companyId?.companyName
     await contact.save();
     const populatedContact = await Contact.findById(contact._id)
       .populate("companyId", "companyName");
- const companyId = contact.companyId.toString();
+ 
+ 
+      const companyId = contact.companyId.toString();
+      console.log("company ID" , companyId)
 
     if (global.io) {
       global.io.to(companyId).emit("activityAdded", populatedContact);
