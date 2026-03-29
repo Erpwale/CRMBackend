@@ -95,26 +95,18 @@ router.post("/create", authMiddleware, async (req, res) => {
       primary,
       companyId
     });
-// 🔥 EMIT EVENT
- 
-   // 🔥 EMIT EVENT (SAFE)
-    if (global.io && companyId) {
-      global.io.to(companyId).emit("contactUpdated", newContact);
-    }
 
-    // ✅ RESPONSE (MANDATORY)
     res.status(201).json({
       success: true,
       data: newContact
     });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
   }
-  catch (error) {
-  console.error(error);
-  res.status(500).json({
-    success: false,
-    message: "Server error"
-  });
-}
 });
 
 
@@ -174,7 +166,7 @@ if (primary) {
       req.body,
       { new: true }
     );
-   global.io.to(companyId).emit("contactUpdated", newContact);
+    io.emit("contactUpdated", { companyId });
 
     res.json({
       message: "Contact updated successfully",
