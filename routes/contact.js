@@ -9,8 +9,17 @@ const { io } = require("../server");
 // CREATE CONTACT
 router.post("/create", authMiddleware, async (req, res) => {
   try {
-    const {name,designation , mobile, email, primary, companyId } = req.body;
-// ---------- REQUIRED FIELD VALIDATION ----------
+    const {
+      name,
+      designation,
+      mobile,
+      email,
+      primary,
+      companyId,
+      replacePrimary
+    } = req.body;
+
+    // VALIDATIONS
     if (!name || !mobile || !email || !designation) {
       return res.status(400).json({
         success: false,
@@ -18,7 +27,6 @@ router.post("/create", authMiddleware, async (req, res) => {
       });
     }
 
-    // ---------- NAME VALIDATION ----------
     if (!/^[A-Za-z\s]+$/.test(name)) {
       return res.status(400).json({
         success: false,
@@ -26,7 +34,6 @@ router.post("/create", authMiddleware, async (req, res) => {
       });
     }
 
-    // ---------- MOBILE VALIDATION ----------
     if (!/^[0-9]{10}$/.test(mobile)) {
       return res.status(400).json({
         success: false,
@@ -34,35 +41,31 @@ router.post("/create", authMiddleware, async (req, res) => {
       });
     }
 
-    // ---------- EMAIL VALIDATION ----------
-   if (!/\S+@\S+\.\S+/.test(email)) {
+    if (!/\S+@\S+\.\S+/.test(email)) {
       return res.status(400).json({
         success: false,
         message: "Invalid email format"
       });
     }
-    // Check duplicate contact by mobile/email
-    const existingContact = await Contact.findOne({
-      $or: [{ mobile }]
-    }).populate("companyId", "companyName");
 
-    const existingMail = await Contact.findOne({
-      $or: [ { email }]
-    }).populate("companyId", "companyName");
-
+    // DUPLICATE CHECK
+    const existingContact = await Contact.findOne({ mobile }).populate("companyId", "companyName");
     if (existingContact) {
       return res.status(400).json({
         success: false,
         message: `Contact already exists in company: ${existingContact.companyId?.companyName}`
       });
     }
- if (existingMail) {
-  return res.status(400).json({
-    success: false,
-message: `Email already exists in company: ${existingMail.companyId?.companyName}`  });
-}
 
-    // Check if primary contact already exists in the company
+    const existingMail = await Contact.findOne({ email }).populate("companyId", "companyName");
+    if (existingMail) {
+      return res.status(400).json({
+        success: false,
+        message: `Email already exists in company: ${existingMail.companyId?.companyName}`
+      });
+    }
+
+    // PRIMARY LOGIC
     if (primary) {
       const existingPrimary = await Contact.findOne({
         companyId,
@@ -70,40 +73,39 @@ message: `Email already exists in company: ${existingMail.companyId?.companyName
       });
 
       if (existingPrimary) {
-        return res.status(400).json({
-          success: false,
-          message: `Primary contact already exists: ${existingPrimary.name}`
+        if (!replacePrimary) {
+          return res.status(400).json({
+            success: false,
+            message: `Primary contact already exists (${existingPrimary.name})`
+          });
+        }
+
+        await Contact.findByIdAndUpdate(existingPrimary._id, {
+          primary: false
         });
       }
     }
 
-    const contact = new Contact({
-      ...req.body,
-      createdBy: req.user.id
+    // CREATE
+    const newContact = await Contact.create({
+      name,
+      designation,
+      mobile,
+      email,
+      primary,
+      companyId
     });
-    await contact.save();
-    const populatedContact = await Contact.findById(contact._id)
-      .populate("companyId", "companyName");
-
-    // 🔥 REAL-TIME EMIT (AFTER SAVE)
-    const Roomid = companyId.toString();
-
-   if (global.io) {
-     global.io.to(Roomid).emit("contactUpdated", populatedContact);
-      } else {
-  console.log("❌ Socket not initialized");
-      }
-
 
     res.status(201).json({
       success: true,
-      message: "Contact created successfully",
-      data: contact
+      data: newContact
     });
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
   }
 });
 
