@@ -133,29 +133,31 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
   try {
     const { primary, companyId, replacePrimary } = req.body;
 
-    // 🔥 Check if another primary exists
-    if (primary) {
-      const existingPrimary = await Contact.findOne({
-        companyId,
-        primary: true,
-        _id: { $ne: req.params.id }
+// 🔥 Check if another primary exists
+if (primary) {
+  const existingPrimary = await Contact.findOne({
+    companyId,
+    primary: true
+  });
+
+  // ✅ If same contact, do nothing (no alert)
+  if (existingPrimary && existingPrimary._id.toString() === req.params.id) {
+    // already primary → skip everything
+  } else if (existingPrimary) {
+
+    if (!replacePrimary) {
+      return res.status(400).json({
+        message: `Primary contact already exists (${existingPrimary.name})`
       });
-
-      if (existingPrimary) {
-        if (!replacePrimary) {
-          return res.status(400).json({
-            message: `Primary contact already exists (${existingPrimary.name})`
-          });
-        }
-
-        // ✅ Make old primary false
-        await Contact.updateOne(
-          { _id: existingPrimary._id },
-          { $set: { primary: false } }
-        );
-      }
     }
 
+    // ✅ Make old primary false
+    await Contact.updateOne(
+      { _id: existingPrimary._id },
+      { $set: { primary: false } }
+    );
+  }
+}
     // ✅ Update current contact
     const updated = await Contact.findByIdAndUpdate(
       req.params.id,
