@@ -9,17 +9,8 @@ const { io } = require("../server");
 // CREATE CONTACT
 router.post("/create", authMiddleware, async (req, res) => {
   try {
-    const {
-      name,
-      designation,
-      mobile,
-      email,
-      primary,
-      companyId,
-      replacePrimary
-    } = req.body;
-
-    // VALIDATIONS
+    const {name,designation , mobile, email, primary, companyId } = req.body;
+// ---------- REQUIRED FIELD VALIDATION ----------
     if (!name || !mobile || !email || !designation) {
       return res.status(400).json({
         success: false,
@@ -27,6 +18,7 @@ router.post("/create", authMiddleware, async (req, res) => {
       });
     }
 
+    // ---------- NAME VALIDATION ----------
     if (!/^[A-Za-z\s]+$/.test(name)) {
       return res.status(400).json({
         success: false,
@@ -34,6 +26,7 @@ router.post("/create", authMiddleware, async (req, res) => {
       });
     }
 
+    // ---------- MOBILE VALIDATION ----------
     if (!/^[0-9]{10}$/.test(mobile)) {
       return res.status(400).json({
         success: false,
@@ -41,71 +34,81 @@ router.post("/create", authMiddleware, async (req, res) => {
       });
     }
 
-    if (!/\S+@\S+\.\S+/.test(email)) {
+    // ---------- EMAIL VALIDATION ----------
+   if (!/\S+@\S+\.\S+/.test(email)) {
       return res.status(400).json({
         success: false,
         message: "Invalid email format"
       });
     }
+    // Check duplicate contact by mobile/email
+    const existingContact = await Contact.findOne({
+      $or: [{ mobile }]
+    }).populate("companyId", "companyName");
 
-    // DUPLICATE CHECK
-    const existingContact = await Contact.findOne({ mobile }).populate("companyId", "companyName");
+    const existingMail = await Contact.findOne({
+      $or: [ { email }]
+    }).populate("companyId", "companyName");
+
     if (existingContact) {
       return res.status(400).json({
         success: false,
         message: `Contact already exists in company: ${existingContact.companyId?.companyName}`
       });
     }
+ if (existingMail) {
+  return res.status(400).json({
+    success: false,
+message: `Email already exists in company: ${existingMail.companyId?.companyName}`  });
+}
 
-    const existingMail = await Contact.findOne({ email }).populate("companyId", "companyName");
-    if (existingMail) {
+    // Check if primary contact already exists in the company
+    if (primary) {
+  const existingPrimary = await Contact.findOne({
+    companyId,
+    primary: true
+  });
+
+  // ✅ If same contact, do nothing (no alert)
+  if (existingPrimary && existingPrimary._id.toString() === req.params.id) {
+    // already primary → skip everything
+  } else if (existingPrimary) {
+
+    if (!replacePrimary) {
       return res.status(400).json({
-        success: false,
-        message: `Email already exists in company: ${existingMail.companyId?.companyName}`
+        message: `Primary contact already exists (${existingPrimary.name})`
       });
     }
-
-    // PRIMARY LOGIC
-    if (primary) {
-      const existingPrimary = await Contact.findOne({
-        companyId,
-        primary: true
-      });
-
-      if (existingPrimary) {
-        if (!replacePrimary) {
-          return res.status(400).json({
-            success: false,
-            message: `Primary contact already exists (${existingPrimary.name})`
-          });
-        }
-
-        await Contact.findByIdAndUpdate(existingPrimary._id, {
-          primary: false
-        });
       }
     }
 
-    // CREATE
-    const newContact = await Contact.create({
-      name,
-      designation,
-      mobile,
-      email,
-      primary,
-      companyId
+    const contact = new Contact({
+      ...req.body,
+      createdBy: req.user.id
     });
+    await contact.save();
+    const populatedContact = await Contact.findById(contact._id)
+      .populate("companyId", "companyName");
+
+    // 🔥 REAL-TIME EMIT (AFTER SAVE)
+    const Roomid = companyId.toString();
+
+   if (global.io) {
+     global.io.to(Roomid).emit("contactUpdated", populatedContact);
+      } else {
+  console.log("❌ Socket not initialized");
+      }
+
 
     res.status(201).json({
       success: true,
-      data: newContact
+      message: "Contact created successfully",
+      data: contact
     });
 
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message
-    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
@@ -166,7 +169,6 @@ if (primary) {
       req.body,
       { new: true }
     );
-    io.emit("contactUpdated", { companyId });
 
     res.json({
       message: "Contact updated successfully",
