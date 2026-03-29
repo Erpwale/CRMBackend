@@ -95,7 +95,8 @@ router.post("/create", authMiddleware, async (req, res) => {
       primary,
       companyId
     });
-
+// 🔥 EMIT EVENT
+io.emit("contactUpdated", { companyId });
     res.status(201).json({
       success: true,
       data: newContact
@@ -166,6 +167,7 @@ if (primary) {
       req.body,
       { new: true }
     );
+    io.emit("contactUpdated", { companyId });
 
     res.json({
       message: "Contact updated successfully",
