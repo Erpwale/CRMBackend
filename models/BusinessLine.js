@@ -16,7 +16,7 @@ const PriceLevelSchema = new mongoose.Schema({
 
 const BusinessLineSchema = new mongoose.Schema(
   {
-    businessLine: { type: String, required: true, unique: true },
+    businessLine: { type: String, required: true },
     priceLevels: [PriceLevelSchema] // ✅ NEW
   },
   { timestamps: true }
