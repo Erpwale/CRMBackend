@@ -108,70 +108,7 @@ router.post("/create", async (req, res) => {
 
     
 
-    // 🚨 Validate priceLevels
-    if (!priceLevels || priceLevels.length === 0) {
-      return res.status(400).json({
-        message: "At least one price level is required ❌"
-      });
-    }
 
-    // 🔥 Validate each level & product
-    for (const level of priceLevels) {
-      if (!level.levelName) {
-        return res.status(400).json({
-          message: "Price Level name is required ❌"
-        });
-      }
-
-      if (!level.products || level.products.length === 0) {
-        return res.status(400).json({
-          message: `Products required for ${level.levelName} ❌`
-        });
-      }
-
-      for (const p of level.products) {
-        if (!p.name) {
-          return res.status(400).json({
-            message: "Product name required ❌"
-          });
-        }
-
-        if (p.gst > 99) {
-          return res.status(400).json({
-            message: "GST must be max 2 digits ❌"
-          });
-        }
-
-        if (p.rate.toString().length > 7) {
-          return res.status(400).json({
-            message: "Rate max 7 digits ❌"
-          });
-        }
-
-        if (p.discount?.toString().length > 5) {
-          return res.status(400).json({
-            message: "Discount max 5 digits ❌"
-          });
-        }
-      }
-    }
-
-    const newData = new BusinessLine({
-      businessLine,
-      priceLevels
-    });
-
-    await newData.save();
-
-    res.status(201).json({
-      message: "Business Line created successfully ✅",
-      data: newData,
-    });
-
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
 
 
 // GET ALL
