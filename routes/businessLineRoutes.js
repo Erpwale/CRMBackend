@@ -12,6 +12,34 @@ router.post("/create", async (req, res) => {
     const existing = await BusinessLine.findOne({
       businessLine: { $regex: `^${businessLine}$`, $options: "i" }
     });
+   if (existing) {
+  for (const newLevel of priceLevels) {
+
+    // 🔥 HERE you add level comparison
+    const levelMatch = existing.priceLevels.find(
+      (lvl) =>
+        lvl.levelName.trim().toLowerCase() ===
+        newLevel.levelName.trim().toLowerCase()
+    );
+
+    if (levelMatch) {
+      for (const newProduct of newLevel.products) {
+
+        const productMatch = levelMatch.products.find(
+          (p) =>
+            p.name.trim().toLowerCase() ===
+            newProduct.name.trim().toLowerCase()
+        );
+
+        if (productMatch) {
+          return res.status(400).json({
+            message: `Duplicate: ${businessLine} → ${newLevel.levelName} → ${newProduct.name} ❌`
+          });
+        }
+      }
+    }
+  }
+}
 
     if (existing) {
       return res.status(400).json({
