@@ -7,7 +7,7 @@ const ProductSchema = new mongoose.Schema({
   gst: { type: Number, default: 0 },
   discount: { type: Number, default: 0 },
   discountAllowed: { type: Boolean, default: false },
-  net: { type: Number, default: 0 } // ✅ ADD
+  net: { type: Number, default: 0 }, // ✅ ADD
 
     termsAndConditions: {
       type: String,
