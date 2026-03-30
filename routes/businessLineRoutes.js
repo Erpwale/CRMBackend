@@ -3,16 +3,52 @@ const express = require("express");
 const router = express.Router();
 const BusinessLine = require("../models/BusinessLine");
 
-// CREATE
 router.post("/create", async (req, res) => {
   try {
     const { businessLine, priceLevels } = req.body;
+
+    if (!businessLine) {
+      return res.status(400).json({ message: "Business Line required ❌" });
+    }
+
+    if (!priceLevels || priceLevels.length === 0) {
+      return res.status(400).json({ message: "Price Levels required ❌" });
+    }
+
+    // ✅ Prevent duplicate priceLevels in request
+    const levelSet = new Set();
+    for (const level of priceLevels) {
+      const key = level.levelName.trim().toLowerCase();
+
+      if (levelSet.has(key)) {
+        return res.status(400).json({
+          message: `Duplicate price level "${level.levelName}" ❌`
+        });
+      }
+      levelSet.add(key);
+    }
+
+    // ✅ Prevent duplicate products in same level
+    for (const level of priceLevels) {
+      const productSet = new Set();
+
+      for (const p of level.products) {
+        const key = p.name.trim().toLowerCase();
+
+        if (productSet.has(key)) {
+          return res.status(400).json({
+            message: `Duplicate product "${p.name}" in ${level.levelName} ❌`
+          });
+        }
+
+        productSet.add(key);
+      }
+    }
 
     const existing = await BusinessLine.findOne({
       businessLine: { $regex: `^${businessLine}$`, $options: "i" }
     });
 
-    // ✅ IF EXISTS → MERGE
     if (existing) {
       for (const newLevel of priceLevels) {
 
@@ -37,12 +73,10 @@ router.post("/create", async (req, res) => {
               });
             }
 
-            // ✅ ADD NEW PRODUCT
             levelMatch.products.push(newProduct);
           }
 
         } else {
-          // ✅ ADD NEW PRICE LEVEL
           existing.priceLevels.push(newLevel);
         }
       }
@@ -55,7 +89,6 @@ router.post("/create", async (req, res) => {
       });
     }
 
-    // ✅ IF NOT EXISTS → CREATE NEW
     const newData = new BusinessLine({
       businessLine,
       priceLevels
