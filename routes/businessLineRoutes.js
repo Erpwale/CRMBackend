@@ -41,11 +41,7 @@ router.post("/create", async (req, res) => {
   }
 }
 
-    if (existing) {
-      return res.status(400).json({
-        message: "Business Line already exists ❌"
-      });
-    }
+    
 
     // 🚨 Validate priceLevels
     if (!priceLevels || priceLevels.length === 0) {
