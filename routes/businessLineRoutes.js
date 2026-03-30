@@ -8,38 +8,70 @@ router.post("/create", async (req, res) => {
   try {
     const { businessLine, priceLevels } = req.body;
 
-    // 🔒 Prevent duplicate Business Line
     const existing = await BusinessLine.findOne({
       businessLine: { $regex: `^${businessLine}$`, $options: "i" }
     });
-   if (existing) {
-  for (const newLevel of priceLevels) {
 
-    // 🔥 HERE you add level comparison
-    const levelMatch = existing.priceLevels.find(
-      (lvl) =>
-        lvl.levelName.trim().toLowerCase() ===
-        newLevel.levelName.trim().toLowerCase()
-    );
+    // ✅ IF EXISTS → MERGE
+    if (existing) {
+      for (const newLevel of priceLevels) {
 
-    if (levelMatch) {
-      for (const newProduct of newLevel.products) {
-
-        const productMatch = levelMatch.products.find(
-          (p) =>
-            p.name.trim().toLowerCase() ===
-            newProduct.name.trim().toLowerCase()
+        const levelMatch = existing.priceLevels.find(
+          (lvl) =>
+            lvl.levelName.trim().toLowerCase() ===
+            newLevel.levelName.trim().toLowerCase()
         );
 
-        if (productMatch) {
-          return res.status(400).json({
-            message: `Duplicate: ${businessLine} → ${newLevel.levelName} → ${newProduct.name} ❌`
-          });
+        if (levelMatch) {
+          for (const newProduct of newLevel.products) {
+
+            const productMatch = levelMatch.products.find(
+              (p) =>
+                p.name.trim().toLowerCase() ===
+                newProduct.name.trim().toLowerCase()
+            );
+
+            if (productMatch) {
+              return res.status(400).json({
+                message: `Duplicate: ${businessLine} → ${newLevel.levelName} → ${newProduct.name} ❌`
+              });
+            }
+
+            // ✅ ADD NEW PRODUCT
+            levelMatch.products.push(newProduct);
+          }
+
+        } else {
+          // ✅ ADD NEW PRICE LEVEL
+          existing.priceLevels.push(newLevel);
         }
       }
+
+      await existing.save();
+
+      return res.json({
+        message: "Updated existing Business Line ✅",
+        data: existing
+      });
     }
+
+    // ✅ IF NOT EXISTS → CREATE NEW
+    const newData = new BusinessLine({
+      businessLine,
+      priceLevels
+    });
+
+    await newData.save();
+
+    res.status(201).json({
+      message: "Business Line created successfully ✅",
+      data: newData,
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
-}
+});
 
     
 
