@@ -6,21 +6,79 @@ const BusinessLine = require("../models/BusinessLine");
 // CREATE
 router.post("/create", async (req, res) => {
   try {
-    const { businessLine, discountAllowed, products } = req.body;
+    const { businessLine, priceLevels } = req.body;
+
+    // 🔒 Prevent duplicate Business Line
+    const existing = await BusinessLine.findOne({
+      businessLine: { $regex: `^${businessLine}$`, $options: "i" }
+    });
+
+    if (existing) {
+      return res.status(400).json({
+        message: "Business Line already exists ❌"
+      });
+    }
+
+    // 🚨 Validate priceLevels
+    if (!priceLevels || priceLevels.length === 0) {
+      return res.status(400).json({
+        message: "At least one price level is required ❌"
+      });
+    }
+
+    // 🔥 Validate each level & product
+    for (const level of priceLevels) {
+      if (!level.levelName) {
+        return res.status(400).json({
+          message: "Price Level name is required ❌"
+        });
+      }
+
+      if (!level.products || level.products.length === 0) {
+        return res.status(400).json({
+          message: `Products required for ${level.levelName} ❌`
+        });
+      }
+
+      for (const p of level.products) {
+        if (!p.name) {
+          return res.status(400).json({
+            message: "Product name required ❌"
+          });
+        }
+
+        if (p.gst > 99) {
+          return res.status(400).json({
+            message: "GST must be max 2 digits ❌"
+          });
+        }
+
+        if (p.rate.toString().length > 7) {
+          return res.status(400).json({
+            message: "Rate max 7 digits ❌"
+          });
+        }
+
+        if (p.discount?.toString().length > 5) {
+          return res.status(400).json({
+            message: "Discount max 5 digits ❌"
+          });
+        }
+      }
+    }
 
     const newData = new BusinessLine({
       businessLine,
-      discountAllowed,
-      products,
-      // createdBy: req.user.id  (if auth)
+      priceLevels
     });
 
     await newData.save();
 
     res.status(201).json({
-      message: "Business Line created successfully",
+      message: "Business Line created successfully ✅",
       data: newData,
     });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -56,11 +114,11 @@ router.get("/:id", async (req, res) => {
 // UPDATE
 router.put("/update/:id", async (req, res) => {
   try {
-    const { businessLine, discountAllowed, products } = req.body;
+    const { businessLine, priceLevels } = req.body;
 
     const updated = await BusinessLine.findByIdAndUpdate(
       req.params.id,
-      { businessLine, discountAllowed, products },
+      { businessLine, priceLevels },
       { new: true }
     );
 
@@ -68,6 +126,7 @@ router.put("/update/:id", async (req, res) => {
       message: "Updated successfully",
       data: updated,
     });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
