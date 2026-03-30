@@ -50,6 +50,7 @@ app.use("/api/callBooking", require("./routes/CallBolkinRoute.js"));
 app.use("/api", require("./routes/PostOffice.js"));
 app.use("/api/LedgerCreating", require("./routes/ledgerRoutes.js"));
 app.use("/api/businessline", require("./routes/businessLineRoutes.js"));
+app.use("api/deal", require("./routes/routes/ProposalRoute.js"));
 global.io = io; // ✅ ADD THIS
 
 // ❗ VERY IMPORTANT: export io
