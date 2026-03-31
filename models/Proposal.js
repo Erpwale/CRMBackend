@@ -212,25 +212,26 @@ router.post("/create", async (req, res) => {
       <br/><br/>
     
 
-<div class="signature-container">
-  <div class="signature-box">
-    <div>
-      For, MS ERPWale Pvt. Ltd.<br/><br/><br/>
-      ___________________<br/>
-      Authorized Signatory
-    </div>
-  </div>
+<table style="width:100%; margin-top:50px;">
+  <tr>
+    <td style="width:50%; padding-right:10px;">
+      <div style="border:2px solid #ccc; border-radius:20px; height:130px; padding:15px;">
+        For, MS ERPWale Pvt. Ltd.<br/><br/><br/>
+        ___________________<br/>
+        Authorized Signatory
+      </div>
+    </td>
 
-  <div class="signature-box">
-    <div>
-      For, ${data.companyName}<br/>
-      ${data.contactName}<br/><br/>
-      ___________________<br/>
-      Authorized Signatory
-    </div>
-  </div>
-</div>data.companyName}, ${data.contactName}
-  </div>
+    <td style="width:50%; padding-left:10px;">
+      <div style="border:2px solid #ccc; border-radius:20px; height:130px; padding:15px;">
+        For, ${data.companyName}<br/>
+        ${data.contactName}<br/><br/>
+        ___________________<br/>
+        Authorized Signatory
+      </div>
+    </td>
+  </tr>
+</table>
 
 
 
