@@ -164,8 +164,10 @@ drawSummary("Total", data.total, true);
     // =========================
     // 📜 TERMS
     // =========================
-    doc.text(
-      `Terms and Condition ${data.businessLine} Delivery : Immediate/Online/Soft License. Taxes : GST as applicable.`
+    doc.font("Helvetica-Bold",align: "right").text(
+      `Terms and Condition ${data.businessLine}  : `, {
+    underline: true,
+  }
     );
 
     doc.moveDown();
