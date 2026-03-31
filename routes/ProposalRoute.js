@@ -1,275 +1,266 @@
 const express = require("express");
 const router = express.Router();
-const PDFDocument = require("pdfkit");
+const puppeteer = require("puppeteer");
 const path = require("path");
-const parseHTML = (html) => {
-  if (!html) return [];
 
-  const paragraphs = html.split(/<\/p>/g);
-
-  return paragraphs
-    .map(p => p.replace(/<p>/g, "").trim())
-    .filter(p => p)
-    .map(p => {
-      const parts = [];
-
-      // split bold and normal text
-      const regex = /<b>(.*?)<\/b>/g;
-      let lastIndex = 0;
-      let match;
-
-      while ((match = regex.exec(p)) !== null) {
-        // normal text before bold
-        if (match.index > lastIndex) {
-          parts.push({
-            text: p.slice(lastIndex, match.index),
-            bold: false,
-          });
-        }
-
-        // bold text
-        parts.push({
-          text: match[1],
-          bold: true,
-        });
-
-        lastIndex = regex.lastIndex;
-      }
-
-      // remaining normal text
-      if (lastIndex < p.length) {
-        parts.push({
-          text: p.slice(lastIndex),
-          bold: false,
-        });
-      }
-
-      return parts;
-    });
-};
-const addHeaderFooter = (doc) => {
-  const headerPath = path.join(__dirname, "../assets/header.jpg");
-  const footerPath = path.join(__dirname, "../assets/footer.jpg");
-
-  // Header Image
-  doc.image(headerPath, 0, 0, {
-    width: doc.page.width,
-  });
-
-  // Footer Image
-  doc.image(
-    footerPath,
-    0,
-    doc.page.height - 80, // adjust height
-    { width: doc.page.width }
-  );
-};
 router.post("/create", async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    // ✅ PRODUCTS TABLE
+    const productRows = data.products.map((item, index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${item.name}</td>
+        <td>${item.qty}</td>
+        <td>${item.rate}</td>
+        <td style="text-align:right;">${item.totalValue}</td>
+      </tr>
+    `).join("");
+
+    // 🔥 CLEAN TERMS FUNCTION (FIXES YOUR ISSUE)
+    const cleanTerms = (html) => {
+      if (!html) return [];
+
+      let cleaned = html
+        .replace(/<span class="ql-ui".*?<\/span>/g, "") // remove quill span
+        .replace(/data-list="ordered"/g, "")
+        .replace(/datalist="ordered"/g, "");
+
+      // extract li items
+      const matches = cleaned.match(/<li[^>]*>(.*?)<\/li>/g) || [];
+
+      return matches.map(item =>
+        item
+          .replace(/<li[^>]*>/, "")
+          .replace(/<\/li>/, "")
+          .trim()
+      );
+    };
+
+    // ✅ HANDLE ARRAY OR STRING INPUT
+    const rawTerms = Array.isArray(data.terms)
+      ? data.terms.join("")
+      : data.terms;
+
+    const termsArray = cleanTerms(rawTerms);
+
+    const termsHTML = `
+      <ol>
+        ${termsArray.map(t => `<li>${t}</li>`).join("")}
+      </ol>
+    `;
+
+    // ✅ HTML TEMPLATE
+    const html = `
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 40px;
+        }
+
+        .header img, .footer img {
+          width: 100%;
+        }
+
+        .title {
+          text-align: center;
+          font-weight: bold;
+          font-size: 18px;
+          margin: 10px 0;
+        }
+
+        .right {
+          text-align: right;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 10px;
+        }
+
+        table, th, td {
+          border: 1px solid black;
+        }
+
+        th {
+          background: #eee;
+        }
+
+        th, td {
+          padding: 6px;
+          font-size: 12px;
+        }
+
+        .summary td {
+          text-align: right;
+        }
+
+        .terms {
+          margin-top: 20px;
+        }
+
+        .terms-title {
+          font-weight: bold;
+          text-decoration: underline;
+        }
+
+        .terms ol {
+          padding-left: 20px;
+        }
+
+        .terms li {
+          margin-bottom: 6px;
+          line-height: 1.5;
+        }
+          .signature-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.signature-box {
+  width: 45%;
+  height: 120px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  padding: 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: flex-start;
+}
+      </style>
+    </head>
+
+    <body>
+
+      <!-- HEADER -->
+      <div class="header">
+        <img src="file://${path.join(__dirname, "../assets/header.jpg")}" />
+      </div>
+
+      <div class="title">BUSINESS PROPOSAL</div>
+
+      <p class="right"><b>Date:</b> ${data.date}</p>
+
+      <p>
+        To,<br/>
+        ${data.companyName}<br/>
+        ${data.address1}<br/>
+        ${data.address2 || ""}<br/>
+        ${data.address3 || ""}<br/>
+        ${data.state}, ${data.city} - ${data.pincode}
+      </p>
+
+      <p><b>Kind Attn :</b> ${data.contactName}</p>
+      <p><b>Subject :</b> Proposal of ${data.businessLine}</p>
+
+      <!-- TABLE -->
+      <table>
+        <tr>
+          <th>Sr</th>
+          <th>Particular</th>
+          <th>Qty</th>
+          <th>Rate</th>
+          <th>Amount (Rs.)</th>
+        </tr>
+
+        ${productRows}
+
+        <tr class="summary">
+          <td colspan="4">Discount</td>
+          <td>${data.discount}</td>
+        </tr>
+        <tr class="summary">
+          <td colspan="4"><b>Gross Total</b></td>
+          <td><b>${data.subtotal}</b></td>
+        </tr>
+        <tr class="summary">
+          <td colspan="4">CGST 9%</td>
+          <td>${data.cgst}</td>
+        </tr>
+        <tr class="summary">
+          <td colspan="4">SGST 9%</td>
+          <td>${data.sgst}</td>
+        </tr>
+        <tr class="summary">
+          <td colspan="4">Round Off</td>
+          <td>${data.roundOff}</td>
+        </tr>
+        <tr class="summary">
+          <td colspan="4"><b>Total</b></td>
+          <td><b>${data.total}</b></td>
+        </tr>
+      </table>
+
+      <!-- TERMS -->
+      <div class="terms">
+        <p class="terms-title">
+          Terms and Condition ${data.businessLine} :
+        </p>
+<table style="width:100%; margin-top:50px;">
+  <tr>
+    <td style="width:50%; padding-right:10px;">
+      <div style="border:2px solid #ccc; border-radius:20px; height:130px; padding:15px;">
+        For, MS ERPWale Pvt. Ltd.<br/><br/><br/>
+        ___________________<br/>
+        Authorized
+      </div>
+    </td>
+
+    <td style="width:50%; padding-left:10px;">
+      <div style="border:2px solid #ccc; border-radius:20px; height:130px; padding:15px;">
+        For, ${data.companyName}<br/>
+        ${data.contactName}<br/><br/>
+        ___________________<br/>
+        Authorized Signatory
+      </div>
+    </td>
+  </tr>
+</table>
+      
+      </div>
+
+      <!-- FOOTER -->
+      <br/><br/>
     
-    const doc = new PDFDocument({ margin: 40 });
+
+
+
+
+
+      <p style="font-size:10px;">
+        (Computer Generated Document so Signature not required)
+      </p>
+
+      <div class="footer">
+        <img src="file://${path.join(__dirname, "../assets/footer.jpg")}" />
+      </div>
+
+    </body>
+    </html>
+    `;
+
+    await page.setContent(html, { waitUntil: "domcontentloaded" });
+
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+    });
+
+    await browser.close();
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=proposal.pdf");
 
-  doc.pipe(res);
+    res.send(pdfBuffer);
 
-addHeaderFooter(doc);
-
-doc.on("pageAdded", () => {
-  addHeaderFooter(doc);
-});
-
-// Now your content
-doc.moveDown(5);
-
-doc.fontSize(16).text("BUSINESS PROPOSAL", { align: "center" });
-
-   doc.fontSize(10).text(`Date : ${data.date}`, {
-  align: "right",
-});
-
-    doc.moveDown();
-
-    doc.text(`To,`);
-    doc.text(data.companyName);
-    doc.text(data.address1);
-    doc.text(data.address2);
-    doc.text(data.address3);
-    doc.text(`${data.state}, ${data.city}, ${data.pincode}`);
-
-    doc.moveDown();
-
-    doc.text(`Kind Attn : ${data.contactName}`);
-    doc.text(`Subject : Proposal of ${data.businessLine}`);
-
-    doc.moveDown();
-
-    // =========================
-    // 📦 TABLE HEADER
-    // =========================
-   const tableTop = doc.y + 10;
-
-const col1 = 40;   // Sr No
-const col2 = 80;   // Product
-const col3 = 300;  // Qty
-const col4 = 360;  // Rate
-const col5 = 430;  // Amount
-const tableWidth = 500;
-
-// Header Row
-doc
-  .rect(40, tableTop, 500, 25)
-  .stroke();
-// Vertical column lines (HEADER)
-doc.moveTo(col2 - 10, tableTop)
-   .lineTo(col2 - 10, tableTop + 25)
-   .stroke();
-
-doc.moveTo(col3 - 10, tableTop)
-   .lineTo(col3 - 10, tableTop + 25)
-   .stroke();
-
-doc.moveTo(col4 - 10, tableTop)
-   .lineTo(col4 - 10, tableTop + 25)
-   .stroke();
-
-doc.moveTo(col5 - 10, tableTop)
-   .lineTo(col5 - 10, tableTop + 25)
-   .stroke();
-
-doc.text("Sr.", col1, tableTop + 8);
-doc.text("Particular", col2, tableTop + 8);
-doc.text("Qty", col3, tableTop + 8);
-doc.text("Rate", col4, tableTop + 8);
-doc.text("Amount (Rs.)", col5, tableTop + 8);
-
-    // =========================
-    // 📦 PRODUCTS
-    // =========================
-   let y = tableTop + 25;
-
-data.products.forEach((item, index) => {
-  doc.rect(40, y, 500, 25).stroke();
-
-  // 🔥 COLUMN LINES
-  doc.moveTo(col2 - 10, y).lineTo(col2 - 10, y + 25).stroke();
-  doc.moveTo(col3 - 10, y).lineTo(col3 - 10, y + 25).stroke();
-  doc.moveTo(col4 - 10, y).lineTo(col4 - 10, y + 25).stroke();
-  doc.moveTo(col5 - 10, y).lineTo(col5 - 10, y + 25).stroke();
-
-  // Text
-  doc.text(index + 1, col1, y + 8);
-  doc.text(item.name, col2, y + 8);
-  doc.text(item.qty, col3, y + 8);
-  doc.text(item.rate, col4, y + 8);
-  doc.text(item.totalValue, col5, y + 8);
-
-  y += 25;
-});
-  
-
-    doc.moveDown();
-
-    // =========================
-    // 💰 TOTALS
-  const drawSummary = (label, value, bold = false) => {
-  doc.rect(40, y, tableWidth, 25).stroke();
-
-  // vertical line only before amount column
-  doc.moveTo(col5 - 10, y).lineTo(col5 - 10, y + 25).stroke();
-
-  if (bold) doc.font("Helvetica-Bold");
-  else doc.font("Helvetica");
-
-  // label in merged area
-  doc.text(label, col3 - 20, y + 8);
-
-  // value right aligned
-  doc.text(value, col5, y + 8, {
-    width: 80,
-    align: "right",
-  });
-
-  y += 25;
-};
-
-// Discount
-drawSummary("Discount", data.discount);
-drawSummary("Gross Total", data.subtotal, true);
-drawSummary("CGST 9%", data.cgst);
-drawSummary("SGST 9%", data.sgst);
-drawSummary("Round Off", data.roundOff);
-drawSummary("Total", data.total, true);
-    doc.moveDown();
-
-    // =========================
-    // 📜 TERMS
-    // =========================
-doc.x = 40;
-
-doc
-  .font("Helvetica-Bold")
-  .text(`Terms and Condition ${data.businessLine} :`, {
-    underline: true
-  });
-
-    doc.moveDown();
-
-    doc.moveDown();
-
-doc
-  .font("Helvetica-Bold")
-  .text(`Terms and Condition ${data.businessLine} :`, 40, doc.y, {
-    underline: true,
-  });
-
-doc.moveDown(0.5);
-
-const parsedTerms = parseHTML(data.terms.join(" "));
-
-parsedTerms.forEach((paragraph, index) => {
-  doc.x = 40;
-
-  // numbering
-  doc.font("Helvetica").text(`${index + 1}. `, {
-    continued: true,
-  });
-
-  paragraph.forEach((part, i) => {
-    doc
-      .font(part.bold ? "Helvetica-Bold" : "Helvetica")
-      .text(part.text, {
-        continued: i !== paragraph.length - 1,
-      });
-  });
-
-  doc.moveDown(0.3);
-});
-    doc.moveDown(2);
-
-    // =========================
-    // ✍️ FOOTER
-    // =========================
-    doc.text(`For, ${data.companyName}, ${data.contactName}`);
-    doc.text(`For, MS ERPWale Pvt. Ltd.`);
-
-    doc.moveDown(2);
-
-    doc.text("Regards,");
-    doc.text(data.userName);
-    doc.text(data.email);
-    doc.text(data.mobile);
-
-    doc.moveDown();
-
-    doc.fontSize(9).text(
-      "(Computer Generated Document so Signature not required)"
-    );
-
-    doc.end();
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "PDF generation failed" });
