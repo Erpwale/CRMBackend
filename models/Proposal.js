@@ -210,17 +210,29 @@ router.post("/create", async (req, res) => {
 
       <!-- FOOTER -->
       <br/><br/>
-     <div class="signature-container">
+    
 
+<div class="signature-container">
   <div class="signature-box">
-    For, MS ERPWale Pvt. Ltd.
+    <div>
+      For, MS ERPWale Pvt. Ltd.<br/><br/><br/>
+      ___________________<br/>
+      Authorized Signatory
+    </div>
   </div>
 
   <div class="signature-box">
-    For, ${data.companyName}, ${data.contactName}
+    <div>
+      For, ${data.companyName}<br/>
+      ${data.contactName}<br/><br/>
+      ___________________<br/>
+      Authorized Signatory
+    </div>
+  </div>
+</div>data.companyName}, ${data.contactName}
   </div>
 
-</div>
+
 
       <p style="font-size:10px;">
         (Computer Generated Document so Signature not required)
