@@ -6,7 +6,25 @@ const path = require("path");
 router.post("/create", async (req, res) => {
   try {
     const data = req.body;
-const cleanTerms = data.terms
+
+    const convertTermsToText = (termsArray) => {
+  return termsArray
+    .filter(t => t && t.trim() !== "")
+    .map(t => {
+      return t
+        // remove starting "1. " if present
+        .replace(/^\d+\.\s*/, "")
+        // remove all HTML tags
+        .replace(/<[^>]+>/g, "")
+        // fix line breaks
+        .replace(/\n/g, " ")
+        .trim();
+    })
+    .flatMap(t => t.split(/(?=\d+\.)/)) // split if multiple lines
+    .map(t => t.trim())
+    .filter(t => t);
+};
+const plainTerms = convertTermsToText(data.terms);
   .filter(t => t && t.trim() !== "")
   .map(t =>
     t
@@ -172,7 +190,7 @@ const cleanTerms = data.terms
           Terms and Condition ${data.businessLine} :
         </p>
 
-      ${cleanTerms} 
+    const plainTerms = convertTermsToText(data.terms);
       </div>
 
       <!-- FOOTER -->
