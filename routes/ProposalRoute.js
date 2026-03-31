@@ -130,37 +130,34 @@ data.products.forEach((item, index) => {
 
     // =========================
     // 💰 TOTALS
-    // =========================
-  const drawRow = (label, value, bold = false) => {
-  doc.rect(40, y, 500, 25).stroke();
+  const drawSummary = (label, value, bold = false) => {
+  doc.rect(40, y, tableWidth, 25).stroke();
+
+  // vertical line only before amount column
+  doc.moveTo(col5 - 10, y).lineTo(col5 - 10, y + 25).stroke();
 
   if (bold) doc.font("Helvetica-Bold");
+  else doc.font("Helvetica");
 
-  doc.text(label, col4 - 60, y + 8);
-  doc.text(value, col5, y + 8);
+  // label in merged area
+  doc.text(label, col3 - 20, y + 8);
 
-  doc.font("Helvetica"); // reset
+  // value right aligned
+  doc.text(value, col5, y + 8, {
+    width: 80,
+    align: "right",
+  });
+
   y += 25;
 };
 
 // Discount
-drawRow("Discount", data.discount);
-
-// Gross Total
-drawRow("Gross Total", data.subtotal, true);
-
-// CGST
-drawRow("CGST 9%", data.cgst);
-
-// SGST
-drawRow("SGST 9%", data.sgst);
-
-// Round Off
-drawRow("Round Off", data.roundOff);
-
-// Total
-drawRow("Total", data.total, true);
-
+drawSummary("Discount", data.discount);
+drawSummary("Gross Total", data.subtotal, true);
+drawSummary("CGST 9%", data.cgst);
+drawSummary("SGST 9%", data.sgst);
+drawSummary("Round Off", data.roundOff);
+drawSummary("Total", data.total, true);
     doc.moveDown();
 
     // =========================
