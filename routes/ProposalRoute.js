@@ -73,6 +73,7 @@ const col2 = 80;   // Product
 const col3 = 300;  // Qty
 const col4 = 360;  // Rate
 const col5 = 430;  // Amount
+const tableWidth = 500;
 
 // Header Row
 doc
