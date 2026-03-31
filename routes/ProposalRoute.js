@@ -2,7 +2,51 @@ const express = require("express");
 const router = express.Router();
 const PDFDocument = require("pdfkit");
 const path = require("path");
+const parseHTML = (html) => {
+  if (!html) return [];
 
+  const paragraphs = html.split(/<\/p>/g);
+
+  return paragraphs
+    .map(p => p.replace(/<p>/g, "").trim())
+    .filter(p => p)
+    .map(p => {
+      const parts = [];
+
+      // split bold and normal text
+      const regex = /<b>(.*?)<\/b>/g;
+      let lastIndex = 0;
+      let match;
+
+      while ((match = regex.exec(p)) !== null) {
+        // normal text before bold
+        if (match.index > lastIndex) {
+          parts.push({
+            text: p.slice(lastIndex, match.index),
+            bold: false,
+          });
+        }
+
+        // bold text
+        parts.push({
+          text: match[1],
+          bold: true,
+        });
+
+        lastIndex = regex.lastIndex;
+      }
+
+      // remaining normal text
+      if (lastIndex < p.length) {
+        parts.push({
+          text: p.slice(lastIndex),
+          bold: false,
+        });
+      }
+
+      return parts;
+    });
+};
 const addHeaderFooter = (doc) => {
   const headerPath = path.join(__dirname, "../assets/header.jpg");
   const footerPath = path.join(__dirname, "../assets/footer.jpg");
@@ -174,10 +218,36 @@ doc
 
     doc.moveDown();
 
-    data.terms?.forEach((t) => {
-      doc.text(t);
-    });
+    doc.moveDown();
 
+doc
+  .font("Helvetica-Bold")
+  .text(`Terms and Condition ${data.businessLine} :`, 40, doc.y, {
+    underline: true,
+  });
+
+doc.moveDown(0.5);
+
+const parsedTerms = parseHTML(data.terms.join(" "));
+
+parsedTerms.forEach((paragraph, index) => {
+  doc.x = 40;
+
+  // numbering
+  doc.font("Helvetica").text(`${index + 1}. `, {
+    continued: true,
+  });
+
+  paragraph.forEach((part, i) => {
+    doc
+      .font(part.bold ? "Helvetica-Bold" : "Helvetica")
+      .text(part.text, {
+        continued: i !== paragraph.length - 1,
+      });
+  });
+
+  doc.moveDown(0.3);
+});
     doc.moveDown(2);
 
     // =========================
