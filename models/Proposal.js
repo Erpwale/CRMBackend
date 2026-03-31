@@ -119,6 +119,22 @@ router.post("/create", async (req, res) => {
           margin-bottom: 6px;
           line-height: 1.5;
         }
+          .signature-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.signature-box {
+  width: 45%;
+  height: 120px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  padding: 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: flex-start;
+}
       </style>
     </head>
 
@@ -194,14 +210,17 @@ router.post("/create", async (req, res) => {
 
       <!-- FOOTER -->
       <br/><br/>
-      <p>For, ${data.companyName}</p>
-      <p>For, MS ERPWale Pvt. Ltd.</p>
+     <div class="signature-container">
 
-      <br/>
-      <p>Regards,</p>
-      <p>${data.userName}</p>
-      <p>${data.email}</p>
-      <p>${data.mobile}</p>
+  <div class="signature-box">
+    For, MS ERPWale Pvt. Ltd.
+  </div>
+
+  <div class="signature-box">
+    For, ${data.companyName}, ${data.contactName}
+  </div>
+
+</div>
 
       <p style="font-size:10px;">
         (Computer Generated Document so Signature not required)
