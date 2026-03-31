@@ -1,146 +1,198 @@
-const mongoose = require("mongoose");
+const express = require("express");
+const router = express.Router();
+const puppeteer = require("puppeteer");
+const path = require("path");
 
-const productSchema = new mongoose.Schema({
-  productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product"
-  },
-  name: String,
+router.post("/create", async (req, res) => {
+  try {
+    const data = req.body;
 
-  qty: {
-    type: Number,
-    required: true,
-    default: 1
-  },
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-  rate: {
-    type: Number,
-    required: true
-  },
+    // 🔥 Convert products to rows
+    const productRows = data.products.map((item, index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${item.name}</td>
+        <td>${item.qty}</td>
+        <td>${item.rate}</td>
+        <td style="text-align:right;">${item.totalValue}</td>
+      </tr>
+    `).join("");
 
-  gst: {
-    type: Number,
-    default: 0
-  },
+    // 🔥 HTML TEMPLATE
+    const html = `
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 40px;
+        }
 
-  discount: {
-    type: Number,
-    default: 0
-  },
+        .header img, .footer img {
+          width: 100%;
+        }
 
-  subtotal: Number,
-  gstValue: Number,
-  totalValue: Number,
-  net: Number
+        .title {
+          text-align: center;
+          font-weight: bold;
+          font-size: 18px;
+          margin: 10px 0;
+        }
+
+        .right {
+          text-align: right;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 10px;
+        }
+
+        table, th, td {
+          border: 1px solid black;
+        }
+
+        th {
+          background: #eee;
+        }
+
+        th, td {
+          padding: 6px;
+          font-size: 12px;
+        }
+
+        .summary td {
+          text-align: right;
+        }
+
+        .terms {
+          margin-top: 20px;
+        }
+
+        .terms-title {
+          font-weight: bold;
+          text-decoration: underline;
+        }
+      </style>
+    </head>
+
+    <body>
+
+      <!-- HEADER -->
+      <div class="header">
+        <img src="file://${path.join(__dirname, "../assets/header.jpg")}" />
+      </div>
+
+      <div class="title">BUSINESS PROPOSAL</div>
+
+      <p class="right"><b>Date:</b> ${data.date}</p>
+
+      <p>
+        To,<br/>
+        ${data.companyName}<br/>
+        ${data.address1}<br/>
+        ${data.address2 || ""}<br/>
+        ${data.address3 || ""}<br/>
+        ${data.state}, ${data.city} - ${data.pincode}
+      </p>
+
+      <p><b>Kind Attn :</b> ${data.contactName}</p>
+      <p><b>Subject :</b> Proposal of ${data.businessLine}</p>
+
+      <!-- TABLE -->
+      <table>
+        <tr>
+          <th>Sr</th>
+          <th>Particular</th>
+          <th>Qty</th>
+          <th>Rate</th>
+          <th>Amount (Rs.)</th>
+        </tr>
+
+        ${productRows}
+
+        <!-- SUMMARY -->
+        <tr class="summary">
+          <td colspan="4">Discount</td>
+          <td>${data.discount}</td>
+        </tr>
+        <tr class="summary">
+          <td colspan="4"><b>Gross Total</b></td>
+          <td><b>${data.subtotal}</b></td>
+        </tr>
+        <tr class="summary">
+          <td colspan="4">CGST 9%</td>
+          <td>${data.cgst}</td>
+        </tr>
+        <tr class="summary">
+          <td colspan="4">SGST 9%</td>
+          <td>${data.sgst}</td>
+        </tr>
+        <tr class="summary">
+          <td colspan="4">Round Off</td>
+          <td>${data.roundOff}</td>
+        </tr>
+        <tr class="summary">
+          <td colspan="4"><b>Total</b></td>
+          <td><b>${data.total}</b></td>
+        </tr>
+      </table>
+
+      <!-- TERMS -->
+      <div class="terms">
+        <p class="terms-title">
+          Terms and Condition ${data.businessLine} :
+        </p>
+
+        <!-- 🔥 YOUR HTML TERMS DIRECT -->
+        ${data.terms.join("")}
+      </div>
+
+      <!-- FOOTER -->
+      <br/><br/>
+      <p>For, ${data.companyName}, ${data.contactName}</p>
+      <p>For, MS ERPWale Pvt. Ltd.</p>
+
+      <br/>
+      <p>Regards,</p>
+      <p>${data.userName}</p>
+      <p>${data.email}</p>
+      <p>${data.mobile}</p>
+
+      <p style="font-size:10px;">
+        (Computer Generated Document so Signature not required)
+      </p>
+
+      <div class="footer">
+        <img src="file://${path.join(__dirname, "../assets/footer.jpg")}" />
+      </div>
+
+    </body>
+    </html>
+    `;
+
+    await page.setContent(html, { waitUntil: "domcontentloaded" });
+
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      printBackground: true,
+    });
+
+    await browser.close();
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=proposal.pdf");
+
+    res.send(pdfBuffer);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "PDF generation failed" });
+  }
 });
 
-const proposalSchema = new mongoose.Schema(
-  {
-    // 📅 BASIC DETAILS
-    date: {
-      type: String,
-      required: true
-    },
-
-    businessLine: {
-      type: String,
-      required: true
-    },
-
-    priceLevel: String,
-
-    // 🏢 COMPANY DETAILS
-    company: {
-      companyId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Company"
-      },
-      name: String,
-      address1: String,
-      address2: String,
-      address3: String,
-      city: String,
-      state: String,
-      pincode: String
-    },
-
-    // 👤 CONTACT
-    contact: {
-      contactId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Contact"
-      },
-      name: String
-    },
-
-    // 📦 PRODUCTS
-    products: [productSchema],
-
-    // 🔢 SERIALS (Tally licenses)
-    selectedSerials: [String],
-
-    // 💰 TOTALS
-    totals: {
-      discount: {
-        type: Number,
-        default: 0
-      },
-
-      subtotal: {
-        type: Number,
-        required: true
-      },
-
-      cgst: {
-        type: Number,
-        default: 0
-      },
-
-      sgst: {
-        type: Number,
-        default: 0
-      },
-
-      gst: {
-        type: Number,
-        default: 0
-      },
-
-      roundOff: {
-        type: Number,
-        default: 0
-      },
-
-      total: {
-        type: Number,
-        required: true
-      },
-
-      net: {
-        type: Number,
-        default: 0
-      }
-    },
-
-    // 📝 TERMS
-    internalTerms: String,
-    specialTerms: String,
-    terms: [String],
-
-    // 👨‍💼 USER INFO
-    createdBy: {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-      },
-      name: String,
-      email: String,
-      mobile: String
-    }
-  },
-  {
-    timestamps: true
-  }
-);
-
-module.exports = mongoose.model("Proposal", proposalSchema);
+module.exports = router;
