@@ -10,7 +10,7 @@ router.post("/create", async (req, res) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    // ✅ PRODUCTS TABLE ROWS
+    // ✅ PRODUCTS TABLE
     const productRows = data.products.map((item, index) => `
       <tr>
         <td>${index + 1}</td>
@@ -21,10 +21,38 @@ router.post("/create", async (req, res) => {
       </tr>
     `).join("");
 
-    // ✅ TERMS (KEEP HTML FROM FRONTEND - supports bold, underline, numbering)
-    const termsHTML = Array.isArray(data.terms)
+    // 🔥 CLEAN TERMS FUNCTION (FIXES YOUR ISSUE)
+    const cleanTerms = (html) => {
+      if (!html) return [];
+
+      let cleaned = html
+        .replace(/<span class="ql-ui".*?<\/span>/g, "") // remove quill span
+        .replace(/data-list="ordered"/g, "")
+        .replace(/datalist="ordered"/g, "");
+
+      // extract li items
+      const matches = cleaned.match(/<li[^>]*>(.*?)<\/li>/g) || [];
+
+      return matches.map(item =>
+        item
+          .replace(/<li[^>]*>/, "")
+          .replace(/<\/li>/, "")
+          .trim()
+      );
+    };
+
+    // ✅ HANDLE ARRAY OR STRING INPUT
+    const rawTerms = Array.isArray(data.terms)
       ? data.terms.join("")
-      : data.terms || "";
+      : data.terms;
+
+    const termsArray = cleanTerms(rawTerms);
+
+    const termsHTML = `
+      <ol>
+        ${termsArray.map(t => `<li>${t}</li>`).join("")}
+      </ol>
+    `;
 
     // ✅ HTML TEMPLATE
     const html = `
@@ -91,7 +119,6 @@ router.post("/create", async (req, res) => {
           margin-bottom: 6px;
           line-height: 1.5;
         }
-
       </style>
     </head>
 
@@ -130,7 +157,6 @@ router.post("/create", async (req, res) => {
 
         ${productRows}
 
-        <!-- SUMMARY -->
         <tr class="summary">
           <td colspan="4">Discount</td>
           <td>${data.discount}</td>
@@ -166,7 +192,7 @@ router.post("/create", async (req, res) => {
         ${termsHTML}
       </div>
 
-      <!-- FOOTER TEXT -->
+      <!-- FOOTER -->
       <br/><br/>
       <p>For, ${data.companyName}</p>
       <p>For, MS ERPWale Pvt. Ltd.</p>
@@ -181,7 +207,6 @@ router.post("/create", async (req, res) => {
         (Computer Generated Document so Signature not required)
       </p>
 
-      <!-- FOOTER IMAGE -->
       <div class="footer">
         <img src="file://${path.join(__dirname, "../assets/footer.jpg")}" />
       </div>
