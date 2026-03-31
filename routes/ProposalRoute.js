@@ -66,18 +66,41 @@ doc.fontSize(16).text("BUSINESS PROPOSAL", { align: "center" });
     // =========================
     // 📦 TABLE HEADER
     // =========================
-    doc.fontSize(11).text("------------------------------------------------------------");
-    doc.text("Sr | Product | Qty | Rate | Amount");
-    doc.text("------------------------------------------------------------");
+   const tableTop = doc.y + 10;
+
+const col1 = 40;   // Sr No
+const col2 = 80;   // Product
+const col3 = 300;  // Qty
+const col4 = 360;  // Rate
+const col5 = 430;  // Amount
+
+// Header Row
+doc
+  .rect(40, tableTop, 500, 25)
+  .stroke();
+
+doc.text("Sr.", col1, tableTop + 8);
+doc.text("Particular", col2, tableTop + 8);
+doc.text("Qty", col3, tableTop + 8);
+doc.text("Rate", col4, tableTop + 8);
+doc.text("Amount (Rs.)", col5, tableTop + 8);
 
     // =========================
     // 📦 PRODUCTS
     // =========================
-    data.products.forEach((item, index) => {
-      doc.text(
-        `${index + 1} | ${item.name} | ${item.qty} | ${item.rate} | ${item.totalValue}`
-      );
-    });
+   let y = tableTop + 25;
+
+data.products.forEach((item, index) => {
+  doc.rect(40, y, 500, 25).stroke();
+
+  doc.text(index + 1, col1, y + 8);
+  doc.text(item.name, col2, y + 8);
+  doc.text(item.qty, col3, y + 8);
+  doc.text(item.rate, col4, y + 8);
+  doc.text(item.totalValue, col5, y + 8);
+
+  y += 25;
+});
 
     doc.text("------------------------------------------------------------");
 
@@ -86,12 +109,35 @@ doc.fontSize(16).text("BUSINESS PROPOSAL", { align: "center" });
     // =========================
     // 💰 TOTALS
     // =========================
-    doc.text(`Discount : ${data.discount}`);
-    doc.text(`Gross Total : ${data.subtotal}`);
-    doc.text(`CGST (9%) : ${data.cgst}`);
-    doc.text(`SGST (9%) : ${data.sgst}`);
-    doc.text(`Round Off : ${data.roundOff}`);
-    doc.text(`Total : ${data.total}`);
+  const drawRow = (label, value, bold = false) => {
+  doc.rect(40, y, 500, 25).stroke();
+
+  if (bold) doc.font("Helvetica-Bold");
+
+  doc.text(label, col4 - 60, y + 8);
+  doc.text(value, col5, y + 8);
+
+  doc.font("Helvetica"); // reset
+  y += 25;
+};
+
+// Discount
+drawRow("Discount", data.discount);
+
+// Gross Total
+drawRow("Gross Total", data.subtotal, true);
+
+// CGST
+drawRow("CGST 9%", data.cgst);
+
+// SGST
+drawRow("SGST 9%", data.sgst);
+
+// Round Off
+drawRow("Round Off", data.roundOff);
+
+// Total
+drawRow("Total", data.total, true);
 
     doc.moveDown();
 
