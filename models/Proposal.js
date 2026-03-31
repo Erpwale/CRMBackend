@@ -6,7 +6,14 @@ const path = require("path");
 router.post("/create", async (req, res) => {
   try {
     const data = req.body;
-
+const cleanTerms = data.terms
+  .filter(t => t && t.trim() !== "")
+  .map(t =>
+    t
+      .replace(/<span class="ql-ui".*?<\/span>/g, "")
+      .replace(/data-list="ordered"/g, "")
+  )
+  .join("");
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
@@ -148,8 +155,7 @@ router.post("/create", async (req, res) => {
           Terms and Condition ${data.businessLine} :
         </p>
 
-        <!-- 🔥 YOUR HTML TERMS DIRECT -->
-        ${data.terms.join("")}
+      ${cleanTerms}   ✅
       </div>
 
       <!-- FOOTER -->
