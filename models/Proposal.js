@@ -25,13 +25,7 @@ router.post("/create", async (req, res) => {
     .filter(t => t);
 };
 const plainTerms = convertTermsToText(data.terms);
-  .filter(t => t && t.trim() !== "")
-  .map(t =>
-    t
-      .replace(/<span class="ql-ui".*?<\/span>/g, "")
-      .replace(/data-list="ordered"/g, "")
-  )
-  .join("");
+  
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
