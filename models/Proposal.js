@@ -84,6 +84,23 @@ const cleanTerms = data.terms
           font-weight: bold;
           text-decoration: underline;
         }
+          .terms ol {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.terms li {
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+
+.terms strong {
+  font-weight: bold;
+}
+
+.terms u {
+  text-decoration: underline;
+}
       </style>
     </head>
 
@@ -155,7 +172,7 @@ const cleanTerms = data.terms
           Terms and Condition ${data.businessLine} :
         </p>
 
-      ${cleanTerms}   ✅
+      ${cleanTerms} 
       </div>
 
       <!-- FOOTER -->
