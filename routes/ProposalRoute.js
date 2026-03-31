@@ -164,11 +164,12 @@ drawSummary("Total", data.total, true);
     // =========================
     // 📜 TERMS
     // =========================
-    doc
+doc.x = 40;
+
+doc
   .font("Helvetica-Bold")
   .text(`Terms and Condition ${data.businessLine} :`, {
-    underline: true,
-    align: "left",
+    underline: true
   });
 
     doc.moveDown();
