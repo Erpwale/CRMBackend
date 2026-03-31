@@ -204,7 +204,14 @@ router.post("/create", async (req, res) => {
         <p class="terms-title">
           Terms and Condition ${data.businessLine} :
         </p>
-<table style="width:100%; margin-top:50px;">
+          ${termsHTML}  
+
+      
+      </div>
+
+      <!-- FOOTER -->
+      <br/><br/>
+      <table style="width:100%; margin-top:50px;">
   <tr>
     <td style="width:50%; padding-right:10px;">
       <div style="border:2px solid #ccc; border-radius:20px; height:130px; padding:15px;">
@@ -224,11 +231,6 @@ router.post("/create", async (req, res) => {
     </td>
   </tr>
 </table>
-      
-      </div>
-
-      <!-- FOOTER -->
-      <br/><br/>
     
 
 
