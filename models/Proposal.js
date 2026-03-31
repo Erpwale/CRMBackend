@@ -218,7 +218,7 @@ router.post("/create", async (req, res) => {
       <div style="border:2px solid #ccc; border-radius:20px; height:130px; padding:15px;">
         For, MS ERPWale Pvt. Ltd.<br/><br/><br/>
         ___________________<br/>
-        Authorized Signatory
+        Authorized
       </div>
     </td>
 
