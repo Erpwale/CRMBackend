@@ -78,6 +78,22 @@ const col5 = 430;  // Amount
 doc
   .rect(40, tableTop, 500, 25)
   .stroke();
+// Vertical column lines (HEADER)
+doc.moveTo(col2 - 10, tableTop)
+   .lineTo(col2 - 10, tableTop + 25)
+   .stroke();
+
+doc.moveTo(col3 - 10, tableTop)
+   .lineTo(col3 - 10, tableTop + 25)
+   .stroke();
+
+doc.moveTo(col4 - 10, tableTop)
+   .lineTo(col4 - 10, tableTop + 25)
+   .stroke();
+
+doc.moveTo(col5 - 10, tableTop)
+   .lineTo(col5 - 10, tableTop + 25)
+   .stroke();
 
 doc.text("Sr.", col1, tableTop + 8);
 doc.text("Particular", col2, tableTop + 8);
@@ -93,6 +109,13 @@ doc.text("Amount (Rs.)", col5, tableTop + 8);
 data.products.forEach((item, index) => {
   doc.rect(40, y, 500, 25).stroke();
 
+  // 🔥 COLUMN LINES
+  doc.moveTo(col2 - 10, y).lineTo(col2 - 10, y + 25).stroke();
+  doc.moveTo(col3 - 10, y).lineTo(col3 - 10, y + 25).stroke();
+  doc.moveTo(col4 - 10, y).lineTo(col4 - 10, y + 25).stroke();
+  doc.moveTo(col5 - 10, y).lineTo(col5 - 10, y + 25).stroke();
+
+  // Text
   doc.text(index + 1, col1, y + 8);
   doc.text(item.name, col2, y + 8);
   doc.text(item.qty, col3, y + 8);
@@ -101,8 +124,7 @@ data.products.forEach((item, index) => {
 
   y += 25;
 });
-
-    doc.text("------------------------------------------------------------");
+  
 
     doc.moveDown();
 
