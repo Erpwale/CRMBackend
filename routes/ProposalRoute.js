@@ -1,7 +1,25 @@
 const express = require("express");
 const router = express.Router();
 const PDFDocument = require("pdfkit");
+const path = require("path");
 
+const addHeaderFooter = (doc) => {
+  const headerPath = path.join(__dirname, "../assets/header.jpg");
+  const footerPath = path.join(__dirname, "../assets/footer.jpg");
+
+  // Header Image
+  doc.image(headerPath, 0, 0, {
+    width: doc.page.width,
+  });
+
+  // Footer Image
+  doc.image(
+    footerPath,
+    0,
+    doc.page.height - 80, // adjust height
+    { width: doc.page.width }
+  );
+};
 router.post("/create", async (req, res) => {
   try {
     const data = req.body;
@@ -11,16 +29,19 @@ router.post("/create", async (req, res) => {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=proposal.pdf");
 
-    doc.pipe(res);
+  doc.pipe(res);
 
-    // =========================
-    // 🧾 HEADER
-    // =========================
-    doc.fontSize(16).text("ADDON", { align: "center" });
-    doc.moveDown(0.5);
-    doc.fontSize(18).text("BUSINESS PROPOSAL", { align: "center" });
+addHeaderFooter(doc);
 
-    doc.moveDown();
+doc.on("pageAdded", () => {
+  addHeaderFooter(doc);
+});
+
+// Now your content
+doc.moveDown(5);
+
+doc.fontSize(16).text("ADDON", { align: "center" });
+
     doc.fontSize(10).text(`Date : ${data.date}`);
 
     doc.moveDown();
