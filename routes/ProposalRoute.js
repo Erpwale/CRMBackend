@@ -164,7 +164,7 @@ drawSummary("Total", data.total, true);
     // =========================
     // 📜 TERMS
     // =========================
-    doc.font("Helvetica-Bold",align: "right").text(
+    doc.font("Helvetica-Bold",align: "left").text(
       `Terms and Condition ${data.businessLine}  : `, {
     underline: true,
   }
