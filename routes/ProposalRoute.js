@@ -23,7 +23,8 @@ const addHeaderFooter = (doc) => {
 router.post("/create", async (req, res) => {
   try {
     const data = req.body;
-
+    console.log(data);
+    
     const doc = new PDFDocument({ margin: 40 });
 
     res.setHeader("Content-Type", "application/pdf");
@@ -40,9 +41,11 @@ doc.on("pageAdded", () => {
 // Now your content
 doc.moveDown(5);
 
-doc.fontSize(16).text("ADDON", { align: "center" });
+doc.fontSize(16).text("BUSINESS PROPOSAL", { align: "center" });
 
-    doc.fontSize(10).text(`Date : ${data.date}`);
+   doc.fontSize(10).text(`Date : ${data.date}`, {
+  align: "right",
+});
 
     doc.moveDown();
 
