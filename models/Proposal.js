@@ -7,29 +7,10 @@ router.post("/create", async (req, res) => {
   try {
     const data = req.body;
 
-    const convertTermsToText = (termsArray) => {
-  return termsArray
-    .filter(t => t && t.trim() !== "")
-    .map(t => {
-      return t
-        // remove starting "1. " if present
-        .replace(/^\d+\.\s*/, "")
-        // remove all HTML tags
-        .replace(/<[^>]+>/g, "")
-        // fix line breaks
-        .replace(/\n/g, " ")
-        .trim();
-    })
-    .flatMap(t => t.split(/(?=\d+\.)/)) // split if multiple lines
-    .map(t => t.trim())
-    .filter(t => t);
-};
-const plainTerms = convertTermsToText(data.terms);
-  
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    // 🔥 Convert products to rows
+    // ✅ PRODUCTS TABLE ROWS
     const productRows = data.products.map((item, index) => `
       <tr>
         <td>${index + 1}</td>
@@ -40,7 +21,12 @@ const plainTerms = convertTermsToText(data.terms);
       </tr>
     `).join("");
 
-    // 🔥 HTML TEMPLATE
+    // ✅ TERMS (KEEP HTML FROM FRONTEND - supports bold, underline, numbering)
+    const termsHTML = Array.isArray(data.terms)
+      ? data.terms.join("")
+      : data.terms || "";
+
+    // ✅ HTML TEMPLATE
     const html = `
     <html>
     <head>
@@ -96,23 +82,16 @@ const plainTerms = convertTermsToText(data.terms);
           font-weight: bold;
           text-decoration: underline;
         }
-          .terms ol {
-  padding-left: 20px;
-  margin: 0;
-}
 
-.terms li {
-  margin-bottom: 6px;
-  line-height: 1.5;
-}
+        .terms ol {
+          padding-left: 20px;
+        }
 
-.terms strong {
-  font-weight: bold;
-}
+        .terms li {
+          margin-bottom: 6px;
+          line-height: 1.5;
+        }
 
-.terms u {
-  text-decoration: underline;
-}
       </style>
     </head>
 
@@ -184,12 +163,12 @@ const plainTerms = convertTermsToText(data.terms);
           Terms and Condition ${data.businessLine} :
         </p>
 
-    const plainTerms = convertTermsToText(data.terms);
+        ${termsHTML}
       </div>
 
-      <!-- FOOTER -->
+      <!-- FOOTER TEXT -->
       <br/><br/>
-      <p>For, ${data.companyName}, ${data.contactName}</p>
+      <p>For, ${data.companyName}</p>
       <p>For, MS ERPWale Pvt. Ltd.</p>
 
       <br/>
@@ -202,6 +181,7 @@ const plainTerms = convertTermsToText(data.terms);
         (Computer Generated Document so Signature not required)
       </p>
 
+      <!-- FOOTER IMAGE -->
       <div class="footer">
         <img src="file://${path.join(__dirname, "../assets/footer.jpg")}" />
       </div>
