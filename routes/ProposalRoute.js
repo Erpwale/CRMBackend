@@ -7,7 +7,11 @@ router.post("/create", async (req, res) => {
   try {
     const data = req.body;
 
-    const browser = await puppeteer.launch();
+ const browser = await puppeteer.launch({
+  executablePath: "/opt/render/.cache/puppeteer/chrome/linux-*/chrome",
+  headless: true,
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+});
     const page = await browser.newPage();
 
     // ✅ PRODUCTS TABLE
