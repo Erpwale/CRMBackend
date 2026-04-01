@@ -4,15 +4,18 @@ const puppeteer = require("puppeteer");
 const path = require("path");
 
 router.post("/create", async (req, res) => {
+  let browser;
+
   try {
     const data = req.body;
 
-//  const browser = await puppeteer.launch({
-//   executablePath: "/opt/render/.cache/puppeteer/chrome/linux-*/chrome",
-//   headless: true,
-//   args: ["--no-sandbox", "--disable-setuid-sandbox"],
-// });
-    // const page = await browser.newPage();
+    // ✅ Launch Puppeteer (Render Safe)
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+
+    const page = await browser.newPage();
 
     // ✅ PRODUCTS TABLE
     const productRows = data.products.map((item, index) => `
@@ -25,16 +28,15 @@ router.post("/create", async (req, res) => {
       </tr>
     `).join("");
 
-    // 🔥 CLEAN TERMS FUNCTION (FIXES YOUR ISSUE)
+    // ✅ CLEAN TERMS FUNCTION
     const cleanTerms = (html) => {
       if (!html) return [];
 
       let cleaned = html
-        .replace(/<span class="ql-ui".*?<\/span>/g, "") // remove quill span
+        .replace(/<span class="ql-ui".*?<\/span>/g, "")
         .replace(/data-list="ordered"/g, "")
         .replace(/datalist="ordered"/g, "");
 
-      // extract li items
       const matches = cleaned.match(/<li[^>]*>(.*?)<\/li>/g) || [];
 
       return matches.map(item =>
@@ -45,7 +47,7 @@ router.post("/create", async (req, res) => {
       );
     };
 
-    // ✅ HANDLE ARRAY OR STRING INPUT
+    // ✅ HANDLE TERMS INPUT
     const rawTerms = Array.isArray(data.terms)
       ? data.terms.join("")
       : data.terms;
@@ -123,22 +125,13 @@ router.post("/create", async (req, res) => {
           margin-bottom: 6px;
           line-height: 1.5;
         }
-          .signature-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 40px;
-}
 
-.signature-box {
-  width: 45%;
-  height: 120px;
-  border: 2px solid #ccc;
-  border-radius: 20px;
-  padding: 20px;
-  font-size: 14px;
-  display: flex;
-  align-items: flex-start;
-}
+        .signature-box {
+          border: 2px solid #ccc;
+          border-radius: 20px;
+          height: 130px;
+          padding: 15px;
+        }
       </style>
     </head>
 
@@ -208,43 +201,36 @@ router.post("/create", async (req, res) => {
         <p class="terms-title">
           Terms and Condition ${data.businessLine} :
         </p>
-          ${termsHTML}  
-
-      
+        ${termsHTML}
       </div>
 
-      <!-- FOOTER -->
-      <br/><br/>
+      <!-- SIGNATURE -->
       <table style="width:100%; margin-top:50px;">
-  <tr>
-    <td style="width:50%; padding-right:10px;">
-      <div style="border:2px solid #ccc; border-radius:20px; height:130px; padding:15px;">
-        For, MS ERPWale Pvt. Ltd.<br/><br/><br/>
-        ___________________<br/>
-        Authorized
-      </div>
-    </td>
+        <tr>
+          <td style="width:50%; padding-right:10px;">
+            <div class="signature-box">
+              For, MS ERPWale Pvt. Ltd.<br/><br/><br/>
+              ___________________<br/>
+              Authorized
+            </div>
+          </td>
 
-    <td style="width:50%; padding-left:10px;">
-      <div style="border:2px solid #ccc; border-radius:20px; height:130px; padding:15px;">
-        For, ${data.companyName}<br/>
-        ${data.contactName}<br/><br/>
-        ___________________<br/>
-        Authorized Signatory
-      </div>
-    </td>
-  </tr>
-</table>
-    
-
-
-
-
+          <td style="width:50%; padding-left:10px;">
+            <div class="signature-box">
+              For, ${data.companyName}<br/>
+              ${data.contactName}<br/><br/>
+              ___________________<br/>
+              Authorized Signatory
+            </div>
+          </td>
+        </tr>
+      </table>
 
       <p style="font-size:10px;">
         (Computer Generated Document so Signature not required)
       </p>
 
+      <!-- FOOTER -->
       <div class="footer">
         <img src="file://${path.join(__dirname, "../assets/footer.jpg")}" />
       </div>
@@ -253,8 +239,10 @@ router.post("/create", async (req, res) => {
     </html>
     `;
 
+    // ✅ LOAD HTML
     await page.setContent(html, { waitUntil: "domcontentloaded" });
 
+    // ✅ GENERATE PDF
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
@@ -268,7 +256,10 @@ router.post("/create", async (req, res) => {
     res.send(pdfBuffer);
 
   } catch (err) {
-    console.log(err);
+    console.error(err);
+
+    if (browser) await browser.close();
+
     res.status(500).json({ message: "PDF generation failed" });
   }
 });
