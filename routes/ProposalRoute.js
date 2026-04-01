@@ -9,10 +9,11 @@ router.post("/create", async (req, res) => {
   try {
     const data = req.body;
 console.log("Cache dir:", process.env.PUPPETEER_CACHE_DIR);
-   browser = await puppeteer.launch({
-  headless: "new", // ✅ better for newer versions
+
+const browser = await puppeteer.launch({
+  headless: "new",
+  executablePath: "/opt/render/.cache/puppeteer/chrome/linux-*/chrome",
   args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  defaultViewport: null,
 });
     const page = await browser.newPage();
 
