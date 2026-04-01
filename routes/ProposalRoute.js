@@ -12,7 +12,7 @@ router.post("/create", async (req, res) => {
 //   headless: true,
 //   args: ["--no-sandbox", "--disable-setuid-sandbox"],
 // });
-    const page = await browser.newPage();
+    // const page = await browser.newPage();
 
     // ✅ PRODUCTS TABLE
     const productRows = data.products.map((item, index) => `
