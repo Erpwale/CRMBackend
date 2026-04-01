@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const puppeteer = require("puppeteer");
+const { chromium } = require("playwright");
 const path = require("path");
 
 router.post("/create", async (req, res) => {
@@ -8,13 +8,12 @@ router.post("/create", async (req, res) => {
 
   try {
     const data = req.body;
-console.log("Cache dir:", process.env.PUPPETEER_CACHE_DIR);
 
-const browser = await puppeteer.launch({
-  headless: "new",
-  executablePath: "/opt/render/.cache/puppeteer/chrome/linux-*/chrome",
-  args: ["--no-sandbox", "--disable-setuid-sandbox"],
-});
+    // ✅ Launch Playwright
+    browser = await chromium.launch({
+      args: ["--no-sandbox"],
+    });
+
     const page = await browser.newPage();
 
     // ✅ PRODUCTS TABLE
@@ -28,7 +27,7 @@ const browser = await puppeteer.launch({
       </tr>
     `).join("");
 
-    // ✅ CLEAN TERMS FUNCTION
+    // ✅ CLEAN TERMS
     const cleanTerms = (html) => {
       if (!html) return [];
 
@@ -47,7 +46,6 @@ const browser = await puppeteer.launch({
       );
     };
 
-    // ✅ HANDLE TERMS INPUT
     const rawTerms = Array.isArray(data.terms)
       ? data.terms.join("")
       : data.terms;
@@ -65,152 +63,72 @@ const browser = await puppeteer.launch({
     <html>
     <head>
       <style>
-        body {
-          font-family: Arial, sans-serif;
-          padding: 40px;
-        }
-
-        .header img, .footer img {
-          width: 100%;
-        }
-
-        .title {
-          text-align: center;
-          font-weight: bold;
-          font-size: 18px;
-          margin: 10px 0;
-        }
-
-        .right {
-          text-align: right;
-        }
-
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 10px;
-        }
-
-        table, th, td {
-          border: 1px solid black;
-        }
-
-        th {
-          background: #eee;
-        }
-
-        th, td {
-          padding: 6px;
-          font-size: 12px;
-        }
-
-        .summary td {
-          text-align: right;
-        }
-
-        .terms {
-          margin-top: 20px;
-        }
-
-        .terms-title {
-          font-weight: bold;
-          text-decoration: underline;
-        }
-
-        .terms ol {
-          padding-left: 20px;
-        }
-
-        .terms li {
-          margin-bottom: 6px;
-          line-height: 1.5;
-        }
-
+        body { font-family: Arial; padding: 40px; }
+        .header img, .footer img { width: 100%; }
+        .title { text-align:center; font-weight:bold; font-size:18px; }
+        table { width:100%; border-collapse: collapse; margin-top:10px; }
+        table, th, td { border:1px solid black; }
+        th { background:#eee; }
+        th, td { padding:6px; font-size:12px; }
+        .summary td { text-align:right; }
+        .terms { margin-top:20px; }
         .signature-box {
-          border: 2px solid #ccc;
-          border-radius: 20px;
-          height: 130px;
-          padding: 15px;
+          border:2px solid #ccc;
+          border-radius:20px;
+          height:130px;
+          padding:15px;
         }
       </style>
     </head>
 
     <body>
 
-      <!-- HEADER -->
       <div class="header">
         <img src="file://${path.join(__dirname, "../assets/header.jpg")}" />
       </div>
 
       <div class="title">BUSINESS PROPOSAL</div>
 
-      <p class="right"><b>Date:</b> ${data.date}</p>
+      <p style="text-align:right;"><b>Date:</b> ${data.date}</p>
 
       <p>
         To,<br/>
         ${data.companyName}<br/>
         ${data.address1}<br/>
-        ${data.address2 || ""}<br/>
-        ${data.address3 || ""}<br/>
         ${data.state}, ${data.city} - ${data.pincode}
       </p>
 
       <p><b>Kind Attn :</b> ${data.contactName}</p>
       <p><b>Subject :</b> Proposal of ${data.businessLine}</p>
 
-      <!-- TABLE -->
       <table>
         <tr>
           <th>Sr</th>
           <th>Particular</th>
           <th>Qty</th>
           <th>Rate</th>
-          <th>Amount (Rs.)</th>
+          <th>Amount</th>
         </tr>
 
         ${productRows}
 
         <tr class="summary">
-          <td colspan="4">Discount</td>
-          <td>${data.discount}</td>
-        </tr>
-        <tr class="summary">
-          <td colspan="4"><b>Gross Total</b></td>
-          <td><b>${data.subtotal}</b></td>
-        </tr>
-        <tr class="summary">
-          <td colspan="4">CGST 9%</td>
-          <td>${data.cgst}</td>
-        </tr>
-        <tr class="summary">
-          <td colspan="4">SGST 9%</td>
-          <td>${data.sgst}</td>
-        </tr>
-        <tr class="summary">
-          <td colspan="4">Round Off</td>
-          <td>${data.roundOff}</td>
-        </tr>
-        <tr class="summary">
-          <td colspan="4"><b>Total</b></td>
-          <td><b>${data.total}</b></td>
+          <td colspan="4">Total</td>
+          <td>${data.total}</td>
         </tr>
       </table>
 
-      <!-- TERMS -->
       <div class="terms">
-        <p class="terms-title">
-          Terms and Condition ${data.businessLine} :
-        </p>
+        <b>Terms:</b>
         ${termsHTML}
       </div>
 
-      <!-- SIGNATURE -->
-      <table style="width:100%; margin-top:50px;">
+      <table style="margin-top:50px;">
         <tr>
           <td style="width:50%; padding-right:10px;">
             <div class="signature-box">
               For, MS ERPWale Pvt. Ltd.<br/><br/><br/>
-              ___________________<br/>
+              ___________<br/>
               Authorized
             </div>
           </td>
@@ -219,18 +137,13 @@ const browser = await puppeteer.launch({
             <div class="signature-box">
               For, ${data.companyName}<br/>
               ${data.contactName}<br/><br/>
-              ___________________<br/>
+              ___________<br/>
               Authorized Signatory
             </div>
           </td>
         </tr>
       </table>
 
-      <p style="font-size:10px;">
-        (Computer Generated Document so Signature not required)
-      </p>
-
-      <!-- FOOTER -->
       <div class="footer">
         <img src="file://${path.join(__dirname, "../assets/footer.jpg")}" />
       </div>
@@ -239,10 +152,10 @@ const browser = await puppeteer.launch({
     </html>
     `;
 
-    // ✅ LOAD HTML
-    await page.setContent(html, { waitUntil: "domcontentloaded" });
+    // ✅ Load HTML
+    await page.setContent(html, { waitUntil: "load" });
 
-    // ✅ GENERATE PDF
+    // ✅ Generate PDF
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
@@ -257,9 +170,7 @@ const browser = await puppeteer.launch({
 
   } catch (err) {
     console.error(err);
-
     if (browser) await browser.close();
-
     res.status(500).json({ message: "PDF generation failed" });
   }
 });
