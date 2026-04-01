@@ -4,15 +4,15 @@ const { chromium } = require("playwright");
 const path = require("path");
 
 router.post("/create", async (req, res) => {
-  let browser; // ✅ global scope
-
+ 
   try {
     const data = req.body; // ✅ FIX
 
-    browser = await chromium.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+   const browser = await chromium.launch({
+  headless: true,
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  channel: "chromium", // ✅ FORCE real chromium
+});
 
     const page = await browser.newPage();
     await page.goto("about:blank");
