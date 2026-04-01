@@ -6,15 +6,13 @@ const path = require("path");
 router.post("/create", async (req, res) => {
   let browser;
 
-  try {
-    const data = req.body;
+  const browser = await chromium.launch({
+  headless: true,
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+});
 
-    // ✅ Launch Playwright
-    browser = await chromium.launch({
-      args: ["--no-sandbox"],
-    });
-
-    const page = await browser.newPage();
+const page = await browser.newPage();
+await page.goto("about:blank");
 
     // ✅ PRODUCTS TABLE
     const productRows = data.products.map((item, index) => `
