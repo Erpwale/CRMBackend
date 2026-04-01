@@ -2,7 +2,17 @@ const express = require("express");
 const router = express.Router();
 const { chromium } = require("playwright");
 const path = require("path");
+const fs = require("fs");
 
+const headerBase64 = fs.readFileSync(
+  path.join(__dirname, "../assets/header.jpg"),
+  { encoding: "base64" }
+);
+
+const footerBase64 = fs.readFileSync(
+  path.join(__dirname, "../assets/footer.jpg"),
+  { encoding: "base64" }
+);
 router.post("/create", async (req, res) => {
  
   try {
@@ -82,8 +92,7 @@ router.post("/create", async (req, res) => {
     <body>
 
       <div class="header">
-        <img src="file://${path.join(__dirname, "../assets/header.jpg")}" />
-      </div>
+<img src="data:image/jpeg;base64,${headerBase64}" />      </div>
 
       <div class="title">BUSINESS PROPOSAL</div>
 
@@ -143,7 +152,7 @@ router.post("/create", async (req, res) => {
       </table>
 
       <div class="footer">
-        <img src="file://${path.join(__dirname, "../assets/footer.jpg")}" />
+       <img src="data:image/jpeg;base64,${footerBase64}" />
       </div>
 
     </body>
