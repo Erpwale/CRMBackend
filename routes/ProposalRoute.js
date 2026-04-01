@@ -4,15 +4,18 @@ const { chromium } = require("playwright");
 const path = require("path");
 
 router.post("/create", async (req, res) => {
-  let browser;
+  let browser; // ✅ global scope
 
-  const browser = await chromium.launch({
-  headless: true,
-  args: ["--no-sandbox", "--disable-setuid-sandbox"],
-});
+  try {
+    const data = req.body; // ✅ FIX
 
-const page = await browser.newPage();
-await page.goto("about:blank");
+    browser = await chromium.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+
+    const page = await browser.newPage();
+    await page.goto("about:blank");
 
     // ✅ PRODUCTS TABLE
     const productRows = data.products.map((item, index) => `
@@ -37,10 +40,7 @@ await page.goto("about:blank");
       const matches = cleaned.match(/<li[^>]*>(.*?)<\/li>/g) || [];
 
       return matches.map(item =>
-        item
-          .replace(/<li[^>]*>/, "")
-          .replace(/<\/li>/, "")
-          .trim()
+        item.replace(/<li[^>]*>/, "").replace(/<\/li>/, "").trim()
       );
     };
 
@@ -123,7 +123,7 @@ await page.goto("about:blank");
 
       <table style="margin-top:50px;">
         <tr>
-          <td style="width:50%; padding-right:10px;">
+          <td style="width:50%;">
             <div class="signature-box">
               For, MS ERPWale Pvt. Ltd.<br/><br/><br/>
               ___________<br/>
@@ -131,7 +131,7 @@ await page.goto("about:blank");
             </div>
           </td>
 
-          <td style="width:50%; padding-left:10px;">
+          <td style="width:50%;">
             <div class="signature-box">
               For, ${data.companyName}<br/>
               ${data.contactName}<br/><br/>
@@ -150,10 +150,8 @@ await page.goto("about:blank");
     </html>
     `;
 
-    // ✅ Load HTML
     await page.setContent(html, { waitUntil: "load" });
 
-    // ✅ Generate PDF
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
