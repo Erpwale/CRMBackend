@@ -67,97 +67,187 @@ router.post("/create", async (req, res) => {
     `;
 
     // ✅ HTML TEMPLATE
-    const html = `
-    <html>
-    <head>
-      <style>
-        body { font-family: Arial; padding: 40px; }
-        .header img, .footer img { width: 100%; }
-        .title { text-align:center; font-weight:bold; font-size:18px; }
-        table { width:100%; border-collapse: collapse; margin-top:10px; }
-        table, th, td { border:1px solid black; }
-        th { background:#eee; }
-        th, td { padding:6px; font-size:12px; }
-        .summary td { text-align:right; }
-        .terms { margin-top:20px; }
-        .signature-box {
-          border:2px solid #ccc;
-          border-radius:20px;
-          height:130px;
-          padding:15px;
-        }
-      </style>
-    </head>
+   const html = `
+<html>
+<head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 30px;
+    font-size: 12px;
+  }
 
-    <body>
+  .header img {
+    width: 100%;
+    height: auto;
+  }
 
-      <div class="header">
-<img src="data:image/jpeg;base64,${headerBase64}" />      </div>
+  .title {
+    text-align: center;
+    font-weight: bold;
+    margin: 10px 0;
+  }
 
-      <div class="title">BUSINESS PROPOSAL</div>
+  .top-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
 
-      <p style="text-align:right;"><b>Date:</b> ${data.date}</p>
+  .left, .right {
+    width: 48%;
+  }
 
-      <p>
-        To,<br/>
-        ${data.companyName}<br/>
-        ${data.address1}<br/>
-        ${data.state}, ${data.city} - ${data.pincode}
-      </p>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
 
-      <p><b>Kind Attn :</b> ${data.contactName}</p>
-      <p><b>Subject :</b> Proposal of ${data.businessLine}</p>
+  th, td {
+    border: 1px solid #999;
+    padding: 6px;
+    text-align: center;
+  }
 
-      <table>
-        <tr>
-          <th>Sr</th>
-          <th>Particular</th>
-          <th>Qty</th>
-          <th>Rate</th>
-          <th>Amount</th>
-        </tr>
+  th {
+    background-color: #f2f2f2;
+  }
 
-        ${productRows}
+  .text-left {
+    text-align: left;
+  }
 
-        <tr class="summary">
-          <td colspan="4">Total</td>
-          <td>${data.total}</td>
-        </tr>
-      </table>
+  .text-right {
+    text-align: right;
+  }
 
-      <div class="terms">
-        <b>Terms:</b>
-        ${termsHTML}
-      </div>
+  .no-border td {
+    border: none;
+  }
 
-      <table style="margin-top:50px;">
-        <tr>
-          <td style="width:50%;">
-            <div class="signature-box">
-              For, MS ERPWale Pvt. Ltd.<br/><br/><br/>
-              ___________<br/>
-              Authorized
-            </div>
-          </td>
+  .summary-row td {
+    font-weight: bold;
+  }
 
-          <td style="width:50%;">
-            <div class="signature-box">
-              For, ${data.companyName}<br/>
-              ${data.contactName}<br/><br/>
-              ___________<br/>
-              Authorized Signatory
-            </div>
-          </td>
-        </tr>
-      </table>
+  .terms {
+    margin-top: 20px;
+  }
 
-      <div class="footer">
-       <img src="data:image/jpeg;base64,${footerBase64}" />
-      </div>
+</style>
+</head>
 
-    </body>
-    </html>
-    `;
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <img src="data:image/jpeg;base64,${headerBase64}" />
+</div>
+
+<div class="title">BUSINESS PROPOSAL</div>
+
+<!-- TOP INFO -->
+<div class="top-section">
+  <div class="left">
+    <b>To,</b><br/>
+    ${data.companyName}<br/>
+    ${data.address1}<br/>
+    ${data.address2 || ""}<br/>
+    ${data.state}, ${data.city} - ${data.pincode}
+  </div>
+
+  <div class="right text-right">
+    <b>Date :</b> ${data.date}
+  </div>
+</div>
+
+<br/>
+
+<b>Kind Attn :</b> ${data.contactName}<br/>
+<b>Subject :</b> Proposal of ${data.businessLine}
+
+<!-- TABLE -->
+<table>
+  <tr>
+    <th>Sr. No.</th>
+    <th class="text-left">Particular</th>
+    <th>Qty</th>
+    <th>Rate</th>
+    <th>Amount (Rs.)</th>
+  </tr>
+
+  ${data.products.map((p, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td class="text-left">${p.name}</td>
+      <td>${p.qty}</td>
+      <td>${p.rate}</td>
+      <td class="text-right">${p.totalValue}</td>
+    </tr>
+  `).join("")}
+
+  <!-- SUMMARY -->
+  <tr>
+    <td></td>
+    <td class="text-right">Discount</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.discount}</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td class="text-right">Gross Total</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.grossTotal}</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td class="text-right">CGST (${data.cgstPercent}%)</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.cgst}</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td class="text-right">SGST (${data.sgstPercent}%)</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.sgst}</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td class="text-right">Round off</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.roundOff}</td>
+  </tr>
+
+  <tr class="summary-row">
+    <td></td>
+    <td class="text-right">Total</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.total}</td>
+  </tr>
+
+</table>
+
+<!-- TERMS -->
+<div class="terms">
+  <b>Terms and Condition (${data.businessLine})</b><br/><br/>
+  Delivery : Immediate/Online/Soft License.<br/>
+  Taxes : GST tax as applicable.
+</div>
+
+</body>
+</html>
+`;
+  
 
     await page.setContent(html, { waitUntil: "load" });
 
