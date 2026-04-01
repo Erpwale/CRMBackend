@@ -240,6 +240,7 @@ router.post("/create", async (req, res) => {
 <!-- TERMS -->
 <div class="terms">
   <b>Terms and Condition (${data.businessLine})</b><br/><br/>
+  ${cleanTerms}
   Delivery : Immediate/Online/Soft License.<br/>
   Taxes : GST tax as applicable.
 </div>
