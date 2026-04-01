@@ -8,13 +8,12 @@ router.post("/create", async (req, res) => {
 
   try {
     const data = req.body;
-
-    // ✅ Launch Puppeteer (Render Safe)
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-
+console.log("Cache dir:", process.env.PUPPETEER_CACHE_DIR);
+   browser = await puppeteer.launch({
+  headless: "new", // ✅ better for newer versions
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  defaultViewport: null,
+});
     const page = await browser.newPage();
 
     // ✅ PRODUCTS TABLE

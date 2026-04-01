@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "npx puppeteer browsers install chrome"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +22,6 @@
     "speakeasy": "^2.0.0",
     "pdfkit": "^0.18.0",
     "puppeteer": "^24.40.0",
-    "puppeteer-core": "^24.40.0",
     "path": "^0.12.7",
     "multer": "^2.1.1",
     "fs": "^0.0.1-security",
