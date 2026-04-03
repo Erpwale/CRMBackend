@@ -61,15 +61,30 @@ router.post("/create-company", authMiddleware, async (req, res) => {
     // ✅ CHECK DUPLICATE CONTACT (Contact Table)
     const existingContact = await Contact.findOne({
       $or: [
-        { mobile: primaryContact.mobile },
+        { mobile: primaryContact.mobile }
+       
+      ]
+    });
+    const existingMail = await Contact.findOne({
+      $or: [
+
         { email: primaryContact.email }
       ]
     });
 
     if (existingContact) {
-      return res.status(400).json({
-        message: "Contact already exists"
-      });
+     
+          return res.status(400).json({
+            message: `Primary contact already exists (${existingContact.name})`
+          });
+       
+    }
+    if (existingMail) {
+     
+          return res.status(400).json({
+            message: `Primary contact already exists (${existingMail.name})`
+          });
+       
     }
 
     // ✅ STEP 1: CREATE COMPANY (WITHOUT primaryContact)
