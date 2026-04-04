@@ -271,4 +271,28 @@ router.post("/create", async (req, res) => {
   }
 });
 
+app.post("/add", async (req, res) => {
+  try {
+    const data = req.body;
+
+    // 🔒 Basic validation
+    if (!data.companyName) {
+      return res.status(400).json({ message: "Company name is required" });
+    }
+
+    // ✅ Save to DB
+    const newProposal = new Proposal(data);
+    const savedData = await newProposal.save();
+
+    res.status(201).json({
+      message: "Proposal saved successfully",
+      data: savedData
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error saving data" });
+  }
+});
+
 module.exports = router;
