@@ -28,7 +28,10 @@ const proposalSchema = new mongoose.Schema({
   roundOff: Number,
   total: Number,
 
-  terms: String
+terms: {
+  type: [String],
+  default: []
+}
 }, { timestamps: true });
 
 module.exports = mongoose.model("Proposal", proposalSchema);
