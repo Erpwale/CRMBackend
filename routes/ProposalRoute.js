@@ -3,6 +3,7 @@ const router = express.Router();
 const { chromium } = require("playwright");
 const path = require("path");
 const fs = require("fs");
+const Proposal= require("../models/Proposal")
 
 const headerBase64 = fs.readFileSync(
   path.join(__dirname, "../assets/header.jpg"),
