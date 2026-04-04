@@ -283,7 +283,7 @@ router.post("/add",authMiddleware, async (req, res) => {
   email: req.user.email,
   mobile: req.user.mobile
 };
-    console.log(data);
+    console.log(req.user);
     
     // 🔒 Basic validation
     if (!data.companyName) {
