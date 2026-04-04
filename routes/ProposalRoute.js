@@ -271,7 +271,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
-app.post("/add", async (req, res) => {
+router.post("/add", async (req, res) => {
   try {
     const data = req.body;
 
