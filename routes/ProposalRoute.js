@@ -274,7 +274,8 @@ router.post("/create", async (req, res) => {
 router.post("/add", async (req, res) => {
   try {
     const data = req.body;
-
+    console.log(data);
+    
     // 🔒 Basic validation
     if (!data.companyName) {
       return res.status(400).json({ message: "Company name is required" });
