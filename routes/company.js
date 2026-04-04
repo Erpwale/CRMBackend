@@ -318,7 +318,7 @@ router.get("/company/:id", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
-router.get("/my-proposals", authMiddleware, async (req, res) => {
+router.get("/my-opportunities", authMiddleware, async (req, res) => {
   try {
     const userId = req.user._id; // from JWT
 
