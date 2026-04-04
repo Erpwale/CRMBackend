@@ -272,9 +272,16 @@ router.post("/create", async (req, res) => {
   }
 });
 
-router.post("/add", async (req, res) => {
+router.post("/add",authMiddleware, async (req, res) => {
   try {
-    const data = req.body;
+    const data = {
+  ...req.body,
+
+  uid: req.user._id,
+  userName: req.user.name,
+  email: req.user.email,
+  mobile: req.user.mobile
+};
     console.log(data);
     
     // 🔒 Basic validation
