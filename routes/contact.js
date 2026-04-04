@@ -144,7 +144,18 @@ router.get("/:companyId", authMiddleware, async (req, res) => {
 router.put("/update/:id", authMiddleware, async (req, res) => {
   try {
     const { primary, companyId, replacePrimary } = req.body;
+if (primary === false) {
+  const totalPrimary = await Contact.countDocuments({
+    companyId,
+    primary: true
+  });
 
+  if (totalPrimary === 1) {
+    return res.status(400).json({
+      message: "At least one primary contact is required"
+    });
+  }
+}
 // 🔥 Check if another primary exists
 if (primary) {
   const existingPrimary = await Contact.findOne({
