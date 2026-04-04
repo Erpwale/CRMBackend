@@ -305,4 +305,23 @@ router.post("/add",authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/my-opportunities", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user._id; // from JWT
+
+    const data = await Proposal.find({ uid: userId })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      message: "User proposals fetched",
+      data
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching data" });
+  }
+});
+
+
 module.exports = router;
