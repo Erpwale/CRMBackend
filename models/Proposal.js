@@ -31,7 +31,15 @@ const proposalSchema = new mongoose.Schema({
 terms: {
   type: [String],
   default: []
-}
+},
+ uid: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
+  userName: String,
+  email: String
+  // mobile: String
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Proposal", proposalSchema);
