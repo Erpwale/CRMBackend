@@ -4,6 +4,7 @@ const { chromium } = require("playwright");
 const path = require("path");
 const fs = require("fs");
 const Proposal= require("../models/Proposal")
+const { authMiddleware, adminOnly } = require("../middleware/auth");
 
 const headerBase64 = fs.readFileSync(
   path.join(__dirname, "../assets/header.jpg"),
