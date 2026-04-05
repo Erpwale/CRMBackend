@@ -47,19 +47,16 @@ const proposalSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-proposalSchema.pre("save", async function (next) {
+proposalSchema.pre("save", async function () {
   if (!this.proposalId) {
-    let randomId;
-    let exists = true;
+    const counter = await Counter.findByIdAndUpdate(
+      { _id: "proposalId" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
 
-    while (exists) {
-      randomId = Math.floor(100000 + Math.random() * 900000); // 6-digit
-      exists = await mongoose.models.Proposal.findOne({ proposalId: randomId });
-    }
-
-    this.proposalId = randomId;
+    this.proposalId = counter.seq;
   }
-  next();
 });
 
 module.exports = mongoose.model("Proposal", proposalSchema);
