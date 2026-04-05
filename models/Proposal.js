@@ -8,11 +8,6 @@ const productSchema = new mongoose.Schema({
 });
 
 const proposalSchema = new mongoose.Schema({
-  proposalId: {
-    type: Number,
-    unique: true
-  },
-
   companyName: String,
   address1: String,
   address2: String,
@@ -33,30 +28,18 @@ const proposalSchema = new mongoose.Schema({
   roundOff: Number,
   total: Number,
 
-  terms: {
-    type: [String],
-    default: []
-  },
-
-  uid: {
+terms: {
+  type: [String],
+  default: []
+},
+ uid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
   userName: String,
   email: String
+  // mobile: String
 
 }, { timestamps: true });
-
-proposalSchema.pre("save", async function () {
-  if (!this.proposalId) {
-    const counter = await Counter.findByIdAndUpdate(
-      { _id: "proposalId" },
-      { $inc: { seq: 1 } },
-      { new: true, upsert: true }
-    );
-
-    this.proposalId = counter.seq;
-  }
-});
 
 module.exports = mongoose.model("Proposal", proposalSchema);
