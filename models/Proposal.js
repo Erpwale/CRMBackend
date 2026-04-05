@@ -8,6 +8,11 @@ const productSchema = new mongoose.Schema({
 });
 
 const proposalSchema = new mongoose.Schema({
+  proposalId: {
+    type: Number,
+    unique: true
+  },
+
   companyName: String,
   address1: String,
   address2: String,
@@ -28,18 +33,33 @@ const proposalSchema = new mongoose.Schema({
   roundOff: Number,
   total: Number,
 
-terms: {
-  type: [String],
-  default: []
-},
- uid: {
+  terms: {
+    type: [String],
+    default: []
+  },
+
+  uid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
   userName: String,
   email: String
-  // mobile: String
 
 }, { timestamps: true });
+
+proposalSchema.pre("save", async function (next) {
+  if (!this.proposalId) {
+    let randomId;
+    let exists = true;
+
+    while (exists) {
+      randomId = Math.floor(100000 + Math.random() * 900000); // 6-digit
+      exists = await mongoose.models.Proposal.findOne({ proposalId: randomId });
+    }
+
+    this.proposalId = randomId;
+  }
+  next();
+});
 
 module.exports = mongoose.model("Proposal", proposalSchema);
