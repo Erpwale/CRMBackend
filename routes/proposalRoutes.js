@@ -14,6 +14,7 @@ router.post("/create", async (req, res) => {
       documentTitle,
       user,
       mailStatus,
+      businessLine
     });
 
     const saved = await proposal.save();
