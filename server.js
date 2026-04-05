@@ -51,6 +51,7 @@ app.use("/api", require("./routes/PostOffice.js"));
 app.use("/api/LedgerCreating", require("./routes/ledgerRoutes.js"));
 app.use("/api/businessline", require("./routes/businessLineRoutes.js"));
 app.use("/api/deal", require("./routes/ProposalRoute.js"));
+app.use("/api/Proposel", require("./routes/proposalRoutes.js"));
 global.io = io; // ✅ ADD THIS
 
 // ❗ VERY IMPORTANT: export io
