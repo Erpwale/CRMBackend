@@ -14,6 +14,18 @@ const upload = multer({ dest: "uploads/" });
  */
 router.post("/import-csv", upload.single("file"), async (req, res) => {
   try {
+    const capitalizeWords = (str) => {
+      if (!str) return "";
+      return str
+        .toLowerCase()
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    };
+    const capitalizeFirst = (str) => {
+      if (!str) return "";
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    };
     const filePath = req.file
       ? req.file.path
       : path.join(__dirname, "../data/pincode.csv");
@@ -28,10 +40,11 @@ router.post("/import-csv", upload.single("file"), async (req, res) => {
 
       // ✅ Clean mapping from CSV
       batch.push({
-        officename: data.City?.trim().toLowerCase(),
+
+        officename: capitalizeWords(data.City?.trim()),
         pincode: Number(data.pincode),
-        district: data.district?.trim().toLowerCase(),
-        statename: data.statename?.trim().toLowerCase(),
+        district: capitalizeWords(data.district?.trim()),
+        statename: capitalizeWords(data.statename?.trim()),
       });
 
       // ✅ Batch insert
