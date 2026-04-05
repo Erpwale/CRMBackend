@@ -7,6 +7,7 @@ const Proposal = require("../models/Proposall");
 // ✅ CREATE Proposal
 router.post("/create", async (req, res) => {
   try {
+    console.log(req.body)
     const { documentTitle, user, mailStatus } = req.body;
 
     const proposal = new Proposal({
