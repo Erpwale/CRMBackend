@@ -23,6 +23,7 @@ router.post("/create", async (req, res) => {
       data: saved,
     });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: err.message });
   }
 });
