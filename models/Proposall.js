@@ -8,6 +8,10 @@ const proposallSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    businessLine: {
+      type: String,
+      required: true,
+    },
     user: {
       type: String,
       required: true,
