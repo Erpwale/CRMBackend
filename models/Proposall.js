@@ -1,7 +1,7 @@
 // models/Proposal.js
 const mongoose = require("mongoose");
 
-const proposalSchema = new mongoose.Schema(
+const proposallSchema = new mongoose.Schema(
   {
     documentTitle: {
       type: String,
