@@ -22,7 +22,8 @@ router.post("/create", async (req, res) => {
 // ✅ CLONE FROM EXISTING PROPOSAL
 console.log(data)
 if (data.opid) {
-const oldProposal = await Proposal.findOne({ proposalId: data.opid });  
+const oldProposal = await Proposal.findOne({ proposalId: data.opid });
+console.log(oldProposal)  
   if (!oldProposal) {
     return res.status(404).json({ message: "Not found" });
   }
