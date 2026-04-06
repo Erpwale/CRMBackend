@@ -88,6 +88,8 @@ if (activityDetails.length < 100 || activityDetails.length > 450) {
     const companyId = contact.companyId.toString();
 
     if (global.io) {
+      console.log("activity socket connected");
+      
       global.io.to(companyId).emit("activityAdded", populatedActivity);
       } else {
   console.log("❌ Socket not initialized");
