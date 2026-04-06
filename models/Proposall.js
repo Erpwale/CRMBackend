@@ -1,6 +1,6 @@
 // models/Proposal.js
 const mongoose = require("mongoose");
-
+const Pcounter= require("./pcounter")
 const proposallSchema = new mongoose.Schema(
   {
     proposalId: {
@@ -38,7 +38,7 @@ const proposallSchema = new mongoose.Schema(
 
 proposallSchema.pre("save", async function () {
   if (this.isNew && !this.proposalId) {
-    const counter = await Counter.findByIdAndUpdate(
+    const counter = await Pcounter.findByIdAndUpdate(
       "proposallId", // ⚠️ DIFFERENT name (important)
       { $inc: { seq: 5000 } },
       { returnDocument: "after", upsert: true }
