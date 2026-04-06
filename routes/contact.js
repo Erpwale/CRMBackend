@@ -102,7 +102,7 @@ router.post("/create", authMiddleware, async (req, res) => {
     const populatedContact = await Contact.findById(contact._id)
       .populate("companyId", "companyName");
 
-    // ---------- SOCKET ----------
+    
     // ---------- SOCKET ----------
 const companyRoom = companyId.toString();
 
@@ -154,7 +154,12 @@ router.get("/:companyId", authMiddleware, async (req, res) => {
 router.put("/update/:id", authMiddleware, async (req, res) => {
   try {
     const { primary, companyId, replacePrimary } = req.body;
-if (primary === false) {
+const existingContact = await Contact.findById(req.params.id);
+
+if (
+  existingContact.primary === true && // was primary before
+  primary === false // user trying to remove it
+) {
   const totalPrimary = await Contact.countDocuments({
     companyId,
     primary: true
