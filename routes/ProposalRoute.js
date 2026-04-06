@@ -293,6 +293,17 @@ router.post("/add",authMiddleware, async (req, res) => {
     // ✅ Save to DB
     const newProposal = new Proposal(data);
     const savedData = await newProposal.save();
+    const companyRoom = data.companyId?.toString(); // make sure companyId exists
+
+   if (global.io) {
+  global.io.emit("opportunityUpdated", {
+    type: "CREATE",
+    data: savedData,
+  });
+}
+    } else {
+      console.log("❌ Socket not initialized or companyId missing");
+    }
 
     res.status(201).json({
       message: "Proposal saved successfully",
