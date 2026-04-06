@@ -202,6 +202,19 @@ if (primary) {
       req.body,
       { new: true }
     );
+    // ---------- SOCKET (🔥 ADD THIS) ----------
+    const companyRoom = companyId.toString();
+
+    if (global.io) {
+      console.log("📡 Emitting contactUpdated (UPDATE) to:", companyRoom);
+
+      global.io.to(companyRoom).emit("contactUpdated", {
+        type: "UPDATE",
+        data: updated,
+      });
+    } else {
+      console.log("❌ Socket not initialized");
+    }
 
     res.json({
       message: "Contact updated successfully",
