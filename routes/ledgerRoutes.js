@@ -104,7 +104,6 @@ if (gstPan !== pan) {
     const ledger = await Ledger.create({
       companyId,
       companyName,
-      
       contactEmail,
       contactName,
       contactMobile,
@@ -122,6 +121,19 @@ if (gstPan !== pan) {
       msme,
     });
 
+    // ✅ SOCKET EMIT (CREATE)
+const companyRoom = companyId.toString();
+
+if (global.io) {
+  console.log("📡 Emitting ledgerUpdated (CREATE) to:", companyRoom);
+
+  global.io.to(companyRoom).emit("ledgerUpdated", {
+    type: "CREATE",
+    data: ledger,
+  });
+} else {
+  console.log("❌ Socket not initialized");
+}
     res.status(201).json({ message: "Ledger created", data: ledger });
 
   } catch (err) {
@@ -166,6 +178,15 @@ router.put("/ledger/:id", async (req, res) => {
       req.body,
       { new: true }
     );
+    if (global.io) {
+      console.log("📡 Emitting ledgerUpdated (UPDATE) to:", companyRoom);
+
+      global.io.to(companyRoom).emit("ledgerUpdated", {
+        type: "UPDATE",
+        data: updated,
+      });
+    }
+
 
     res.json(updated);
   } catch (err) {
