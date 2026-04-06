@@ -20,6 +20,7 @@ router.post("/create", async (req, res) => {
   try {
     const data = req.body; // ✅ FIX
 // ✅ CLONE FROM EXISTING PROPOSAL
+console.log(data)
 if (data.opid) {
   const oldProposal = await Proposal.findById(data.opid);
 
