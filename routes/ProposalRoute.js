@@ -23,7 +23,7 @@ router.post("/create", async (req, res) => {
 console.log(data)
 if (data.opid) {
   const oldProposal = await Proposal.findById(data.proposalId);
-
+  console.log(oldProposal)
   if (!oldProposal) {
     return res.status(404).json({ message: "Not found" });
   }
