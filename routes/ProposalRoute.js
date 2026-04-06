@@ -301,7 +301,7 @@ router.post("/add",authMiddleware, async (req, res) => {
     data: savedData,
   });
 }
-    } else {
+    else {
       console.log("❌ Socket not initialized or companyId missing");
     }
 
