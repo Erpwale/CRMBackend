@@ -51,7 +51,7 @@ proposalSchema.pre("save", async function () {
   if (this.isNew && !this.proposalId) {
     const counter = await Counter.findByIdAndUpdate(
       "proposalId",
-      { $inc: { seq: 1 } },
+      { $inc: { seq: 8999 } },
       { returnDocument: "after", upsert: true }
     );
 
