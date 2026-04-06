@@ -8,13 +8,14 @@ const Proposal = require("../models/Proposall");
 router.post("/create", async (req, res) => {
   try {
     console.log(req.body)
-    const { documentTitle, user, mailStatus, businessLine } = req.body;
+    const { documentTitle, user, mailStatus, businessLine,opid } = req.body;
 
     const proposal = new Proposal({
       documentTitle,
       user,
       mailStatus,
-      businessLine
+      businessLine,
+      opid
     });
 
     const saved = await proposal.save();
