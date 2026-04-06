@@ -19,7 +19,23 @@ router.post("/create", async (req, res) => {
  
   try {
     const data = req.body; // ✅ FIX
+// ✅ CLONE FROM EXISTING PROPOSAL
+if (data.opid) {
+  const oldProposal = await Proposal.findById(data.opid);
 
+  if (!oldProposal) {
+    return res.status(404).json({ message: "Not found" });
+  }
+
+  const oldData = oldProposal.toObject();
+
+  Object.assign(data, {
+    ...oldData,
+    ...data, // ✅ new values override old
+    _id: undefined,
+    proposalId: undefined
+  });
+}
    const browser = await chromium.launch({
   headless: true,
   args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -261,9 +277,8 @@ router.post("/create", async (req, res) => {
 
     await browser.close();
 
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=proposal.pdf");
-
+res.setHeader("Content-Type", "application/pdf");
+res.setHeader("Content-Disposition", "inline; filename=proposal.pdf");
     res.send(pdfBuffer);
 
   } catch (err) {
