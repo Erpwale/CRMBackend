@@ -11,7 +11,7 @@ const proposallSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
-  {
+  
     documentTitle: {
       type: String,
       required: true,
