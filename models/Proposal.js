@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Counter = require("./Counter")
 
 const productSchema = new mongoose.Schema({
   name: String,
@@ -8,6 +9,10 @@ const productSchema = new mongoose.Schema({
 });
 
 const proposalSchema = new mongoose.Schema({
+   proposalId: {
+    type: Number,
+    unique: true
+  },
   companyName: String,
   address1: String,
   address2: String,
@@ -42,4 +47,21 @@ terms: {
 
 }, { timestamps: true });
 
+proposalSchema.pre("save", async function (next) {
+  try {
+    if (this.isNew && !this.proposalId) {
+      const counter = await Counter.findByIdAndUpdate(
+        "proposalId",                 // sequence name
+        { $inc: { seq: 1 } },
+        { new: true, upsert: true }
+      );
+
+      this.proposalId = counter.seq; // 9000, 9001, 9002...
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = mongoose.model("Proposal", proposalSchema);
