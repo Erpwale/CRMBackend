@@ -47,21 +47,15 @@ terms: {
 
 }, { timestamps: true });
 
-proposalSchema.pre("save", async function (next) {
-  try {
-    if (this.isNew && !this.proposalId) {
-      const counter = await Counter.findByIdAndUpdate(
-        "proposalId",                 // sequence name
-        { $inc: { seq: 1 } },
-        { new: true, upsert: true }
-      );
+proposalSchema.pre("save", async function () {
+  if (this.isNew && !this.proposalId) {
+    const counter = await Counter.findByIdAndUpdate(
+      "proposalId",
+      { $inc: { seq: 1 } },
+      { returnDocument: "after", upsert: true }
+    );
 
-      this.proposalId = counter.seq; // 9000, 9001, 9002...
-    }
-
-    next();
-  } catch (error) {
-    next(error);
+    this.proposalId = counter.seq;
   }
 });
 module.exports = mongoose.model("Proposal", proposalSchema);
