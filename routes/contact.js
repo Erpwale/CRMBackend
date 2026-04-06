@@ -103,9 +103,19 @@ router.post("/create", authMiddleware, async (req, res) => {
       .populate("companyId", "companyName");
 
     // ---------- SOCKET ----------
-    if (global.io) {
-      global.io.to(companyId).emit("contactUpdated", populatedContact);
-    }
+    // ---------- SOCKET ----------
+const companyRoom = companyId.toString();
+
+if (global.io) {
+  console.log("📡 Emitting contactUpdated to:", companyRoom);
+
+  global.io.to(companyRoom).emit("contactUpdated", {
+    type: "CREATE",
+    data: populatedContact,
+  });
+} else {
+  console.log("❌ Socket not initialized");
+}
 
     res.status(201).json({
       success: true,
