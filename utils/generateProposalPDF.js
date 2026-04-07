@@ -175,8 +175,8 @@ ${data.products.map((p, i) => `
   displayHeaderFooter: true,
 
   margin: {
-    top: "120px",
-    bottom: "120px"
+    top: "100px",
+    bottom: "100px"
   },
 
   headerTemplate: `
