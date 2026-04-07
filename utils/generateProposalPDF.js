@@ -60,9 +60,9 @@ console.log("termsHTML:", termsHTML);
   th { background: #f2f2f2; }
   .text-left { text-align: left; }
   .text-right { text-align: right; }
-  .footer-section {
-  margin-top: 50px;
-  font-size: 13px;
+ .footer-section {
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 .signature-row {
@@ -94,11 +94,17 @@ console.log("termsHTML:", termsHTML);
 }
 
 .bottom-banner {
-  margin-top: 40px;
+  margin-top: 30px;
+  page-break-inside: avoid;
 }
 
 .bottom-banner img {
   width: 100%;
+}
+
+/* 🔥 Important for PDF */
+body {
+  page-break-after: auto;
 }
 </style>
 </head>
