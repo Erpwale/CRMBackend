@@ -9,6 +9,15 @@ const generateProposalPDF = async (data) => {
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
 
+const headerBase64 = fs.readFileSync(
+  path.join(__dirname, "../assets/header.jpg"),
+  { encoding: "base64" }
+);
+
+const footerBase64 = fs.readFileSync(
+  path.join(__dirname, "../assets/footer.jpg"),
+  { encoding: "base64" }
+);
     const page = await browser.newPage();
 
     // ✅ CLEAN TERMS
