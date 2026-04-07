@@ -166,9 +166,7 @@ ${data.products.map((p, i) => `
 
     await page.setContent(html, { waitUntil: "load" });
 
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
+
       const pdfBuffer = await page.pdf({
   format: "A4",
   printBackground: true,
