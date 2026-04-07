@@ -94,7 +94,7 @@ console.log("termsHTML:", termsHTML);
 }
 
 .bottom-banner {
-  margin-top: 10px;
+  margin-top: 0px;
 }
 
 .bottom-banner img {
