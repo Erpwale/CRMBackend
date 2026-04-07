@@ -60,6 +60,46 @@ console.log("termsHTML:", termsHTML);
   th { background: #f2f2f2; }
   .text-left { text-align: left; }
   .text-right { text-align: right; }
+  .footer-section {
+  margin-top: 50px;
+  font-size: 13px;
+}
+
+.signature-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.signature-box {
+  width: 45%;
+  text-align: center;
+}
+
+.signature-line {
+  height: 70px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.regards {
+  margin-top: 40px;
+}
+
+.note {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 11px;
+}
+
+.bottom-banner {
+  margin-top: 40px;
+}
+
+.bottom-banner img {
+  width: 100%;
+}
 </style>
 </head>
 
@@ -117,6 +157,46 @@ ${data.products.map((p, i) => `
 <div style="margin-top:20px;">
   <b>Terms & Conditions</b>
   ${termsHTML}
+</div>
+
+<div class="footer-section">
+
+  <!-- Signature Section -->
+  <div class="signature-row">
+    
+    <div class="signature-box">
+      <div class="signature-line"></div>
+      <b>For, MS ERPWale Pvt. Ltd.</b>
+    </div>
+
+    <div class="signature-box">
+      <div class="signature-line"></div>
+      <b>
+        For, ${data.companyName}<br/>
+        ${data.contactName}
+      </b>
+    </div>
+
+  </div>
+
+  <!-- Regards -->
+  <div class="regards">
+    <b>Regards,</b><br/>
+    ${data.userName || "User Name"}<br/>
+    ${data.email || "Email"}<br/>
+    ${data.mobile || "Mobile"}
+  </div>
+
+  <!-- Note -->
+  <div class="note">
+    (Computer Generated Document so Signature not required)
+  </div>
+
+  <!-- Bottom Banner -->
+  <div class="bottom-banner">
+    <img src="data:image/jpeg;base64,${footerBase64}" />
+  </div>
+
 </div>
 
 </body>
