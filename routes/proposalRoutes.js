@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const Proposal = require("../models/Proposall");
 const opp= require("../models/Proposal")
-
+const generateProposalPDF= require("../utils/generateProposalPDF.js")
 // ✅ CREATE Proposal
 router.post("/create", async (req, res) => {
   try {
