@@ -126,7 +126,7 @@ router.post("/send-mail", async (req, res) => {
   try {
     const { to, subject, content, proposalId } = req.body;
 
-    const opp = await Proposal.findOne({proposalId: proposalId });
+    const proposal = await opp.findOne({proposalId: proposalId });
 
     if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
