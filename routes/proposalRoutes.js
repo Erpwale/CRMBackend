@@ -99,4 +99,30 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
+router.post("/preview", async (req, res) => {
+  const { opid } = req.body;
+
+  const proposal = await Proposal.findOne({ proposalId: opid });
+
+  const pdfBuffer = await generateProposalPDF(proposal);
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", "inline; filename=proposal.pdf");
+
+  res.send(pdfBuffer);
+});
+const pdfBuffer = await generateProposalPDF(proposal);
+
+await transporter.sendMail({
+  to,
+  subject,
+  html: content,
+  attachments: [
+    {
+      filename: `${proposal.documentTitle}.pdf`,
+      content: pdfBuffer,
+    },
+  ],
+});
+
 module.exports = router;
