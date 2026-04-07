@@ -142,6 +142,19 @@ router.post("/send-mail", async (req, res) => {
   try {
     const { to, subject, content, proposalId } = req.body;
     console.log(req.body);
+console.log("➡️ Sending mail...");
+    console.log("TO:", to);
+    console.log("EMAIL:", process.env.EMAIL);
+
+    // ✅ Step 1: Verify SMTP
+    try {
+      await transporter.verify();
+      console.log("✅ SMTP READY");
+    } catch (err) {
+      console.error("❌ SMTP VERIFY ERROR:", err);
+      return res.status(500).json({ message: "SMTP not working" });
+    }
+
     
     const proposal = await opp.findOne({proposalId: proposalId });
 
