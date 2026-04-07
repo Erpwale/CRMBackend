@@ -189,11 +189,11 @@ ${data.products.map((p, i) => `
     <div style="width:100%; font-size:10px; padding:0 20px;">
 
       <div style="display:flex; justify-content:space-between;">
-        <div>
+        <div style="height:20px;">
           <b>For, MS ERPWale Pvt. Ltd.</b>
         </div>
 
-        <div style="text-align:right;">
+        <div style="text-align:right;height:20px;">
           <b>For, ${data.companyName}<br/>${data.contactName}</b>
         </div>
       </div>
