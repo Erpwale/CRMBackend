@@ -54,6 +54,11 @@ const generateProposalPDF = async (data) => {
 </head>
 
 <body>
+<!-- HEADER -->
+<div class="header">
+  <img src="data:image/jpeg;base64,${headerBase64}" />
+</div>
+h
 
 <h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
 
