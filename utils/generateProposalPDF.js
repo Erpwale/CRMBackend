@@ -40,9 +40,9 @@ const footerBase64 = fs.readFileSync(
     const rawTerms = Array.isArray(data.terms)
       ? data.terms.join("")
       : data.terms;
-
+    console.log("rawTerms",rawTerms)
     const termsArray = cleanTerms(rawTerms);
-
+    console.log("termsArray",termsArray)
     const termsHTML = `
       <ol>
         ${termsArray.map(t => `<li>${t}</li>`).join("")}
