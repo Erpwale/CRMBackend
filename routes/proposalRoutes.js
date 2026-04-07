@@ -4,6 +4,19 @@ const router = express.Router();
 const Proposal = require("../models/Proposall");
 const opp= require("../models/Proposal")
 const generateProposalPDF= require("../utils/generateProposalPDF.js")
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.zoho.com",
+  port: 465,
+  secure: true, // ✅ SSL
+  auth: {
+    user: process.env.EMAIL,      // your Zoho email
+    pass: process.env.PASSWORD,   // Zoho app password
+  },
+});
+
+module.exports = transporter;
 // ✅ CREATE Proposal
 router.post("/create", async (req, res) => {
   try {
