@@ -100,29 +100,58 @@ router.delete("/delete/:id", async (req, res) => {
 });
 
 router.post("/preview", async (req, res) => {
-  const { opid } = req.body;
+  try {
+    const { opid } = req.body;
 
-  const proposal = await Proposal.findOne({ proposalId: opid });
+    const proposal = await Proposal.findOne({ proposalId: opid });
 
-  const pdfBuffer = await generateProposalPDF(proposal);
+    if (!proposal) {
+      return res.status(404).json({ message: "Proposal not found" });
+    }
 
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", "inline; filename=proposal.pdf");
+    const pdfBuffer = await generateProposalPDF(proposal);
 
-  res.send(pdfBuffer);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "inline; filename=proposal.pdf");
+
+    res.send(pdfBuffer);
+
+  } catch (err) {
+    console.error("❌ Preview Error:", err);
+    res.status(500).json({ message: "Preview failed" });
+  }
 });
-const pdfBuffer = await generateProposalPDF(proposal);
 
-await transporter.sendMail({
-  to,
-  subject,
-  html: content,
-  attachments: [
-    {
-      filename: `${proposal.documentTitle}.pdf`,
-      content: pdfBuffer,
-    },
-  ],
+router.post("/send-mail", async (req, res) => {
+  try {
+    const { to, subject, content, proposalId } = req.body;
+
+    const proposal = await Proposal.findOne({ proposalId });
+
+    if (!proposal) {
+      return res.status(404).json({ message: "Proposal not found" });
+    }
+
+    const pdfBuffer = await generateProposalPDF(proposal);
+
+    await transporter.sendMail({
+      to,
+      subject,
+      html: content,
+      attachments: [
+        {
+          filename: `${proposal.documentTitle}.pdf`,
+          content: pdfBuffer,
+        },
+      ],
+    });
+
+    res.json({ success: true, message: "Mail sent" });
+
+  } catch (err) {
+    console.error("❌ Mail Error:", err);
+    res.status(500).json({ message: "Mail failed" });
+  }
 });
 
 module.exports = router;
