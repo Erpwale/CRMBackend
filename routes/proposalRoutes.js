@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const Proposal = require("../models/Proposall");
-
+const opp= require("../models/Proposal")
 
 // ✅ CREATE Proposal
 router.post("/create", async (req, res) => {
@@ -103,7 +103,7 @@ router.post("/preview", async (req, res) => {
   try {
     const { opid } = req.body;
 
-    const proposal = await Proposal.findOne({ proposalId: opid });
+    const proposal = await opp.findOne({ proposalId: opid });
 
     if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
