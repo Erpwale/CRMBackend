@@ -54,7 +54,7 @@ const footerBase64 = fs.readFileSync(
 <html>
 <head>
 <style>
-  body { font-family: Arial; padding: 30px; font-size: 12px; }
+  body { font-family: Arial; padding: 30px; font-size: 14px; }
   table { width: 100%; border-collapse: collapse; margin-top: 15px; }
   th, td { border: 1px solid #999; padding: 6px; text-align: center; }
   th { background: #f2f2f2; }
@@ -68,7 +68,7 @@ const footerBase64 = fs.readFileSync(
 <div class="header">
   <img src="data:image/jpeg;base64,${headerBase64}" />
 </div>
-h
+
 
 <h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
 
