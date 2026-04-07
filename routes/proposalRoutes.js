@@ -141,30 +141,24 @@ router.post("/preview", async (req, res) => {
 router.post("/send-mail", async (req, res) => {
   try {
     const { to, subject, content, proposalId } = req.body;
-    console.log(req.body);
-console.log("➡️ Sending mail...");
+
+    console.log("➡️ Sending mail...");
     console.log("TO:", to);
     console.log("EMAIL:", process.env.EMAIL);
 
-    // ✅ Step 1: Verify SMTP
-    try {
-      await transporter.verify();
-      console.log("✅ SMTP READY");
-    } catch (err) {
-      console.error("❌ SMTP VERIFY ERROR:", err);
-      return res.status(500).json({ message: "SMTP not working" });
-    }
+    // ❌ removed verify
 
-    
-    const proposal = await opp.findOne({proposalId: proposalId });
+    const proposal = await opp.findOne({ proposalId });
 
     if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
     }
 
     const pdfBuffer = await generateProposalPDF(proposal);
+    console.log("📄 PDF SIZE:", pdfBuffer.length);
 
     await transporter.sendMail({
+      from: process.env.EMAIL, // ✅ ADD THIS
       to,
       subject,
       html: content,
@@ -172,12 +166,14 @@ console.log("➡️ Sending mail...");
         {
           filename: `${proposal.documentTitle}.pdf`,
           content: pdfBuffer,
-          contentType: "application/pdf", // 
+          contentType: "application/pdf",
         },
       ],
     });
 
-    res.json({ success: true, message: "Mail sent" });
+    console.log("✅ MAIL SENT");
+
+    res.json({ success: true });
 
   } catch (err) {
     console.error("❌ Mail Error:", err);
