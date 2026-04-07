@@ -207,12 +207,57 @@ ${data.products.map((p, i) => `
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
-      margin: {
-    top: "120px",     // header space
-    bottom: "120px"   // footer space
+      const pdfBuffer = await page.pdf({
+  format: "A4",
+  printBackground: true,
+  displayHeaderFooter: true,
+
+  margin: {
+    top: "120px",
+    bottom: "120px"
   },
-    headerTemplate: `...`,
-  footerTemplate: `...`
+
+  headerTemplate: `
+    <div style="width:100%; text-align:center;">
+      <img src="data:image/jpeg;base64,${headerBase64}" style="width:100%;" />
+    </div>
+  `,
+
+  footerTemplate: `
+    <div style="width:100%; font-size:10px; padding:0 20px;">
+
+      <div style="display:flex; justify-content:space-between;">
+        <div>
+          <b>For, MS ERPWale Pvt. Ltd.</b>
+        </div>
+
+        <div style="text-align:right;">
+          <b>For, ${data.companyName}<br/>${data.contactName}</b>
+        </div>
+      </div>
+
+      <div style="margin-top:5px;">
+        <b>Regards,</b><br/>
+        ${data.userName || ""}<br/>
+        ${data.email || ""}<br/>
+        ${data.mobile || ""}
+      </div>
+
+      <div style="text-align:center; margin-top:5px;">
+        (Computer Generated Document so Signature not required)
+      </div>
+
+      <div style="margin-top:5px;">
+        <img src="data:image/jpeg;base64,${footerBase64}" style="width:100%;" />
+      </div>
+
+      <div style="text-align:right; font-size:9px;">
+        Page <span class="pageNumber"></span> of <span class="totalPages"></span>
+      </div>
+
+    </div>
+  `
+});
 
   displayHeaderFooter: true,
     });
