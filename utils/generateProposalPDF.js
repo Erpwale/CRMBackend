@@ -37,18 +37,18 @@ const footerBase64 = fs.readFileSync(
       );
     };
 
-    const rawTerms = Array.isArray(data.terms)
-      ? data.terms.join("")
-      : data.terms;
-    console.log("rawTerms",rawTerms)
-    const termsArray = cleanTerms(rawTerms);
-    console.log("termsArray",termsArray)
-    const termsHTML = `
-      <ol>
-        ${termsArray.map(t => `<li>${t}</li>`).join("")}
-      </ol>
-    `;
-console.log("termsHTML",termsHTML)
+   const termsHTML = `
+  <ol>
+    ${data.terms
+      .map(t =>
+        `<li>${t.replace(/<[^>]*>/g, "").trim()}</li>`
+      )
+      .filter(li => li !== "<li></li>")
+      .join("")}
+  </ol>
+`;
+
+console.log("termsHTML:", termsHTML);
     // ✅ HTML TEMPLATE (YOUR FULL TEMPLATE HERE)
     const html = `
 <html>
