@@ -48,7 +48,7 @@ const footerBase64 = fs.readFileSync(
         ${termsArray.map(t => `<li>${t}</li>`).join("")}
       </ol>
     `;
-
+console.log("termsHTML",termsHTML)
     // ✅ HTML TEMPLATE (YOUR FULL TEMPLATE HERE)
     const html = `
 <html>
