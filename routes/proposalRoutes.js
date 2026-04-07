@@ -138,7 +138,8 @@ router.post("/preview", async (req, res) => {
 router.post("/send-mail", async (req, res) => {
   try {
     const { to, subject, content, proposalId } = req.body;
-
+    console.log(req.body);
+    
     const proposal = await opp.findOne({proposalId: proposalId });
 
     if (!proposal) {
