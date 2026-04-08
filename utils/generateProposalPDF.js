@@ -44,10 +44,8 @@ const termsHTML = `
     return `
       <div style="margin-bottom:10px;">
         <b>${p.name}</b>
-        <ol>
-          ${p.terms
-            .map(t => `<li>${t.replace(/<[^>]*>/g, "").trim()}</li>`)
-            .join("")}
+        <div>
+          ${p.terms}
         </ol>
       </div>
     `;
