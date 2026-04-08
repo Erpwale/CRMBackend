@@ -38,18 +38,45 @@ const footerBase64 = fs.readFileSync(
     };
 
 const termsHTML = `
-  ${data.products.map(p => {
-    if (!p.terms || p.terms.length === 0) return "";
+  <div style="margin-top:30px;">
 
-    return `
-      <div style="margin-bottom:10px;">
-        <b>${p.name}</b>
-        <div>
-          ${p.terms}
-        </ol>
+    <h3 style="margin-bottom:10px;">Terms & Conditions</h3>
+
+    <!-- ✅ Product-wise Terms -->
+    ${data.products.map(p => {
+      if (!p.terms || p.terms.length === 0) return "";
+
+      return `
+        <div style="margin-bottom:12px;">
+          <b>${p.name}</b>
+          <div style="margin-top:5px;">
+            ${Array.isArray(p.terms) ? p.terms.join("") : p.terms}
+          </div>
+        </div>
+      `;
+    }).join("")}
+
+    <!-- ✅ Internal Terms -->
+    ${data.internalTerms ? `
+      <div style="margin-top:15px;">
+        <b>Internal Terms</b>
+        <div style="margin-top:5px;">
+          ${data.internalTerms}
+        </div>
       </div>
-    `;
-  }).join("")}
+    ` : ""}
+
+    <!-- ✅ Special Terms -->
+    ${data.specialTerms ? `
+      <div style="margin-top:15px;">
+        <b>Special Terms</b>
+        <div style="margin-top:5px;">
+          ${data.specialTerms}
+        </div>
+      </div>
+    ` : ""}
+
+  </div>
 `;
 console.log("termsHTML:", termsHTML);
     // ✅ HTML TEMPLATE (YOUR FULL TEMPLATE HERE)
@@ -106,7 +133,7 @@ console.log("termsHTML:", termsHTML);
 </style>
 </head>
 
-<body>
+<body style="padding-bottom:120px;">
 <!-- HEADER -->
 
 
