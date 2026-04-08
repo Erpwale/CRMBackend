@@ -133,7 +133,7 @@ console.log("termsHTML:", termsHTML);
 </style>
 </head>
 
-<body style="padding-bottom:120px;">
+<body style="padding-bottom:150px; padding-to:100%">
 <!-- HEADER -->
 
 
