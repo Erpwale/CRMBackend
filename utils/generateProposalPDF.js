@@ -37,17 +37,22 @@ const footerBase64 = fs.readFileSync(
       );
     };
 
-   const termsHTML = `
-  <ol>
-    ${data.terms
-      .map(t =>
-        `<li>${t.replace(/<[^>]*>/g, "").trim()}</li>`
-      )
-      .filter(li => li !== "<li></li>")
-      .join("")}
-  </ol>
-`;
+const termsHTML = `
+  ${data.products.map(p => {
+    if (!p.terms || p.terms.length === 0) return "";
 
+    return `
+      <div style="margin-bottom:10px;">
+        <b>${p.name}</b>
+        <ol>
+          ${p.terms
+            .map(t => `<li>${t.replace(/<[^>]*>/g, "").trim()}</li>`)
+            .join("")}
+        </ol>
+      </div>
+    `;
+  }).join("")}
+`;
 console.log("termsHTML:", termsHTML);
     // ✅ HTML TEMPLATE (YOUR FULL TEMPLATE HERE)
     const html = `
