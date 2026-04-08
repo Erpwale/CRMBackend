@@ -114,7 +114,6 @@ console.log("termsHTML:", termsHTML);
   <b>To:</b><br/>
   ${data.companyName}<br/>
   ${data.address1}<br/>
-  ${data.address2 || ""}<br/>
   ${data.state}, ${data.city} - ${data.pincode}
 </div>
 
