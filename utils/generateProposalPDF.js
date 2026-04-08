@@ -47,7 +47,7 @@ const termsHTML = `
       if (!p.terms || p.terms.length === 0) return "";
 
       return `
-        <div style="margin-bottom:12px;">
+        <div style="margin-bottom:12px; page-break-inside: avoid;">
           <h3 style="margin-bottom:10px;">Terms & Conditions ${p.name}</h3>
           <div style="margin-top:2px;">
             ${Array.isArray(p.terms) ? p.terms.join("") : p.terms}
@@ -58,7 +58,7 @@ const termsHTML = `
 
     <!-- ✅ Internal Terms -->
     ${data.internalTerms ? `
-      <div style="margin-top:15px;">
+      <div style="margin-top:15px;page-break-inside: avoid;">
         <b>Internal Terms</b>
         <div style="margin-top:2px;">
           ${data.internalTerms}
@@ -68,7 +68,7 @@ const termsHTML = `
 
     <!-- ✅ Special Terms -->
     ${data.specialTerms ? `
-      <div style="margin-top:15px;">
+      <div style="margin-top:15px;page-break-inside: avoid;">
         <b>Special Terms</b>
         <div style="margin-top:2px;">
           ${data.specialTerms}
@@ -153,7 +153,7 @@ console.log("termsHTML:", termsHTML);
 <b>Contact:</b> ${data.contactName}<br/>
 <b>Subject:</b> Proposal of ${data.businessLine}
 
-<table>
+<table style:"page-break-inside: avoid;">
 <tr>
   <th>Sr</th>
   <th>Particular</th>
