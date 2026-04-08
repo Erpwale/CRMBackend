@@ -40,7 +40,7 @@ const footerBase64 = fs.readFileSync(
 const termsHTML = `
   <div style="margin-top:30px;">
 
-    <h3 style="margin-bottom:10px;">Terms & Conditions</h3>
+  
 
     <!-- ✅ Product-wise Terms -->
     ${data.products.map(p => {
@@ -48,6 +48,7 @@ const termsHTML = `
 
       return `
         <div style="margin-bottom:12px;">
+          <h3 style="margin-bottom:10px;">Terms & Conditions</h3>
           <b>${p.name}</b>
           <div style="margin-top:5px;">
             ${Array.isArray(p.terms) ? p.terms.join("") : p.terms}
@@ -182,7 +183,7 @@ ${data.products.map((p, i) => `
 </table>
 
 <div style="margin-top:20px;">
-  <b>Terms & Conditions</b>
+
   ${termsHTML}
 </div>
 <div style="page-break-inside: avoid; margin-top:30px;">
@@ -220,7 +221,7 @@ ${data.products.map((p, i) => `
 
   margin: {
     top: "100px",
-    bottom: "100px"
+    bottom: "180px"
   },
 
   headerTemplate: `
