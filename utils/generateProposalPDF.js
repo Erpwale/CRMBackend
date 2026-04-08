@@ -38,41 +38,34 @@ const footerBase64 = fs.readFileSync(
     };
 
 const termsHTML = `
-  <div style="margin-top:30px;">
+  <div style="page-break-before: always; margin-top:20px;">
 
-  
+    <h3 style="margin-bottom:10px;">Terms & Conditions</h3>
 
-    <!-- ✅ Product-wise Terms -->
     ${data.products.map(p => {
       if (!p.terms || p.terms.length === 0) return "";
 
       return `
-        <div style="margin-bottom:12px; page-break-inside: avoid;">
-          <h3 style="margin-bottom:10px;">Terms & Conditions ${p.name}</h3>
-          <div style="margin-top:2px;">
+        <div style="margin-bottom:12px;">
+          <b>${p.name}</b>
+          <div style="margin-top:5px;">
             ${Array.isArray(p.terms) ? p.terms.join("") : p.terms}
           </div>
         </div>
       `;
     }).join("")}
 
-    <!-- ✅ Internal Terms -->
     ${data.internalTerms ? `
-      <div style="margin-top:15px;page-break-inside: avoid;">
+      <div style="margin-top:15px;">
         <b>Internal Terms</b>
-        <div style="margin-top:2px;">
-          ${data.internalTerms}
-        </div>
+        <div>${data.internalTerms}</div>
       </div>
     ` : ""}
 
-    <!-- ✅ Special Terms -->
     ${data.specialTerms ? `
-      <div style="margin-top:15px;page-break-inside: avoid;">
+      <div style="margin-top:15px;">
         <b>Special Terms</b>
-        <div style="margin-top:2px;">
-          ${data.specialTerms}
-        </div>
+        <div>${data.specialTerms}</div>
       </div>
     ` : ""}
 
