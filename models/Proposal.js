@@ -5,7 +5,12 @@ const productSchema = new mongoose.Schema({
   name: String,
   qty: Number,
   rate: Number,
-  totalValue: Number
+  totalValue: Number,
+  // ✅ ADD THIS
+  terms: {
+    type: [String],
+    default: []
+  }
 });
 
 const proposalSchema = new mongoose.Schema({
@@ -33,10 +38,8 @@ const proposalSchema = new mongoose.Schema({
   roundOff: Number,
   total: Number,
 
-terms: {
-  type: [String],
-  default: []
-},
+internalTerms: String,
+specialTerms: String,
  uid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
