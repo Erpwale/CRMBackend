@@ -185,7 +185,24 @@ ${data.products.map((p, i) => `
   <b>Terms & Conditions</b>
   ${termsHTML}
 </div>
+  <div style="width:100%; font-size:14px; padding:0 20px;">
+    <div style="display:flex; justify-content:space-between;">
+        <div style="height:20px;">
+          <b>For, MS ERPWale Pvt. Ltd.</b>
+        </div>
 
+        <div style="text-align:right;height:20px;">
+          <b>For, ${data.companyName}<br/>${data.contactName}</b>
+        </div>
+      </div>
+
+      <div style="margin-top:5px;">
+        <b>Regards,</b><br/>
+        ${data.userName || ""}<br/>
+        ${data.email || ""}<br/>
+        ${data.mobile || ""}
+      </div>
+</div>
 
 </div>
 
@@ -215,23 +232,7 @@ ${data.products.map((p, i) => `
   footerTemplate: `
     <div style="width:100%; font-size:10px; padding:0 20px;">
 
-      <div style="display:flex; justify-content:space-between;">
-        <div style="height:20px;">
-          <b>For, MS ERPWale Pvt. Ltd.</b>
-        </div>
-
-        <div style="text-align:right;height:20px;">
-          <b>For, ${data.companyName}<br/>${data.contactName}</b>
-        </div>
-      </div>
-
-      <div style="margin-top:5px;">
-        <b>Regards,</b><br/>
-        ${data.userName || ""}<br/>
-        ${data.email || ""}<br/>
-        ${data.mobile || ""}
-      </div>
-
+  
       <div style="text-align:center; margin-top:5px;">
         (Computer Generated Document so Signature not required)
       </div>
