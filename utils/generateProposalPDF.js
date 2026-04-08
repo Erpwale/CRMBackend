@@ -185,13 +185,13 @@ ${data.products.map((p, i) => `
   <b>Terms & Conditions</b>
   ${termsHTML}
 </div>
-  <div style="width:100%; font-size:14px; padding:0 20px;">
+  <div style="width:100%; font-size:14px; padding:0 20px; margin-top:120px">
     <div style="display:flex; justify-content:space-between;">
-        <div style="height:20px;">
+        <div style="height:50px;">
           <b>For, MS ERPWale Pvt. Ltd.</b>
         </div>
 
-        <div style="text-align:right;height:20px;">
+        <div style="text-align:right;height:50px;">
           <b>For, ${data.companyName}<br/>${data.contactName}</b>
         </div>
       </div>
