@@ -219,8 +219,7 @@ ${data.products.map((p, i) => `
   `
 });
 
-  displayHeaderFooter: true,
-
+ 
 
     return pdfBuffer;
 
