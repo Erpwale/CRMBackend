@@ -48,9 +48,8 @@ const termsHTML = `
 
       return `
         <div style="margin-bottom:12px;">
-          <h3 style="margin-bottom:10px;">Terms & Conditions</h3>
-          <b>${p.name}</b>
-          <div style="margin-top:5px;">
+          <h3 style="margin-bottom:10px;">Terms & Conditions ${p.name}</h3>
+          <div style="margin-top:2px;">
             ${Array.isArray(p.terms) ? p.terms.join("") : p.terms}
           </div>
         </div>
@@ -61,7 +60,7 @@ const termsHTML = `
     ${data.internalTerms ? `
       <div style="margin-top:15px;">
         <b>Internal Terms</b>
-        <div style="margin-top:5px;">
+        <div style="margin-top:2px;">
           ${data.internalTerms}
         </div>
       </div>
@@ -71,7 +70,7 @@ const termsHTML = `
     ${data.specialTerms ? `
       <div style="margin-top:15px;">
         <b>Special Terms</b>
-        <div style="margin-top:5px;">
+        <div style="margin-top:2px;">
           ${data.specialTerms}
         </div>
       </div>
