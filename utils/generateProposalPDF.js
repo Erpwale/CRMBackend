@@ -183,6 +183,54 @@ const emptyRows = Array.from({
   <tbody>
     ${productRows}
     ${emptyRows}
+    <tr>
+    <td></td>
+    <td class="text-right">Discount</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.discount || 0}</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td class="text-right">Gross Total</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.grossTotal || 0}</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td class="text-right">CGST (${data.cgstPercent || 0}%)</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.cgst || 0}</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td class="text-right">SGST (${data.sgstPercent || 0}%)</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.sgst || 0}</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td class="text-right">Round Off</td>
+    <td></td>
+    <td></td>
+    <td class="text-right">${data.roundOff || 0}</td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td class="text-right"><b>Total</b></td>
+    <td></td>
+    <td></td>
+    <td class="text-right"><b>${data.total || 0}</b></td>
+  </tr>
+
   </tbody>
 </table>
 
