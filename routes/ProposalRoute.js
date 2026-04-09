@@ -334,9 +334,9 @@ router.post("/add",authMiddleware, async (req, res) => {
 
 router.get("/my-opportunities", authMiddleware, async (req, res) => {
   try {
-    const userId = req.user._id; // from JWT
+    // const userId = req.user._id; // from JWT
 
-    const data = await Proposal.find({ uid: userId })
+    const data = await Proposal.find()
       .sort({ createdAt: -1 });
 
     res.status(200).json({
