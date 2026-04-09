@@ -7,18 +7,13 @@ const generateProposalPDF= require("../utils/generateProposalPDF.js")
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.zoho.com",
-  port: 587,
-  secure: false, // TLS via STARTTLS
+  host: "smtp.hostinger.com",
+  port: 465,
+  secure: true, // ✅ SSL (important)
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.PASSWORD, // ⚠️ must be APP PASSWORD
+    user: process.env.EMAIL,     // your Hostinger email
+    pass: process.env.PASSWORD,  // your email password
   },
-  tls: {
-    rejectUnauthorized: false, // ✅ important for Render
-  },
-  connectionTimeout: 30000,
-  greetingTimeout: 30000,
 });
 transporter.verify((err, success) => {
   console.log(err || "SMTP WORKING");
