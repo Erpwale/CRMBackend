@@ -138,15 +138,79 @@ router.post("/preview", async (req, res) => {
   }
 });
 
+router.get("/proposal/:opid", async (req, res) => {
+  try {
+    const { opid } = req.params;
+
+    const proposal = await opp.findOne({ proposalId: opid });
+
+    if (!proposal) {
+      return res.status(404).send("Proposal not found");
+    }
+
+    const pdfBuffer = await generateProposalPDF(proposal);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename=proposal_${opid}.pdf`
+    );
+
+    res.send(pdfBuffer);
+  } catch (err) {
+    console.error("❌ Preview Error:", err);
+    res.status(500).send("Preview failed");
+  }
+});
+
+// router.post("/send-mail", async (req, res) => {
+//   try {
+//     const { to, subject, content, proposalId } = req.body;
+
+//     console.log("➡️ Sending mail...");
+//     console.log("TO:", to);
+//     console.log("EMAIL:", process.env.EMAIL);
+
+//     // ❌ removed verify
+
+//     const proposal = await opp.findOne({ proposalId });
+
+//     if (!proposal) {
+//       return res.status(404).json({ message: "Proposal not found" });
+//     }
+
+//     const pdfBuffer = await generateProposalPDF(proposal);
+//     console.log("📄 PDF SIZE:", pdfBuffer.length);
+
+//     await transporter.sendMail({
+//       from: process.env.EMAIL, // ✅ ADD THIS
+//       to,
+//       subject,
+//       html: content,
+//       attachments: [
+//         {
+//           filename: `${proposal.documentTitle}.pdf`,
+//           content: pdfBuffer,
+//           contentType: "application/pdf",
+//         },
+//       ],
+//     });
+
+//     console.log("✅ MAIL SENT");
+
+//     res.json({ success: true });
+
+//   } catch (err) {
+//     console.error("❌ Mail Error:", err);
+//     res.status(500).json({ message: "Mail failed" });
+//   }
+// });
+
 router.post("/send-mail", async (req, res) => {
   try {
     const { to, subject, content, proposalId } = req.body;
 
     console.log("➡️ Sending mail...");
-    console.log("TO:", to);
-    console.log("EMAIL:", process.env.EMAIL);
-
-    // ❌ removed verify
 
     const proposal = await opp.findOne({ proposalId });
 
@@ -154,21 +218,18 @@ router.post("/send-mail", async (req, res) => {
       return res.status(404).json({ message: "Proposal not found" });
     }
 
-    const pdfBuffer = await generateProposalPDF(proposal);
-    console.log("📄 PDF SIZE:", pdfBuffer.length);
+    // ✅ Correct link
+    const pdfLink = `http://localhost:5000/proposal/${proposalId}`;
 
     await transporter.sendMail({
-      from: process.env.EMAIL, // ✅ ADD THIS
+      from: process.env.EMAIL,
       to,
       subject,
-      html: content,
-      attachments: [
-        {
-          filename: `${proposal.documentTitle}.pdf`,
-          content: pdfBuffer,
-          contentType: "application/pdf",
-        },
-      ],
+      html: `
+        ${content}
+        <br/><br/>
+        👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
+      `,
     });
 
     console.log("✅ MAIL SENT");
