@@ -126,7 +126,7 @@ console.log("termsHTML:", termsHTML);
 </style>
 </head>
 
-<body style="padding-bottom:250px;">
+<body>
 <!-- HEADER -->
 
 
