@@ -5,18 +5,17 @@ const Proposal = require("../models/Proposall");
 const opp= require("../models/Proposal")
 const generateProposalPDF= require("../utils/generateProposalPDF.js")
 const nodemailer = require("nodemailer");
-
 const transporter = nodemailer.createTransport({
   host: "smtp.hostinger.com",
-  port: 465,
-  secure: true, // ✅ SSL (important)
+  port: 587,
+  secure: false, // ❗ IMPORTANT (false for 587)
   auth: {
-    user: process.env.EMAIL,     // your Hostinger email
-    pass: process.env.PASSWORD,  // your email password
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
   },
-});
-transporter.verify((err, success) => {
-  console.log(err || "SMTP WORKING");
+  tls: {
+    rejectUnauthorized: false, // optional but helps in some servers
+  },
 });
 module.exports = transporter;
 // ✅ CREATE Proposal
