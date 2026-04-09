@@ -20,6 +20,9 @@ const transporter = nodemailer.createTransport({
   connectionTimeout: 30000,
   greetingTimeout: 30000,
 });
+transporter.verify((err, success) => {
+  console.log(err || "SMTP WORKING");
+});
 module.exports = transporter;
 // ✅ CREATE Proposal
 router.post("/create", async (req, res) => {
