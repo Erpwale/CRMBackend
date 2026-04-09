@@ -9,16 +9,17 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   host: "smtp.zoho.com",
   port: 587,
-  secure: false, // ✅ FIXED
-  requireTLS: true, // ✅ ADD THIS
+  secure: false, // TLS via STARTTLS
   auth: {
     user: process.env.EMAIL,
-    pass: process.env.PASSWORD,
+    pass: process.env.PASSWORD, // ⚠️ must be APP PASSWORD
   },
-  connectionTimeout: 20000,
-  greetingTimeout: 20000,
+  tls: {
+    rejectUnauthorized: false, // ✅ important for Render
+  },
+  connectionTimeout: 30000,
+  greetingTimeout: 30000,
 });
-
 module.exports = transporter;
 // ✅ CREATE Proposal
 router.post("/create", async (req, res) => {
