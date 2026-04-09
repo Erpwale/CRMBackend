@@ -146,7 +146,7 @@ console.log("termsHTML:", termsHTML);
 <b>Contact:</b> ${data.contactName}<br/>
 <b>Subject:</b> Proposal of ${data.businessLine}
 
-<table style:"page-break-inside: avoid;">
+<table style="break-inside: avoid; page-break-inside: avoid; width: 100%; border-collapse: collapse; margin-top: 15px;">
 <tr>
   <th>Sr</th>
   <th>Particular</th>
@@ -178,25 +178,23 @@ ${data.products.map((p, i) => `
 
   ${termsHTML}
 </div>
-<div style="page-break-inside: avoid; margin-top:30px;">
+<div style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
     <div style="display:flex; justify-content:space-between;">
         <div style="height:50px;">
-          <b>For, MS ERPWale Pvt. Ltd.</b>
+            <b>For, MS ERPWale Pvt. Ltd.</b>
         </div>
-
         <div style="text-align:right;height:50px;">
           <b>For, ${data.companyName}<br/>${data.contactName}</b>
         </div>
-      </div>
+    </div>
 
-      <div style="margin-top:5px;">
+    <div style="margin-top:5px;">
         <b>Regards,</b><br/>
         ${data.userName || ""}<br/>
         ${data.email || ""}<br/>
         ${data.mobile || ""}
-      </div>
+    </div>
 </div>
-
 </div>
 
 </body>
