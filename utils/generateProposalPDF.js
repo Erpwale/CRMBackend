@@ -72,7 +72,7 @@ const termsHTML = `
   </div>
 `;
 console.log("termsHTML:", termsHTML);
-const maxRows = 15;
+const maxRows = 10;
 
 const productRows = data.products.map((p, i) => `
 <tr>
