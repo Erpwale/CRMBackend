@@ -270,8 +270,8 @@ const emptyRows = Array.from({
   displayHeaderFooter: true,
 
   margin: {
-    top: "50px",
-    bottom: "80px"
+    top: "180px",
+    bottom: "180px"
   },
 
   headerTemplate: `
