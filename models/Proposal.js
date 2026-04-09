@@ -28,7 +28,6 @@ const proposalSchema = new mongoose.Schema({
   contactName: String,
   businessLine: String,
   products: [productSchema],
-
   discount: Number,
   grossTotal: Number,
   cgstPercent: Number,
@@ -37,6 +36,8 @@ const proposalSchema = new mongoose.Schema({
   sgst: Number,
   roundOff: Number,
   total: Number,
+  subtotal: Number,
+  net: Number,
 
 internalTerms: String,
 specialTerms: String,
