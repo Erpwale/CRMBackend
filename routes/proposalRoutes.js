@@ -7,17 +7,21 @@ const generateProposalPDF= require("../utils/generateProposalPDF.js")
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.hostinger.com",
-  port: 465,
-  secure: true, // ✅ SSL (important)
+  service: "gmail",
   auth: {
-    user: process.env.EMAIL,     // your Hostinger email
-    pass: process.env.PASSWORD,  // your email password
+    user: process.env.EMAIL,        // your gmail
+    pass: process.env.APP_PASSWORD, // app password (NOT real password)
   },
 });
+
 transporter.verify((err, success) => {
-  console.log(err || "SMTP WORKING");
+  if (err) {
+    console.error("SMTP ERROR:", err);
+  } else {
+    console.log("SMTP WORKING");
+  }
 });
+
 module.exports = transporter;
 // ✅ CREATE Proposal
 router.post("/create", async (req, res) => {
