@@ -275,8 +275,8 @@ const emptyRows = Array.from({
   },
 
   headerTemplate: `
-    <div style="width:100%; text-align:center;margin-bottom:20px">
-      <img src="data:image/jpeg;base64,${headerBase64}" style="width:100%;" />
+    <div style="width:100%; text-align:center;padding-bottom:200px">
+      <img src="data:image/jpeg;base64,${headerBase64}" style="width:100%; margin-bottom:50px" />
     </div>
   `,
 
