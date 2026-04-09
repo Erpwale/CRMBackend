@@ -155,15 +155,31 @@ console.log("termsHTML:", termsHTML);
   <th>Amount</th>
 </tr>
 
-${data.products.map((p, i) => `
+const maxRows = 15;
+const totalRowsCount = 6; // Discount, Gross, CGST, SGST, RoundOff, Total
+
+const productRows = data.products.map((p, i) => `
 <tr>
   <td>${i + 1}</td>
-  <td class="text-left">${p.name}</td>
-  <td>${p.qty}</td>
-  <td>${p.rate}</td>
-  <td class="text-right">${p.totalValue}</td>
+  <td class="text-left">${p.name || ""}</td>
+  <td>${p.qty || ""}</td>
+  <td>${p.rate || ""}</td>
+  <td class="text-right">${p.totalValue || ""}</td>
 </tr>
-`).join("")}
+`).join("");
+
+// 🔥 Empty rows BEFORE totals
+const emptyRows = Array.from({
+  length: Math.max(0, maxRows - totalRowsCount - data.products.length)
+}).map((_, i) => `
+<tr>
+  <td>${data.products.length + i + 1}</td>
+  <td>&nbsp;</td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+`).join("");
 
 <tr><td></td><td class="text-right">Discount</td><td></td><td></td><td>${data.discount}</td></tr>
 <tr><td></td><td class="text-right">Gross Total</td><td></td><td></td><td>${data.grossTotal}</td></tr>
