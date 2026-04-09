@@ -208,7 +208,7 @@ router.get("/proposal/:opid", async (req, res) => {
 router.post("/send-mail", async (req, res) => {
   try {
     const { to, subject, content, proposalId } = req.body;
-    l
+    
 
     console.log("➡️ Sending mail...",to);
 
