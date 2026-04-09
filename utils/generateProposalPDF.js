@@ -72,6 +72,29 @@ const termsHTML = `
   </div>
 `;
 console.log("termsHTML:", termsHTML);
+const maxRows = 15;
+
+const productRows = data.products.map((p, i) => `
+<tr>
+  <td>${i + 1}</td>
+  <td class="text-left">${p.name || ""}</td>
+  <td>${p.qty || ""}</td>
+  <td>${p.rate || ""}</td>
+  <td class="text-right">${p.totalValue || ""}</td>
+</tr>
+`).join("");
+
+const emptyRows = Array.from({
+  length: Math.max(0, maxRows - data.products.length)
+}).map((_, i) => `
+<tr>
+  <td>${data.products.length + i + 1}</td>
+  <td>&nbsp;</td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+`).join("");
     // ✅ HTML TEMPLATE (YOUR FULL TEMPLATE HERE)
     const html = `
 <html>
@@ -146,48 +169,21 @@ console.log("termsHTML:", termsHTML);
 <b>Contact:</b> ${data.contactName}<br/>
 <b>Subject:</b> Proposal of ${data.businessLine}
 
-<table style="break-inside: avoid; page-break-inside: avoid; width: 100%; border-collapse: collapse; margin-top: 15px;">
-<tr>
-  <th>Sr</th>
-  <th>Particular</th>
-  <th>Qty</th>
-  <th>Rate</th>
-  <th>Amount</th>
-</tr>
+<table>
+  <thead>
+    <tr>
+      <th>Sr</th>
+      <th>Particular</th>
+      <th>Qty</th>
+      <th>Rate</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
 
-const maxRows = 15;
-const totalRowsCount = 6; // Discount, Gross, CGST, SGST, RoundOff, Total
-
-const productRows = data.products.map((p, i) => `
-<tr>
-  <td>${i + 1}</td>
-  <td class="text-left">${p.name || ""}</td>
-  <td>${p.qty || ""}</td>
-  <td>${p.rate || ""}</td>
-  <td class="text-right">${p.totalValue || ""}</td>
-</tr>
-`).join("");
-
-// 🔥 Empty rows BEFORE totals
-const emptyRows = Array.from({
-  length: Math.max(0, maxRows - totalRowsCount - data.products.length)
-}).map((_, i) => `
-<tr>
-  <td>${data.products.length + i + 1}</td>
-  <td>&nbsp;</td>
-  <td></td>
-  <td></td>
-  <td></td>
-</tr>
-`).join("");
-
-<tr><td></td><td class="text-right">Discount</td><td></td><td></td><td>${data.discount}</td></tr>
-<tr><td></td><td class="text-right">Gross Total</td><td></td><td></td><td>${data.grossTotal}</td></tr>
-<tr><td></td><td class="text-right">CGST (${data.cgstPercent}%)</td><td></td><td></td><td>${data.cgst}</td></tr>
-<tr><td></td><td class="text-right">SGST (${data.sgstPercent}%)</td><td></td><td></td><td>${data.sgst}</td></tr>
-<tr><td></td><td class="text-right">Round Off</td><td></td><td></td><td>${data.roundOff}</td></tr>
-<tr><td></td><td class="text-right"><b>Total</b></td><td></td><td></td><td><b>${data.total}</b></td></tr>
-
+  <tbody>
+    ${productRows}
+    ${emptyRows}
+  </tbody>
 </table>
 
 <div style="margin-top:20px;">
