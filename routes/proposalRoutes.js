@@ -214,12 +214,9 @@ router.post("/send-mail", async (req, res) => {
 
     console.log("➡️ Sending mail...",to);
 
-    const proposal = await opp.findOne({ proposalId });
-    const prop = await Proposal.findOne({proposalId: proposalId });
-    console.log(proposal)
-    console.log(prop)
+    const proposalpdf = await opp.findOne({ proposalId });
 
-    if (!proposal) {
+    if (!proposalpdf) {
       return res.status(404).json({ message: "Proposal not found" });
     }
 
@@ -254,7 +251,7 @@ console.log("EMAIL:", process.env.EMAIL);
     try {
       await transporter.sendMail({
         from: process.env.EMAIL,
-        replyTo: proposal.email, // ⚠️ fix typo (, → .)
+        replyTo: proposalpdf.email, // ⚠️ fix typo (, → .)
         to,
         subject,
         html: `
