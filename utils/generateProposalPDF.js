@@ -106,7 +106,7 @@ const emptyRows = Array.from({
   th, td { border: 1px solid #f1f1f1; padding: 6px; text-align: center; }
   th { background: #ffffff; }
   .text-left { text-align: left;
-  max-width: 550px;
+width: 550px;
   word-break: break-word; }
   .text-right { text-align: right;width:20px; }
   .footer-section {
