@@ -279,13 +279,13 @@ await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-statu
 
 router.put("/update-mail-status", async (req, res) => {
   try {
+    console.log("Update staus",req.body)
+    const { proposalId, status } = req.body;
     console.log("RAW proposalId:", proposalId);
 console.log("TYPE:", typeof proposalId);
 
 const num = Number(proposalId);
 console.log("Converted:", num);
-    console.log("Update staus",req.body)
-    const { proposalId, status } = req.body;
 
     if (!["Sent", "Pending", "Failed"].includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
