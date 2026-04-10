@@ -295,7 +295,7 @@ console.log("Converted:", num);
 
     const proposal = await Proposal.findOneAndUpdate(
       { opid:proposalId },
-      { mailStatus: status },
+      { $set: { mailStatus: status } },
       { new: true }
     );
     console.log(proposal1)
