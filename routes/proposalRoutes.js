@@ -215,7 +215,7 @@ router.post("/send-mail", async (req, res) => {
     console.log("➡️ Sending mail...",to);
 
     const proposal = await opp.findOne({ proposalId });
-    console.log(proposel)
+    console.log(proposal)
 
     if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
