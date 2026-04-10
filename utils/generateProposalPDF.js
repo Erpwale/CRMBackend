@@ -101,7 +101,7 @@ const emptyRows = Array.from({
   border: 2px solid #315d7c;
   pointer-events: none;
 }
-  body { font-family: Arial; padding: 30px; font-size: 14px; border:1px solid #315d7c;}
+  body { font-family: Arial; padding: 30px; font-size: 14px;}
   table { width: 100%; border-collapse: collapse; margin-top: 15px; }
   th, td { border: 1px solid #f1f1f1; padding: 6px; text-align: center; }
   th { background: #ffffff; }
