@@ -284,14 +284,15 @@ router.put("/update-mail-status", async (req, res) => {
 
     if (!["Sent", "Pending", "Failed"].includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
+      console.log("invalid Status")
     }
 
-    const proposal = await opp.findOneAndUpdate(
+    const proposal = await Proposal.findOneAndUpdate(
       { proposalId },
       { mailStatus: status },
       { new: true }
     );
-
+    console.log(proposal)
     if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
     }
