@@ -319,4 +319,17 @@ router.get("/company/:id", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/search", async (req, res) => {
+  try {
+    const { keyword } = req.query;
+
+    const companies = await Company.find({
+      companyName: { $regex: keyword, $options: "i" },
+    }).limit(10);
+
+    res.json({ data: companies });
+  } catch (err) {
+    res.status(500).json({ message: "Error searching companies" });
+  }
+});
 module.exports = router;
