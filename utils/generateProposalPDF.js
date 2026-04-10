@@ -88,7 +88,7 @@ const emptyRows = Array.from({
   length: Math.max(0, maxRows - data.products.length)
 }).map((_, i) => `
 <tr>
-  <td>${data.products.length + i + 1}</td>
+  <td></td>
   <td>&nbsp;</td>
   <td></td>
   <td></td>
@@ -155,7 +155,7 @@ const emptyRows = Array.from({
 
 
 <h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
-<div style="display: flex;">
+<div style="display: flex;justify-content: space-between;">
 
 <div>
   <b>To:</b><br/>
