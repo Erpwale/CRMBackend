@@ -252,7 +252,7 @@ console.log("EMAIL:", process.env.EMAIL);
     try {
       await transporter.sendMail({
         from: process.env.EMAIL,
-        replyTo: "deepalimore09@gmail.com", // ⚠️ fix typo (, → .)
+        replyTo: proposal.email, // ⚠️ fix typo (, → .)
         to,
         subject,
         html: `
