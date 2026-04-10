@@ -38,38 +38,26 @@ const footerBase64 = fs.readFileSync(
     };
 
 const termsHTML = `
-  <div style="page-break-before: always; margin-top:20px;">
+<div style="page-break-before: always;">
 
-    <h3 style="margin-bottom:10px;">Terms & Conditions</h3>
+  <h3>Terms & Conditions</h3>
 
-    ${data.products.map(p => {
-      if (!p.terms || p.terms.length === 0) return "";
+  ${data.products.map(p => `
+    <div style="margin-bottom:10px;">
+      <b>${p.name}</b>
+      <div>${p.terms || ""}</div>
+    </div>
+  `).join("")}
 
-      return `
-        <div style="margin-bottom:12px;">
-          <b>${p.name}</b>
-          <div style="margin-top:5px;">
-            ${Array.isArray(p.terms) ? p.terms.join("") : p.terms}
-          </div>
-        </div>
-      `;
-    }).join("")}
+  ${data.internalTerms ? `
+    <div><b>Internal Terms</b><br/>${data.internalTerms}</div>
+  ` : ""}
 
-    ${data.internalTerms ? `
-      <div style="margin-top:15px;">
-        <b>Internal Terms</b>
-        <div>${data.internalTerms}</div>
-      </div>
-    ` : ""}
+  ${data.specialTerms ? `
+    <div><b>Special Terms</b><br/>${data.specialTerms}</div>
+  ` : ""}
 
-    ${data.specialTerms ? `
-      <div style="margin-top:15px;">
-        <b>Special Terms</b>
-        <div>${data.specialTerms}</div>
-      </div>
-    ` : ""}
-
-  </div>
+</div>
 `;
 console.log("termsHTML:", termsHTML);
 const maxRows = 10;
@@ -100,11 +88,26 @@ const emptyRows = Array.from({
 <html>
 <head>
 <style>
+@page {
+  margin: 90px 20px 100px 20px; /* match your PDF margins */
+}
+
+.page-border {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 2px solid #315d7c;
+  pointer-events: none;
+}
   body { font-family: Arial; padding: 30px; font-size: 14px; border:1px solid #315d7c;}
   table { width: 100%; border-collapse: collapse; margin-top: 15px; }
   th, td { border: 1px solid #f1f1f1; padding: 6px; text-align: center; }
   th { background: #ffffff; }
-  .text-left { text-align: left; }
+  .text-left { text-align: left;
+  max-width: 250px;
+  word-break: break-word; }
   .text-right { text-align: right; }
   .footer-section {
   margin-top: 50px;
@@ -152,7 +155,7 @@ const emptyRows = Array.from({
 <body>
 <!-- HEADER -->
 
-
+<div class="page-border"></div>
 
 <h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
 <div style="display: flex;justify-content: space-between;">
@@ -238,8 +241,7 @@ Kind Attn: ${data.contactName}<br/>
   </tbody>
 </table>
 
-<div style="margin-top:20px;">
-
+<div style="page-break-before: always;">
   ${termsHTML}
 </div>
 <div style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
