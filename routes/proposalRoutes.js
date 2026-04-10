@@ -224,7 +224,7 @@ router.post("/send-mail", async (req, res) => {
     const pdfLink = `http://localhost:5000/proposal/${proposalId}`;
 
    await transporter.sendMail({
-  from: "Newsletters <noreply@example.com>",
+  from: "Newsletters <service@mserpwale.com>",
   to: "deepalimore609@gmail.com",
   subject: "Hello pooled world",
   text: "Hi Alice!",
