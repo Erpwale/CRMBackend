@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport({
 });
 module.exports = transporter;
 // ✅ CREATE Proposal
-const companyRoom = companyId.toString();
+// const companyRoom = companyId.toString();
 router.post("/create", async (req, res) => {
   try {
     console.log(req.body)
@@ -303,14 +303,14 @@ console.log("Converted:", num);
     if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
     }
- if (global.io) {
-      console.log("📡 Emitting proUpdated (UPDATE) to:", companyRoom);
+//  if (global.io) {
+//       console.log("📡 Emitting proUpdated (UPDATE) to:", companyRoom);
 
-      global.io.to(companyRoom).emit("proUpdated", {
-        type: "UPDATE",
-        data: proposal,
-      });
-    }
+//       global.io.to(companyRoom).emit("proUpdated", {
+//         type: "UPDATE",
+//         data: proposal,
+//       });
+//     }
 
     res.json({
       success: true,
