@@ -215,6 +215,7 @@ router.post("/send-mail", async (req, res) => {
     console.log("➡️ Sending mail...",to);
 
     const proposal = await opp.findOne({ proposalId });
+    console.log(proposel)
 
     if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
@@ -222,9 +223,10 @@ router.post("/send-mail", async (req, res) => {
 
     // ✅ Correct link
     const pdfLink = `http://localhost:5000/proposal/${proposalId}`;
-
+console.log("EMAIL:", process.env.EMAIL);
     await transporter.sendMail({
       from: process.env.EMAIL,
+      replyTo: "deepalimore09@gmail,com",
       to,
       subject,
       html: `
