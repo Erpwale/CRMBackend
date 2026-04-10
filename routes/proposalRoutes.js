@@ -288,7 +288,7 @@ router.put("/update-mail-status", async (req, res) => {
     }
 
     const proposal = await Proposal.findOneAndUpdate(
-      { proposalId },
+      { proposalId:Number(proposalId) },
       { mailStatus: status },
       { new: true }
     );
