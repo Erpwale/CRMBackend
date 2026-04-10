@@ -286,13 +286,14 @@ router.put("/update-mail-status", async (req, res) => {
       return res.status(400).json({ message: "Invalid status" });
       console.log("invalid Status")
     }
+ const proposal1 = await Proposal.findOne({ proposalId });
 
     const proposal = await Proposal.findOneAndUpdate(
       { proposalId:Number(proposalId) },
       { mailStatus: status },
       { new: true }
     );
-    console.log(proposal)
+    console.log(proposal1)
     if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
     }
