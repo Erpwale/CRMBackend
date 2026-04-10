@@ -307,7 +307,7 @@ console.log("Converted:", num);
 
       global.io.to(companyRoom).emit("proUpdated", {
         type: "UPDATE",
-        data: updated,
+        data: proposal,
       });
     }
 
