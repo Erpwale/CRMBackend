@@ -126,8 +126,8 @@ const emptyRows = Array.from({
 }
 
 .signature-line {
-  height: 70px;
-  border: 1px solid #ccc;
+  height: 170px;
+  border: 1px solid #d8d8d8;
   border-radius: 12px;
   margin-bottom: 10px;
 }
