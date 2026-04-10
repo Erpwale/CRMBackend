@@ -291,14 +291,14 @@ console.log("Converted:", num);
       return res.status(400).json({ message: "Invalid status" });
       console.log("invalid Status")
     }
- const proposal1 = await Proposal.findOne({ opid:197980 });
+
 
     const proposal = await Proposal.findOneAndUpdate(
       { opid:proposalId },
       { $set: { mailStatus: status } },
-      { new: true }
+       { returnDocument: "after" }
     );
-    console.log(proposal1)
+    console.log(proposal)
     if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
     }
