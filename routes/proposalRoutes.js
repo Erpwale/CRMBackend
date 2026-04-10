@@ -241,20 +241,32 @@ console.log("EMAIL:", process.env.EMAIL);
 
       console.log("✅ MAIL SENT");
 
- await opp.updateOne(
-  { proposalId },
-  { $set: { mailStatus: "Sent" } }
-);
+await fetch("https://crmbackend-j0pp.onrender.com/api/update-mail-status", {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    proposalId,
+    status: "Sent",
+  }),
+});
 
       res.json({ success: true });
 
     } catch (mailErr) {
       console.error("❌ Mail Error:", mailErr);
 
-    await opp.updateOne(
-  { proposalId },
-  { $set: { mailStatus: "Failed" } }
-);
+   await fetch("https://crmbackend-j0pp.onrender.com/api/update-mail-status", {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    proposalId,
+    status: "Failed",
+  }),
+});
       res.status(500).json({ message: "Mail failed" });
     }
 
