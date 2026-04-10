@@ -261,7 +261,7 @@ await fetch("https://crmbackend-j0pp.onrender.com/api/update-mail-status", {
   method: "PUT",
   headers: {
     "Content-Type": "application/json",
-  },s
+  },
   body: JSON.stringify({
     proposalId,
     status: "Failed",
