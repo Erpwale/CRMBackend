@@ -100,10 +100,10 @@ const emptyRows = Array.from({
 <html>
 <head>
 <style>
-  body { font-family: Arial; padding: 30px; font-size: 14px; }
+  body { font-family: Arial; padding: 30px; font-size: 14px; border:1px solid #315d7c;}
   table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-  th, td { border: 1px solid #999; padding: 6px; text-align: center; }
-  th { background: #f2f2f2; }
+  th, td { border: 1px solid #f1f1f1; padding: 6px; text-align: center; }
+  th { background: #ffffff; }
   .text-left { text-align: left; }
   .text-right { text-align: right; }
   .footer-section {
@@ -155,6 +155,7 @@ const emptyRows = Array.from({
 
 
 <h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
+<div style="display: flex;">
 
 <div>
   <b>To:</b><br/>
@@ -164,10 +165,13 @@ const emptyRows = Array.from({
 </div>
 
 <br/>
+<div>
 
 <b>Date:</b> ${data.date}<br/>
-<b>Contact:</b> ${data.contactName}<br/>
-<b>Subject:</b> Proposal of ${data.businessLine}
+</div>
+</div>
+Kind Attn: ${data.contactName}<br/>
+<b>Subject: Proposal of ${data.businessLine} </b>
 
 <table>
   <thead>

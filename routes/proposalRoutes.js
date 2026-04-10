@@ -222,7 +222,7 @@ router.post("/send-mail", async (req, res) => {
     }
 
     // ✅ Correct link
-    const pdfLink = `https://crmerp.netlify.app/proposal/${proposalId}`;
+    const pdfLink = `https://crmbackend-j0pp.onrender.com/proposal/${proposalId}`;
 console.log("EMAIL:", process.env.EMAIL);
 
 
