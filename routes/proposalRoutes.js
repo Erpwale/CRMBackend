@@ -241,7 +241,7 @@ console.log("EMAIL:", process.env.EMAIL);
 
       console.log("✅ MAIL SENT");
 
-await fetch("https://crmbackend-j0pp.onrender.com/api/update-mail-status", {
+await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
   method: "PUT",
   headers: {
     "Content-Type": "application/json",
@@ -257,7 +257,7 @@ await fetch("https://crmbackend-j0pp.onrender.com/api/update-mail-status", {
     } catch (mailErr) {
       console.error("❌ Mail Error:", mailErr);
 
-   await fetch("https://crmbackend-j0pp.onrender.com/api/update-mail-status", {
+   await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
   method: "PUT",
   headers: {
     "Content-Type": "application/json",
