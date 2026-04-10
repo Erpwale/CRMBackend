@@ -22,6 +22,7 @@ const transporter = nodemailer.createTransport({
 });
 module.exports = transporter;
 // ✅ CREATE Proposal
+const companyRoom = companyId.toString();
 router.post("/create", async (req, res) => {
   try {
     console.log(req.body)
