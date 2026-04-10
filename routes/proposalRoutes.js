@@ -223,12 +223,22 @@ router.post("/send-mail", async (req, res) => {
     // ✅ Correct link
     const pdfLink = `http://localhost:5000/proposal/${proposalId}`;
 
-   await transporter.sendMail({
-  from: "Newsletters <service@mserpwale.com>",
-  to: "deepalimore609@gmail.com",
-  subject: "Hello pooled world",
-  text: "Hi Alice!",
-});
+    await transporter.sendMail({
+      from: process.env.EMAIL,
+      to,
+      subject,
+      html: `
+        ${content}
+        <br/><br/>
+        👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
+      `,
+    });
+// await transporter.sendMail({
+//   from: "Newsletters <service@mserpwale.com>",
+//   to: "deepalimore609@gmail.com",
+//   subject: "Hello pooled world",
+//   text: "Hi Alice!",
+// });
 
     console.log("✅ MAIL SENT");
 
