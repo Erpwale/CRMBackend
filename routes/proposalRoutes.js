@@ -302,6 +302,14 @@ console.log("Converted:", num);
     if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
     }
+ if (global.io) {
+      console.log("📡 Emitting proUpdated (UPDATE) to:", companyRoom);
+
+      global.io.to(companyRoom).emit("proUpdated", {
+        type: "UPDATE",
+        data: updated,
+      });
+    }
 
     res.json({
       success: true,
