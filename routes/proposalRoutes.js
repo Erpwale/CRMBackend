@@ -214,7 +214,8 @@ router.post("/send-mail", async (req, res) => {
 
     console.log("➡️ Sending mail...",to);
 
-    const proposal = await opp.findOne({ proposalId });
+    const proposalpdf = await opp.findOne({ proposalId });
+    const prop= await Proposal.findOne({proposalId})
     console.log(proposal)
 
     if (!proposal) {
@@ -252,7 +253,7 @@ console.log("EMAIL:", process.env.EMAIL);
     try {
       await transporter.sendMail({
         from: process.env.EMAIL,
-        replyTo: proposal.email, // ⚠️ fix typo (, → .)
+        replyTo: proposalpdf.email, // ⚠️ fix typo (, → .)
         to,
         subject,
         html: `
