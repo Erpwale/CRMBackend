@@ -210,50 +210,31 @@ router.get("/proposal/:opid", async (req, res) => {
 router.post("/send-mail", async (req, res) => {
   try {
     const { to, subject, content, proposalId } = req.body;
-    
 
-    console.log("➡️ Sending mail...",to);
+    console.log("➡️ Sending mail...", to);
 
+    // ✅ Get proposal (for status)
+    const proposal = await Proposal.findOne({ proposalId });
+
+    // ✅ Get proposal data (for email / PDF)
     const proposalpdf = await opp.findOne({ proposalId });
-    const proposal= await Proposal.findOne({proposalId})
-    console.log(proposal)
 
-    if (!proposal) {
+    if (!proposal || !proposalpdf) {
       return res.status(404).json({ message: "Proposal not found" });
     }
 
-    // ✅ Correct link
     const pdfLink = `https://crmbackend-j0pp.onrender.com/api/Proposel/proposal/${proposalId}`;
-console.log("EMAIL:", process.env.EMAIL);
-//     await transporter.sendMail({
-//       from: process.env.EMAIL,
-//       replyTo: "deepalimore09@gmail,com",
-//       to,
-//       subject,
-//       html: `
-//         ${content}
-//         <br/><br/>
-//         👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
-//       `,
-//     });
-// // await transporter.sendMail({
-// //   from: "Newsletters <service@mserpwale.com>",
-// //   to: "deepalimore609@gmail.com",
-// //   subject: "Hello pooled world",
-// //   text: "Hi Alice!",
-// // });
 
-//     console.log("✅ MAIL SENT");
-//  proposal.mailStatus = "Sent";
-//       await proposal.save();
-
-//       res.json({ success: true });
-
+    // ✅ Safe replyTo
+    const replyEmail =
+      proposalpdf.email && proposalpdf.email.includes("@")
+        ? proposalpdf.email
+        : "deepalimore09@gmail.com";
 
     try {
       await transporter.sendMail({
-        from: process.env.EMAIL,
-        replyTo: proposalpdf.email, 
+        from: "MS ERP <service@mserpwale.com>",
+        replyTo: replyEmail, // ✅ safe
         to,
         subject,
         html: `
@@ -265,26 +246,28 @@ console.log("EMAIL:", process.env.EMAIL);
 
       console.log("✅ MAIL SENT");
 
-      // ✅ Update status to Sent
-      proposal.mailStatus = "Sent";
-      await proposal.save();
+      // ✅ Update status
+      await Proposal.updateOne(
+        { proposalId },
+        { $set: { mailStatus: "Sent" } }
+      );
 
       res.json({ success: true });
 
     } catch (mailErr) {
       console.error("❌ Mail Error:", mailErr);
 
-      // ❌ Update status to Failed
-      proposal.mailStatus = "Failed";
-      await proposal.save();
+      await Proposal.updateOne(
+        { proposalId },
+        { $set: { mailStatus: "Failed" } }
+      );
 
       res.status(500).json({ message: "Mail failed" });
     }
 
-
   } catch (err) {
-    console.error("❌ Mail Error:", err);
-    res.status(500).json({ message: "Mail failed" });
+    console.error("❌ Server Error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
