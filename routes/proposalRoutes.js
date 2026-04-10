@@ -222,7 +222,7 @@ router.post("/send-mail", async (req, res) => {
     }
 
     // ✅ Correct link
-    const pdfLink = `http://localhost:5000/proposal/${proposalId}`;
+    const pdfLink = `https://crmerp.netlify.app/proposal/${proposalId}`;
 console.log("EMAIL:", process.env.EMAIL);
     await transporter.sendMail({
       from: process.env.EMAIL,
