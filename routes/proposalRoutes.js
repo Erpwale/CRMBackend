@@ -210,31 +210,51 @@ router.get("/proposal/:opid", async (req, res) => {
 router.post("/send-mail", async (req, res) => {
   try {
     const { to, subject, content, proposalId } = req.body;
+    
 
-    console.log("➡️ Sending mail...", to);
+    console.log("➡️ Sending mail...",to);
 
-    // ✅ Get proposal (for status)
-    const proposal = await Proposal.findOne({ proposalId });
+    const proposal = await opp.findOne({ proposalId });
+    const prop = await Proposal.findOne({proposalId: proposalId });
+    console.log(proposal)
+    console.log(prop)
 
-    // ✅ Get proposal data (for email / PDF)
-    const proposalpdf = await opp.findOne({ proposalId });
-
-    if (!proposal || !proposalpdf) {
+    if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
     }
 
-    const pdfLink = `https://crmbackend-j0pp.onrender.com/api/Proposel/proposal/${proposalId}`;
+    // ✅ Correct link
+    const pdfLink = `https://crmerp.netlify.app/proposal/${proposalId}`;
+console.log("EMAIL:", process.env.EMAIL);
+//     await transporter.sendMail({
+//       from: process.env.EMAIL,
+//       replyTo: "deepalimore09@gmail,com",
+//       to,
+//       subject,
+//       html: `
+//         ${content}
+//         <br/><br/>
+//         👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
+//       `,
+//     });
+// // await transporter.sendMail({
+// //   from: "Newsletters <service@mserpwale.com>",
+// //   to: "deepalimore609@gmail.com",
+// //   subject: "Hello pooled world",
+// //   text: "Hi Alice!",
+// // });
 
-    // ✅ Safe replyTo
-    const replyEmail =
-      proposalpdf.email && proposalpdf.email.includes("@")
-        ? proposalpdf.email
-        : "deepalimore09@gmail.com";
+//     console.log("✅ MAIL SENT");
+//  proposal.mailStatus = "Sent";
+//       await proposal.save();
+
+//       res.json({ success: true });
+
 
     try {
       await transporter.sendMail({
-        from: "MS ERP <service@mserpwale.com>",
-        replyTo: replyEmail, // ✅ safe
+        from: process.env.EMAIL,
+        replyTo: proposal.email, // ⚠️ fix typo (, → .)
         to,
         subject,
         html: `
@@ -246,28 +266,26 @@ router.post("/send-mail", async (req, res) => {
 
       console.log("✅ MAIL SENT");
 
-      // ✅ Update status
-      await Proposal.updateOne(
-        { proposalId },
-        { $set: { mailStatus: "Sent" } }
-      );
+      // ✅ Update status to Sent
+      proposal.mailStatus = "Sent";
+      await proposal.save();
 
       res.json({ success: true });
 
     } catch (mailErr) {
       console.error("❌ Mail Error:", mailErr);
 
-      await Proposal.updateOne(
-        { proposalId },
-        { $set: { mailStatus: "Failed" } }
-      );
+      // ❌ Update status to Failed
+      proposal.mailStatus = "Failed";
+      await proposal.save();
 
       res.status(500).json({ message: "Mail failed" });
     }
 
+
   } catch (err) {
-    console.error("❌ Server Error:", err);
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ Mail Error:", err);
+    res.status(500).json({ message: "Mail failed" });
   }
 });
 
