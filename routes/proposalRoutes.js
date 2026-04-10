@@ -7,8 +7,11 @@ const generateProposalPDF= require("../utils/generateProposalPDF.js")
 const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   host: "smtp.hostinger.com",
-  port: 587,
-  secure: false, // ❗ IMPORTANT (false for 587)
+  port: 465,
+  secure: true,
+  pool: true, // Enable connection pooling
+  maxConnections: 5, // Maximum number of simultaneous connections (default: 5)
+  maxMessages: 100, // Messages per connection before reconnecting (default: 100)
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
@@ -220,16 +223,12 @@ router.post("/send-mail", async (req, res) => {
     // ✅ Correct link
     const pdfLink = `http://localhost:5000/proposal/${proposalId}`;
 
-    await transporter.sendMail({
-      from: process.env.EMAIL,
-      to,
-      subject,
-      html: `
-        ${content}
-        <br/><br/>
-        👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
-      `,
-    });
+   await transporter.sendMail({
+  from: "Newsletters <noreply@example.com>",
+  to: "deepalimore609@gmail.com",
+  subject: "Hello pooled world",
+  text: "Hi Alice!",
+});
 
     console.log("✅ MAIL SENT");
 
