@@ -223,29 +223,7 @@ router.post("/send-mail", async (req, res) => {
     // ✅ Correct link
     const pdfLink = `https://crmerp.netlify.app/proposal/${proposalId}`;
 console.log("EMAIL:", process.env.EMAIL);
-//     await transporter.sendMail({
-//       from: process.env.EMAIL,
-//       replyTo: "deepalimore09@gmail,com",
-//       to,
-//       subject,
-//       html: `
-//         ${content}
-//         <br/><br/>
-//         👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
-//       `,
-//     });
-// // await transporter.sendMail({
-// //   from: "Newsletters <service@mserpwale.com>",
-// //   to: "deepalimore609@gmail.com",
-// //   subject: "Hello pooled world",
-// //   text: "Hi Alice!",
-// // });
 
-//     console.log("✅ MAIL SENT");
-//  proposal.mailStatus = "Sent";
-//       await proposal.save();
-
-//       res.json({ success: true });
 
 
     try {
@@ -286,8 +264,10 @@ console.log("EMAIL:", process.env.EMAIL);
     res.status(500).json({ message: "Mail failed" });
   }
 });
+
 router.put("/update-mail-status", async (req, res) => {
   try {
+    console.log("Update staus",req.body)
     const { proposalId, status } = req.body;
 
     if (!["Sent", "Pending", "Failed"].includes(status)) {
