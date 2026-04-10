@@ -214,10 +214,9 @@ router.post("/send-mail", async (req, res) => {
 
     console.log("➡️ Sending mail...",to);
 
-    const proposalpdf = await opp.findOne({ proposalId });
-    const proposal = await Proposal.findOne({ proposalId });
-    console.log(proposal)
-    if (!proposalpdf) {
+    const proposal = await opp.findOne({ proposalId });
+
+    if (!proposal) {
       return res.status(404).json({ message: "Proposal not found" });
     }
 
@@ -252,7 +251,7 @@ console.log("EMAIL:", process.env.EMAIL);
     try {
       await transporter.sendMail({
         from: process.env.EMAIL,
-        replyTo: proposalpdf.email, // ⚠️ fix typo (, → .)
+        replyTo: proposal.email, // ⚠️ fix typo (, → .)
         to,
         subject,
         html: `
@@ -264,19 +263,20 @@ console.log("EMAIL:", process.env.EMAIL);
 
       console.log("✅ MAIL SENT");
 
-      // ✅ Update status to Sent
-      proposal.mailStatus = "Sent";
-      await proposal.save();
+ await opp.updateOne(
+  { proposalId },
+  { $set: { mailStatus: "Sent" } }
+);
 
       res.json({ success: true });
 
     } catch (mailErr) {
       console.error("❌ Mail Error:", mailErr);
 
-      // ❌ Update status to Failed
-      proposal.mailStatus = "Failed";
-      await proposal.save();
-
+    await opp.updateOne(
+  { proposalId },
+  { $set: { mailStatus: "Failed" } }
+);
       res.status(500).json({ message: "Mail failed" });
     }
 
@@ -286,5 +286,32 @@ console.log("EMAIL:", process.env.EMAIL);
     res.status(500).json({ message: "Mail failed" });
   }
 });
+router.put("/update-mail-status", async (req, res) => {
+  try {
+    const { proposalId, status } = req.body;
 
+    if (!["Sent", "Pending", "Failed"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const proposal = await opp.findOneAndUpdate(
+      { proposalId },
+      { mailStatus: status },
+      { new: true }
+    );
+
+    if (!proposal) {
+      return res.status(404).json({ message: "Proposal not found" });
+    }
+
+    res.json({
+      success: true,
+      mailStatus: proposal.mailStatus,
+    });
+
+  } catch (err) {
+    console.error("❌ Status Update Error:", err);
+    res.status(500).json({ message: "Update failed" });
+  }
+});
 module.exports = router;
