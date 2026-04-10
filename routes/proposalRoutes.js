@@ -222,29 +222,64 @@ router.post("/send-mail", async (req, res) => {
     }
 
     // ✅ Correct link
-    const pdfLink = `https://crmerp.netlify.app/proposal/${proposalId}`;
+    const pdfLink = `https://crmbackend-j0pp.onrender.com/api/Proposel/proposal/${proposalId}`;
 console.log("EMAIL:", process.env.EMAIL);
-    await transporter.sendMail({
-      from: process.env.EMAIL,
-      replyTo: "deepalimore09@gmail,com",
-      to,
-      subject,
-      html: `
-        ${content}
-        <br/><br/>
-        👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
-      `,
-    });
-// await transporter.sendMail({
-//   from: "Newsletters <service@mserpwale.com>",
-//   to: "deepalimore609@gmail.com",
-//   subject: "Hello pooled world",
-//   text: "Hi Alice!",
-// });
+//     await transporter.sendMail({
+//       from: process.env.EMAIL,
+//       replyTo: "deepalimore09@gmail,com",
+//       to,
+//       subject,
+//       html: `
+//         ${content}
+//         <br/><br/>
+//         👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
+//       `,
+//     });
+// // await transporter.sendMail({
+// //   from: "Newsletters <service@mserpwale.com>",
+// //   to: "deepalimore609@gmail.com",
+// //   subject: "Hello pooled world",
+// //   text: "Hi Alice!",
+// // });
 
-    console.log("✅ MAIL SENT");
+//     console.log("✅ MAIL SENT");
+//  proposal.mailStatus = "Sent";
+//       await proposal.save();
 
-    res.json({ success: true });
+//       res.json({ success: true });
+
+
+    try {
+      await transporter.sendMail({
+        from: process.env.EMAIL,
+        replyTo: "deepalimore09@gmail.com", // ⚠️ fix typo (, → .)
+        to,
+        subject,
+        html: `
+          ${content}
+          <br/><br/>
+          👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
+        `,
+      });
+
+      console.log("✅ MAIL SENT");
+
+      // ✅ Update status to Sent
+      proposal.mailStatus = "Sent";
+      await proposal.save();
+
+      res.json({ success: true });
+
+    } catch (mailErr) {
+      console.error("❌ Mail Error:", mailErr);
+
+      // ❌ Update status to Failed
+      proposal.mailStatus = "Failed";
+      await proposal.save();
+
+      res.status(500).json({ message: "Mail failed" });
+    }
+
 
   } catch (err) {
     console.error("❌ Mail Error:", err);
