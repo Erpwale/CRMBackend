@@ -226,12 +226,13 @@ const emptyRows = Array.from({
     <td class="right bold">Gross Total</td>
     <td></td>
     <td></td>
-    <td class="right bold">${data.grossTotal || 0}</td>
+    <td class="right bold">${data.subtotal || 0}</td>
   </tr>
 
   <tr>
     <td></td>
-    <td class="center">CGST (${data.cgstPercent || 0}%)</td>
+    <td class="center">CGST (${data.cgstPercent || 9}%)</td>
+    
     <td></td>
     <td></td>
     <td class="right">${data.cgst || 0}</td>
@@ -239,7 +240,7 @@ const emptyRows = Array.from({
 
   <tr>
     <td></td>
-    <td class="center">SGST (${data.sgstPercent || 0}%)</td>
+    <td class="center">SGST (${data.sgstPercent || 9}%)</td>
     <td></td>
     <td></td>
    <td class="right">${data.sgst || 0}</td>
