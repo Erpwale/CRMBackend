@@ -89,7 +89,7 @@ const emptyRows = Array.from({
 <head>
 <style>
 @page {
-  margin: 20px 100px 20px 20px; /* match your PDF margins */
+  margin: 100px 20px 20px 20px; /* match your PDF margins */
 }
 
 .page-border {
