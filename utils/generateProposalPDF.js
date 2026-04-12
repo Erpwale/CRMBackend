@@ -233,7 +233,7 @@ Kind Attn: ${data.contactName}<br/>
     <td class="center">CGST (${data.cgstPercent || 0}%)</td>
     <td></td>
     <td></td>
-    <<td class="right">${data.cgst || 0}</td>
+    <td class="right">${data.cgst || 0}</td>
   </tr>
 
   <tr>
