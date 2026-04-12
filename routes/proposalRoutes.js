@@ -9,17 +9,29 @@ const transporter = nodemailer.createTransport({
   host: "smtp.hostinger.com",
   port: 465,
   secure: true,
-  pool: true, // Enable connection pooling
-  maxConnections: 5, // Maximum number of simultaneous connections (default: 5)
-  maxMessages: 100, // Messages per connection before reconnecting (default: 100)
+
+  pool: true,
+  maxConnections: 10,
+  maxMessages: 500,
+  rateLimit: 10,
+
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
   },
-   family: 4 ,
+
+  family: 4, // force IPv4
+
+  connectionTimeout: 10000,
+  greetingTimeout: 5000,
+  socketTimeout: 10000,
+
   tls: {
-    rejectUnauthorized: false, // optional but helps in some servers
+    minVersion: "TLSv1.2"
   },
+
+  logger: true,
+  debug: true
 });
 module.exports = transporter;
 // ✅ CREATE Proposal
