@@ -178,7 +178,7 @@ const emptyRows = Array.from({
 <!-- HEADER -->
 
 <div class="page-border"></div>
-<div style="margin-top:20%">
+<div style="margin-top:5%">
 <h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
 <div style="display: flex;justify-content: space-between;">
 
@@ -264,7 +264,7 @@ Kind Attn: ${data.contactName}<br/>
   </tbody>
 </table>
 
-<div style="page-break-before: always;">
+<div style="page-break-before: always;margin-top:"20px">
   ${termsHTML}
 </div>
 <div style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
