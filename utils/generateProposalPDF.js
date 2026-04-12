@@ -299,20 +299,20 @@ const emptyRows = Array.from({
   displayHeaderFooter: true,
 
   margin: {
-    top: "90px",
+    top: "100px",
     bottom: "100px"
   },
 
   headerTemplate: `
     <div style="width:95%; text-align:center; margin-left:20px; margin-right:20px">
-      <img src="data:image/jpeg;base64,${headerBase64}" style="width:99%; " />
+      <img src="data:image/jpeg;base64,${headerBase64}" style="width:98%; " />
     </div>
   `,
 
   footerTemplate: `
-    <div style="width:90%; text-align:center;">
+    <div style="width:95%; text-align:center; margin-left:20px; margin-right:20px">
       <div style="margin-top:5px;">
-        <img src="data:image/jpeg;base64,${footerBase64}" style="width:100%;" />
+        <img src="data:image/jpeg;base64,${footerBase64}" style="width:98%; " />
       </div>
     </div>
   `
