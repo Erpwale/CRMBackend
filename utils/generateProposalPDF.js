@@ -64,11 +64,11 @@ const maxRows = 10;
 
 const productRows = data.products.map((p, i) => `
 <tr>
-  <td>${i + 1}</td>
-  <td class="text-left">${p.name || ""}</td>
-  <td>${p.qty || ""}</td>
-  <td>${p.rate || ""}</td>
-  <td class="text-right">${p.totalValue || ""}</td>
+  <td class="center">${i + 1}</td>
+   <td class="left bold">${p.name || ""}</td>
+  <td class="center">${p.qty || ""}</td>
+  <td class="right">${p.rate || ""}</td>
+  <td class="right">${p.totalValue || ""}</td>
 </tr>
 `).join("");
 
@@ -102,13 +102,35 @@ const emptyRows = Array.from({
   pointer-events: none;
 }
   body { font-family: Arial; padding: 30px; font-size: 14px;}
-  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-  th, td { border: 1px solid #f1f1f1; padding: 6px; text-align: center; }
-  th { background: #ffffff; }
-  .text-left { text-align: left;
-width: 550px;
-  word-break: break-word; }
-  .text-right { text-align: right;width:20px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* IMPORTANT */
+  }
+
+  th, td {
+    border: 1px solid #bfc5cc;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  th {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .left { text-align: left; }
+  .center { text-align: center; }
+  .right { text-align: right; }
+  .bold { font-weight: bold; }
+
+  /* Column widths */
+  .col-sr   { width: 8%; }
+  .col-part { width: 50%; }  /* 👈 increased */
+  .col-qty  { width: 10%; }
+  .col-rate { width: 16%; }
+  .col-amt  { width: 16%; }
+
   .footer-section {
   margin-top: 50px;
   font-size: 13px;
@@ -179,11 +201,11 @@ Kind Attn: ${data.contactName}<br/>
 <table>
   <thead>
     <tr>
-      <th>Sr</th>
-      <th>Particular</th>
-      <th>Qty</th>
-      <th>Rate</th>
-      <th>Amount</th>
+    <th class="col-sr">Sr. No.</th>
+    <th class="col-part">Particular</th>
+    <th class="col-qty">Qty</th>
+    <th class="col-rate">Rate</th>
+    <th class="col-amt">Amount (Rs.)</th>
     </tr>
   </thead>
 
@@ -192,50 +214,50 @@ Kind Attn: ${data.contactName}<br/>
     ${emptyRows}
     <tr>
     <td></td>
-    <td class="text-right">Discount</td>
+     <td class="right bold">Discount</td>
     <td></td>
     <td></td>
-    <td class="text-right">${data.discount || 0}</td>
+    <td class="right">${data.discount || 0}</td>
   </tr>
 
   <tr>
     <td></td>
-    <td class="text-right">Gross Total</td>
+    <td class="right bold">Gross Total</td>
     <td></td>
     <td></td>
-    <td class="text-right">${data.grossTotal || 0}</td>
+    <td class="right bold">${data.grossTotal || 0}</td>
   </tr>
 
   <tr>
     <td></td>
-    <td class="text-right">CGST (${data.cgstPercent || 0}%)</td>
+    <td class="center">CGST (${data.cgstPercent || 0}%)</td>
     <td></td>
     <td></td>
-    <td class="text-right">${data.cgst || 0}</td>
+    <<td class="right">${data.cgst || 0}</td>
   </tr>
 
   <tr>
     <td></td>
-    <td class="text-right">SGST (${data.sgstPercent || 0}%)</td>
+    <td class="center">SGST (${data.sgstPercent || 0}%)</td>
     <td></td>
     <td></td>
-    <td class="text-right">${data.sgst || 0}</td>
+   <td class="right">${data.sgst || 0}</td>
   </tr>
 
   <tr>
     <td></td>
-    <td class="text-right">Round Off</td>
+    <td class="right">Round off</td>
     <td></td>
     <td></td>
-    <td class="text-right">${data.roundOff || 0}</td>
+    <td class="right">${data.roundOff || 0}</td>
   </tr>
 
   <tr>
     <td></td>
-    <td class="text-right"><b>Total</b></td>
+      <td class="right bold">Total</td>
     <td></td>
     <td></td>
-    <td class="text-right"><b>${data.total || 0}</b></td>
+    <td class="right bold"><b>${data.total || 0}</b></td>
   </tr>
 
   </tbody>
