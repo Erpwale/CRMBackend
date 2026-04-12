@@ -89,7 +89,7 @@ const emptyRows = Array.from({
 <head>
 <style>
 @page {
-  margin: 90px 20px 100px 20px; /* match your PDF margins */
+  margin: 20px 20px 20px 20px; /* match your PDF margins */
 }
 
 .page-border {
@@ -298,7 +298,35 @@ Kind Attn: ${data.contactName}<br/>
   printBackground: true,
   displayHeaderFooter: true,
 
+  // margin: {
+  //   top: "90px",
+  //   bottom: "100px"
+  // },
 
+  // headerTemplate: `
+  //   <div style="width:100%; text-align:center;">
+  //     <img src="data:image/jpeg;base64,${headerBase64}" style="width:100%; " />
+  //   </div>
+  // `,
+
+  // footerTemplate: `
+  //   <div style="width:100%; font-size:10px; padding-bottom:20px;">
+
+  
+  //     <div style="text-align:center; margin-top:5px;">
+  //       (Computer Generated Document so Signature not required)
+  //     </div>
+
+  //     <div style="margin-top:5px;">
+  //       <img src="data:image/jpeg;base64,${footerBase64}" style="width:100%;" />
+  //     </div>
+
+  //     <div style="text-align:right; font-size:9px;">
+  //       Page <span class="pageNumber"></span> of <span class="totalPages"></span>
+  //     </div>
+
+  //   </div>
+  // `
 });
 
  
