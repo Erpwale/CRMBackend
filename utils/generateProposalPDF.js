@@ -89,7 +89,7 @@ const emptyRows = Array.from({
 <head>
 <style>
 @page {
-  margin: 90px 20px 100px 20px; /* match your PDF margins */
+  margin: 20px 20px 20px 20px; /* match your PDF margins */
 }
 
 .page-border {
@@ -195,11 +195,11 @@ const emptyRows = Array.from({
 <b>Date:</b> ${data.date}<br/>
 </div>
 </div>
-Kind Attn: ${data.contactName}<br/>
+<p>Kind Attn: ${data.contactName}<br/></'p>
 <p><b>Subject: Proposal of ${data.businessLine}</b></p>
 
 
-<table style={margin:"20px"}>
+<table>
   <thead>
     <tr>
     <th class="col-sr">Sr. No.</th>
@@ -304,26 +304,22 @@ Kind Attn: ${data.contactName}<br/>
   },
 
   headerTemplate: `
-    <div style="width:100%; text-align:center;">
-      <img src="data:image/jpeg;base64,${headerBase64}" style="width:100%; " />
+    <div style="width:90%; text-align:center;">
+      <img src="data:image/jpeg;base64,${headerBase64}" style="width:90%; " />
     </div>
   `,
 
   footerTemplate: `
-    <div style="width:100%; font-size:10px; padding-bottom:20px;">
+    <div style="width:90%; font-size:10px; padding-bottom:20px;">
 
   
-      <div style="text-align:center; margin-top:5px;">
-        (Computer Generated Document so Signature not required)
-      </div>
+
 
       <div style="margin-top:5px;">
-        <img src="data:image/jpeg;base64,${footerBase64}" style="width:100%;" />
+        <img src="data:image/jpeg;base64,${footerBase64}" style="width:90%;" />
       </div>
 
-      <div style="text-align:right; font-size:9px;">
-        Page <span class="pageNumber"></span> of <span class="totalPages"></span>
-      </div>
+      
 
     </div>
   `
