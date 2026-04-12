@@ -178,7 +178,7 @@ const emptyRows = Array.from({
 <!-- HEADER -->
 
 <div class="page-border"></div>
-
+<div style="margin-top:20%">
 <h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
 <div style="display: flex;justify-content: space-between;">
 
@@ -283,9 +283,14 @@ Kind Attn: ${data.contactName}<br/>
         ${data.email || ""}<br/>
         ${data.mobile || ""}
     </div>
-</div>
-</div>
 
+</div>
+ <div style="text-align:center; margin-top:5px;">
+        (Computer Generated Document so Signature not required)
+      </div>
+
+</div>
+</div>
 </body>
 </html>
 `;
@@ -304,27 +309,19 @@ Kind Attn: ${data.contactName}<br/>
   },
 
   headerTemplate: `
-    <div style="width: 80%; text-align:center;">
+    <div style="width: 90%; text-align:center;">
       <img src="data:image/jpeg;base64,${headerBase64}" style="width:100%; " />
     </div>
   `,
 
   footerTemplate: `
-    <div style="width:80%; font-size:10px; padding-bottom:20px;">
+    <div style="width:90%; font-size:10px; padding-bottom:20px;margin:20px">
 
   
-      <div style="text-align:center; margin-top:5px;">
-        (Computer Generated Document so Signature not required)
-      </div>
-
+     
       <div style="margin-top:5px;">
         <img src="data:image/jpeg;base64,${footerBase64}" style="width:100%;" />
       </div>
-
-      <div style="text-align:right; font-size:9px;">
-        Page <span class="pageNumber"></span> of <span class="totalPages"></span>
-      </div>
-
     </div>
   `
 });
