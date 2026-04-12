@@ -198,7 +198,7 @@ const emptyRows = Array.from({
 Kind Attn: ${data.contactName}<br/>
 <b>Subject: Proposal of ${data.businessLine} </b>
 
-<table>
+<table style={margin:"20px"}>
   <thead>
     <tr>
     <th class="col-sr">Sr. No.</th>
