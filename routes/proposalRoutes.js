@@ -9,8 +9,8 @@ const dns = require("dns");
 dns.setDefaultResultOrder("ipv4first");
 const transporter = nodemailer.createTransport({
   host: "smtp.hostinger.com",
-  port: 465,
-  secure: true,
+ port: 587,
+secure: false
 
   pool: true,
   maxConnections: 10,
