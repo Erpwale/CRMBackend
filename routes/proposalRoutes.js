@@ -16,6 +16,7 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
   },
+   family: 4 ,
   tls: {
     rejectUnauthorized: false, // optional but helps in some servers
   },
@@ -222,7 +223,7 @@ router.post("/send-mail", async (req, res) => {
     }
 
     // ✅ Correct link
-    const pdfLink = `https://crmbackend-j0pp.onrender.com/proposal/${proposalId}`;
+    const pdfLink = `https://crmbackend-j0pp.onrender.com/api/Proposel/proposal/${proposalId}`;
 console.log("EMAIL:", process.env.EMAIL);
 
 
