@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   pool: true, // Enable connection pooling
-  maxConnections: 5, // Maximum number of simultaneous connections (default: 5)
+  maxConnections: 500, // Maximum number of simultaneous connections (default: 5)
   maxMessages: 100, // Messages per connection before reconnecting (default: 100)
   auth: {
     user: process.env.EMAIL,
