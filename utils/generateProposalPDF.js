@@ -305,22 +305,15 @@ const emptyRows = Array.from({
 
   headerTemplate: `
     <div style="width:95%; text-align:center; margin-left:20px; margin-right:20px">
-      <img src="data:image/jpeg;base64,${headerBase64}" style="width:90%; " />
+      <img src="data:image/jpeg;base64,${headerBase64}" style="width:97%; " />
     </div>
   `,
 
   footerTemplate: `
     <div style="width:90%; text-align:center;">
-
-  
-
-
       <div style="margin-top:5px;">
         <img src="data:image/jpeg;base64,${footerBase64}" style="width:100%;" />
       </div>
-
-      
-
     </div>
   `
 });
