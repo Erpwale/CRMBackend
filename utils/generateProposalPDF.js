@@ -38,7 +38,7 @@ const footerBase64 = fs.readFileSync(
     };
 
 const termsHTML = `
-<div style="page-break-before: always;">
+<div style="">
 
   <h3>Terms & Conditions</h3>
 
@@ -267,7 +267,7 @@ const emptyRows = Array.from({
 <div>
   ${termsHTML}
 </div>
-<div style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
+<div style=" margin-top:30px;">
     <div style="display:flex; justify-content:space-between;">
         <div style="height:50px;">
             <b>For, MS ERPWale Pvt. Ltd.</b>
