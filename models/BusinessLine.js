@@ -24,7 +24,12 @@ const PriceLevelSchema = new mongoose.Schema({
 const BusinessLineSchema = new mongoose.Schema(
   {
     businessLine: { type: String, required: true },
-    priceLevels: [PriceLevelSchema] // ✅ NEW
+    priceLevels: [PriceLevelSchema] ,// ✅ NEW
+    status: {
+  type: String,
+  enum: ["active", "inactive"],
+  default: "active"
+}
   },
   { timestamps: true }
 );

@@ -157,7 +157,29 @@ router.put("/update/:id", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+router.patch("/status/:id", async (req, res) => {
+  try {
+    const { status } = req.body;
 
+    const updated = await BusinessLine.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    res.json({
+      message: `Status updated to ${status}`,
+      data: updated,
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // DELETE
 router.delete("/delete/:id", async (req, res) => {
