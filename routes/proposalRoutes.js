@@ -5,6 +5,8 @@ const Proposal = require("../models/Proposall");
 const opp= require("../models/Proposal")
 const generateProposalPDF= require("../utils/generateProposalPDF.js")
 const nodemailer = require("nodemailer");
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
 const transporter = nodemailer.createTransport({
   host: "smtp.hostinger.com",
   port: 465,
