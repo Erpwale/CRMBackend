@@ -38,7 +38,7 @@ const footerBase64 = fs.readFileSync(
     };
 
 const termsHTML = `
-<div style="">
+<div style="page-break-before: always;">
 
   <h3>Terms & Conditions</h3>
 
@@ -89,7 +89,7 @@ const emptyRows = Array.from({
 <head>
 <style>
 @page {
-  margin: 110px 20px 20px 20px; /* match your PDF margins */
+  margin: 100px 20px 20px 20px; /* match your PDF margins */
 }
 
 .page-border {
@@ -212,7 +212,7 @@ const emptyRows = Array.from({
 
   <tbody>
     ${productRows}
-    
+    ${emptyRows}
     <tr>
     <td></td>
      <td class="right bold">Discount</td>
@@ -264,10 +264,10 @@ const emptyRows = Array.from({
   </tbody>
 </table>
 
-<div>
+<div style="page-break-before: always;">
   ${termsHTML}
 </div>
-<div style=" margin-top:30px;">
+<div style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
     <div style="display:flex; justify-content:space-between;">
         <div style="height:50px;">
             <b>For, MS ERPWale Pvt. Ltd.</b>
