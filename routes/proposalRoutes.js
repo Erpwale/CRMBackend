@@ -38,17 +38,18 @@ secure: false,
 module.exports = transporter;
 // ✅ CREATE Proposal
 // const companyRoom = companyId.toString();
-router.post("/create", async (req, res) => {
+router.post("/create", auth, async (req, res) => {
   try {
-    console.log(req.body)
-    const { documentTitle, user, mailStatus, businessLine,opid } = req.body;
+    console.log(req.body);
+
+    const { documentTitle, mailStatus, businessLine, opid } = req.body;
 
     const proposal = new Proposal({
       documentTitle,
-      user,
-      mailStatus,
       businessLine,
-      opid
+      mailStatus,
+      opid,
+      user: req.user._id   // ✅ THIS is the only change you need
     });
 
     const saved = await proposal.save();
@@ -58,8 +59,9 @@ router.post("/create", async (req, res) => {
       message: "Proposal created",
       data: saved,
     });
+
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).json({ error: err.message });
   }
 });
