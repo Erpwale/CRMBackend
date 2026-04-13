@@ -263,7 +263,7 @@ console.log("EMAIL:", process.env.EMAIL);
       // });
 
       await transporter.sendMail({
-  from: "Newsletters <noreply@example.com>",
+  from: "Newsletters <service@mserpwale.com>",
   to: "deepalimore609@gmail.com",
   subject: "Hello pooled world",
   text: "Hi Alice!",
