@@ -86,7 +86,7 @@ router.get("/all", async (req, res) => {
 
     console.log(req.user.uid)
     const proposals = await Proposal.find({
-      uid: req.user.uid, // ✅ filter by uid
+      user: req.user.uid, // ✅ filter by uid
     }).sort({ createdAt: -1 });
 
     res.json({
@@ -94,6 +94,7 @@ router.get("/all", async (req, res) => {
       data: proposals,
     });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: err.message });
   }
 });
