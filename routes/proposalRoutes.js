@@ -6,7 +6,7 @@ const opp= require("../models/Proposal")
 const generateProposalPDF= require("../utils/generateProposalPDF.js")
 const nodemailer = require("nodemailer");
 const dns = require("dns");
-const { auth, adminOnly } = require("../middleware/auth");
+const { authMiddleware, adminOnly } = require("../middleware/auth");
 dns.setDefaultResultOrder("ipv4first");
 const transporter = nodemailer.createTransport({
   host: "smtp.hostinger.com",
@@ -39,7 +39,7 @@ secure: false,
 module.exports = transporter;
 // ✅ CREATE Proposal
 // const companyRoom = companyId.toString();
-router.post("/create", auth, async (req, res) => {
+router.post("/create", authMiddleware, async (req, res) => {
   try {
     console.log(req.body);
 
