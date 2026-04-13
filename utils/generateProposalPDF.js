@@ -275,16 +275,22 @@ const emptyRows = Array.from({
 <div style="page-break-before: always;">
   ${termsHTML}
 </div>
-<div class="signature-container" style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
-    <div style="display:flex; justify-content:space-between;">
-        <div style="height:50px;">
-            <b>For, MS ERPWale Pvt. Ltd.</b>
-        </div>
-        <div style="text-align:right;height:50px;">
-          <b>For, ${data.companyName}<br/>${data.contactName}</b>
-        </div>
+<div style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
+   <div class="signature-wrapper">
+  
+  <div class="signature-card">
+    <div class="signature-title">
+      For, MS ERPWale Pvt. Ltd.
     </div>
+  </div>
 
+  <div class="signature-card">
+    <div class="signature-title">
+      For, ${data.companyName}, ${data.contactName}
+    </div>
+  </div>
+</div>
+</div>
     <div style="margin-top:5px;" >
         <b>Regards,</b><br/>
         ${data.userName || ""}<br/>
