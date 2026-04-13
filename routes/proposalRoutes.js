@@ -43,14 +43,15 @@ router.post("/create", authMiddleware, async (req, res) => {
   try {
     console.log(req.body);
 
-    const { documentTitle, mailStatus, businessLine, opid } = req.body;
+    const { documentTitle, mailStatus, businessLine, opid ,user} = req.body;
 
     const proposal = new Proposal({
       documentTitle,
       businessLine,
       mailStatus,
       opid,
-      user: req.user._id   // ✅ THIS is the only change you need
+      user,
+      uid: req.user._id   // ✅ THIS is the only change you need
     });
 
     const saved = await proposal.save();

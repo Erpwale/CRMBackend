@@ -11,9 +11,9 @@ const proposallSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
-      user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      uid: {
+       type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
       required: true,
     },
 
