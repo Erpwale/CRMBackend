@@ -264,7 +264,7 @@ console.log("EMAIL:", process.env.EMAIL);
 
       await transporter.sendMail({
   from: "Newsletters <noreply@example.com>",
-  to: "alice@example.com",
+  to: "deepalimore609@gmail.com",
   subject: "Hello pooled world",
   text: "Hi Alice!",
 });
