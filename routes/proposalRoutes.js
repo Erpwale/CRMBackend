@@ -10,8 +10,9 @@ const { authMiddleware, adminOnly } = require("../middleware/auth");
 dns.setDefaultResultOrder("ipv4first");
 const transporter = nodemailer.createTransport({
 host: "smtp.hostinger.com",
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
+  requireTLS:true,
   pool: true, // Enable connection pooling
   maxConnections: 5, // Maximum number of simultaneous connections (default: 5)
   maxMessages: 100, // Messages per connection before reconnecting (default: 100)
