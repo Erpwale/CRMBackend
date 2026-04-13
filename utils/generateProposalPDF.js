@@ -190,7 +190,7 @@ const emptyRows = Array.from({
   height: 140px;
   border: 2px solid #cfcfcf;
   border-radius: 25px;
-  background: #f3f3f3;
+
   padding: 20px;
   display: flex;
   align-items: flex-start;
