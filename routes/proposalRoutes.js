@@ -24,10 +24,10 @@ secure: false,
   },
 
   family: 4, // force IPv4
-
-  connectionTimeout: 10000,
-  greetingTimeout: 5000,
-  socketTimeout: 10000,
+ connectionTimeout: 60000, // 1 minute
+  greetingTimeout: 30000,   // 30 seconds
+  socketTimeout: 300000,    // 5 minutes
+  
 
   tls: {
     minVersion: "TLSv1.2"
