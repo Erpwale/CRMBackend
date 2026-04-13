@@ -178,6 +178,27 @@ const emptyRows = Array.from({
   padding: 20px;
   margin-top: 40px;
 }
+  .signature-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.signature-card {
+  width: 48%;
+  height: 140px;
+  border: 2px solid #cfcfcf;
+  border-radius: 25px;
+  background: #f3f3f3;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.signature-title {
+  font-size: 14px;
+}
 </style>
 </head>
 
