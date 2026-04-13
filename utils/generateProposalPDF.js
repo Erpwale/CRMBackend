@@ -171,6 +171,13 @@ const emptyRows = Array.from({
 .bottom-banner img {
   width: 100%;
 }
+
+.signature-container {
+  border: 2px solid #141414;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 40px;
+}
 </style>
 </head>
 
@@ -268,7 +275,7 @@ const emptyRows = Array.from({
 <div style="page-break-before: always;">
   ${termsHTML}
 </div>
-<div style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
+<div class="signature-container" style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
     <div style="display:flex; justify-content:space-between;">
         <div style="height:50px;">
             <b>For, MS ERPWale Pvt. Ltd.</b>
@@ -278,7 +285,7 @@ const emptyRows = Array.from({
         </div>
     </div>
 
-    <div style="margin-top:5px;">
+    <div style="margin-top:5px;"  class="signature-container">
         <b>Regards,</b><br/>
         ${data.userName || ""}<br/>
         ${data.email || ""}<br/>
