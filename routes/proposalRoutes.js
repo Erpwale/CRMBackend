@@ -9,30 +9,16 @@ const dns = require("dns");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 dns.setDefaultResultOrder("ipv4first");
 const transporter = nodemailer.createTransport({
-  host: "smtp.hostinger.com",
- port: 587,
-secure: false,
-
-  pool: true,
-  maxConnections: 10,
-  maxMessages: 500,
-  rateLimit: 10,
-
+host: "smtp.example.com",
+  port: 465,
+  secure: true,
+  pool: true, // Enable connection pooling
+  maxConnections: 5, // Maximum number of simultaneous connections (default: 5)
+  maxMessages: 100, // Messages per connection before reconnecting (default: 100)
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
-  },
-
-  family: 4, // force IPv4
- connectionTimeout: 120000, // 1 minute
-  greetingTimeout: 30000,   // 30 seconds
-  socketTimeout: 300000,    // 5 minutes
-  
-
-  tls: {
-    minVersion: "TLSv1.2"
-  },
-
+  }
   logger: true,
   debug: true
 });
@@ -264,18 +250,24 @@ console.log("EMAIL:", process.env.EMAIL);
 
 
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL,
-        replyTo: proposal.email, // ⚠️ fix typo (, → .)
-        to,
-        subject,
-        html: `
-          ${content}
-          <br/><br/>
-          👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
-        `,
-      });
+      // await transporter.sendMail({
+      //   from: process.env.EMAIL,
+      //   replyTo: proposal.email, // ⚠️ fix typo (, → .)
+      //   to,
+      //   subject,
+      //   html: `
+      //     ${content}
+      //     <br/><br/>
+      //     👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
+      //   `,
+      // });
 
+      await transporter.sendMail({
+  from: "Newsletters <noreply@example.com>",
+  to: "alice@example.com",
+  subject: "Hello pooled world",
+  text: "Hi Alice!",
+});
       console.log("✅ MAIL SENT");
 
 await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
