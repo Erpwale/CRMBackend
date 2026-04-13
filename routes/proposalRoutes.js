@@ -69,7 +69,7 @@ router.post("/create", authMiddleware, async (req, res) => {
 
 
 // ✅ GET ALL Proposals
-router.get("/all", async (req, res) => {
+router.get("/allAdmin", async (req, res) => {
   try {
     const proposals = await Proposal.find().sort({ createdAt: -1 });
 
@@ -81,7 +81,20 @@ router.get("/all", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+router.get("/all", async (req, res) => {
+  try {
+    const { userId } = req.query;
 
+    const proposals = await Proposal.find({ userId }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: proposals,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // ✅ GET SINGLE Proposal
 router.get("/:id", async (req, res) => {
