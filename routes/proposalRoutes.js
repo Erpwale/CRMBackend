@@ -6,6 +6,7 @@ const opp= require("../models/Proposal")
 const generateProposalPDF= require("../utils/generateProposalPDF.js")
 const nodemailer = require("nodemailer");
 const dns = require("dns");
+const { auth, adminOnly } = require("../middleware/auth");
 dns.setDefaultResultOrder("ipv4first");
 const transporter = nodemailer.createTransport({
   host: "smtp.hostinger.com",
