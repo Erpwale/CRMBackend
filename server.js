@@ -22,10 +22,7 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-if (JSON.stringify(payload).length > 1000000) {
-  toast.error("Data too large ❌ Reduce content/images");
-  return;
-}
+
 // ✅ Socket connection
 io.on("connection", (socket) => {
   console.log("✅ User connected:", socket.id);
