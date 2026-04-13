@@ -89,7 +89,7 @@ router.get("/all", authMiddleware, async (req, res) => {
     console.log("USER:", req.user); // 👈 check this
 
     const proposals = await Proposal.find({
-      user: req.user.uid, // ✅ must match token
+      uid: req.user.uid, // ✅ must match token
     }).sort({ createdAt: -1 });
 
     res.json({
