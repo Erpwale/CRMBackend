@@ -24,7 +24,7 @@ secure: false,
   },
 
   family: 4, // force IPv4
- connectionTimeout: 60000, // 1 minute
+ connectionTimeout: 120000, // 1 minute
   greetingTimeout: 30000,   // 30 seconds
   socketTimeout: 300000,    // 5 minutes
   
