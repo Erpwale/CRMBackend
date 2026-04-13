@@ -81,12 +81,14 @@ router.get("/allAdmin", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-router.get("/all", async (req, res) => {
-  try {
 
-    console.log(req.user.uid)
+
+router.get("/all", authMiddleware, async (req, res) => {
+  try {
+    console.log("USER:", req.user); // 👈 check this
+
     const proposals = await Proposal.find({
-      user: req.user.uid, // ✅ filter by uid
+      uid: req.user.uid, // ✅ must match token
     }).sort({ createdAt: -1 });
 
     res.json({
@@ -94,7 +96,6 @@ router.get("/all", async (req, res) => {
       data: proposals,
     });
   } catch (err) {
-    console.log(err)
     res.status(500).json({ error: err.message });
   }
 });
