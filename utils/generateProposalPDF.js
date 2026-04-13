@@ -285,7 +285,7 @@ const emptyRows = Array.from({
         </div>
     </div>
 
-    <div style="margin-top:5px;"  class="signature-container">
+    <div style="margin-top:5px;" >
         <b>Regards,</b><br/>
         ${data.userName || ""}<br/>
         ${data.email || ""}<br/>
