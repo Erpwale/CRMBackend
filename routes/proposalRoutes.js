@@ -18,7 +18,7 @@ host: "smtp.example.com",
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
-  }
+  },
   logger: true,
   debug: true
 });
