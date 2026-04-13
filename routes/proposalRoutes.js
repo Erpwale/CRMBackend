@@ -83,6 +83,8 @@ router.get("/allAdmin", async (req, res) => {
 });
 router.get("/all", async (req, res) => {
   try {
+
+    console.log(req.user.uid)
     const proposals = await Proposal.find({
       uid: req.user.uid, // ✅ filter by uid
     }).sort({ createdAt: -1 });
