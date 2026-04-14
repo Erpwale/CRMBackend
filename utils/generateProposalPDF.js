@@ -61,7 +61,12 @@ const termsHTML = `
 `;
 console.log("termsHTML:", termsHTML);
 const maxRows = 10;
+const formatAddress = (address, maxLength = 25) => {
+  if (!address) return "";
 
+  const regex = new RegExp(`.{1,${maxLength}}`, "g");
+  return address.match(regex).join("<br/>");
+};
 const productRows = data.products.map((p, i) => `
 <tr>
   <td class="center">${i + 1}</td>
@@ -220,7 +225,13 @@ const emptyRows = Array.from({
 <div>
   <b>To:</b><br/>
  <b> ${data.companyName}</b><br/>
-  ${data.address1}<br/>
+  <span
+    dangerouslySetInnerHTML={{
+      __html: formatAddress(data.address1)
+    }}
+  />
+  
+  <br/>
   ${data.state}, ${data.city} - ${data.pincode}
 </div>
 
