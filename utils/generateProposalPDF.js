@@ -109,14 +109,14 @@ const emptyRows = Array.from({
   table-layout: fixed;
 
   border: 0.2px solid
-   border-color: rgb(232 232 232 / var(--tw-border-opacity, 1));;
+   border-color: rgb(241, 241, 241);
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
 
   th, td {
     border: 0.2px solid
-     border-color: rgb(232 232 232 / var(--tw-border-opacity, 1));;
+     border-color: rgb(241, 241, 241);
     padding: 10px;
     font-size: 14px;
   }
