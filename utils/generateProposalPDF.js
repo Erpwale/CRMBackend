@@ -40,7 +40,7 @@ const footerBase64 = fs.readFileSync(
 const termsHTML = `
 <div style="page-break-before: always;">
 
-  <h3>Terms & Conditions</h3>
+  <h3 style= "margin-top:30px;">Terms & Conditions</h3>
 
   ${data.products.map(p => `
     <div style="margin-bottom:10px;">
@@ -98,7 +98,7 @@ const emptyRows = Array.from({
   left: 10px;
   right: 10px;
   bottom: 10px;
-  border: 2px solid #315d7c;
+  border: 1px solid #315d7cd0;
   pointer-events: none;
 }
   body { font-family: Arial; padding: 30px; font-size: 14px;}
@@ -293,7 +293,7 @@ const emptyRows = Array.from({
   </tbody>
 </table>
 
-<div style="page-break-before: always; margin-top: 20px">
+<div style="page-break-before: always;">
   ${termsHTML}
 </div>
 <div style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
