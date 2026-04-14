@@ -240,7 +240,7 @@ const emptyRows = Array.from({
 
   <tbody>
     ${productRows}
-    // ${emptyRows}
+   
     <tr>
     <td></td>
      <td class="right bold">Discount</td>
