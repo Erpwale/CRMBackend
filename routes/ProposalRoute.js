@@ -291,8 +291,13 @@ res.setHeader("Content-Disposition", "inline; filename=proposal.pdf");
 
 router.post("/add",authMiddleware, async (req, res) => {
   try {
+       const totalGST = req.body.gstTotal || 0;
     const data = {
   ...req.body,
+// ✅ Split GST with 2 decimal precision
+      cgst: +(totalGST / 2).toFixed(2),
+      sgst: +(totalGST / 2).toFixed(2),
+
 
   uid: req.user._id,
   userName: req.user.name,
