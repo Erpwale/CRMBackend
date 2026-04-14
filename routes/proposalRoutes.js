@@ -152,8 +152,14 @@ router.post("/preview", async (req, res) => {
 
     const pdfBuffer = await generateProposalPDF(proposal);
 
+    // ✅ use dynamic name
+    const fileName = `${proposal.companyName || "proposal"}.pdf`;
+
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "inline; filename=proposal.pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename="${fileName}"`
+    );
 
     res.send(pdfBuffer);
 
@@ -162,7 +168,6 @@ router.post("/preview", async (req, res) => {
     res.status(500).json({ message: "Preview failed" });
   }
 });
-
 router.get("/proposal/:opid", async (req, res) => {
   try {
     const { opid } = req.params;
