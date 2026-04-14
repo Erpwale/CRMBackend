@@ -108,8 +108,8 @@ const emptyRows = Array.from({
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
 
-  border: 0.5px solid #bfc5cc93;
-  border-radius: 1px;         /* 👈 curve */
+  border: 0.5px solid #ffffffc4;
+  border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
 
