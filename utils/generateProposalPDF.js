@@ -113,14 +113,14 @@ const emptyRows = Array.from({
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
 
-  border: 0.2px solid;
+  border: 0.2px solid
    border-color: rgb(241, 241, 241);
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
 
   th, td {
-    border: 0.2px solid;
+    border: 0.2px solid
      border-color: rgb(241, 241, 241);
     padding: 10px;
     font-size: 14px;
@@ -219,7 +219,7 @@ const emptyRows = Array.from({
 
 <div class="page-border"></div>
 
-<h3 style="text-align:center;">BUSINESS PROPOSAL</>
+<h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
 <div style="display: flex;justify-content: space-between;">
 
 <div>
@@ -232,12 +232,11 @@ const emptyRows = Array.from({
   />
   
   <br/>
-  ${data.state}, 
-  ${data.city} - ${data.pincode}
+  ${data.state}, ${data.city} - ${data.pincode}
 </div>
 
 <br/>
-<div style:"margin-bottom:20px;">
+<div>
 
 <b>Date:</b> ${data.date}<br/>
 </div>
