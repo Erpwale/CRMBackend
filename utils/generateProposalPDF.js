@@ -128,7 +128,7 @@ const emptyRows = Array.from({
   table-layout: fixed;
 
   border: 0.3px solid;
-   border-color: rgb(241, 241, 241);
+   border-color: rgb(233, 233, 233);
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
@@ -253,7 +253,7 @@ const emptyRows = Array.from({
 </div>
 
 <p style="padding-top:20px;"><b>Kind Attn: ${data.contactName}</b></p>
-<b>Subject: Proposal of ${data.businessLine}</b>
+<p><b>Subject: Proposal of ${data.businessLine}</b></p>
 
 
 <table>
