@@ -102,14 +102,19 @@ const emptyRows = Array.from({
   pointer-events: none;
 }
   body { font-family: Arial; padding: 30px; font-size: 14px;}
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed; /* IMPORTANT */
-  }
+ table {
+  width: 100%;
+  border-collapse: separate;   /* ✅ change this */
+  border-spacing: 0;           /* remove gaps */
+  table-layout: fixed;
+
+  border: 1px solid #bfc5cc93;
+  border-radius: 10px;         /* 👈 curve */
+  overflow: hidden;            /* clip corners */
+}
 
   th, td {
-    border: 1px solid #bfc5cc;
+    border: 1px solid #bfc5ccb0;
     padding: 10px;
     font-size: 14px;
   }
@@ -126,9 +131,9 @@ const emptyRows = Array.from({
 
   /* Column widths */
   .col-sr   { width: 8%; }
-  .col-part { width: 50%; }  /* 👈 increased */
+  .col-part { width: 58%; }  /* 👈 increased */
   .col-qty  { width: 10%; }
-  .col-rate { width: 16%; }
+  .col-rate { width: 8%; }
   .col-amt  { width: 16%; }
 
   .footer-section {
