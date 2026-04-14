@@ -53,7 +53,7 @@ const termsHTML = `
 
   ${data.products.map(p => `
     <div style="margin-bottom:10px;">
-      <b>${p.name}</b>
+     
       <div>${p.terms || ""}</div>
     </div>
   `).join("")}
@@ -126,7 +126,7 @@ const emptyRows = Array.from({
   border-collapse: separate;   /* ✅ change this */
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
-  border: 0.5px solid #d8d8d8d2;
+  border: 0.5px #d8d8d8d2;
   
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
@@ -134,7 +134,7 @@ const emptyRows = Array.from({
 
   th, td {
 
-    border: 0.5px solid #d8d8d8d2;
+    border: 0.5px #d8d8d8d2;
     padding: 10px;
     font-size: 14px;
   }
@@ -319,7 +319,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
       <td class="right bold">Total</td>
     <td></td>
     <td></td>
-    <td class="right bold"><b>${data.total || 0}.00</b></td>
+    <td class="right bold"><b>${data.total || 0}</b></td>
   </tr>
 
   </tbody>
