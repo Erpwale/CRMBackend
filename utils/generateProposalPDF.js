@@ -98,7 +98,7 @@ const emptyRows = Array.from({
   left: 10px;
   right: 10px;
   bottom: 10px;
-  border: 1px solid #315d7cd0;
+  border: 1px solid #3A8EFF;
   pointer-events: none;
 }
   body { font-family: Arial; padding: 30px; font-size: 14px;}
@@ -193,7 +193,7 @@ const emptyRows = Array.from({
 .signature-card {
   width: 48%;
   height: 80px;
-  border: 0.5px solid #ffffff;
+  border: 0.5px solid #d8d8d8d2;
   border-radius: 25px;
 
   padding: 20px;
