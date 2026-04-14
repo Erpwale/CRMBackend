@@ -108,8 +108,8 @@ const emptyRows = Array.from({
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
 
-  border: 1px solid #bfc5cc93;
-  border-radius: 10px;         /* 👈 curve */
+  border: 0.5px solid #bfc5cc93;
+  border-radius: 1px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
 
@@ -246,14 +246,15 @@ const emptyRows = Array.from({
   <tbody>
     ${productRows}
    
-    <tr>
-    <td></td>
-     <td class="right bold">Discount</td>
-    <td></td>
-    <td></td>
-    <td class="right">${data.discount || 0}</td>
-  </tr>
-
+    ${data.discount && data.discount !== 0 ? `
+<tr>
+  <td></td>
+  <td class="right bold">Discount</td>
+  <td></td>
+  <td></td>
+  <td class="right">${data.discount}</td>
+</tr>
+` : ""}
   <tr>
     <td></td>
     <td class="right bold">Gross Total</td>
@@ -278,14 +279,16 @@ const emptyRows = Array.from({
     <td></td>
    <td class="right">${data.sgst || 0}</td>
   </tr>
-
-  <tr>
+${data.roundOff && data.roundOff !== 0 ? `
+ <tr>
     <td></td>
     <td class="right">Round off</td>
     <td></td>
     <td></td>
     <td class="right">${data.roundOff || 0}</td>
   </tr>
+` : ""}
+ 
 
   <tr>
     <td></td>
