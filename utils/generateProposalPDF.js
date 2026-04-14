@@ -108,13 +108,13 @@ const emptyRows = Array.from({
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
 
-  border: 0.5px solid #ffffffc4;
+  border: 0.5px solid #ebebebc4;
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
 
   th, td {
-    border: 1px solid #bfc5ccb0;
+    border: 0.5px solid #ebebebc4;
     padding: 10px;
     font-size: 14px;
   }
