@@ -67,8 +67,8 @@ const productRows = data.products.map((p, i) => `
   <td class="center">${i + 1}</td>
    <td class="left bold">${p.name || ""}</td>
   <td class="center">${p.qty || ""}</td>
-  <td class="right">${p.rate || ""}</td>
-  <td class="right">${p.totalValue || ""}</td>
+  <td class="right">${p.rate || ""}.0</td>
+  <td class="right">${p.totalValue || ""}.0</td>
 </tr>
 `).join("");
 
@@ -178,7 +178,7 @@ const emptyRows = Array.from({
 }
 
 .signature-container {
-  border: 2px solid #141414;
+  border: 0.5px solid #141414;
   border-radius: 10px;
   padding: 20px;
   margin-top: 40px;
@@ -192,8 +192,8 @@ const emptyRows = Array.from({
 
 .signature-card {
   width: 48%;
-  height: 100px;
-  border: 2px solid #cfcfcf;
+  height: 80px;
+  border: 0.5px solid #ffffff;
   border-radius: 25px;
 
   padding: 20px;
@@ -217,7 +217,7 @@ const emptyRows = Array.from({
 
 <div>
   <b>To:</b><br/>
-  ${data.companyName}<br/>
+ <b> ${data.companyName}</b><br/>
   ${data.address1}<br/>
   ${data.state}, ${data.city} - ${data.pincode}
 </div>
@@ -228,7 +228,7 @@ const emptyRows = Array.from({
 <b>Date:</b> ${data.date}<br/>
 </div>
 </div>
-<p>Kind Attn: ${data.contactName}<br/></'p>
+<p><b>Kind Attn: ${data.contactName}</b><br/></'p>
 <p><b>Subject: Proposal of ${data.businessLine}</b></p>
 
 
@@ -260,7 +260,7 @@ const emptyRows = Array.from({
     <td class="right bold">Gross Total</td>
     <td></td>
     <td></td>
-    <td class="right bold">${data.subtotal || 0}</td>
+    <td class="right bold">${data.subtotal || 0}.0</td>
   </tr>
 
   <tr>
