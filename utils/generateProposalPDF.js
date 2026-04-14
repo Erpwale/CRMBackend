@@ -126,16 +126,15 @@ const emptyRows = Array.from({
   border-collapse: separate;   /* ✅ change this */
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
-
-  border: 0.67px solid #bfc5cc; /* outer border */
+ border: 0.5px solid #d8d8d8d2;
+  
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
 
   th, td {
 
-     border: 0.67px solid #bfc5cc; /* inner borders */
-
+     border: 0.5px solid #d8d8d8d2;
     padding: 10px;
     font-size: 14px;
   }
