@@ -219,18 +219,19 @@ const emptyRows = Array.from({
 
 <div class="page-border"></div>
 
-<h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
+<h3 style="text-align:center;padding-bottom:20px">BUSINESS PROPOSAL</h3>
 <div style="display: flex;justify-content: space-between;">
 
-<div style="margin-to: 20px;">
+<div style="margin-top: 20px;">
   <b>To:</b><br/>
  <b> ${data.companyName}</b><br/>
  ${formatAddress(data.address1)}  <br/>
-  ${data.state}, ${data.city} - ${data.pincode}
+ <p> ${data.state},<p>
+ <p> ${data.city} - ${data.pincode}</p>
 </div>
 
 <br/>
-<div>
+<div style:"Padding-bottom:5px">
 
 <b>Date:</b> ${data.date}<br/>
 </div>
