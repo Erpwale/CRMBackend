@@ -192,7 +192,7 @@ const emptyRows = Array.from({
 
 .signature-card {
   width: 48%;
-  height: 140px;
+  height: 100px;
   border: 2px solid #cfcfcf;
   border-radius: 25px;
 
@@ -304,7 +304,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
 <div style="page-break-before: always;">
   ${termsHTML}
 </div>
-<div style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
+<div style="page-break-before: always; margin-top:30px;">
    <div class="signature-wrapper">
   
   <div class="signature-card">
