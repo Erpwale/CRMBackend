@@ -219,9 +219,12 @@ const emptyRows = Array.from({
 
 <div class="page-border"></div>
 
-<h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
+<h3 style="text-align:center;">BUSINESS PROPOSAL</>
 <div style="display: flex;justify-content: space-between;">
+<div>
 
+<b>Date:</b> ${data.date}<br/>
+</div>
 <div>
   <b>To:</b><br/>
  <b> ${data.companyName}</b><br/>
@@ -232,14 +235,12 @@ const emptyRows = Array.from({
   />
   
   <br/>
-  ${data.state}, ${data.city} - ${data.pincode}
+  ${data.state}, 
+  ${data.city} - ${data.pincode}
 </div>
 
 <br/>
-<div>
 
-<b>Date:</b> ${data.date}<br/>
-</div>
 </div>
 <p><b>Kind Attn: ${data.contactName}</b><br/></'p>
 <p><b>Subject: Proposal of ${data.businessLine}</b></p>
