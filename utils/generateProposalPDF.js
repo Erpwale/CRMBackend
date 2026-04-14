@@ -228,7 +228,8 @@ const emptyRows = Array.from({
     <b>To:</b><br/>
     <b>${data.companyName}</b><br/>
     ${formatAddress(data.address1)}<br/>
-    ${data.state}, ${data.city} - ${data.pincode}
+    <p>${data.state}, </p>
+    <p>${data.city} - ${data.pincode}</p>
   </div>
 
   <!-- Right Side -->
