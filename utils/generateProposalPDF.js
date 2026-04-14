@@ -98,7 +98,7 @@ const emptyRows = Array.from({
   left: 10px;
   right: 10px;
   bottom: 10px;
-  border: 1px solid #3A8EFF;
+  border: 1px solid #112F6D;
   pointer-events: none;
 }
   body { font-family: Arial; padding: 30px; font-size: 14px;}
