@@ -39,12 +39,12 @@ const footerBase64 = fs.readFileSync(
 const formatDate = (date) => {
   const [month, day, year] = date.split("/");
   const d = new Date(`${year}-${month}-${day}`);
-  
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  });
+
+  const dayNum = d.getDate();
+  const monthName = d.toLocaleString("en-US", { month: "long" });
+  const yearNum = d.getFullYear();
+
+  return `${dayNum}-${monthName}-${yearNum}`;
 };
 const termsHTML = `
 <div style="page-break-before: always;">
@@ -238,7 +238,7 @@ const emptyRows = Array.from({
 
   <!-- Left Side -->
  <div style="margin-top:20px; line-height:1.5; white-space: normal; word-break: keep-all;">
-  <b>To:</b><br/>
+  <b>To,</b><br/>
   <b>${data.companyName?.toUpperCase()}</b><br/>
     ${formatAddress(data.address1)}<br/>
  ${data.district}, ${data.city}</br>
@@ -328,7 +328,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
 <div style="page-break-before: always;">
   ${termsHTML}
 </div>
-<div style="page-break-before: always; margin-top:30px;">
+<div style="page-break-before: always; margin:auto;">
    <div class="signature-wrapper">
   
   <div class="signature-card">
@@ -339,7 +339,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
 
   <div class="signature-card">
     <div class="signature-title">
-      For, ${data.companyName}, ${data.contactName}
+      For, ${data.companyName}/ ${data.contactName}
     </div>
   </div>
 </div>
@@ -351,6 +351,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
         ${data.mobile || ""}
     </div>
 </div>
+<p style="text-align:center;">(Computer Generated Document so Signature not required)</p>
 </div>
 
 </body>
