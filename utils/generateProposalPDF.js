@@ -339,7 +339,7 @@ const emptyRows = Array.from({
   },
 
   headerTemplate: `
-    <div style="width:95%; text-align:center; margin-left:21px; margin-right:21px">
+    <div style="width:95%; text-align:center; margin-left:22px; margin-right:222px">
      <div style="margin-top:5px;">
       <img src="data:image/jpeg;base64,${headerBase64}" style="width:98%; " />
       </div>
