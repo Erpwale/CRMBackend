@@ -219,24 +219,27 @@ const emptyRows = Array.from({
 
 <div class="page-border"></div>
 
-<h3 style="text-align:center;padding-bottom:20px">BUSINESS PROPOSAL</h3>
-<div style="display: flex;justify-content: space-between;">
+<h3 style="text-align:center; padding-bottom:20px;">BUSINESS PROPOSAL</h3>
 
-<div style="margin-top: 20px;">
-  <b>To:</b><br/>
- <b> ${data.companyName}</b><br/>
- ${formatAddress(data.address1)}  <br/>
- <p> ${data.state},<p>
- <p> ${data.city} - ${data.pincode}</p>
+<div style="display:flex; justify-content:space-between; align-items:flex-start;">
+
+  <!-- Left Side -->
+  <div style="margin-top:20px; line-height:1.5;">
+    <b>To:</b><br/>
+    <b>${data.companyName}</b><br/>
+    ${formatAddress(data.address1)}<br/>
+    ${data.state}, ${data.city} - ${data.pincode}
+  </div>
+
+  <!-- Right Side -->
+  <div style="padding-bottom:5px; text-align:right;">
+    <b>Date:</b> ${data.date}
+  </div>
+
 </div>
 
-<br/>
-<div style:"Padding-bottom:5px">
+<p><b>Kind Attn: ${data.contactName}</b></p>
 
-<b>Date:</b> ${data.date}<br/>
-</div>
-</div>
-<p><b>Kind Attn: ${data.contactName}</b><br/></'p>
 <p><b>Subject: Proposal of ${data.businessLine}</b></p>
 
 
