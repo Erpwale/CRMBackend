@@ -252,7 +252,8 @@ const emptyRows = Array.from({
   <b>To:</b><br/>
   <b>${data.companyName?.toUpperCase()}</b><br/>
     ${formatAddress(data.address1)}<br/>
-  ${data.state}, ${data.city} - ${data.pincode}
+  ${data.state},${data.district}
+   ${data.city} - ${data.pincode}
 </div>
 
   <!-- Right Side -->
