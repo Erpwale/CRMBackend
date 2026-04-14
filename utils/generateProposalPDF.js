@@ -61,23 +61,34 @@ const termsHTML = `
 `;
 console.log("termsHTML:", termsHTML);
 const maxRows = 10;
-const formatAddress = (address, limit = 20) => {
+const formatAddress = (address, maxLength = 30) => {
   if (!address) return "";
 
   const words = address.split(" ");
   let lines = [];
   let currentLine = "";
 
-  words.forEach(word => {
-    if ((currentLine + word).length <= limit) {
-      currentLine += (currentLine ? " " : "") + word;
-    } else {
-      lines.push(currentLine);
-      currentLine = word;
-    }
-  });
+  for (let word of words) {
+    if ((currentLine + word).length > maxLength) {
+      lines.push(currentLine.trim());
+      currentLine = word + " ";
 
-  if (currentLine) lines.push(currentLine);
+      // ✅ stop at 2 lines
+      if (lines.length === 1) break;
+    } else {
+      currentLine += word + " ";
+    }
+  }
+
+  // push second line
+  if (lines.length < 2 && currentLine) {
+    lines.push(currentLine.trim());
+  }
+
+  // if still words remaining → add "..."
+  if (words.join(" ").length > lines.join(" ").length) {
+    lines[1] = lines[1] + "...";
+  }
 
   return lines.join("<br/>");
 };
@@ -86,7 +97,7 @@ const productRows = data.products.map((p, i) => `
   <td class="center">${i + 1}</td>
    <td class="left bold">${p.name || ""}</td>
   <td class="center">${p.qty || ""}</td>
-  <td class="right">${p.rate || ""}.0</td>
+  <td class="right">${p.rate || ""}.00</td>
   <td class="right">${p.totalValue || ""}.0</td>
 </tr>
 `).join("");
@@ -283,7 +294,7 @@ const emptyRows = Array.from({
     <td class="right bold">Gross Total</td>
     <td></td>
     <td></td>
-    <td class="right bold">${data.subtotal || 0}.0</td>
+    <td class="right bold">${data.subtotal || 0}.00</td>
   </tr>
 
   <tr>
@@ -318,7 +329,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
       <td class="right bold">Total</td>
     <td></td>
     <td></td>
-    <td class="right bold"><b>${data.total || 0}</b></td>
+    <td class="right bold"><b>${data.total || 0}.00</b></td>
   </tr>
 
   </tbody>
