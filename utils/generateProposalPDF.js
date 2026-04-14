@@ -108,13 +108,15 @@ const emptyRows = Array.from({
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
 
-  border: 0.5px solid #ebebebc4;
+  border: 0.2px solid
+   border-color: rgb(232 232 232 / var(--tw-border-opacity, 1));;
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
 
   th, td {
-    border: 0.5px solid #ebebebc4;
+    border: 0.2px solid
+     border-color: rgb(232 232 232 / var(--tw-border-opacity, 1));;
     padding: 10px;
     font-size: 14px;
   }
@@ -320,7 +322,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
   </div>
 </div>
 </div>
-    <div style="margin-top:5px;" >
+    <div style="margin-top:10px;" >
         <b>Regards,</b><br/>
         ${data.userName || ""}<br/>
         ${data.email || ""}<br/>
