@@ -366,8 +366,8 @@ ${data.roundOff && data.roundOff !== 0 ? `
   displayHeaderFooter: true,
 
   margin: {
-    top: "100px",
-    bottom: "100px"
+    top: "150px",
+    bottom: "150px"
   },
 
   headerTemplate: `
