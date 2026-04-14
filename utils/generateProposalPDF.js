@@ -127,15 +127,15 @@ const emptyRows = Array.from({
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
 
-  border: 0.3px solid;
-   border-color: rgb(233, 233, 233);
+  border: 1px solid #bfc5cc; /* outer border */
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
 
   th, td {
-    border: 0.2px solid;
-     border-color: rgb(241, 241, 241);
+
+     border: 1px solid #bfc5cc; /* inner borders */
+
     padding: 10px;
     font-size: 14px;
   }
