@@ -113,7 +113,7 @@ const emptyRows = Array.from({
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
 
-  border: 0.2px solid;
+  border: 0.3px solid;
    border-color: rgb(241, 241, 241);
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
@@ -226,9 +226,9 @@ const emptyRows = Array.from({
   <!-- Left Side -->
   <div style="margin-top:20px; line-height:1.5;">
     <b>To:</b><br/>
-    <b>${data.companyName}</b><br/>
+    <b>${data.companyName}.toUpperCase()</b><br/>
     ${formatAddress(data.address1)}<br/>
-  ${data.state}, </br>
+  ${data.state}, ${data.district} </br>
    ${data.city} - ${data.pincode}
   </div>
 
@@ -239,9 +239,8 @@ const emptyRows = Array.from({
 
 </div>
 
-<p><b>Kind Attn: ${data.contactName}</b></p>
-
-<p><b>Subject: Proposal of ${data.businessLine}</b></p>
+<p style="padding-top:20px;"><b>Kind Attn: ${data.contactName}</b></p>
+<b>Subject: Proposal of ${data.businessLine}</b>
 
 
 <table>
