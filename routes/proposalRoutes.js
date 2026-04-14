@@ -200,9 +200,9 @@ router.get("/proposal/title/:documentTitle", async (req, res) => {
   try {
     const { documentTitle } = req.params;
 
-    const proposal = await Proposal.findOne({
-      documentTitle: documentTitle,
-    });
+  const proposal = await Proposal.findOne({
+  documentTitle: { $regex: `^${documentTitle}$`, $options: "i" }
+});
 
     if (!proposal) {
       return res.status(404).send("Proposal not found");
