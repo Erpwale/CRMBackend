@@ -293,7 +293,7 @@ const emptyRows = Array.from({
   </tbody>
 </table>
 
-<div style="page-break-before: always;">
+<div style="page-break-before: always; margin-top: 20px">
   ${termsHTML}
 </div>
 <div style="break-inside: avoid; page-break-inside: avoid; margin-top:30px;">
