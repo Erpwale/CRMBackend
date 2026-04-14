@@ -198,10 +198,10 @@ router.get("/proposal/:opid", async (req, res) => {
 });
 router.get("/proposal/title/:documentTitle", async (req, res) => {
   try {
-    const { opid } = req.params;
+    const { documentTitle } = req.params;
 
- const proposal = await Proposal.findOne({
-      documentTitle: documentTitle
+    const proposal = await Proposal.findOne({
+      documentTitle: documentTitle,
     });
 
     if (!proposal) {
@@ -209,11 +209,16 @@ router.get("/proposal/title/:documentTitle", async (req, res) => {
     }
 
     const pdfBuffer = await generateProposalPDF(proposal);
- // ✅ business line + opid
+
+    // ✅ Safe business line
     const safeBusinessLine = (proposal.businessLine || "proposal")
       .replace(/[^a-z0-9]/gi, "_");
 
-    const fileName = `${safeBusinessLine}-${opid}.pdf`;
+    // ✅ Use documentTitle instead of opid
+    const safeTitle = documentTitle.replace(/[^a-z0-9]/gi, "_");
+
+    const fileName = `${safeBusinessLine}-${safeTitle}.pdf`;
+
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
@@ -221,6 +226,7 @@ router.get("/proposal/title/:documentTitle", async (req, res) => {
     );
 
     res.send(pdfBuffer);
+
   } catch (err) {
     console.error("❌ Preview Error:", err);
     res.status(500).send("Preview failed");
