@@ -222,7 +222,7 @@ const emptyRows = Array.from({
 <h2 style="text-align:center;">BUSINESS PROPOSAL</h2>
 <div style="display: flex;justify-content: space-between;">
 
-<div>
+<div style="margin-to: 20px;">
   <b>To:</b><br/>
  <b> ${data.companyName}</b><br/>
  ${formatAddress(data.address1)}  <br/>
