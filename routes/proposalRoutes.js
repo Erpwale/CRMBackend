@@ -179,11 +179,15 @@ router.get("/proposal/:opid", async (req, res) => {
     }
 
     const pdfBuffer = await generateProposalPDF(proposal);
+ // ✅ business line + opid
+    const safeBusinessLine = (proposal.businessLine || "proposal")
+      .replace(/[^a-z0-9]/gi, "_");
 
+    const fileName = `${safeBusinessLine}-${opid}.pdf`;
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
-      `inline; filename=proposal_${opid}.pdf`
+      `inline; filename="${fileName}"`
     );
 
     res.send(pdfBuffer);
