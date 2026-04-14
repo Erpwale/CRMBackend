@@ -224,13 +224,12 @@ const emptyRows = Array.from({
 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
 
   <!-- Left Side -->
-  <div style="margin-top:20px; line-height:1.5;">
-    <b>To:</b><br/>
-    <b>${data.companyName?.toUpperCase()}</b><br/>
-    ${formatAddress(data.address1)}<br/>
-  ${data.state}, ${data.district} </br>
-   ${data.city} - ${data.pincode}
-  </div>
+ <div style="margin-top:20px; line-height:1.5; white-space: normal; word-break: keep-all;">
+  <b>To:</b><br/>
+  <b>${data.companyName?.toUpperCase()}</b><br/>
+  ${data.address1}<br/>
+  ${data.state}, ${data.city} - ${data.pincode}
+</div>
 
   <!-- Right Side -->
   <div style="padding-bottom:5px; text-align:right;">
