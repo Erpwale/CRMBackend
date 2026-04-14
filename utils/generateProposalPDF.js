@@ -113,14 +113,14 @@ const emptyRows = Array.from({
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
 
-  border: 0.2px solid
+  border: 0.2px solid;
    border-color: rgb(241, 241, 241);
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
 
   th, td {
-    border: 0.2px solid
+    border: 0.2px solid;
      border-color: rgb(241, 241, 241);
     padding: 10px;
     font-size: 14px;
@@ -225,13 +225,7 @@ const emptyRows = Array.from({
 <div>
   <b>To:</b><br/>
  <b> ${data.companyName}</b><br/>
-  <span
-    dangerouslySetInnerHTML={{
-      __html: formatAddress(data.address1)
-    }}
-  />
-  
-  <br/>
+ ${formatAddress(data.address1)}  <br/>
   ${data.state}, ${data.city} - ${data.pincode}
 </div>
 
