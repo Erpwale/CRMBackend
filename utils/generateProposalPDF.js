@@ -344,7 +344,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
   </div>
 </div>
 </div>
-    <div style="margin-top:10px;" >
+    <div style="margin-top:30px;" >
         <b>Regards,</b><br/>
         ${data.userName || ""}<br/>
         ${data.email || ""}<br/>
