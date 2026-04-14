@@ -101,7 +101,7 @@ const emptyRows = Array.from({
   border: 1px solid #315d7cd0;
   pointer-events: none;
 }
-  body { font-family: Arial; padding: 30px; font-size: 14px;}
+  body { font-family: Arial; font-size: 14px;}
   table {
     width: 100%;
     border-collapse: collapse;
@@ -339,7 +339,7 @@ const emptyRows = Array.from({
   },
 
   headerTemplate: `
-    <div style="width:95%; text-align:center; margin-left:20px; margin-right:20px">
+    <div style="width:95%; text-align:center; margin-left:19px; margin-right:19px">
      <div style="margin-top:5px;">
       <img src="data:image/jpeg;base64,${headerBase64}" style="width:98%; " />
       </div>
@@ -347,7 +347,7 @@ const emptyRows = Array.from({
   `,
 
   footerTemplate: `
-    <div style="width:95%; text-align:center; margin-left:20px; margin-right:20px">
+    <div style="width:95%; text-align:center; margin-left:19px; margin-right:19px">
       <div style="margin-top:5px;">
         <img src="data:image/jpeg;base64,${footerBase64}" style="width:98%; " />
       </div>
