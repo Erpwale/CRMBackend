@@ -61,11 +61,25 @@ const termsHTML = `
 `;
 console.log("termsHTML:", termsHTML);
 const maxRows = 10;
-const formatAddress = (address, maxLength = 25) => {
+const formatAddress = (address, limit = 20) => {
   if (!address) return "";
 
-  const regex = new RegExp(`.{1,${maxLength}}`, "g");
-  return address.match(regex).join("<br/>");
+  const words = address.split(" ");
+  let lines = [];
+  let currentLine = "";
+
+  words.forEach(word => {
+    if ((currentLine + word).length <= limit) {
+      currentLine += (currentLine ? " " : "") + word;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  });
+
+  if (currentLine) lines.push(currentLine);
+
+  return lines.join("<br/>");
 };
 const productRows = data.products.map((p, i) => `
 <tr>
@@ -227,7 +241,7 @@ const emptyRows = Array.from({
  <div style="margin-top:20px; line-height:1.5; white-space: normal; word-break: keep-all;">
   <b>To:</b><br/>
   <b>${data.companyName?.toUpperCase()}</b><br/>
-  ${data.address1}<br/>
+    ${formatAddress(data.address1)}<br/>
   ${data.state}, ${data.city} - ${data.pincode}
 </div>
 
