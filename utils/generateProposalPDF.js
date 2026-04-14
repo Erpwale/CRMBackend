@@ -36,7 +36,16 @@ const footerBase64 = fs.readFileSync(
         item.replace(/<li[^>]*>/, "").replace(/<\/li>/, "").trim()
       );
     };
-
+const formatDate = (date) => {
+  const [month, day, year] = date.split("/");
+  const d = new Date(`${year}-${month}-${day}`);
+  
+  return d.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+};
 const termsHTML = `
 <div style="page-break-before: always;">
 
@@ -258,7 +267,7 @@ const emptyRows = Array.from({
 
   <!-- Right Side -->
   <div style="padding-bottom:5px; text-align:right;">
-    <b>Date:</b> ${data.date}
+    <b>Date:</b>  ${formatDate(data.date)}
   </div>
 
 </div>
