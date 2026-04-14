@@ -252,8 +252,8 @@ const emptyRows = Array.from({
 
 </div>
 
-<p style="padding-top:20px;"><b>Kind Attn: ${data.contactName}</b></p>
-<p><b>Subject: Proposal of ${data.businessLine}</b></p>
+<p style="padding-top:20px;">Kind Attn : ${data.contactName}</p>
+<p><b>Subject : Proposal of ${data.businessLine}</b></p>
 
 
 <table>
