@@ -23,9 +23,10 @@ const proposalSchema = new mongoose.Schema({
   address2: String,
   state: String,
   city: String,
+  district:String,
   pincode: String,
   date: String,
-  contactName: String,
+  contactName: String,sd
   businessLine: String,
   products: [productSchema],
   discount: Number,
