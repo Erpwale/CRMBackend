@@ -339,7 +339,7 @@ const emptyRows = Array.from({
   },
 
   headerTemplate: `
-    <div style="width:95%; text-align:center; margin-left:22px; margin-right:222px">
+    <div style="width:95%; text-align:center; margin-left:22px; margin-right:22px">
      <div style="margin-top:5px;">
       <img src="data:image/jpeg;base64,${headerBase64}" style="width:98%; " />
       </div>
@@ -347,7 +347,7 @@ const emptyRows = Array.from({
   `,
 
   footerTemplate: `
-    <div style="width:95%; text-align:center; margin-left:20px; margin-right:20px">
+    <div style="width:95%; text-align:center; margin-left:22px; margin-right:22px">
       <div style="margin-top:5px;">
         <img src="data:image/jpeg;base64,${footerBase64}" style="width:98%; " />
       </div>
