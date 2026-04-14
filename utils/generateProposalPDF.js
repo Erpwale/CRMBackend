@@ -328,7 +328,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
 <div style="page-break-before: always;">
   ${termsHTML}
 </div>
-<div style="page-break-before: always; margin:auto;">
+<div style="page-break-before: always; marging-top: 500px;">
    <div class="signature-wrapper">
   
   <div class="signature-card">
@@ -344,7 +344,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
   </div>
 </div>
 </div>
-    <div style="margin-top:30px;" >
+    <div style="margin-top:80px;" >
         <b>Regards,</b><br/>
         ${data.userName || ""}<br/>
         ${data.email || ""}<br/>
