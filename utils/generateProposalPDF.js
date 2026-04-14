@@ -70,36 +70,16 @@ const termsHTML = `
 `;
 console.log("termsHTML:", termsHTML);
 const maxRows = 10;
-const formatAddress = (address, maxLength = 30) => {
+const formatAddress = (address) => {
   if (!address) return "";
 
   const words = address.split(" ");
-  let lines = [];
-  let currentLine = "";
+  const mid = Math.ceil(words.length / 2);
 
-  for (let word of words) {
-    if ((currentLine + word).length > maxLength) {
-      lines.push(currentLine.trim());
-      currentLine = word + " ";
+  const line1 = words.slice(0, mid).join(" ");
+  const line2 = words.slice(mid).join(" ");
 
-      // ✅ stop at 2 lines
-      if (lines.length === 1) break;
-    } else {
-      currentLine += word + " ";
-    }
-  }
-
-  // push second line
-  if (lines.length < 2 && currentLine) {
-    lines.push(currentLine.trim());
-  }
-
-  // if still words remaining → add "..."
-  if (words.join(" ").length > lines.join(" ").length) {
-    lines[1] = lines[1] + "...";
-  }
-
-  return lines.join("<br/>");
+  return `${line1}<br/>${line2}`;
 };
 const productRows = data.products.map((p, i) => `
 <tr>
