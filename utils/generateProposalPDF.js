@@ -113,14 +113,14 @@ const emptyRows = Array.from({
   border-spacing: 0;           /* remove gaps */
   table-layout: fixed;
 
-  border: 0.2px solid
+  border: 0.2px solid;
    border-color: rgb(241, 241, 241);
   border-radius: 5px;         /* 👈 curve */
   overflow: hidden;            /* clip corners */
 }
 
   th, td {
-    border: 0.2px solid
+    border: 0.2px solid;
      border-color: rgb(241, 241, 241);
     padding: 10px;
     font-size: 14px;
@@ -221,10 +221,7 @@ const emptyRows = Array.from({
 
 <h3 style="text-align:center;">BUSINESS PROPOSAL</>
 <div style="display: flex;justify-content: space-between;">
-<div>
 
-<b>Date:</b> ${data.date}<br/>
-</div>
 <div>
   <b>To:</b><br/>
  <b> ${data.companyName}</b><br/>
@@ -240,7 +237,10 @@ const emptyRows = Array.from({
 </div>
 
 <br/>
+<div style:"margin-bottom:20px;">
 
+<b>Date:</b> ${data.date}<br/>
+</div>
 </div>
 <p><b>Kind Attn: ${data.contactName}</b><br/></'p>
 <p><b>Subject: Proposal of ${data.businessLine}</b></p>
