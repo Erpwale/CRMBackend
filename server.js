@@ -51,7 +51,7 @@ app.use("/api/callBooking", require("./routes/CallBolkinRoute.js"));
 app.use("/api", require("./routes/PostOffice.js"));
 app.use("/api/LedgerCreating", require("./routes/ledgerRoutes.js"));
 app.use("/api/businessline", require("./routes/businessLineRoutes.js"));
-app.use("/api/deal", require("./routes/opportunity.js"));
+app.use("/api/deal", require("./routes/ProposalRoute.js"));
 app.use("/api/Proposel", require("./routes/proposalRoutes.js"));
 app.use("/api/bank", require("./routes/bankRoutes"));
 global.io = io; // ✅ ADD THIS
