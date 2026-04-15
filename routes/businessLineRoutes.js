@@ -106,6 +106,19 @@ router.post("/create", async (req, res) => {
   }
 });
 
+router.get("/price-levels", async (req, res) => {
+  try {
+    const { search } = req.query;
+
+    const result = await PriceLevel.find({
+      name: { $regex: search, $options: "i" }, // case-insensitive
+    }).limit(10);
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
     
 
 
