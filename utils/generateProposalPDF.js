@@ -97,7 +97,7 @@ const paymentHTML = (data.tallySerials || []).map((tally) => `
 
     <h3>Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h3>
 
-    <p><b>Account Name:</b> ${data.bankDetails?.accountName || ""}</p>
+    <p><b>Account Name:</b> ${data.bankDetails?.holderName || ""}</p>
     <p><b>Bank Name:</b> ${data.bankDetails?.bankName || ""}</p>
     <p><b>Account Number:</b> ${data.bankDetails?.accountNumber || ""}</p>
     <p><b>IFSC Code:</b> ${data.bankDetails?.ifsc || ""}</p>
