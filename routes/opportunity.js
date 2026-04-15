@@ -55,3 +55,4 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Error fetching deal" });
   }
 });
+module.exports = router; // ✅ THIS WAS MISSING
