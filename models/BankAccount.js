@@ -6,7 +6,7 @@ const bankAccountSchema = new mongoose.Schema(
     holderName: { type: String, required: true },
     accountNumber: { type: String, required: true },
     branchName: { type: String, required: true },
-    abaNumber: { type: String },
+    isfcode: { type: String , required:true},
   },
   { timestamps: true }
 );
