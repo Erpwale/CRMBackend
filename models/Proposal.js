@@ -15,21 +15,24 @@ description: { type: String, default: "" },
 });
 
 const proposalSchema = new mongoose.Schema({
-   proposalId: {
+  proposalId: {
     type: Number,
     unique: true
   },
+
   companyName: String,
   address1: String,
   address2: String,
   state: String,
   city: String,
-  district:String,
+  district: String,
   pincode: String,
   date: String,
   contactName: String,
   businessLine: String,
+
   products: [productSchema],
+
   discount: Number,
   grossTotal: Number,
   cgstPercent: Number,
@@ -41,18 +44,25 @@ const proposalSchema = new mongoose.Schema({
   subtotal: Number,
   net: Number,
 
-internalTerms: String,
-specialTerms: String,
- uid: {
+  internalTerms: String,
+  specialTerms: String,
+
+  // ✅ ADD BANK DETAILS HERE
+  bankDetails: {
+    bankName: String,
+    accountNumber: String,
+    ifsc: String,
+    branch: String
+  },
+
+  uid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
   userName: String,
   email: String
-  // mobile: String
 
 }, { timestamps: true });
-
 proposalSchema.pre("save", async function () {
   if (this.isNew && !this.proposalId) {
     const counter = await Counter.findByIdAndUpdate(
