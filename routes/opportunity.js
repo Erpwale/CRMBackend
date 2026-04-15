@@ -1,7 +1,7 @@
 // routes/deal.js
 const express = require("express");
 const router = express.Router();
-const Deal = require("../models/opportunityModel");
+const Deal = require("../models/opportunityModel.js");
 
 // ➕ CREATE DEAL
 router.post("/add", async (req, res) => {
