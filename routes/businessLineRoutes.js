@@ -108,18 +108,28 @@ router.post("/create", async (req, res) => {
 
 router.get("/price-levels", async (req, res) => {
   try {
-    const { search } = req.query;
+    const { search = "" } = req.query;
 
-    const result = await PriceLevel.find({
-      name: { $regex: search, $options: "i" }, // case-insensitive
-    }).limit(10);
+    const businessLines = await BusinessLine.find();
 
-    res.json(result);
+    // 🔥 extract all level names
+    const allLevels = businessLines.flatMap((bl) =>
+      bl.priceLevels.map((pl) => pl.levelName)
+    );
+
+    // 🔥 remove duplicates
+    const uniqueLevels = [...new Set(allLevels)];
+
+    // 🔍 filter by search
+    const filtered = uniqueLevels.filter((level) =>
+      level.toLowerCase().includes(search.toLowerCase())
+    );
+
+    res.json(filtered.slice(0, 10)); // limit 10
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
-    
 
 
 
