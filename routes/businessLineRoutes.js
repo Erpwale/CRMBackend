@@ -131,6 +131,20 @@ router.get("/price-levels", async (req, res) => {
   }
 });
 
+router.get("/search", async (req, res) => {
+  try {
+    const { search } = req.query;
+
+    const result = await BusinessLine.find({
+      businessLine: { $regex: search, $options: "i" },
+    }).limit(10);
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 
 
@@ -144,8 +158,17 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+router.get("/active", async (req, res) => {
+  try {
+    const data = await BusinessLine
+      .find({ status: "active" })   // ✅ filter by status
+      .sort({ createdAt: -1 });
 
-
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 // GET SINGLE
 router.get("/:id", async (req, res) => {
   try {
