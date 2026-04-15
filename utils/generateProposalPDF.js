@@ -91,7 +91,19 @@ const productRows = data.products.map((p, i) => `
   <td class="right">${p.totalValue || ""}.00</td>
 </tr>
 `).join("");
+const paymentHTML = (data.tallySerials || []).map((tally) => `
+  <div style="margin-top:20px;">
+    <h4>Tally Serial No: ${tally}</h4>
 
+    <h3>Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h3>
+
+    <p><b>Account Name:</b> ${data.bankDetails?.accountName || ""}</p>
+    <p><b>Bank Name:</b> ${data.bankDetails?.bankName || ""}</p>
+    <p><b>Account Number:</b> ${data.bankDetails?.accountNumber || ""}</p>
+    <p><b>IFSC Code:</b> ${data.bankDetails?.ifsc || ""}</p>
+    <p><b>Branch:</b> ${data.bankDetails?.branch || ""}</p>
+  </div>
+`).join("");
 const emptyRows = Array.from({
   length: Math.max(0, maxRows - data.products.length)
 }).map((_, i) => `
@@ -326,13 +338,7 @@ ${data.roundOff && data.roundOff !== 0 ? `
   </tbody>
 </table>
 <div>
-<p><h4>Tally Serial No: </h4> </p>
-<h3>Bank Details For NIFT/RTGS/CHEQUE DEPOSIT</h3>
-<p>Account Name: </p>
-<p>Bank Name:  </p>
-<p>Account Number: </p>
-<p>IFSC Code: </p>
-<p>Branch:</p>
+${paymentHTML}
 </div>
 <div style="page-break-before: always;">
   ${termsHTML}

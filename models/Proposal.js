@@ -60,7 +60,8 @@ const proposalSchema = new mongoose.Schema({
     bankName: String,
     accountNumber: String,
     ifsc: String,
-    branch: String
+    branch: String,
+    holderName:String,
   },
 
   uid: {
