@@ -3,6 +3,7 @@ const Counter = require("./Counter")
 
 const productSchema = new mongoose.Schema({
   name: String,
+  description:string;
   qty: Number,
   rate: Number,
   totalValue: Number,
