@@ -111,7 +111,7 @@ router.get("/price-levels", async (req, res) => {
     const { search = "" } = req.query;
 
     const businessLines = await BusinessLine.find();
-
+    console.log(businessLines)
     // 🔥 extract all level names
     const allLevels = businessLines.flatMap((bl) =>
       bl.priceLevels.map((pl) => pl.levelName)
