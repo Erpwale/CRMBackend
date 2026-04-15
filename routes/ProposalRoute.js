@@ -291,7 +291,7 @@ res.setHeader("Content-Disposition", "inline; filename=proposal.pdf");
 
 router.post("/add",authMiddleware, async (req, res) => {
   try {
-    console.log("sds0",req)
+    console.log("sds0",res)
        const totalGST = req.body.gstTotal || 0;
     const data = {
   ...req.body,
