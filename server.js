@@ -53,7 +53,7 @@ app.use("/api/LedgerCreating", require("./routes/ledgerRoutes.js"));
 app.use("/api/businessline", require("./routes/businessLineRoutes.js"));
 app.use("/api/deal", require("./routes/opportunity.js"));
 app.use("/api/Proposel", require("./routes/proposalRoutes.js"));
-app.use("/api/bank", require("./routes/BankAccount"));
+app.use("/api/bank", require("./routes/bankRoutes"));
 global.io = io; // ✅ ADD THIS
 
 // ❗ VERY IMPORTANT: export io
