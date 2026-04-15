@@ -290,8 +290,9 @@ res.setHeader("Content-Disposition", "inline; filename=proposal.pdf");
 });
 
 router.post("/add",authMiddleware, async (req, res) => {
+  
   try {
-   
+  console.log("REQ BODY:", req.body.bankDetails); 
        const totalGST = req.body.gstTotal || 0;
     const data = {
   ...req.body,
