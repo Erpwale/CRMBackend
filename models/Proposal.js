@@ -25,6 +25,10 @@ const proposalSchema = new mongoose.Schema({
   },
 
   companyName: String,
+  tallySerials: {
+  type: [String],
+  default: []
+},
   address1: String,
   address2: String,
   state: String,

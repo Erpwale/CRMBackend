@@ -325,7 +325,15 @@ ${data.roundOff && data.roundOff !== 0 ? `
 
   </tbody>
 </table>
-
+<div>
+<p><h4>Tally Serial No: </h4> </p>
+<h3>Bank Details For NIFT/RTGS/CHEQUE DEPOSIT</h3>
+<p>Account Name: </p>
+<p>Bank Name:  </p>
+<p>Account Number: </p>
+<p>IFSC Code: </p>
+<p>Branch:</p>
+</div>
 <div style="page-break-before: always;">
   ${termsHTML}
 </div>
