@@ -296,10 +296,7 @@ router.post("/add",authMiddleware, async (req, res) => {
     const data = {
   ...req.body,
    // ✅ ADD THIS
-  bankName: bank?.bankName,
-  accountNumber: bank?.accountNumber,
-  ifsc: bank?.ifsc,
-  branch: bank?.branch,
+ 
 // ✅ Split GST with 2 decimal precision
       cgst: +(totalGST / 2).toFixed(2),
       sgst: +(totalGST / 2).toFixed(2),
