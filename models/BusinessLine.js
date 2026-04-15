@@ -10,6 +10,7 @@ const ProductSchema = new mongoose.Schema({
 
   rate: { type: Number, default: 0 },
   gst: { type: Number, default: 0 },
+  hsn: { type: Number, default: 0 },
   discount: { type: Number, default: 0 },
     RatechangeAllowed: { type: Boolean, default: false },
   discountAllowed: { type: Boolean, default: false },
