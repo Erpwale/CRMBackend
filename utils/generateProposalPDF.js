@@ -194,7 +194,7 @@ const emptyRows = Array.from({
   th, td {
 
    border: 1px solid #ddd; 
-    padding: 10px;
+    padding: 5px;
     font-size: 13px;
   }
 
