@@ -336,9 +336,9 @@ ${paymentHTML}
     <p><b>IFSC Code     :</b> ${data.bankDetails?.ifsc || ""}</p>
     <p><b>Branch        :</b> ${data.bankDetails?.branch || ""}</p>
 </div>
-<div style="page-break-before: always;">
+
   ${termsHTML}
-</div>
+
 <div style="page-break-before: always; position: relative; height: 1000px;">
 
   <div style="
