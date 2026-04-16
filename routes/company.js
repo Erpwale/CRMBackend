@@ -323,9 +323,42 @@ router.get("/search", async (req, res) => {
   try {
     const { keyword } = req.query;
 
+    if (!keyword || !keyword.trim()) {
+      return res.json({ data: [] });
+    }
+
+    const searchRegex = new RegExp(keyword.trim(), "i");
+
     const companies = await Company.find({
-      companyName: { $regex: keyword, $options: "i" },
-    }).limit(10);
+      $or: [
+        { companyName: searchRegex },
+        { source: searchRegex },
+        { companyType: searchRegex },
+        // { businessLine: searchRegex },
+        // { businessType: searchRegex },
+        // { turnover: searchRegex },
+        // { remark: searchRegex },
+        // { us: searchRegex },
+
+        // ✅ Address fields (nested)
+        // { "address.line1": searchRegex },
+        // { "address.zone": searchRegex },
+        // { "address.sector": searchRegex },
+        // { "address.city": searchRegex },
+        // { "address.district": searchRegex },
+        // { "address.state": searchRegex },
+        // { "address.pincode": searchRegex },
+        // { "address.country": searchRegex },
+
+        // ✅ Tally License array fields
+        { "tallyLicense.srNo": searchRegex },
+        // { "tallyLicense.licenseType": searchRegex },
+        // { "tallyLicense.location": searchRegex },
+        // { "tallyLicense.name": searchRegex },
+      ],
+    })
+      .populate("primaryContact") // optional
+      .limit(10);
 
     res.json({ data: companies });
   } catch (err) {
