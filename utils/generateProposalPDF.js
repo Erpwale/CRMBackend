@@ -96,6 +96,8 @@ const productRows = data.products.map((p, i) => `
 const gstGroups = {};
 
 data.products.forEach(p => {
+  console.log(p);
+  
   const gst = Number(p.gst || 0);
   const subtotal = Number(p.subtotal || 0);
 
