@@ -99,13 +99,14 @@ data.products.forEach(p => {
   console.log(p);
   
   const gst = Number(p.gst || 0);
+    const gstValue = Number(p.gstValue || 0);
   const subtotal = Number(p.subtotal || 0);
 
   if (!gstGroups[gst]) {
     gstGroups[gst] = 0;
   }
 
-  gstGroups[gst] += subtotal;
+  gstGroups[gst] += gstValue;
 });
 
 // STEP 2: Generate CGST + SGST rows
@@ -116,9 +117,13 @@ const gstRows = Object.keys(gstGroups).map(gst => {
   const groupSubtotal = gstGroups[gst];
   const halfGst = gst / 2;
 
-  const cgst = (groupSubtotal * halfGst) / 100;
-  const sgst = (groupSubtotal * halfGst) / 100;
+  // const cgst = (groupSubtotal * halfGst) / 100;
+  // const sgst = (groupSubtotal * halfGst) / 100;
 
+  const totalGst = gstGroups[gst];
+
+  const cgst = totalGst / 2;
+  const sgst = totalGst / 2;
   totalCgst += cgst;
   totalSgst += sgst;
 
