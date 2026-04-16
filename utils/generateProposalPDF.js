@@ -366,6 +366,8 @@ ${paymentHTML}
   </div>
 
   <!-- REGARDS -->
+  
+  </div>
   <div style="margin-top:40px; text-align:left;">
     <b>Regards,</b><br/>
     ${data.userName || ""}<br/>
@@ -377,8 +379,6 @@ ${paymentHTML}
   <p style="margin-top:20px; text-align:center;">
     (Computer Generated Document so Signature not required)
   </p>
-
-</div>
 
 </body>
 </html>
