@@ -113,21 +113,20 @@ data.products.forEach(p => {
 let totalCgst = 0;
 let totalSgst = 0;
 
-const gstRows = Object.keys(gstGroups).map(gst => {
-  const groupSubtotal = gstGroups[gst];
-  const halfGst = gst / 2;
+const gstRows = Object.keys(gstGroups)
+  .sort((a, b) => a - b) // optional (nice order)
+  .map(gst => {
+    const totalGst = gstGroups[gst]; // ✅ correct variable
 
-  // const cgst = (groupSubtotal * halfGst) / 100;
-  // const sgst = (groupSubtotal * halfGst) / 100;
+    const cgst = totalGst / 2;
+    const sgst = totalGst / 2;
 
-  const totalGst = gstGroups[gst];
+    totalCgst += cgst;
+    totalSgst += sgst;
 
-  const cgst = totalGst / 2;
-  const sgst = totalGst / 2;
-  totalCgst += cgst;
-  totalSgst += sgst;
+    const halfGst = gst / 2;
 
-  return `
+    return `
 <tr>
   <td></td>
   <td class="right">CGST (${halfGst}%)</td>
@@ -144,7 +143,7 @@ const gstRows = Object.keys(gstGroups).map(gst => {
   <td class="right">${sgst.toFixed(2)}</td>
 </tr>
 `;
-}).join("");
+  }).join("");
 const paymentHTML = `
   <div style="margin-top:20px;">
     <h4>
@@ -336,30 +335,7 @@ const emptyRows = Array.from({
   <td class="right">${data.discount}</td>
 </tr>
 ` : ""}
-  <tr>
-    <td></td>
-    <td class="right bold">Gross Total</td>
-    <td></td>
-    <td></td>
-    <td class="right bold">${data.subtotal || 0}.00</td>
-  </tr>
 
-  <tr>
-    <td></td>
-    <td class="right">CGST (${data.cgstPercent || 9}%)</td>
-    
-    <td></td>
-    <td></td>
-    <td class="right">${data.cgst || 0}</td>
-  </tr>
-
-  <tr>
-    <td></td>
-    <td class="right">SGST (${data.sgstPercent || 9}%)</td>
-    <td></td>
-    <td></td>
-   <td class="right">${data.sgst || 0}</td>
-  </tr>
   ${gstRows}
 ${data.roundOff !== undefined && data.roundOff !== null  && data.roundOff !== 0 ? `
 <tr>
