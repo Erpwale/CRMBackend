@@ -95,13 +95,7 @@ const paymentHTML = (data.tallySerials || []).map((tally) => `
   <div style="margin-top:20px;">
     <h4>Tally Serial No: ${tally}</h4>
 
-    <h3>Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h3>
-
-    <p><b>Account Name:</b> ${data.bankDetails?.holderName || ""}</p>
-    <p><b>Bank Name:</b> ${data.bankDetails?.bankName || ""}</p>
-    <p><b>Account Number:</b> ${data.bankDetails?.accountNumber || ""}</p>
-    <p><b>IFSC Code:</b> ${data.bankDetails?.ifsc || ""}</p>
-    <p><b>Branch:</b> ${data.bankDetails?.branch || ""}</p>
+  
   </div>
 `).join("");
 const emptyRows = Array.from({
@@ -339,6 +333,13 @@ ${data.roundOff && data.roundOff !== 0 ? `
 </table>
 <div>
 ${paymentHTML}
+  <h3>Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h3>
+
+    <p><b>Account Name:</b> ${data.bankDetails?.holderName || ""}</p>
+    <p><b>Bank Name:</b> ${data.bankDetails?.bankName || ""}</p>
+    <p><b>Account Number:</b> ${data.bankDetails?.accountNumber || ""}</p>
+    <p><b>IFSC Code:</b> ${data.bankDetails?.ifsc || ""}</p>
+    <p><b>Branch:</b> ${data.bankDetails?.branch || ""}</p>
 </div>
 <div style="page-break-before: always;">
   ${termsHTML}
