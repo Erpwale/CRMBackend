@@ -147,7 +147,7 @@ const emptyRows = Array.from({
     font-weight: bold;
   }
 
-  .left { text-align: left; }
+  .left { text-align: left;font-weight: bold; }
   .center { text-align: center; }
   .right { text-align: right; }
   .bold { font-weight: bold; }
@@ -306,16 +306,15 @@ const emptyRows = Array.from({
     <td></td>
    <td class="right">${data.sgst || 0}</td>
   </tr>
-${data.roundOff && data.roundOff !== 0 ? `
- <tr>
-    <td></td>
-    <td class="right">Round off</td>
-    <td></td>
-    <td></td>
-    <td class="right">${data.roundOff || 0}</td>
-  </tr>
+${data.roundOff !== undefined && data.roundOff !== null ? `
+<tr>
+  <td></td>
+  <td class="right">Round off</td>
+  <td></td>
+  <td></td>
+  <td class="right">${Number(data.roundOff).toFixed(2)}</td>
+</tr>
 ` : ""}
- 
 
   <tr>
     <td></td>
