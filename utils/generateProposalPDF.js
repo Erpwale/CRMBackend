@@ -332,27 +332,27 @@ ${paymentHTML}
 
 <div style="margin:0;">
   <div style="display:flex;">
-    <span style="width:150px;">Account Name</span>
+    <span style="width:100px;">Account Name</span>
     <span>:   ${data.bankDetails?.holderName || ""}</span>
   </div>
 
   <div style="display:flex;">
-    <span style="width:150px;">Bank Name</span>
+    <span style="width:100px;">Bank Name</span>
     <span>:   ${data.bankDetails?.bankName || ""}</span>
   </div>
 
   <div style="display:flex;">
-    <span style="width:150px;">Acc. Number</span>
+    <span style="width:100px;">Acc. Number</span>
     <span>:  ${data.bankDetails?.accountNumber || ""}</span>
   </div>
 
   <div style="display:flex;">
-    <span style="width:150px;">IFSC Code</span>
+    <span style="width:100px;">IFSC Code</span>
     <span>:   ${data.bankDetails?.ifsc || ""}</span>
   </div>
 
   <div style="display:flex;">
-    <span style="width:150px;">Branch</span>
+    <span style="width:100px;">Branch</span>
     <span>:   ${data.bankDetails?.branch || ""}</span>
   </div>
 </div>
