@@ -96,6 +96,7 @@ const gstGroups = {};
 
 data.products.forEach(p => {
   const gst = Number(p.gst || 0);
+console.log(gst);
 
   if (!gstGroups[gst]) {
     gstGroups[gst] = 0;
