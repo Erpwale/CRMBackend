@@ -368,12 +368,13 @@ ${paymentHTML}
     </div>
 
     <!-- REGARDS -->
-    <div style="margin-top:40px;">
-      <b>Regards,</b><br/>
-      ${data.userName || ""}<br/>
-      ${data.email || ""}<br/>
-      ${data.mobile || ""}
-    </div>
+    <!-- REGARDS -->
+<div style="margin-top:40px; text-align:left; width:60%; margin-left:auto; margin-right:auto;">
+  <b>Regards,</b><br/>
+  ${data.userName || ""}<br/>
+  ${data.email || ""}<br/>
+  ${data.mobile || ""}
+</div>
 
     <!-- NOTE -->
     <p style="margin-top:20px;">
