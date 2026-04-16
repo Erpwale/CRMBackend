@@ -130,18 +130,14 @@ const emptyRows = Array.from({
   body { font-family: Arial; padding: 30px; font-size: 14px;}
  table {
   width: 100%;
-  border-collapse: separate;   /* ✅ change this */
-  border-spacing: 0;           /* remove gaps */
+  border-collapse: collapse;  /* ✅ FIX */
   table-layout: fixed;
-  border: 0.1px solid #d8d8d8d2;
-  
-  border-radius: 5px;         /* 👈 curve */
-  overflow: hidden;            /* clip corners */
+  border: 1px solid #ddd;
 }
 
   th, td {
 
-    border: 0.1px solid #d8d8d8d2;
+   border: 1px solid #ddd; 
     padding: 10px;
     font-size: 14px;
   }
