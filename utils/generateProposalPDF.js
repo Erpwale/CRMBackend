@@ -363,7 +363,7 @@ ${paymentHTML}
 
   <div style="
     position: absolute;
-    top: 20%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
@@ -395,14 +395,11 @@ ${paymentHTML}
   ${data.email || ""}<br/>
   ${data.mobile || ""}
 </div>
-
     <!-- NOTE -->
     <p style="margin-top:20px;">
       (Computer Generated Document so Signature not required)
     </p>
-
   </div>
-
 </div>
 </body>
 </html>
