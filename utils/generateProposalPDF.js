@@ -339,7 +339,7 @@ ${paymentHTML}
 <div style="page-break-before: always;">
   ${termsHTML}
 </div>
-<div style="page-break-before: always; marging-top: 500px;">
+<div style="page-break-before: always;display: flex; justify-content: center; align-items: center;">
    <div class="signature-wrapper">
   
   <div class="signature-card">
