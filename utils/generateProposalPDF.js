@@ -91,6 +91,45 @@ const productRows = data.products.map((p, i) => `
   <td class="right">${p.totalValue || ""}.00</td>
 </tr>
 `).join("");
+// GROUP GST
+const gstGroups = {};
+
+data.products.forEach(p => {
+  const gst = Number(p.gst || 0);
+
+  if (!gstGroups[gst]) {
+    gstGroups[gst] = 0;
+  }
+
+  gstGroups[gst] += Number(p.totalValue || 0);
+});
+
+// CREATE GST ROWS
+const gstRows = Object.keys(gstGroups).map(gst => {
+  const total = gstGroups[gst];
+  const halfGst = gst / 2;
+
+  const cgst = (total * halfGst) / 100;
+  const sgst = (total * halfGst) / 100;
+
+  return `
+<tr>
+  <td></td>
+  <td class="right">CGST (${halfGst}%)</td>
+  <td></td>
+  <td></td>
+  <td class="right">${cgst.toFixed(2)}</td>
+</tr>
+
+<tr>
+  <td></td>
+  <td class="right">SGST (${halfGst}%)</td>
+  <td></td>
+  <td></td>
+  <td class="right">${sgst.toFixed(2)}</td>
+</tr>
+`;
+}).join("");
 const paymentHTML = `
   <div style="margin-top:20px;">
     <h4>
@@ -306,6 +345,7 @@ const emptyRows = Array.from({
     <td></td>
    <td class="right">${data.sgst || 0}</td>
   </tr>
+  ${gstRows}
 ${data.roundOff !== undefined && data.roundOff !== null  && data.roundOff !== 0 ? `
 <tr>
   <td></td>
