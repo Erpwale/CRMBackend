@@ -328,13 +328,13 @@ ${data.roundOff !== undefined && data.roundOff !== null ? `
 </table>
 <div>
 ${paymentHTML}
-  <h3>Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h3>
+  <h4>Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h4>
 
-    <p><b>Account Name:</b> ${data.bankDetails?.holderName || ""}</p>
-    <p><b>Bank Name:</b> ${data.bankDetails?.bankName || ""}</p>
+    <p><b>Account Name  :</b> ${data.bankDetails?.holderName || ""}</p>
+    <p><b>Bank Name     :</b> ${data.bankDetails?.bankName || ""}</p>
     <p><b>Account Number:</b> ${data.bankDetails?.accountNumber || ""}</p>
-    <p><b>IFSC Code:</b> ${data.bankDetails?.ifsc || ""}</p>
-    <p><b>Branch:</b> ${data.bankDetails?.branch || ""}</p>
+    <p><b>IFSC Code     :</b> ${data.bankDetails?.ifsc || ""}</p>
+    <p><b>Branch        :</b> ${data.bankDetails?.branch || ""}</p>
 </div>
 <div style="page-break-before: always;">
   ${termsHTML}
