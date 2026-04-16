@@ -339,30 +339,45 @@ ${paymentHTML}
 <div style="page-break-before: always;">
   ${termsHTML}
 </div>
-<div style="page-break-before: always; marging-top: 500px;">
-   <div class="signature-wrapper">
-  
-  <div class="signature-card">
-    <div class="signature-title">
-      For, MS ERPWale Pvt. Ltd.
+<div style="
+  page-break-before: always;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+">
+
+  <!-- SIGNATURE -->
+  <div class="signature-wrapper" style="width:100%; justify-content: center;">
+    
+    <div class="signature-card">
+      <div class="signature-title">
+        For, MS ERPWale Pvt. Ltd.
+      </div>
     </div>
+
+    <div class="signature-card">
+      <div class="signature-title">
+        For, ${data.companyName}/ ${data.contactName}
+      </div>
+    </div>
+
   </div>
 
-  <div class="signature-card">
-    <div class="signature-title">
-      For, ${data.companyName}/ ${data.contactName}
-    </div>
+  <!-- REGARDS -->
+  <div style="margin-top:40px; text-align:left;">
+    <b>Regards,</b><br/>
+    ${data.userName || ""}<br/>
+    ${data.email || ""}<br/>
+    ${data.mobile || ""}
   </div>
-</div>
-</div>
-    <div style="margin-top:80px;" >
-        <b>Regards,</b><br/>
-        ${data.userName || ""}<br/>
-        ${data.email || ""}<br/>
-        ${data.mobile || ""}
-    </div>
-</div>
-<p style="text-align:center;">(Computer Generated Document so Signature not required)</p>
+
+  <!-- NOTE -->
+  <p style="margin-top:20px; text-align:center;">
+    (Computer Generated Document so Signature not required)
+  </p>
+
 </div>
 
 </body>
