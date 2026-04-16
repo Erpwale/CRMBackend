@@ -151,6 +151,9 @@ const paymentHTML = `
     </h4>
   </div>
 `;
+const totalProductDiscount = data.products.reduce((sum, p) => {
+  return sum + Number(p.discount || 0);
+}, 0);
 const emptyRows = Array.from({
   length: Math.max(0, maxRows - data.products.length)
 }).map((_, i) => `
@@ -326,13 +329,13 @@ const emptyRows = Array.from({
   <tbody>
     ${productRows}
    
-    ${data.discount && data.discount !== 0 ? `
+ ${totalProductDiscount > 0 ? `
 <tr>
   <td></td>
   <td class="right bold">Discount</td>
   <td></td>
   <td></td>
-  <td class="right">${data.discount}</td>
+  <td class="right">${totalProductDiscount.toFixed(2)}</td>
 </tr>
 ` : ""}
 
