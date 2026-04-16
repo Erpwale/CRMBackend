@@ -362,7 +362,7 @@ ${data.roundOff !== undefined && data.roundOff !== null  && data.roundOff !== 0 
 </table>
 <div>
 ${paymentHTML}
-<h4>Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h4>
+<h4 style="margin:0;">Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h4>
 
 <div style="margin:0;">
   <div style="display:flex;">
