@@ -330,7 +330,7 @@ ${data.roundOff !== undefined && data.roundOff !== null ? `
 ${paymentHTML}
  <h4>Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h4>
 
-<pre style="font-family: monospace; margin: 0;">
+<pre style=" margin: 0;">
 Account Name    : ${data.bankDetails?.holderName || ""}
 Bank Name       : ${data.bankDetails?.bankName || ""}
 Acc. Number     : ${data.bankDetails?.accountNumber || ""}
