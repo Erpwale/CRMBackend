@@ -85,7 +85,7 @@ const productRows = data.products.map((p, i) => `
 <tr>
   <td class="center">${i + 1}</td>
    <td class="left "><span class="bold">${p.name || ""}</span></br>
-   <span style="font-size:13px"> ${p.description}</p></td>
+   <span style="font-size:12px"> ${p.description}</p></td>
   <td class="center">${p.qty || ""}</td>
   <td class="right">${p.rate || ""}.00</td>
   <td class="right">${p.totalValue || ""}.00</td>
@@ -195,7 +195,7 @@ const emptyRows = Array.from({
 
    border: 1px solid #ddd; 
     padding: 10px;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   th {
