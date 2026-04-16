@@ -10,6 +10,10 @@ tallySerials: {
 },
   qty: Number,
   rate: Number,
+   gst: { type: Number, default: 0 },        // GST %
+  gstValue: { type: Number, default: 0 },  // GST amount
+  discount: { type: Number, default: 0 },  // discount per item
+  subtotal: { type: Number, default: 0 },  // before GST
   totalValue: Number,
   // ✅ ADD THIS
   terms: {
