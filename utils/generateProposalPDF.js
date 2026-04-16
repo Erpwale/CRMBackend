@@ -328,15 +328,34 @@ ${data.roundOff !== undefined && data.roundOff !== null ? `
 </table>
 <div>
 ${paymentHTML}
- <h4>Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h4>
+<h4>Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h4>
 
-<pre style=" margin: 0;">
-Account Name    : ${data.bankDetails?.holderName || ""}
-Bank Name       : ${data.bankDetails?.bankName || ""}
-Acc. Number     : ${data.bankDetails?.accountNumber || ""}
-IFSC Code       : ${data.bankDetails?.ifsc || ""}
-Branch          : ${data.bankDetails?.branch || ""}
-</pre>
+<div style="margin:0;">
+  <div style="display:flex;">
+    <span style="width:150px;">Account Name</span>
+    <span>: ${data.bankDetails?.holderName || ""}</span>
+  </div>
+
+  <div style="display:flex;">
+    <span style="width:150px;">Bank Name</span>
+    <span>: ${data.bankDetails?.bankName || ""}</span>
+  </div>
+
+  <div style="display:flex;">
+    <span style="width:150px;">Acc. Number</span>
+    <span>: ${data.bankDetails?.accountNumber || ""}</span>
+  </div>
+
+  <div style="display:flex;">
+    <span style="width:150px;">IFSC Code</span>
+    <span>: ${data.bankDetails?.ifsc || ""}</span>
+  </div>
+
+  <div style="display:flex;">
+    <span style="width:150px;">Branch</span>
+    <span>: ${data.bankDetails?.branch || ""}</span>
+  </div>
+</div>
 
   ${termsHTML}
 
