@@ -398,8 +398,8 @@ Branch          : ${data.bankDetails?.branch || ""}
   displayHeaderFooter: true,
 
   margin: {
-    top: "550px",
-    bottom: "550px"
+    top: "120px",
+    bottom: "120px"
   },
 
   headerTemplate: `
