@@ -306,7 +306,7 @@ const emptyRows = Array.from({
     <td></td>
    <td class="right">${data.sgst || 0}</td>
   </tr>
-${data.roundOff !== undefined && data.roundOff !== null ? `
+${data.roundOff !== undefined && data.roundOff !== null  && data.roundOff !== 0 ? `
 <tr>
   <td></td>
   <td class="right">Round off</td>
@@ -359,7 +359,7 @@ ${paymentHTML}
 
   ${termsHTML}
 
-<div style="page-break-before: always; position: relative; height: 1000px;">
+<div style="page-break-before: always; position: relative; height: 700px;">
 
   <div style="
     position: absolute;
