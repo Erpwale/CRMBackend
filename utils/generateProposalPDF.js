@@ -92,26 +92,33 @@ const productRows = data.products.map((p, i) => `
 </tr>
 `).join("");
 // GROUP GST
+// STEP 1: Group products by GST %
 const gstGroups = {};
 
 data.products.forEach(p => {
   const gst = Number(p.gst || 0);
-console.log(gst);
+  const subtotal = Number(p.subtotal || 0);
 
   if (!gstGroups[gst]) {
     gstGroups[gst] = 0;
   }
 
-  gstGroups[gst] += Number(p.totalValue || 0);
+  gstGroups[gst] += subtotal;
 });
 
-// CREATE GST ROWS
+// STEP 2: Generate CGST + SGST rows
+let totalCgst = 0;
+let totalSgst = 0;
+
 const gstRows = Object.keys(gstGroups).map(gst => {
-  const total = gstGroups[gst];
+  const groupSubtotal = gstGroups[gst];
   const halfGst = gst / 2;
 
-  const cgst = (total * halfGst) / 100;
-  const sgst = (total * halfGst) / 100;
+  const cgst = (groupSubtotal * halfGst) / 100;
+  const sgst = (groupSubtotal * halfGst) / 100;
+
+  totalCgst += cgst;
+  totalSgst += sgst;
 
   return `
 <tr>
