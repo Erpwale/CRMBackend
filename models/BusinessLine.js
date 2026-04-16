@@ -14,6 +14,7 @@ const ProductSchema = new mongoose.Schema({
   discount: { type: Number, default: 0 },
     RatechangeAllowed: { type: Boolean, default: false },
   discountAllowed: { type: Boolean, default: false },
+  descriptionchangedAllowed: { type: Boolean, default: false },
   net: { type: Number, default: 0 }, // ✅ ADD
 
     termsAndConditions: {
