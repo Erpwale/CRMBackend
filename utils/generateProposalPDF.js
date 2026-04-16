@@ -91,13 +91,13 @@ const productRows = data.products.map((p, i) => `
   <td class="right">${p.totalValue || ""}.00</td>
 </tr>
 `).join("");
-const paymentHTML = (data.tallySerials || []).map((tally) => `
+const paymentHTML = `
   <div style="margin-top:20px;">
-    <h4>Tally Serial No: ${tally}</h4>
-
-  
+    <h4>
+      Tally Serial No: ${(data.tallySerials || []).join(", ")}
+    </h4>
   </div>
-`).join("");
+`;
 const emptyRows = Array.from({
   length: Math.max(0, maxRows - data.products.length)
 }).map((_, i) => `
