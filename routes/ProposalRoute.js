@@ -289,44 +289,51 @@ res.setHeader("Content-Disposition", "inline; filename=proposal.pdf");
   }
 });
 
-router.post("/add",authMiddleware, async (req, res) => {
-  
+router.post("/add", authMiddleware, async (req, res) => {
   try {
-  console.log("REQ BODY:", req.body.bankDetails); 
-       const totalGST = req.body.gstTotal || 0;
+    console.log("REQ BODY:", req.body.bankDetails);
+
+    // ✅ STEP 1: Get values
+    const subtotal = req.body.subtotal || 0;
+    const totalGST = req.body.gstTotal || 0;
+
+    // ✅ STEP 2: Calculate total & roundOff (ADD HERE)
+    const totalBeforeRound = subtotal + totalGST;
+    const roundedTotal = Math.round(totalBeforeRound);
+    const roundOff = +(roundedTotal - totalBeforeRound).toFixed(2);
+
+    // ✅ STEP 3: Create data object
     const data = {
-  ...req.body,
-   // ✅ ADD THIS
- 
-// ✅ Split GST with 2 decimal precision
+      ...req.body,
+
       cgst: +(totalGST / 2).toFixed(2),
       sgst: +(totalGST / 2).toFixed(2),
 
+      // ✅ ADD THESE TWO
+      roundOff,
+      total: roundedTotal,
 
-  uid: req.user._id,
-  userName: req.user.name,
-  email: req.user.email,
-  mobile: req.user.mobile
-};
-    console.log(req.user);
-    
-    // 🔒 Basic validation
+      uid: req.user._id,
+      userName: req.user.name,
+      email: req.user.email,
+      mobile: req.user.mobile
+    };
+
+    console.log("RoundOff:", roundOff); // 🔍 debug
+
     if (!data.companyName) {
       return res.status(400).json({ message: "Company name is required" });
     }
 
-    // ✅ Save to DB
     const newProposal = new Proposal(data);
     const savedData = await newProposal.save();
-    const companyRoom = data.companyId?.toString(); // make sure companyId exists
 
-   if (global.io) {
-  global.io.emit("opportunityUpdated", {
-    type: "CREATE",
-    data: savedData,
-  });
-}
-    else {
+    if (global.io) {
+      global.io.emit("opportunityUpdated", {
+        type: "CREATE",
+        data: savedData,
+      });
+    } else {
       console.log("❌ Socket not initialized or companyId missing");
     }
 
@@ -336,8 +343,7 @@ router.post("/add",authMiddleware, async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error)
-    console.error(error);
+    console.log(error);
     res.status(500).json({ message: "Error saving data" });
   }
 });
