@@ -350,10 +350,11 @@ router.post("/add", authMiddleware, async (req, res) => {
 
 router.get("/my-opportunities", authMiddleware, async (req, res) => {
   try {
-    // const userId = req.user._id; // from JWT
+    const companyName = req.user.companyName; // ✅ from JWT
 
-    const data = await Proposal.find()
-      .sort({ createdAt: -1 });
+    const data = await Proposal.find({
+      companyName: { $regex: `^${companyName}$`, $options: "i" }
+    }).sort({ createdAt: -1 });
 
     res.status(200).json({
       message: "User proposals fetched",
@@ -365,6 +366,5 @@ router.get("/my-opportunities", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Error fetching data" });
   }
 });
-
 
 module.exports = router;
