@@ -188,7 +188,7 @@ const emptyRows = Array.from({
   border: 1px solid #112F6D;
   pointer-events: none;
 }
-  body {font-family: "DM Sans", sans-serif; padding: 30px; font-size: 13px;}
+  body {font-family: "DM Sans", sans-serif; font-weight:400; padding: 30px; font-size: 13px;}
  table {
   width: 100%;
   border-collapse: collapse;  /* ✅ FIX */
