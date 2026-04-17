@@ -84,8 +84,8 @@ const formatAddress = (address) => {
 const productRows = data.products.map((p, i) => `
 <tr>
   <td class="center">${i + 1}</td>
-   <td class="left "><span class="bold" style: "margin-top:5px;">${p.name || ""}</span></br>
-   <span style="font-size:12px; font-weight:100; margin-top:5px;">
+   <td class="left "><span class="bold" style: "margin-top=5px;">${p.name || ""}</span></br>
+   <span style="font-size:12px; font-weight:100;">
   ${p.description}
 </span></td>
   <td class="center">${p.qty || ""}</td>
@@ -196,7 +196,7 @@ const emptyRows = Array.from({
   th, td {
 
    border: 1px solid #ddd; 
-    padding: 7px;
+    padding: 9px;
     font-size: 13px;
   }
 
@@ -314,9 +314,13 @@ const emptyRows = Array.from({
 
 </div>
 
-<p style="padding-top:15px; padding-bottom:5px;">Kind Attn : ${data.contactName}</p>
-<p><b>Subject : Proposal of ${data.businessLine}</b></p>
+<p style="margin: 15px 0 2px 0;">
+  Kind Attn : ${data.contactName || ""}
+</p>
 
+<p style="margin: 0;">
+  <strong>Subject : Proposal of ${data.businessLine || ""}</strong>
+</p>
 
 <table>
   <thead>
@@ -343,7 +347,7 @@ const emptyRows = Array.from({
 ` : ""}
 
  
-<tr>
+<tr style="background: #F5F5F5;">
   <td></td>
   <td class="right bold">Gross Total</td>
   <td></td>
