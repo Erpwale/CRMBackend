@@ -84,8 +84,8 @@ const formatAddress = (address) => {
 const productRows = data.products.map((p, i) => `
 <tr>
   <td class="center">${i + 1}</td>
-   <td class="left "><span class="bold margin-top:5px">${p.name || ""}</span></br>
-   <span style="font-size:12px; font-weight:100;margin-top:5px">
+   <td class="left "><span class="bold margin-top:5px;">${p.name || ""}</span></br>
+   <span style="font-size:12px; font-weight:100;margin-top:5px;">
   ${p.description}
 </span></td>
   <td class="center">${p.qty || ""}</td>
@@ -171,6 +171,9 @@ const emptyRows = Array.from({
     const html = `
 <html>
 <head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
 <style>
 @page {
   margin: 100px 20px 20px 20px; /* match your PDF margins */
@@ -185,7 +188,7 @@ const emptyRows = Array.from({
   border: 1px solid #112F6D;
   pointer-events: none;
 }
-  body { font-family: DM Sans; padding: 30px; font-size: 13px;}
+  body {font-family: "DM Sans", sans-serif; padding: 30px; font-size: 13px;}
  table {
   width: 100%;
   border-collapse: collapse;  /* ✅ FIX */
