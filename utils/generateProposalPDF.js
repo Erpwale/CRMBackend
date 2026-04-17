@@ -307,13 +307,13 @@ const emptyRows = Array.from({
 </div>
 
   <!-- Right Side -->
-  <div style="padding-bottom:5px; text-align:right;">
+  <div style="padding-bottom:3px; text-align:right;">
     <b>Date:</b>  ${formatDate(data.date)}
   </div>
 
 </div>
 
-<p style="padding-top:20px;">Kind Attn : ${data.contactName}</p>
+<p style="padding-top:15px;">Kind Attn : ${data.contactName}</p>
 <p><b>Subject : Proposal of ${data.businessLine}</b></p>
 
 
@@ -341,6 +341,16 @@ const emptyRows = Array.from({
 </tr>
 ` : ""}
 
+ 
+<tr>
+  <td></td>
+  <td class="right bold">Gross Total</td>
+  <td></td>
+  <td></td>
+  <td class="right">000</td>
+</tr>
+
+
   ${gstRows}
 ${data.roundOff !== undefined && data.roundOff !== null  && data.roundOff !== 0 ? `
 <tr>
@@ -367,30 +377,30 @@ ${paymentHTML}
 <h4 style="margin:0;">Bank Details For NEFT/RTGS/CHEQUE DEPOSIT</h4>
 
 <div style="margin:0;">
-  <div style="display:flex;">
+  <p style="display:flex;">
     <span style="width:100px;">Account Name</span>
     <span>:   ${data.bankDetails?.holderName || ""}</span>
-  </div>
+  </p>
 
-  <div style="display:flex;">
+  <p style="display:flex;">
     <span style="width:100px;">Bank Name</span>
     <span>:   ${data.bankDetails?.bankName || ""}</span>
-  </div>
+  </p>
 
-  <div style="display:flex;">
+  <p style="display:flex;">
     <span style="width:100px;">Acc. Number</span>
     <span>:  ${data.bankDetails?.accountNumber || ""}</span>
-  </div>
+  </p>
 
-  <div style="display:flex;">
+  <p style="display:flex;">
     <span style="width:100px;">IFSC Code</span>
     <span>:   ${data.bankDetails?.ifsc || ""}</span>
-  </div>
+  </p>
 
-  <div style="display:flex;">
+  <p style="display:flex;">
     <span style="width:100px;">Branch</span>
     <span>:   ${data.bankDetails?.branch || ""}</span>
-  </div>
+  </p>
 </div>
 
   ${termsHTML}
