@@ -327,6 +327,7 @@ const emptyRows = Array.from({
   <thead>
     <tr>
     <th class="col-sr">Sr. No.</th>
+    
     <th class="col-part">Particular</th>
     <th class="col-qty">Qty</th>
     <th class="col-rate">Rate</th>
