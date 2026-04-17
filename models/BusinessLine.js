@@ -16,6 +16,8 @@ const ProductSchema = new mongoose.Schema({
   discountAllowed: { type: Boolean, default: false },
   descriptionchangedAllowed: { type: Boolean, default: false },
   net: { type: Number, default: 0 }, // ✅ ADD
+   qtyChangeAllowed: { type: Boolean, default: false },        // ✅ ADD THIS
+  tallySerialRequired: { type: Boolean, default: false },     // ✅ ADD THIS
 
     termsAndConditions: {
       type: String,

@@ -5,66 +5,93 @@ const BusinessLine = require("../models/BusinessLine");
 
 router.post("/create", async (req, res) => {
   try {
-    const { businessLine, priceLevels } = req.body;
+    let { businessLine, priceLevels } = req.body;
+
+    // ✅ Normalize input
+    businessLine = businessLine?.trim();
 
     if (!businessLine) {
       return res.status(400).json({ message: "Business Line required ❌" });
     }
 
-    if (!priceLevels || priceLevels.length === 0) {
+    if (!Array.isArray(priceLevels) || priceLevels.length === 0) {
       return res.status(400).json({ message: "Price Levels required ❌" });
     }
 
-    // ✅ Prevent duplicate priceLevels in request
+    // ✅ Validate & sanitize priceLevels
     const levelSet = new Set();
-    for (const level of priceLevels) {
-      const key = level.levelName.trim().toLowerCase();
 
-      if (levelSet.has(key)) {
+    for (const level of priceLevels) {
+      const levelName = level?.levelName?.trim();
+
+      if (!levelName) {
+        return res.status(400).json({ message: "Price level name required ❌" });
+      }
+
+      const levelKey = levelName.toLowerCase();
+
+      if (levelSet.has(levelKey)) {
         return res.status(400).json({
-          message: `Duplicate price level "${level.levelName}" ❌`
+          message: `Duplicate price level "${levelName}" ❌`
         });
       }
-      levelSet.add(key);
-    }
+      levelSet.add(levelKey);
 
-    // ✅ Prevent duplicate products in same level
-    for (const level of priceLevels) {
+      // ✅ Validate products
+      if (!Array.isArray(level.products) || level.products.length === 0) {
+        return res.status(400).json({
+          message: `Products required for "${levelName}" ❌`
+        });
+      }
+
       const productSet = new Set();
 
       for (const p of level.products) {
-        const key = p.name.trim().toLowerCase();
+        const productName = p?.name?.trim();
 
-        if (productSet.has(key)) {
+        if (!productName) {
           return res.status(400).json({
-            message: `Duplicate product "${p.name}" in ${level.levelName} ❌`
+            message: `Product name required in "${levelName}" ❌`
           });
         }
 
-        productSet.add(key);
+        const productKey = productName.toLowerCase();
+
+        if (productSet.has(productKey)) {
+          return res.status(400).json({
+            message: `Duplicate product "${productName}" in ${levelName} ❌`
+          });
+        }
+
+        productSet.add(productKey);
+
+        // ✅ sanitize name back
+        p.name = productName;
       }
+
+      // ✅ sanitize level name
+      level.levelName = levelName;
     }
 
+    // ✅ Find existing (clean match)
     const existing = await BusinessLine.findOne({
       businessLine: { $regex: `^${businessLine}$`, $options: "i" }
     });
 
     if (existing) {
       for (const newLevel of priceLevels) {
-
         const levelMatch = existing.priceLevels.find(
           (lvl) =>
             lvl.levelName.trim().toLowerCase() ===
-            newLevel.levelName.trim().toLowerCase()
+            newLevel.levelName.toLowerCase()
         );
 
         if (levelMatch) {
           for (const newProduct of newLevel.products) {
-
             const productMatch = levelMatch.products.find(
               (p) =>
                 p.name.trim().toLowerCase() ===
-                newProduct.name.trim().toLowerCase()
+                newProduct.name.toLowerCase()
             );
 
             if (productMatch) {
@@ -75,7 +102,6 @@ router.post("/create", async (req, res) => {
 
             levelMatch.products.push(newProduct);
           }
-
         } else {
           existing.priceLevels.push(newLevel);
         }
@@ -89,6 +115,7 @@ router.post("/create", async (req, res) => {
       });
     }
 
+    // ✅ Create new
     const newData = new BusinessLine({
       businessLine,
       priceLevels
@@ -102,7 +129,8 @@ router.post("/create", async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    res.status(500).json({ message: "Server Error ❌" });
   }
 });
 
