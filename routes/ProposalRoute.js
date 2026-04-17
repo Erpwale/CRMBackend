@@ -350,20 +350,16 @@ router.post("/add", authMiddleware, async (req, res) => {
 
 router.get("/my-opportunities", authMiddleware, async (req, res) => {
   try {
-    const companyName = req.user.companyName; // ✅ from JWT
-    console.log("companyname",req.user)
+    const { companyName } = req.query;
+
     const data = await Proposal.find({
       companyName: { $regex: `^${companyName}$`, $options: "i" }
     }).sort({ createdAt: -1 });
 
-    res.status(200).json({
-      message: "User proposals fetched",
-      data
-    });
+    res.status(200).json({ data });
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching data" });
+  } catch (err) {
+    res.status(500).json({ message: "Error" });
   }
 });
 
