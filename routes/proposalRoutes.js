@@ -296,24 +296,24 @@ console.log("EMAIL:", process.env.EMAIL);
 
 
     try {
-      // await transporter.sendMail({
-      //   from: process.env.EMAIL,
-      //   replyTo: proposal.email, // ⚠️ fix typo (, → .)
-      //   to,
-      //   subject,
-      //   html: `
-      //     ${content}
-      //     <br/><br/>
-      //     👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
-      //   `,
-      // });
-
       await transporter.sendMail({
-  from: "Newsletters <service@mserpwale.com>",
-  to: "deepalimore609@gmail.com",
-  subject: "Hello pooled world",
-  text: "Hi Alice!",
-});
+        from: process.env.EMAIL,
+        replyTo: proposal.email, // ⚠️ fix typo (, → .)
+        to,
+        subject,
+        html: `
+          ${content}
+          <br/><br/>
+          👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
+        `,
+      });
+
+//       await transporter.sendMail({
+//   from: "Newsletters <service@mserpwale.com>",
+//   to: "deepalimore609@gmail.com",
+//   subject: "Hello pooled world",
+//   text: "Hi Alice!",
+// });
       console.log("✅ MAIL SENT");
 
 await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
