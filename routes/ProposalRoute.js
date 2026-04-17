@@ -351,7 +351,7 @@ router.post("/add", authMiddleware, async (req, res) => {
 router.get("/my-opportunities", authMiddleware, async (req, res) => {
   try {
     const companyName = req.user.companyName; // ✅ from JWT
-
+    console.log("companyname",req.user)
     const data = await Proposal.find({
       companyName: { $regex: `^${companyName}$`, $options: "i" }
     }).sort({ createdAt: -1 });
