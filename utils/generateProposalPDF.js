@@ -84,7 +84,7 @@ const formatAddress = (address) => {
 const productRows = data.products.map((p, i) => `
 <tr>
   <td class="center">${i + 1}</td>
-   <td class="left "><span class="bold" style="margin-bottom:5px;">${p.name || ""}</span></br>
+   <td class="left "><p class="bold" style="margin-bottom:5px;">${p.name || ""}</p></br>
    <span style="font-size:12px; font-weight:100;">
   ${p.description}
 </span></td>
@@ -327,7 +327,7 @@ const emptyRows = Array.from({
   <thead>
     <tr>
     <th class="col-sr">Sr. No.</th>
-    
+
     <th class="col-part">Particular</th>
     <th class="col-qty">Qty</th>
     <th class="col-rate">Rate</th>
