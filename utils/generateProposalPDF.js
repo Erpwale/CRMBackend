@@ -84,8 +84,8 @@ const formatAddress = (address) => {
 const productRows = data.products.map((p, i) => `
 <tr>
   <td class="center">${i + 1}</td>
-   <td class="left "><span class="bold">${p.name || ""}</span></br>
-   <span style="font-size:12px; font-weight:200;">
+   <td class="left "><span class="bold margin-top:5px">${p.name || ""}</span></br>
+   <span style="font-size:12px; font-weight:100;margin-top:5px">
   ${p.description}
 </span></td>
   <td class="center">${p.qty || ""}</td>
@@ -185,7 +185,7 @@ const emptyRows = Array.from({
   border: 1px solid #112F6D;
   pointer-events: none;
 }
-  body { font-family: Arial; padding: 30px; font-size: 13px;}
+  body { font-family: DM Sans; padding: 30px; font-size: 13px;}
  table {
   width: 100%;
   border-collapse: collapse;  /* ✅ FIX */
