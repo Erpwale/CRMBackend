@@ -77,7 +77,10 @@ router.get("/all", authMiddleware, async (req, res) => {
 
     const proposals = await Proposal.find({
       uid: req.user._id, // ✅ must match token
-    }).sort({ createdAt: -1 });
+      
+    })
+     .populate("uid", "name email") // 👈 THIS IS THE KEY
+    .sort({ createdAt: -1 });
 
     res.json({
       success: true,
