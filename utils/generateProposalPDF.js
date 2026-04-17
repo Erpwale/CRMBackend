@@ -84,8 +84,8 @@ const formatAddress = (address) => {
 const productRows = data.products.map((p, i) => `
 <tr>
   <td class="center">${i + 1}</td>
-   <td class="left "><span class="bold margin-top:5px;">${p.name || ""}</span></br>
-   <span style="font-size:12px; font-weight:100;margin-top:5px;">
+   <td class="left "><span class="bold" style: "margin-top:5px;">${p.name || ""}</span></br>
+   <span style="font-size:12px; font-weight:100; margin-top:5px;">
   ${p.description}
 </span></td>
   <td class="center">${p.qty || ""}</td>
@@ -196,13 +196,14 @@ const emptyRows = Array.from({
   th, td {
 
    border: 1px solid #ddd; 
-    padding: 5px;
+    padding: 7px;
     font-size: 13px;
   }
 
   th {
     text-align: center;
     font-weight: bold;
+    background: #F5F5F5;
   }
 
   .left { text-align: left;}
@@ -313,7 +314,7 @@ const emptyRows = Array.from({
 
 </div>
 
-<p style="padding-top:15px;">Kind Attn : ${data.contactName}</p>
+<p style="padding-top:15px; padding-bottom:5px;">Kind Attn : ${data.contactName}</p>
 <p><b>Subject : Proposal of ${data.businessLine}</b></p>
 
 
@@ -362,7 +363,7 @@ ${data.roundOff !== undefined && data.roundOff !== null  && data.roundOff !== 0 
 </tr>
 ` : ""}
 
-  <tr>
+  <tr style="background: #F5F5F5;">
     <td></td>
       <td class="right bold">Total</td>
     <td></td>
@@ -419,17 +420,19 @@ ${paymentHTML}
     <!-- SIGNATURE -->
     <div class="signature-wrapper" style="justify-content: center;">
 
-      <div class="signature-card">
-        <div class="signature-title">
-          For, MS ERPWale Pvt. Ltd.
-        </div>
-      </div>
+    <div class="signature-card">
+  <div class="top-text">For,</div>
+  <div class="spacer"></div>
+  <div class="bottom-text">MS ERPWale Pvt. Ltd.</div>
+</div>
 
-      <div class="signature-card">
-        <div class="signature-title">
-          For, ${data.companyName}/ ${data.contactName}
-        </div>
-      </div>
+<div class="signature-card">
+  <div class="top-text">For,</div>
+  <div class="spacer"></div>
+  <div class="bottom-text">
+    ${data.companyName} / ${data.contactName}
+  </div>
+</div>
 
     </div>
 
