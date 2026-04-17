@@ -354,7 +354,7 @@ const emptyRows = Array.from({
   <td class="right bold">Gross Total</td>
   <td></td>
   <td></td>
-  <td class="right">000</td>
+  <td class="right">${data.subtotal.toFixed(2)}</td>
 </tr>
 
 
