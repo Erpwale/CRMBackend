@@ -85,7 +85,7 @@ const productRows = data.products.map((p, i) => `
 <tr>
   <td class="center">${i + 1}</td>
    <td class="left "><span class="bold" >${p.name || ""}</span></br>
-   <p style="font-size:12px; font-weight:80; margin-top:3px;">
+   <p style="font-size:10px; font-weight:60; margin-top:3px;">
   ${p.description}
 </p></td>
   <td class="center">${p.qty || ""}</td>
@@ -214,8 +214,8 @@ const emptyRows = Array.from({
   /* Column widths */
   .col-sr   { width: 8%; }
   .col-part { width: 58%; }  /* 👈 increased */
-  .col-qty  { width: 10%; }
-  .col-rate { width: 8%; }
+  .col-qty  { width: 8%; }
+  .col-rate { width: 10%; }
   .col-amt  { width: 16%; }
 
   .footer-section {
