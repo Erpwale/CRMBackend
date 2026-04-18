@@ -3,19 +3,43 @@ const Counter = require("./Counter")
 
 const productSchema = new mongoose.Schema({
   name: String,
-description: { type: String, default: "" },
-tallySerials: {
-  type: [String],
-  default: []
-},
+
+  description: { type: String, default: "" },
+
+  tallySerials: {
+    type: [String],
+    default: []
+  },
+
+  // ✅ MOVE AMC HERE
+  amcDetails: {
+    subType: String,
+    licenseNo: String,
+    licenseType: String,
+    periodFrom: String,
+    periodTo: String,
+
+    supportType: String,
+    users: String,
+    inventoryType: String,
+    syncASC: String,
+
+    ascValue: Number,
+    addonASC: Number,
+    customizationASC: Number,
+    syncValue: Number,
+    remoteValue: Number,
+  },
+
   qty: Number,
   rate: Number,
-   gst: { type: Number, default: 0 },        // GST %
-  gstValue: { type: Number, default: 0 },  // GST amount
-  discount: { type: Number, default: 0 },  // discount per item
-  subtotal: { type: Number, default: 0 },  // before GST
+
+  gst: { type: Number, default: 0 },
+  gstValue: { type: Number, default: 0 },
+  discount: { type: Number, default: 0 },
+  subtotal: { type: Number, default: 0 },
   totalValue: Number,
-  // ✅ ADD THIS
+
   terms: {
     type: [String],
     default: []
@@ -75,24 +99,6 @@ const proposalSchema = new mongoose.Schema({
   },
   userName: String,
   email: String,
-    amcDetails: {
-    subType: String,             // New / Renew
-    licenseNo: String,
-    licenseType: String,
-    periodFrom: String,
-    periodTo: String,
-
-    supportType: String,
-    users: String,
-    inventoryType: String,
-    syncASC: String,
-
-    ascValue: Number,
-    addonASC: Number,
-    customizationASC: Number,
-    syncValue: Number,
-    remoteValue: Number,
-  },
 
 }, { timestamps: true });
 proposalSchema.pre("save", async function () {
