@@ -71,6 +71,10 @@ statusDetails: {
   closeReason: String,
   closeRemark: String,
 },
+proposalStatus: {
+  type: Boolean,
+  default: false
+},
   address1: String,
   address2: String,
   state: String,
@@ -115,6 +119,13 @@ statusDetails: {
 
 }, { timestamps: true });
 proposalSchema.pre("save", async function () {
+
+  // ✅ WHEN NEW PROPOSAL CREATED
+  if (this.isNew) {
+    this.proposalStatus = true;   // 👉 set TRUE on create
+  }
+
+  // ✅ YOUR EXISTING COUNTER LOGIC (unchanged)
   if (this.isNew && !this.proposalId) {
     const counter = await Counter.findByIdAndUpdate(
       "proposalId",
