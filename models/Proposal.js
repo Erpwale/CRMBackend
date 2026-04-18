@@ -22,6 +22,7 @@ tallySerials: {
   }
 });
 
+
 const proposalSchema = new mongoose.Schema({
   proposalId: {
     type: Number,
@@ -73,7 +74,25 @@ const proposalSchema = new mongoose.Schema({
     ref: "User"
   },
   userName: String,
-  email: String
+  email: String,
+    amcDetails: {
+    subType: String,             // New / Renew
+    licenseNo: String,
+    licenseType: String,
+    periodFrom: String,
+    periodTo: String,
+
+    supportType: String,
+    users: String,
+    inventoryType: String,
+    syncASC: String,
+
+    ascValue: Number,
+    addonASC: Number,
+    customizationASC: Number,
+    syncValue: Number,
+    remoteValue: Number,
+  },
 
 }, { timestamps: true });
 proposalSchema.pre("save", async function () {
