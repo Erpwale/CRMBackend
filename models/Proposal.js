@@ -120,10 +120,7 @@ proposalStatus: {
 }, { timestamps: true });
 proposalSchema.pre("save", async function () {
 
-  // ✅ WHEN NEW PROPOSAL CREATED
-  if (this.isNew) {
-    this.proposalStatus = true;   // 👉 set TRUE on create
-  }
+
 
   // ✅ YOUR EXISTING COUNTER LOGIC (unchanged)
   if (this.isNew && !this.proposalId) {

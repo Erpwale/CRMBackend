@@ -378,4 +378,21 @@ router.put("/status/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+router.put("/statusp/:id", async (req, res) => {
+  try {
+    
+    const updated = await Proposal.findByIdAndUpdate(
+      req.params.id,
+      {
+
+        proposalStatus: true   // ✅ ADD THIS LINE
+      },
+      { new: true }
+    );
+
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;
