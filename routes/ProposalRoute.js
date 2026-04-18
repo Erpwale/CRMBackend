@@ -363,4 +363,19 @@ router.get("/my-opportunities", authMiddleware, async (req, res) => {
   }
 });
 
+router.put("/status/:id", async (req, res) => {
+  try {
+    const { statusDetails } = req.body;
+
+    const updated = await Proposal.findByIdAndUpdate(
+      req.params.id,
+      { statusDetails },
+      { new: true }
+    );
+
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;

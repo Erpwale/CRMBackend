@@ -58,6 +58,19 @@ const proposalSchema = new mongoose.Schema({
   type: [String],
   default: []
 },
+statusDetails: {
+  statusDate: {
+    type: String,
+    default: () => new Date().toISOString().split("T")[0],
+  },
+  status: {
+    type: String,
+    default: "Open",   // ✅ DEFAULT STATUS
+  },
+  postponedDate: String,
+  closeReason: String,
+  closeRemark: String,
+},
   address1: String,
   address2: String,
   state: String,
