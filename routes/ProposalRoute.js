@@ -395,4 +395,30 @@ router.put("/statusp/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// GET Opportunity by ID
+router.get("/opportunity/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const opportunity = await Opportunity.findById(id);
+
+    if (!opportunity) {
+      return res.status(404).json({
+        success: false,
+        message: "Opportunity not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: opportunity,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 module.exports = router;
