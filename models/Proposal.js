@@ -16,6 +16,7 @@ const productSchema = new mongoose.Schema({
     subType: String,
     licenseNo: String,
     licenseType: String,
+    location: String,
     periodFrom: String,
     periodTo: String,
 

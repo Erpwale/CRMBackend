@@ -207,6 +207,7 @@ const totalASC =
 // other fields
 const licenseNo = amc.licenseNo || "";
 const licenseType = amc.licenseType || "";
+const location = amc.locatio || "";
 const subType = amc.subType || "";
 const supportType = amc.supportType || "";
 const periodFrom = amc.periodFrom || "";
@@ -270,21 +271,21 @@ const AMCcover = `
     <thead>
       <tr>
         <th>License No.</th>
-        <th >Location</th>
-        <th>Lic. Type</th>
-        <th>Sub Type</th>
-        <th>Support Type</th>
-        <th>ASC Period</th>
+        <th style="width:20px">Location</th>
+        <th style="width:20px">Lic. Type</th>
+        <th style="width:20px">Sub Type</th>
+        <th style="width:20px">Support Type</th>
+        <th >ASC Period</th>
       </tr>
     </thead>
 
     <tbody>
       <tr>
       <td>${licenseNo}</td>
-<td >PUNE</td>
-<td>${licenseType}</td>
-<td>${subType}</td>
-<td>${supportType}</td>
+<td style="width:20px">${location}</td>
+<td style="width:20px">${licenseType}</td>
+<td style="width:20px">${subType}</td>
+<td style="width:20px">${supportType}</td>
 <td>${periodFrom} to ${periodTo}</td>
       </tr>
     </tbody>
