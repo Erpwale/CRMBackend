@@ -98,7 +98,7 @@ const productRows = data.products.map((p, i) => {
   </td>
   <td class="center">${p.qty || ""}</td>
   <td class="right">${p.rate || ""}.00</td>
-  <td class="right">${p.totalValue || ""}.00</td>
+  <td class="right">${p. subtotal,    || ""}.00</td>
 </tr>
 `;
 }).join("");
