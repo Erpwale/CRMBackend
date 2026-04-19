@@ -50,6 +50,34 @@ const termsHTML = `
 <div style="page-break-before: always;">
 
   <h3 style= "margin-top:30px">Terms & Conditions</h3>
+  <div>
+  <div>
+    <h4>1.1	License Activation</h4>
+    <p>
+    The proposed solution/Service shall be developed and deployed strictly for one specific Tally License (Serial Number). Any replication, reuse, or deployment on additional licenses will require prior approval and will be subject to additional commercial terms.
+
+    </p>
+    </div>
+  <div>
+    <h4>1.2	Taxes & Duties</h4>
+    <p>
+All fees and charges mentioned are exclusive of applicable taxes. Goods and Services Tax (GST) and any other statutory levies shall be charged as per prevailing government regulations.
+    </p>
+    </div>
+  <div>
+    <h4>1.3 Proposal Validity & Payment Terms</h4>
+    <p>
+This proposal shall remain valid for 15 (fifteen) days from the date of issuance. In the absence of 100% advance payment within 7 (seven) days, the proposal shall be deemed null and void, and pricing/terms may be revised.
+    </p>
+    </div>
+  <div>
+    <h4>1.4	Refund Policy</h4>
+    <p>
+The amount received will be non-refundable and once the product is delivered, it is not exchangeable under any circumstances.
+    </p>
+    </div>
+  
+  </div>
 
   ${data.products.map(p => `
     <div style="margin-bottom:10px;">
@@ -558,26 +586,15 @@ ${paymentHTML}
     <span style="width:100px;">Account Name</span>
     <span>:   ${data.bankDetails?.holderName || ""}</span>
   </p>
-
-  <p style="display:flex;">
-    <span style="width:100px;">Bank Name</span>
-    <span>:   ${data.bankDetails?.bankName || ""}</span>
-  </p>
-
   <p style="display:flex;">
     <span style="width:100px;">Acc. Number</span>
     <span>:  ${data.bankDetails?.accountNumber || ""}</span>
   </p>
-
   <p style="display:flex;">
-    <span style="width:100px;">IFSC Code</span>
-    <span>:   ${data.bankDetails?.ifsc || ""}</span>
+    <span style="width:100px;">Bank Name / IFSC CODE</span>
+    <span>:   ${data.bankDetails?.bankName || ""}/   ${data.bankDetails?.ifsc || ""}</span>
   </p>
 
-  <p style="display:flex;">
-    <span style="width:100px;">Branch</span>
-    <span>:   ${data.bankDetails?.branch || ""}</span>
-  </p>
 </div>
 <div style="page-break-before: always; position: relative;">
 
