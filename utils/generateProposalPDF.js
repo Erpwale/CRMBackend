@@ -275,7 +275,7 @@ const AMCcover = `
         <th style="width:50px">Lic. Type</th>
         <th style="width:50px">Sub Type</th>
         <th style="width:50px">Support Type</th>
-        <th style="width:70px">ASC Period</th>
+        <th style="width:100px">ASC Period</th>
       </tr>
     </thead>
 
@@ -286,7 +286,7 @@ const AMCcover = `
 <td style="width:50px">${licenseType}</td>
 <td style="width:50px">${subType}</td>
 <td style="width:50px">${supportType}</td>
-<td style="width:70px">${periodFrom} to ${periodTo}</td>
+<td style="width:100px">${periodFrom} to ${periodTo}</td>
       </tr>
     </tbody>
   </table>
