@@ -106,7 +106,7 @@ if (gstPan !== pan) {
       companyId,
       companyName,
       contactEmail,
-      contactName,
+      userName,
       contactMobile,
       address1,
       address2,
