@@ -270,23 +270,23 @@ const AMCcover = `
   <table style="margin-top:10px; font-size:12px;">
     <thead>
       <tr>
-        <th>License No.</th>
-        <th style="width:20px">Location</th>
-        <th style="width:20px">Lic. Type</th>
-        <th style="width:20px">Sub Type</th>
-        <th style="width:20px">Support Type</th>
-        <th >ASC Period</th>
+        <th style:"width:50px">License No.</th>
+        <th style="width:40px">Location</th>
+        <th style="width:40px">Lic. Type</th>
+        <th style="width:40px">Sub Type</th>
+        <th style="width:40px">Support Type</th>
+        <th style="width:70px">ASC Period</th>
       </tr>
     </thead>
 
     <tbody>
       <tr>
-      <td>${licenseNo}</td>
-<td style="width:20px">${location}</td>
-<td style="width:20px">${licenseType}</td>
-<td style="width:20px">${subType}</td>
-<td style="width:20px">${supportType}</td>
-<td>${periodFrom} to ${periodTo}</td>
+      <td style:"width:50px">${licenseNo}</td>
+<td style="width:40px">${location}</td>
+<td style="width:40px">${licenseType}</td>
+<td style="width:40px">${subType}</td>
+<td style="width:40px">${supportType}</td>
+<td style="width:70px">${periodFrom} to ${periodTo}</td>
       </tr>
     </tbody>
   </table>
