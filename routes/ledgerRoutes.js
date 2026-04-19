@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
   console.log("logs",req.body)
     if (
       !companyId || !companyName || !gstin || !pan || !contactEmail || !address1 || !state ||
-      !district || !city || !pincode || !gstType|| !contactName
+      !district || !city || !pincode || !gstType|| !userName
     ) {
       return res.status(400).json({ message: "Required fields missing" });
     }
