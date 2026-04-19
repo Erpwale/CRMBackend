@@ -207,7 +207,7 @@ const totalASC =
 // other fields
 const licenseNo = amc.licenseNo || "";
 const licenseType = amc.licenseType || "";
-const location = amc.locatio || "";
+const location = amc.location || "";
 const subType = amc.subType || "";
 const supportType = amc.supportType || "";
 const periodFrom = amc.periodFrom || "";
