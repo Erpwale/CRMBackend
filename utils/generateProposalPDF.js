@@ -240,8 +240,8 @@ const AMCcover = `
 
      <tr><td>Standard ASC</td><td class="right">${ascValue.toFixed(2)}</td></tr>
 <tr><td>Customization ASC</td><td class="right">${customizationASC.toFixed(2)}</td></tr>
-<tr><td>Add-On ASC</td><td class="right">000</td></tr>
-<tr><td>Remote App ASC</td><td class="right">000</td></tr>
+<tr><td>Add-On ASC</td><td class="right">${addonASC.toFixed(2)}</td></tr>
+<tr><td>Remote App ASC</td><td class="right">${remoteValue.toFixed(2)}</td></tr>
 <tr>
   <td>Sync ASC</td>
   <td class="right">
