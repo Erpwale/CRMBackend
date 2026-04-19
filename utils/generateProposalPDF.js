@@ -156,6 +156,21 @@ const gstRows = Object.keys(gstGroups)
 `;
   }).join("");
 
+const amc = data.products?.[0]?.amcDetails || {};
+
+const standardASC = amc.standardASC || 0;
+const customizationASC = amc.customizationASC || 0;
+const addOnASC = amc.addOnASC || 0;
+const remoteAppASC = amc.remoteAppASC || 0;
+const syncASC = amc.syncASC || 0;
+
+const totalASC =
+  standardASC +
+  customizationASC +
+  addOnASC +
+  remoteAppASC +
+  syncASC;
+
 
 const AMCcover = `
 <div style="margin-top:30px; font-family: Arial;">
@@ -181,16 +196,18 @@ const AMCcover = `
         <td class="center">Yes</td>
       </tr>
 
-      <tr><td>Standard ASC</td><td class="right">9000.00</td></tr>
-      <tr><td>Customization ASC</td><td class="right">0.00</td></tr>
-      <tr><td>Add-On ASC</td><td class="right">0.00</td></tr>
-      <tr><td>Remote App ASC</td><td class="right">0.00</td></tr>
-      <tr><td>Sync ASC</td><td class="right">3000.00</td></tr>
+     <tr><td>Standard ASC</td><td class="right">${standardASC.toFixed(2)}</td></tr>
+<tr><td>Customization ASC</td><td class="right">${customizationASC.toFixed(2)}</td></tr>
+<tr><td>Add-On ASC</td><td class="right">${addOnASC.toFixed(2)}</td></tr>
+<tr><td>Remote App ASC</td><td class="right">${remoteAppASC.toFixed(2)}</td></tr>
+<tr><td>Sync ASC</td><td class="right">${syncASC.toFixed(2)}</td></tr>
 
-      <tr style="font-weight:bold;">
-        <td class="right">Total ASC Amount</td>
-        <td class="right">12000.00</td>
-      </tr>
+<tr style="font-weight:bold;">
+  <td class="right">Total ASC Amount</td>
+  <td class="right">${totalASC.toFixed(2)}</td>
+</tr>
+
+      
     </tbody>
   </table>
 
