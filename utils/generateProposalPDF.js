@@ -158,11 +158,11 @@ const gstRows = Object.keys(gstGroups)
 
 const amc = data.products?.[0]?.amcDetails || {};
 
-const standardASC = amc.standardASC || 0;
-const customizationASC = amc.customizationASC || 0;
-const addOnASC = amc.addOnASC || 0;
-const remoteAppASC = amc.remoteAppASC || 0;
-const syncASC = amc.syncASC || 0;
+const standardASC = Number(amc.standardASC || 0);
+const customizationASC = Number(amc.customizationASC || 0);
+const addOnASC = Number(amc.addOnASC || 0);
+const remoteAppASC = Number(amc.remoteAppASC || 0);
+const syncASC = Number(amc.syncASC || 0);
 
 const totalASC =
   standardASC +
