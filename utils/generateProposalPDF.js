@@ -283,8 +283,8 @@ const AMCcover = `
       <tr>
       <td style="width:50px">${licenseNo || ""}</td>
 <td style="width:50px">${location || ""}</td>
-<td style="width:50px">${licenseType || ""}</td>
-<td style="width:50px">${subType || ""}</td>
+<td style="width:40px">${licenseType || ""}</td>
+<td style="width:40px">${subType || ""}</td>
 <td style="width:50px">${supportType || ""}</td>
 <td style="width:100px">${periodFrom || ""} to ${periodTo || ""}</td>
       </tr>
