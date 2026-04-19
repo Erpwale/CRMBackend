@@ -82,7 +82,10 @@ const formatAddress = (address) => {
   return `${line1}<br/>${line2}`;
 };
 const productRows = data.products.map((p, i) => {
-  const desc = (p.description || "").replace(/\n/g, '<br style="display:block; margin-top:8px;" />'); // ✅ FIX
+ const desc = (p.description || "").replace(
+  /\n/g,
+  '<br/><br/>'
+);
 
   return `
 <tr>
