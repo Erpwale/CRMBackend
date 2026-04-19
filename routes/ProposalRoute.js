@@ -401,7 +401,7 @@ router.get("/opportunity/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const opportunity = await Opportunity.findById(id);
+    const opportunity = await Proposal.findById(id);
 
     if (!opportunity) {
       return res.status(404).json({
