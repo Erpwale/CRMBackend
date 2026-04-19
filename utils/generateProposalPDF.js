@@ -565,7 +565,7 @@ ${paymentHTML}
 <div style="page-break-before: always; position: relative;">
 
 
-${(data.businessLine || "").toLowerCase().includes("Annual Support Cover") 
+${(data.businessLine || "").toLowerCase().trim() === "annual support cover" 
   ? AMCcover 
   : ""}
 </div>
