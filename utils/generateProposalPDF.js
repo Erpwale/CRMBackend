@@ -295,14 +295,9 @@ const AMCcover = `
 
       <tr>
         <td><b>Other Setup</b></td>
-        <td>We shall provide assistance for backup & restore procedures, data splitting, and data migration. Support will also cover configuration of default security controls, installation and licensing (Single User / Multi User), feature activation, and basic statutory issue resolution.
-Note: Clients are responsible for maintaining regular data backups to ensure data safety.
+        <td>We will assist with backup & restore, data splitting, and migration. Support includes security configuration, installation & licensing (SU/MU), feature activation, and basic statutory issue resolution.
+Note: Clients must maintain regular data backups to ensure data safety
 </td>
-      </tr>
-
-      <tr>
-        <td><b>Issue Resolution Timeline</b></td>
-        <td>All support requests will be addressed within reasonable timelines during business hours. Resolution time may vary depending on the complexity and nature of the issue.</td>
       </tr>
 
       <tr>
