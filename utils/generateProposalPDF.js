@@ -81,18 +81,24 @@ const formatAddress = (address) => {
 
   return `${line1}<br/>${line2}`;
 };
-const productRows = data.products.map((p, i) => `
+const productRows = data.products.map((p, i) => {
+  const desc = (p.description || "").replace(/\n/g, "<br/>"); // ✅ FIX
+
+  return `
 <tr>
   <td class="center">${i + 1}</td>
-   <td class="left "><span class="bold" >${p.name || ""}</span></br>
-   <p style="font-size:11px; font-weight:50; margin-top:4px;">
-  ${p.description}
-</p></td>
+  <td class="left">
+    <span class="bold">${p.name || ""}</span><br/>
+    <p style="font-size:11px; font-weight:400; margin-top:4px;">
+      ${desc}
+    </p>
+  </td>
   <td class="center">${p.qty || ""}</td>
   <td class="right">${p.rate || ""}.00</td>
   <td class="right">${p.totalValue || ""}.00</td>
 </tr>
-`).join("");
+`;
+}).join("");
 // GROUP GST
 // STEP 1: Group products by GST %
 const gstGroups = {};
