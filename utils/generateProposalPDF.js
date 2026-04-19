@@ -158,19 +158,33 @@ const gstRows = Object.keys(gstGroups)
 
 const amc = data.products?.[0]?.amcDetails || {};
 
-const standardASC = Number(amc.standardASC || 0);
+// ✅ Convert safely to number
+const ascValue = Number(amc.ascValue || 0);
 const customizationASC = Number(amc.customizationASC || 0);
-const addOnASC = Number(amc.addOnASC || 0);
-const remoteAppASC = Number(amc.remoteAppASC || 0);
-const syncASC = Number(amc.syncASC || 0);
+const addonASC = Number(amc.addonASC || 0);
+const remoteValue = Number(amc.remoteValue || 0);
+const syncValue = Number(amc.syncValue || 0);
 
+// ❗ syncASC is "Yes/No" (string)
+const syncASC = amc.syncASC || "No";
+
+// ✅ total
 const totalASC =
-  standardASC +
+  ascValue +
   customizationASC +
-  addOnASC +
-  remoteAppASC +
-  syncASC;
+  addonASC +
+  remoteValue +
+  syncValue;
 
+// other fields
+const licenseNo = amc.licenseNo || "";
+const licenseType = amc.licenseType || "";
+const subType = amc.subType || "";
+const supportType = amc.supportType || "";
+const periodFrom = amc.periodFrom || "";
+const periodTo = amc.periodTo || "";
+const users = amc.users || "";
+const inventoryType = amc.inventoryType || "";
 
 const AMCcover = `
 <div style="margin-top:30px; font-family: Arial;">
@@ -200,7 +214,12 @@ const AMCcover = `
 <tr><td>Customization ASC</td><td class="right">${customizationASC.toFixed(2)}</td></tr>
 <tr><td>Add-On ASC</td><td class="right">${addOnASC.toFixed(2)}</td></tr>
 <tr><td>Remote App ASC</td><td class="right">${remoteAppASC.toFixed(2)}</td></tr>
-<tr><td>Sync ASC</td><td class="right">${syncASC.toFixed(2)}</td></tr>
+<tr>
+  <td>Sync ASC</td>
+  <td class="right">
+    ${syncASC === "Yes" ? syncValue.toFixed(2) : "0.00"}
+  </td>
+</tr>
 
 <tr style="font-weight:bold;">
   <td class="right">Total ASC Amount</td>
@@ -213,8 +232,9 @@ const AMCcover = `
 
   <!-- USER INFO -->
   <div style="margin-top:15px; font-size:12px;">
-    <b>No of Users:</b> 0-5 &nbsp;&nbsp;&nbsp;&nbsp;
-    <b>Inventory Type:</b> Basic
+   <b>No of Users:</b> ${users}
+&nbsp;&nbsp;&nbsp;&nbsp;
+<b>Inventory Type:</b> ${inventoryType}
   </div>
 
   <!-- LICENSE TABLE -->
@@ -232,12 +252,12 @@ const AMCcover = `
 
     <tbody>
       <tr>
-        <td>784545244</td>
-        <td>PUNE</td>
-        <td>Gold</td>
-        <td>New</td>
-        <td>Online</td>
-        <td>25/04/2026 to 24/04/2027</td>
+      <td>${licenseNo}</td>
+<td>PUNE</td>
+<td>${licenseType}</td>
+<td>${subType}</td>
+<td>${supportType}</td>
+<td>${periodFrom} to ${periodTo}</td>
       </tr>
     </tbody>
   </table>
@@ -565,7 +585,7 @@ ${paymentHTML}
 <div style="page-break-before: always; position: relative;">
 
 
-${(data.businessLine || "").toLowerCase().trim() === "annual support cover" 
+${(data.businessLine || "").toLowerCase().includes("Annual Support Cover") 
   ? AMCcover 
   : ""}
 </div>
