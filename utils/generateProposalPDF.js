@@ -270,7 +270,7 @@ const AMCcover = `
     <thead>
       <tr>
         <th>License No.</th>
-        <th>Location</th>
+        <th >Location</th>
         <th>Lic. Type</th>
         <th>Sub Type</th>
         <th>Support Type</th>
@@ -281,7 +281,7 @@ const AMCcover = `
     <tbody>
       <tr>
       <td>${licenseNo}</td>
-<td>PUNE</td>
+<td >PUNE</td>
 <td>${licenseType}</td>
 <td>${subType}</td>
 <td>${supportType}</td>
@@ -302,34 +302,34 @@ const AMCcover = `
   <table style="font-size:12px;">
     <tbody>
       <tr>
-        <td style="width:30%;"><b>Default Tally</b></td>
+        <td style="width:20%;"><b>Default Tally</b></td>
         <td>All standard features and functionalities available in the licensed version of Tally Prime</td>
       </tr>
 
       <tr>
-        <td><b>User Guidance & Training</b></td>
+        <td style="width:20%;"><b>User Guidance & Training</b></td>
         <td>Basic user-level guidance and functional assistance will be provided to help users understand and effectively utilize Tally features. This does not include formal or structured training programs.</td>
       </tr>
 
-      <tr>
-        <td><b>Support Clarity</b></td>
+      <tr >
+        <td style="width:20%;"><b>Support Clarity</b></td>
         <td>Support will primarily be delivered through remote access tools, calls, or online sessions. On-site support, if required, will be scheduled separately and may be chargeable.</td>
       </tr>
 
       <tr>
-        <td><b>Release Update</b></td>
+        <td style="width:20%;"><b>Release Update</b></td>
         <td>Release updates shall be applicable only as per the policies of Tally Solutions Pvt. Ltd., subject to an active Tally Software Services (TSS) subscription.</td>
       </tr>
 
       <tr>
-        <td><b>Other Setup</b></td>
+        <td style="width:20%;"><b>Other Setup</b></td>
         <td>We will assist with backup & restore, data splitting, and migration. Support includes security configuration, installation & licensing (SU/MU), feature activation, and basic statutory issue resolution.
 Note: Clients must maintain regular data backups to ensure data safety
 </td>
       </tr>
 
       <tr>
-        <td><b>Scope Exclusions & Commercials</b></td>
+        <td style="width:20%;"><b>Scope Exclusions & Commercials</b></td>
         <td>Any services, customization, development, or support not explicitly mentioned in this scope shall be considered outside the agreement and may be charged separately</td>
       </tr>
     </tbody>
@@ -591,7 +591,7 @@ ${paymentHTML}
     <span>:  ${data.bankDetails?.accountNumber || ""}</span>
   </p>
   <p style="display:flex;">
-    <span style="width:100px;">Bank Name / IFSC CODE</span>
+    <span style="width:100px;">Bank /IFSC</span>
     <span>:   ${data.bankDetails?.bankName || ""}/   ${data.bankDetails?.ifsc || ""}</span>
   </p>
 
