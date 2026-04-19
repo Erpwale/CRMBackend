@@ -157,13 +157,124 @@ const gstRows = Object.keys(gstGroups)
   }).join("");
 
 
-const AMCcover =`
+const AMCcover = `
+<div style="margin-top:30px; font-family: Arial;">
 
+  <h3 style="text-align:center; font-weight:bold; text-decoration: underline;">
+    (Support Cover for Standard Tally Prime)
+  </h3>
 
-<h1>(Support Cover for Standard Tally Prime)</h1>
+  <table style="margin-top:15px; font-size:12px;">
+    <thead>
+      <tr>
+        <th style="width:70%">Particulars</th>
+        <th style="width:30%">Details</th>
+      </tr>
+    </thead>
 
+    <tbody>
+      <tr>
+        <td>
+          Standard Support Hours (Mon–Fri: 10:00 AM to 6:00 PM) – IST <br/>
+          Extended Support Hours (Saturday: 10:00 AM to 2:00 PM) – IST
+        </td>
+        <td class="center">Yes</td>
+      </tr>
 
+      <tr><td>Standard ASC</td><td class="right">9000.00</td></tr>
+      <tr><td>Customization ASC</td><td class="right">0.00</td></tr>
+      <tr><td>Add-On ASC</td><td class="right">0.00</td></tr>
+      <tr><td>Remote App ASC</td><td class="right">0.00</td></tr>
+      <tr><td>Sync ASC</td><td class="right">3000.00</td></tr>
 
+      <tr style="font-weight:bold;">
+        <td class="right">Total ASC Amount</td>
+        <td class="right">12000.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- USER INFO -->
+  <div style="margin-top:15px; font-size:12px;">
+    <b>No of Users:</b> 0-5 &nbsp;&nbsp;&nbsp;&nbsp;
+    <b>Inventory Type:</b> Basic
+  </div>
+
+  <!-- LICENSE TABLE -->
+  <table style="margin-top:10px; font-size:12px;">
+    <thead>
+      <tr>
+        <th>License No.</th>
+        <th>Location</th>
+        <th>Lic. Type</th>
+        <th>Sub Type</th>
+        <th>Support Type</th>
+        <th>ASC Period</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>784545244</td>
+        <td>PUNE</td>
+        <td>Gold</td>
+        <td>New</td>
+        <td>Online</td>
+        <td>25/04/2026 to 24/04/2027</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SCOPE -->
+  <h4 style="margin-top:20px; text-decoration: underline;">
+    Scope of Support Cover:
+  </h4>
+
+  <p style="font-size:12px;">
+    We will assist and guide you on the below-mentioned services as part of ASC.
+  </p>
+
+  <table style="font-size:12px;">
+    <tbody>
+      <tr>
+        <td style="width:30%;"><b>Default Tally</b></td>
+        <td>All standard features and functionalities available in the licensed version of Tally Prime</td>
+      </tr>
+
+      <tr>
+        <td><b>User Guidance & Training</b></td>
+        <td>Basic user-level guidance and functional assistance to utilize Tally features</td>
+      </tr>
+
+      <tr>
+        <td><b>Support Clarity</b></td>
+        <td>Support via remote tools, calls, or online sessions</td>
+      </tr>
+
+      <tr>
+        <td><b>Release Update</b></td>
+        <td>Applicable as per Tally Solutions policies</td>
+      </tr>
+
+      <tr>
+        <td><b>Other Setup</b></td>
+        <td>Basic configurations like data migration, GST setup, etc.</td>
+      </tr>
+
+      <tr>
+        <td><b>Issue Resolution Timeline</b></td>
+        <td>Resolved within business hours depending on complexity</td>
+      </tr>
+
+      <tr>
+        <td><b>Scope Exclusions & Commercials</b></td>
+        <td>Customization, development, or out-of-scope services will be charged separately</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+`;
 `
 
 
@@ -434,7 +545,11 @@ ${paymentHTML}
     <span>:   ${data.bankDetails?.branch || ""}</span>
   </p>
 </div>
+<div style="page-break-before: always; position: relative;">
+
+
 ${AMCcover}
+</div>
 
   ${termsHTML}
 
