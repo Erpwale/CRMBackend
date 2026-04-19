@@ -210,7 +210,7 @@ const AMCcover = `
         <td class="center">Yes</td>
       </tr>
 
-     <tr><td>Standard ASC</td><td class="right">${standardASC.toFixed(2)}</td></tr>
+     <tr><td>Standard ASC</td><td class="right">${ascValue.toFixed(2)}</td></tr>
 <tr><td>Customization ASC</td><td class="right">${customizationASC.toFixed(2)}</td></tr>
 <tr><td>Add-On ASC</td><td class="right">${addOnASC.toFixed(2)}</td></tr>
 <tr><td>Remote App ASC</td><td class="right">${remoteAppASC.toFixed(2)}</td></tr>
@@ -280,32 +280,34 @@ const AMCcover = `
 
       <tr>
         <td><b>User Guidance & Training</b></td>
-        <td>Basic user-level guidance and functional assistance to utilize Tally features</td>
+        <td>Basic user-level guidance and functional assistance will be provided to help users understand and effectively utilize Tally features. This does not include formal or structured training programs.</td>
       </tr>
 
       <tr>
         <td><b>Support Clarity</b></td>
-        <td>Support via remote tools, calls, or online sessions</td>
+        <td>Support will primarily be delivered through remote access tools, calls, or online sessions. On-site support, if required, will be scheduled separately and may be chargeable.</td>
       </tr>
 
       <tr>
         <td><b>Release Update</b></td>
-        <td>Applicable as per Tally Solutions policies</td>
+        <td>Release updates shall be applicable only as per the policies of Tally Solutions Pvt. Ltd., subject to an active Tally Software Services (TSS) subscription.</td>
       </tr>
 
       <tr>
         <td><b>Other Setup</b></td>
-        <td>Basic configurations like data migration, GST setup, etc.</td>
+        <td>We shall provide assistance for backup & restore procedures, data splitting, and data migration. Support will also cover configuration of default security controls, installation and licensing (Single User / Multi User), feature activation, and basic statutory issue resolution.
+Note: Clients are responsible for maintaining regular data backups to ensure data safety.
+</td>
       </tr>
 
       <tr>
         <td><b>Issue Resolution Timeline</b></td>
-        <td>Resolved within business hours depending on complexity</td>
+        <td>All support requests will be addressed within reasonable timelines during business hours. Resolution time may vary depending on the complexity and nature of the issue.</td>
       </tr>
 
       <tr>
         <td><b>Scope Exclusions & Commercials</b></td>
-        <td>Customization, development, or out-of-scope services will be charged separately</td>
+        <td>Any services, customization, development, or support not explicitly mentioned in this scope shall be considered outside the agreement and may be charged separately</td>
       </tr>
     </tbody>
   </table>
