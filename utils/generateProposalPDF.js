@@ -275,7 +275,7 @@ const AMCcover = `
 
 </div>
 `;
-`
+
 
 
 
