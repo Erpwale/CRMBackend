@@ -155,6 +155,22 @@ const gstRows = Object.keys(gstGroups)
 </tr>
 `;
   }).join("");
+
+
+const AMCcover =`
+
+
+<h1>(Support Cover for Standard Tally Prime)</h1>
+
+
+
+`
+
+
+
+
+
+
 const paymentHTML = `
   <div style="margin-top:20px;">
     <h4>
@@ -418,6 +434,7 @@ ${paymentHTML}
     <span>:   ${data.bankDetails?.branch || ""}</span>
   </p>
 </div>
+${AMCcover}
 
   ${termsHTML}
 
