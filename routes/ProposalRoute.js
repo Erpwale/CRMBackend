@@ -318,6 +318,8 @@ router.post("/add", authMiddleware, async (req, res) => {
       email: req.user.email,
       mobile: req.user.mobile
     };
+    console.log("FULL BODY 👉", req.body);
+console.log("PRICE LEVEL 👉", req.body.priceLevel);
 
     console.log("RoundOff:", roundOff); // 🔍 debug
 
