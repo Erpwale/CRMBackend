@@ -43,7 +43,7 @@ router.post("/create", authMiddleware, async (req, res) => {
 
     const saved = await proposal.save();
  // ✅ 🔥 UPDATE OPPORTUNITY HERE
- await Opportunity.findOneAndUpdate(
+ await opp.findOneAndUpdate(
   { proposalId: opid },  // 👈 match your number field
   { proposalStatus: true }
 );
