@@ -597,11 +597,13 @@ ${paymentHTML}
   </p>
 
 </div>
-<div style="page-break-before: always; position: relative;">
-
-
-${AMCcover}
-</div>
+${data?.businessLine?.trim() === "Annual Support Cover"
+  ? `
+    <div style="page-break-before: always; position: relative;">
+      ${AMCcover}
+    </div>
+  `
+  : ""}
 
   ${termsHTML}
 
