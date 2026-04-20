@@ -35,7 +35,10 @@ const salesOrderSchema = new mongoose.Schema(
       required: true,
       validate: [(val) => val.length > 0, "At least 1 product required"]
     },
-
+tallySerials: {
+  type: [String],
+  default: []
+},
     cgst: { type: Number, required: true, min: 0 },
     sgst: { type: Number, required: true, min: 0 },
     net: { type: Number, required: true, min: 0 },
