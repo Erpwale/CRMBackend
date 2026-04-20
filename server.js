@@ -54,6 +54,7 @@ app.use("/api/businessline", require("./routes/businessLineRoutes.js"));
 app.use("/api/deal", require("./routes/ProposalRoute.js"));
 app.use("/api/Proposel", require("./routes/proposalRoutes.js"));
 app.use("/api/bank", require("./routes/bankRoutes"));
+app.use("api/sales-orde", require("./routes/SalesOrder"));
 global.io = io; // ✅ ADD THIS
 
 // ❗ VERY IMPORTANT: export io
