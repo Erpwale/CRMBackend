@@ -42,16 +42,16 @@ router.post("/create", authMiddleware, async (req, res) => {
     });
 
     const saved = await proposal.save();
-
+ // ✅ 🔥 UPDATE OPPORTUNITY HERE
+    await opp.findByIdAndUpdate(opid, {
+      proposalStatus: true
+    });
     res.status(201).json({
       success: true,
       message: "Proposal created",
       data: saved,
     });
-  // ✅ 🔥 UPDATE OPPORTUNITY HERE
-    await opp.findByIdAndUpdate(opid, {
-      proposalStatus: true
-    });
+ 
 
   } catch (err) {
     console.log(err);
