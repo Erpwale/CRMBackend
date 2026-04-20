@@ -27,7 +27,7 @@ const salesOrderSchema = new mongoose.Schema(
     userName: { type: String, required: true },
     salesTeam: { type: String, required: true },
 
-    orderNo: { type: String, required: true },
+   orderNo: { type: String, required: true },
     orderDate: { type: String, required: true },
 
     products: {
