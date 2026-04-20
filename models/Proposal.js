@@ -55,6 +55,10 @@ const proposalSchema = new mongoose.Schema({
   },
 
   companyName: String,
+  priceLevel: {
+  type: String,
+  default: ""
+},
   tallySerials: {
   type: [String],
   default: []
