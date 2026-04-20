@@ -48,6 +48,10 @@ router.post("/create", authMiddleware, async (req, res) => {
       message: "Proposal created",
       data: saved,
     });
+  // ✅ 🔥 UPDATE OPPORTUNITY HERE
+    await opp.findByIdAndUpdate(opid, {
+      proposalStatus: true
+    });
 
   } catch (err) {
     console.log(err);
