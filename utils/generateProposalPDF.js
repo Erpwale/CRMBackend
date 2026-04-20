@@ -236,7 +236,7 @@ const AMCcover = `
           Standard Support Hours (Mon–Fri: 10:00 AM to 6:00 PM) – IST <br/>
           Extended Support Hours (Saturday: 10:00 AM to 2:00 PM) – IST
         </td>
-        <td class="center">Yes</td>
+        <td class="right">Yes</td>
       </tr>
 
      <tr><td>Standard ASC</td><td class="right">${ascValue.toFixed(2)}</td></tr>
