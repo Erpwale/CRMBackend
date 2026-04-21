@@ -78,19 +78,24 @@ router.get("/allAdmin", async (req, res) => {
 
 router.get("/all", authMiddleware, async (req, res) => {
   try {
-    console.log("USER:", req.user); // 👈 check this
+    const { companyId } = req.query;
+
+    if (!companyId) {
+      return res.status(400).json({ message: "companyId is required" });
+    }
 
     const proposals = await Proposal.find({
-      uid: req.user._id, // ✅ must match token
-      
+      uid: req.user._id,        // ✅ user filter
+      companyId: companyId     // ✅ company filter
     })
-     .populate("uid", "name email") // 👈 THIS IS THE KEY
-    .sort({ createdAt: -1 });
+      .populate("uid", "name email")
+      .sort({ createdAt: -1 });
 
     res.json({
       success: true,
       data: proposals,
     });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
