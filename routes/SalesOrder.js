@@ -81,7 +81,33 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const data = await SalesOrder.find().sort({ createdAt: -1 });
+    const { startDate, endDate, businessLine, search } = req.query;
+
+    let filter = {};
+
+    // ✅ 1. DATE FILTER (based on createdAt)
+    if (startDate && endDate) {
+      filter.createdAt = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      };
+    }
+
+    // ✅ 2. BUSINESS LINE FILTER
+    if (businessLine) {
+      filter.businessLine = businessLine;
+    }
+
+    // ✅ 3. SEARCH (Order No + Party Name)
+    if (search) {
+      filter.$or = [
+        { orderNo: { $regex: search, $options: "i" } },
+        { partyName: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const data = await SalesOrder.find(filter).sort({ createdAt: -1 });
+
     res.json({ success: true, data });
   } catch (err) {
     res.status(500).json({ message: err.message });
