@@ -66,19 +66,14 @@ router.post("/", async (req, res) => {
     await order.save();
 
     // ✅ UPDATE PROPOSAL STATUS
-if (req.body.opid && mongoose.Types.ObjectId.isValid(req.body.opid)) {
-  await opp.findByIdAndUpdate(
-    req.body.opid,
-    {
-      proposalStatus: true,
-      "statusDetails.status": "Close Won",
-      "statusDetails.statusDate": new Date().toISOString().split("T")[0]
-    }
-  );
-} else {
-  console.log("Invalid opid:", req.body.opid);
-}
-
+await opp.findOneAndUpdate(
+  { proposalId: req.body.opid },   // ✅ match your field
+  {
+    proposalStatus: true,
+    "statusDetails.status": "Close Won",
+    "statusDetails.statusDate": new Date().toISOString().split("T")[0]
+  }
+);
     res.status(201).json({
       success: true,
       message: "Created & Proposal Closed Won",
