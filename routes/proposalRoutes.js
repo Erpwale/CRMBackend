@@ -30,7 +30,7 @@ router.post("/create", authMiddleware, async (req, res) => {
   try {
     console.log(req.body);
 
-    const { documentTitle, mailStatus, businessLine, opid ,user} = req.body;
+    const { documentTitle, mailStatus, businessLine, opid ,user,compayId} = req.body;
 
     const proposal = new Proposal({
       documentTitle,
