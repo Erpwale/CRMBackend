@@ -66,16 +66,16 @@ router.post("/", async (req, res) => {
     await order.save();
 
     // ✅ UPDATE PROPOSAL STATUS
-    if (req.body.proposalId) {
-      await opp.findOneAndUpdate(
-        { proposalId: req.body.proposalId },
-        {
-          proposalStatus: true,
-          "statusDetails.status": "Close Won",
-          "statusDetails.statusDate": new Date().toISOString().split("T")[0]
-        }
-      );
+if (req.body.opid) {
+  await opp.findByIdAndUpdate(
+    req.body.opid,
+    {
+      proposalStatus: true,
+      "statusDetails.status": "Close Won",
+      "statusDetails.statusDate": new Date().toISOString().split("T")[0]
     }
+  );
+}
 
     res.status(201).json({
       success: true,

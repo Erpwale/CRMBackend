@@ -39,6 +39,10 @@ const salesOrderSchema = new mongoose.Schema(
       type: [String],
       default: []
     },
+      opid:{
+          type: Number,
+          required: true
+        },
 
     // ✅ FROM FRONTEND (DO NOT CALCULATE)
     cgst: { type: Number, default: 0 },
