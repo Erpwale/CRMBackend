@@ -298,7 +298,7 @@ router.post("/send-mail", async (req, res) => {
     }
 
     // ✅ Correct link
-    const pdfLink = `https://crmbackend-j0pp.onrender.com/api/Proposel/proposal/${proposalId}`;
+    const pdfLink = `https://crmbackend-ozmq.onrender.com/api/Proposel/proposal/${proposalId}`;
 console.log("EMAIL:", process.env.EMAIL);
 
 
