@@ -114,6 +114,20 @@ router.get("/", async (req, res) => {
   }
 });
 
+
+router.get("/business-lines", async (req, res) => {
+  try {
+    const lines = await SalesOrder.distinct("businessLine");
+
+    res.json({
+      success: true,
+      data: lines
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 /* ========================= */
 /* ✅ GET ONE */
 /* ========================= */
@@ -182,16 +196,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.get("/business-lines", async (req, res) => {
-  try {
-    const lines = await SalesOrder.distinct("businessLine");
-
-    res.json({
-      success: true,
-      data: lines
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
 module.exports = router;
