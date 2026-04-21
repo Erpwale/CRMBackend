@@ -66,7 +66,7 @@ router.post("/", async (req, res) => {
     await order.save();
 
     // ✅ UPDATE PROPOSAL STATUS
-if (req.body.opid) {
+if (req.body.opid && mongoose.Types.ObjectId.isValid(req.body.opid)) {
   await opp.findByIdAndUpdate(
     req.body.opid,
     {
@@ -75,6 +75,8 @@ if (req.body.opid) {
       "statusDetails.statusDate": new Date().toISOString().split("T")[0]
     }
   );
+} else {
+  console.log("Invalid opid:", req.body.opid);
 }
 
     res.status(201).json({
