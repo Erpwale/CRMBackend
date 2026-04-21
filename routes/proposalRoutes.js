@@ -39,7 +39,7 @@ router.post("/create", authMiddleware, async (req, res) => {
       opid,
       user,
       uid: req.user._id,   // ✅ THIS is the only change you need
-      companyId   // ✅ ADD THIS
+      companyId: companyId  // ✅ ADD THIS
     });
 
     const saved = await proposal.save();
