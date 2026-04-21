@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const SalesOrder = require("../models/SalesOrder.js")
-
+const opp = require("../models/Proposal"); // import model
 /* ✅ VALIDATION FUNCTION */
 
 const validate = (body) => {
@@ -65,16 +65,28 @@ router.post("/", async (req, res) => {
     const order = new SalesOrder(req.body);
     await order.save();
 
+    // ✅ UPDATE PROPOSAL STATUS
+    if (req.body.proposalId) {
+      await opp.findOneAndUpdate(
+        { proposalId: req.body.proposalId },
+        {
+          proposalStatus: true,
+          "statusDetails.status": "Close Won",
+          "statusDetails.statusDate": new Date().toISOString().split("T")[0]
+        }
+      );
+    }
+
     res.status(201).json({
       success: true,
-      message: "Created",
+      message: "Created & Proposal Closed Won",
       data: order
     });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-
 /* ========================= */
 /* ✅ GET ALL */
 /* ========================= */
