@@ -4,8 +4,8 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, default: "" },
   license: { type: String, default: "" },
-  qty: { type: Number, required: true, min: 1 },
-  rate: { type: Number, required: true, min: 0 },
+  qty: { type: Number, required: true },
+  rate: { type: Number, required: true },
   discount: { type: Number, default: 0 },
   gst: { type: Number, default: 0 },
   net: { type: Number, default: 0 }
@@ -27,23 +27,27 @@ const salesOrderSchema = new mongoose.Schema(
     userName: { type: String, required: true },
     salesTeam: { type: String, required: true },
 
-   orderNo: { type: String, required: true },
+    orderNo: { type: String, required: true },
     orderDate: { type: String, required: true },
 
     products: {
       type: [productSchema],
-      required: true,
-      validate: [(val) => val.length > 0, "At least 1 product required"]
+      required: true
     },
-tallySerials: {
-  type: [String],
-  default: []
-},
-    cgst: { type: Number, required: true, min: 0 },
-    sgst: { type: Number, required: true, min: 0 },
-    net: { type: Number, required: true, min: 0 },
 
-    narration: { type: String, default: "" } // ✅ optional
+    tallySerials: {
+      type: [String],
+      default: []
+    },
+
+    // ✅ FROM FRONTEND (DO NOT CALCULATE)
+    cgst: { type: Number, default: 0 },
+    sgst: { type: Number, default: 0 },
+    grossTotal: { type: Number, default: 0 },
+    roundoff: { type: Number, default: 0 }, // ⚠️ match frontend exactly
+    net: { type: Number, required: true },
+
+    narration: { type: String, default: "" }
   },
   { timestamps: true }
 );
