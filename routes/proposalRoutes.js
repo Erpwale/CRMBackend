@@ -79,13 +79,17 @@ router.get("/allAdmin", async (req, res) => {
 
 router.get("/all", authMiddleware, async (req, res) => {
   try {
+    const { companyId } = req.query;
 
-const { companyName } = req.query;
-    console.log("company name ",companyName)
-    const proposals = await Proposal.find({
-      uid: req.user._id,        // ✅ user filter
-      companyName: companyName     // ✅ company filter
-    })
+    const query = {
+      uid: req.user._id
+    };
+
+    if (companyId) {
+      query.companyId = companyId;
+    }
+
+    const proposals = await Proposal.find(query)
       .populate("uid", "name email")
       .sort({ createdAt: -1 });
 
