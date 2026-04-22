@@ -1,7 +1,7 @@
 // routes/voucherConfig.js
 const express = require("express");
 const router = express.Router();
-const VoucherConfig = require("../models/VoucherConfig");
+const VoucherConfig = require("../models/SalesVoucherConfig");
 
 // SAVE OR UPDATE
 router.post("/", async (req, res) => {
