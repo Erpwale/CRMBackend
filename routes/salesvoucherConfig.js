@@ -25,39 +25,35 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  try {
-    const config = await VoucherConfig.findOne();
-    if (!config) return res.status(400).json({ message: "Config not found" });
+router.get("/preview", async (req, res) => {
+  const config = await VoucherConfig.findOne();
 
-    let number = config.currentNumber;
+  let number = config.currentNumber;
 
-    // ✅ restart logic (basic yearly example)
-    if (config.restart?.periodicity === "Yearly") {
-      const currentYear = new Date().getFullYear();
-      const configYear = new Date(config.restart.applicableFrom).getFullYear();
+  let formattedNumber = config.prefillZero
+    ? String(number).padStart(config.width, "0")
+    : String(number);
 
-      if (currentYear !== configYear) {
-        number = config.restart.startingNumber || 1;
-        config.currentNumber = number;
-      }
-    }
+  const finalNumber = `${config.prefix?.value || ""}${formattedNumber}${config.suffix?.value || ""}`;
 
-    // ✅ padding
-    let formattedNumber = config.prefillZero
-      ? String(number).padStart(config.width, "0")
-      : String(number);
+  res.json({ voucherNumber: finalNumber });
+});
 
-    const finalNumber = `${config.prefix?.value || ""}${formattedNumber}${config.suffix?.value || ""}`;
+router.post("/generate", async (req, res) => {
+  const config = await VoucherConfig.findOne();
 
-    // ✅ increment counter
-    config.currentNumber += 1;
-    await config.save();
+  let number = config.currentNumber;
 
-    res.json({ voucherNumber: finalNumber });
+  let formattedNumber = config.prefillZero
+    ? String(number).padStart(config.width, "0")
+    : String(number);
 
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  const finalNumber = `${config.prefix?.value || ""}${formattedNumber}${config.suffix?.value || ""}`;
+
+  // ✅ increment ONLY here
+  config.currentNumber += 1;
+  await config.save();
+
+  res.json({ voucherNumber: finalNumber });
 });
 module.exports = router;

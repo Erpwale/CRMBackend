@@ -81,13 +81,18 @@ router.get("/all", authMiddleware, async (req, res) => {
   try {
     const { companyId } = req.query;
 
-    const query = {
-      uid: req.user._id
-    };
-
-    if (companyId) {
-      query.companyId = companyId;
+    // ❌ If not provided → throw error
+    if (!companyId) {
+      return res.status(400).json({
+        success: false,
+        message: "companyId is required",
+      });
     }
+
+    const query = {
+      uid: req.user._id,
+      companyId: companyId, // ✅ always applied
+    };
 
     const proposals = await Proposal.find(query)
       .populate("uid", "name email")
