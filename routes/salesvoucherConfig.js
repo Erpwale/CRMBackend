@@ -6,18 +6,8 @@ const VoucherConfig = require("../models/SalesVoucherConfig");
 // SAVE OR UPDATE
 router.post("/", async (req, res) => {
   try {
-    let config = await VoucherConfig.findOne();
-
-    if (config) {
-      config = await VoucherConfig.findByIdAndUpdate(
-        config._id,
-        req.body,
-        { new: true }
-      );
-    } else {
-      config = new VoucherConfig(req.body);
-      await config.save();
-    }
+    const config = new VoucherConfig(req.body);
+    await config.save();
 
     res.json(config);
   } catch (err) {
