@@ -51,7 +51,7 @@ router.post("/generate", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    let config = await VoucherConfig.findOne();
+    let config = await VoucherConfig.find();
 
     // ✅ If no data, send default (IMPORTANT)
     if (!config) {
