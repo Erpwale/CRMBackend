@@ -53,8 +53,8 @@ router.get("/", async (req, res) => {
   try {
     let config = await VoucherConfig.find();
 
-    // ✅ If no data, send default (IMPORTANT)
-    if (!config) {
+    // ✅ FIX: check length instead
+    if (config.length === 0) {
       return res.json({
         startingNumber: 1,
         width: 3,
