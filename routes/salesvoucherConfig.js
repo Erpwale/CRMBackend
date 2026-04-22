@@ -56,4 +56,38 @@ router.post("/generate", async (req, res) => {
 
   res.json({ voucherNumber: finalNumber });
 });
+
+// routes/voucherConfig.js
+
+router.get("/", async (req, res) => {
+  try {
+    let config = await VoucherConfig.findOne();
+
+    // ✅ If no data, send default (IMPORTANT)
+    if (!config) {
+      return res.json({
+        startingNumber: 1,
+        width: 3,
+        prefillZero: true,
+        restart: {
+          applicableFrom: "",
+          startingNumber: 1,
+          periodicity: "Yearly",
+        },
+        prefix: {
+          applicableFrom: "",
+          value: "",
+        },
+        suffix: {
+          applicableFrom: "",
+          value: "",
+        },
+      });
+    }
+
+    res.json(config);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;
