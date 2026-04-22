@@ -6,6 +6,53 @@ const VoucherConfig = require("../models/SalesVoucherConfig");
 // SAVE OR UPDATE
 router.post("/", async (req, res) => {
   try {
+    const { restart } = req.body;
+
+    if (!restart?.applicableFrom || !restart?.periodicity) {
+      return res.status(400).json({
+        message: "Applicable From and Periodicity required",
+      });
+    }
+
+    const newDate = new Date(restart.applicableFrom);
+    const newYear = newDate.getFullYear();
+    const newMonth = newDate.getMonth();
+
+    // 🔍 Fetch existing configs
+    const existingConfigs = await VoucherConfig.find();
+
+    // 🚫 Conflict check
+    const conflict = existingConfigs.find((c) => {
+      const existingDate = new Date(c.restart.applicableFrom);
+      const year = existingDate.getFullYear();
+      const month = existingDate.getMonth();
+
+      // ❌ Yearly duplicate (same year)
+      if (
+        restart.periodicity === "Yearly" &&
+        c.restart.periodicity === "Yearly"
+      ) {
+        return year === newYear;
+      }
+
+      // ❌ Monthly duplicate (same month + year)
+      if (
+        restart.periodicity === "Monthly" &&
+        c.restart.periodicity === "Monthly"
+      ) {
+        return year === newYear && month === newMonth;
+      }
+
+      return false;
+    });
+
+    if (conflict) {
+      return res.status(400).json({
+        message: "Configuration already exists for this period",
+      });
+    }
+
+    // ✅ Save new config
     const config = new VoucherConfig(req.body);
     await config.save();
 
@@ -14,7 +61,6 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 router.get("/preview", async (req, res) => {
   const config = await VoucherConfig.findOne();
 
