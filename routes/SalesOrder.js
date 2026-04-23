@@ -326,7 +326,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border: 1px solid #000;
             border-top: none;
             font-size: 10px;
-            height: 400px;
+            height: 300px;
         }
 
         .invoice-table th {
