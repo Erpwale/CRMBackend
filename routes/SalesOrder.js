@@ -170,7 +170,7 @@ router.get("/invoice-pdf", async (req, res) => {
             background: white;
             margin: 0 auto;
             padding: 09mm;
-           /* box-shadow: 0 0 10px rgba(0,0,0,0.1);*/
+          
         }
 
         .invoice-title {
@@ -178,13 +178,13 @@ router.get("/invoice-pdf", async (req, res) => {
             font-size: 15px;
             font-weight: bold;
             padding: 8px;
-            /* border: 0.5px solid #00000061; */
+          
             border-bottom: none;
         }
 
         .header-section {
             display: flex;
-            border: 0.3px solid #00000061;;
+            border: 0.3px solid #00000061;
             height: 130px;
         }
 
@@ -269,12 +269,12 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .buyer-header {
-            /* background: #f5f5f5; */
+           
             padding: 1px 5px;
             font-weight: bold;
             font-size: 10px;
             
-            /* border-bottom: 0.5px solid #00000061; */
+          
         }
 
         .buyer-content {
@@ -326,7 +326,7 @@ router.get("/invoice-pdf", async (req, res) => {
             width: 50%;
         }
 
-        /* Invoice Table */
+       
         .invoice-table {
             width: 100%;
             border-collapse: collapse;
@@ -422,7 +422,6 @@ router.get("/invoice-pdf", async (req, res) => {
 			
         }
 
-        /* HSN Table */
         .hsn-table {
             width: 100%;
             border-collapse: collapse;
@@ -449,7 +448,6 @@ router.get("/invoice-pdf", async (req, res) => {
             font-size: 12px;
         }
 
-        /* Footer Section */
         .footer-section {
             display: flex;
             border: 0.3px solid #00000061;
@@ -462,7 +460,7 @@ router.get("/invoice-pdf", async (req, res) => {
             width: 50%;
             padding: 8px;
                 margin-top: 80px;
-            /* border-right: 0.5px solid #00000061; */
+          
         }
 
         .footer-right {
