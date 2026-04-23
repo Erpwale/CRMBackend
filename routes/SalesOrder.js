@@ -143,10 +143,6 @@ router.get("/business-lines", async (req, res) => {
 });
 router.get("/invoice-pdf", async (req, res) => {
   try {
-    const html=`
-
-
-    `
        const pdf = await generatePDF(html);
 
     res.set({
