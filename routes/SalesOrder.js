@@ -141,7 +141,7 @@ router.get("/business-lines", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.get("/invoice-pdf/:ordid", async (req, res) => {
+router.get("/invoice-pdf", async (req, res) => {
   try {
       const { ordid } = req.query;
 
