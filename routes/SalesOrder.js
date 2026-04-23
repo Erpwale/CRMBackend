@@ -158,7 +158,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family:calibri;
             font-size: 11px;
             background: #f0f0f0;
             padding: 20px;
@@ -175,7 +175,7 @@ router.get("/invoice-pdf", async (req, res) => {
 
         .invoice-title {
             text-align: center;
-            font-size: 16px;
+            font-size: 20px;
             font-weight: bold;
             padding: 8px;
             /* border: 0.5px solid #00000061; */
@@ -192,12 +192,12 @@ router.get("/invoice-pdf", async (req, res) => {
             width: 50%;
             padding: 8px;
             border-right: 0.5px solid #00000061;
-            font-size: 11px;
-            line-height: 1.4;
+            font-size: 14px;
+            line-height: 1;
         }
 
         .company-info strong {
-            font-size: 13px;
+            font-size: 16px;
         }
 
         .logo-order-section {
@@ -280,13 +280,13 @@ router.get("/invoice-pdf", async (req, res) => {
         .buyer-info {
             width: 50%;
             padding: 8px;
-            font-size: 11px;
-            line-height: 1.5;
+           font-size: 14px;
+            line-height: 1;
             border-right: 0.5px solid #00000061;
         }
 
         .buyer-info strong {
-            font-size: 13px;
+            font-size: 16px;
         }
 
         .purchase-order {
@@ -379,7 +379,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .item-sub {
-            font-size: 9px;
+            font-size:11px;
             color: #333;
             font-style: italic;
         }
@@ -581,7 +581,7 @@ router.get("/invoice-pdf", async (req, res) => {
                 
                 <div class="buyer-content">
                     <div class="buyer-info">
-                        <div> <strong>Bill To</strong></div>
+                        <div>Buyer (Bill to)</div>
                         <strong>DECCAN WATER TREATMENT PVT LTD</strong><br>
                         S.No.32, Behind Relax Hotel, Near Hari, Om Seri, Old<br>
                         Kharadi-Mundhwa Road, Pune, Vadgaon Sheri<br>
@@ -608,6 +608,7 @@ router.get("/invoice-pdf", async (req, res) => {
                         <tr>
                             <th class="sl-no">SI<br>No.</th>
                             <th class="description">Description of<br>Services</th>
+                            <th class="hsn">HSN/SAC</th>
                             <th class="qty">Quantity</th>
                             <th class="rate">Rate</th>
                             <th>per</th>
@@ -627,6 +628,7 @@ router.get("/invoice-pdf", async (req, res) => {
                                     <strong>Output SGST 9%</strong>
                                 </div>
                             </td>
+                            <td></td>
                             <td class="qty">1 Nos</td>
                             <td class="rate">3,600.00</td>
                             <td style="text-align: center;">Nos
@@ -642,10 +644,14 @@ router.get("/invoice-pdf", async (req, res) => {
                         </tr>
                        
                         <tr class="total-row">
-                            <td colspan="2" style="text-align: right; padding-right: 10px;">Total</td>
+                            <td>    </td>
+                            <td colspan="1" style="text-align: right; padding-right: 10px;">Total</td>
                             <td style="text-align: center;">1 Nos</td>
-                            <td colspan="3"></td>
+                            <td ></td>
+                            <td ></td>
+                            <td ></td>
                             <td class="amount" style="font-size: 12px;">₹ 3,186.00</td>
+                            <td ></td>
                         </tr>
                     </tbody>
                 </table>
@@ -754,6 +760,7 @@ router.get("/invoice-pdf", async (req, res) => {
     </div>
 </body>
 </html>
+
 
 
 
