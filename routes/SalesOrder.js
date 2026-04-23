@@ -158,7 +158,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         body {
-            font-family:calibri;
+            font-family:Arial, sans-serif;
             font-size: 11px;
             background: #f0f0f0;
             padding: 20px;
@@ -189,11 +189,11 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .company-info {
-            width: 50%;
-            padding: 8px;
-            border-right: 0.5px solid #00000061;
-            font-size: 14px;
-            line-height: 1;
+               width: 50%;
+    padding: 6px;
+    border-right: 0.5px solid #00000061;
+    font-size: 14px;
+    line-height: 1.1;
         }
 
         .company-info strong {
@@ -278,11 +278,11 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .buyer-info {
-            width: 50%;
-            padding: 8px;
-           font-size: 14px;
-            line-height: 1;
-            border-right: 0.5px solid #00000061;
+    width: 50%;
+    padding: 1px;
+    font-size: 14px;
+    line-height: 1.1;
+    border-right: 0.5px solid #00000061;
         }
 
         .buyer-info strong {
