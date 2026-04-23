@@ -540,7 +540,7 @@ router.get("/invoice-pdf", async (req, res) => {
             <div class="logo-order-section">
                 <div class="logo-area">
                    <div class="logo">
-  <img src="data:image/png;base64,${logoBase64}" width="60" />
+  <img src="data:image/png;base64,${logoBase64}" width="160" />
   <div>
     <div class="logo-text">ERPWALE</div>
     <div class="logo-subtext">PRIVATE LIMITED</div>
