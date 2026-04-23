@@ -141,8 +141,15 @@ router.get("/business-lines", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.get("/invoice-pdf", async (req, res) => {
+router.get("/invoice-pdf/:ordid", async (req, res) => {
   try {
+      const { ordid } = req.params;
+
+    const order = await SalesOrder.findOne({ ordid });
+    console.log(order);
+     if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
     const html=`
     <!DOCTYPE html>
 <html lang="en">
