@@ -1,24 +1,37 @@
-const puppeteer = require("puppeteer");
+const { chromium } = require("playwright");
 
 const generatePDF = async (htmlContent) => {
-  const browser = await puppeteer.launch({
-    headless: "new"
+  const browser = await chromium.launch();
+
+  const page = await browser.newPage({
+    viewport: { width: 794, height: 1123 } // A4 size
   });
 
-  const page = await browser.newPage();
-
   await page.setContent(htmlContent, {
-    waitUntil: "networkidle0"
+    waitUntil: "networkidle"
+  });
+
+  // Inject print CSS
+  await page.addStyleTag({
+    content: `
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      body {
+        margin: 0;
+      }
+    `
   });
 
   const pdfBuffer = await page.pdf({
     format: "A4",
     printBackground: true,
     margin: {
-      top: "10mm",
-      bottom: "10mm",
-      left: "10mm",
-      right: "10mm"
+      top: "0mm",
+      bottom: "0mm",
+      left: "0mm",
+      right: "0mm"
     }
   });
 
