@@ -143,6 +143,637 @@ router.get("/business-lines", async (req, res) => {
 });
 router.get("/invoice-pdf", async (req, res) => {
   try {
+    const html=`
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proforma Invoice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:Arial, sans-serif;
+            font-size: 11px;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+
+        .invoice-container {
+           width: 210mm;
+            min-height: 297mm;
+            background: white;
+            margin: 0 auto;
+            padding: 09mm;
+           /* box-shadow: 0 0 10px rgba(0,0,0,0.1);*/
+        }
+
+        .invoice-title {
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 8px;
+            /* border: 0.5px solid #00000061; */
+            border-bottom: none;
+        }
+
+        .header-section {
+            display: flex;
+            border: 0.3px solid #00000061;;
+            height: 130px;
+        }
+
+        .company-info {
+            width: 50%;
+            padding: 10px;
+            border-right: 0.3px solid #00000061;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        .company-info strong {
+            font-size: 14px;
+        }
+
+        .logo-order-section {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            /* border-bottom: 0.5px solid #00000061; */
+            min-height: 119px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo-cube {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 50%, #7986cb 100%);
+            position: relative;
+            transform: rotate(-10deg);
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a237e;
+        }
+
+        .logo-subtext {
+            font-size: 8px;
+            color: #666;
+            letter-spacing: 2px;
+        }
+
+        .order-details {
+			padding-top:10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            font-size: 12px;
+			
+        }
+
+        .order-details > div {
+            padding: 3px 8px;
+            border-bottom: 0.3px solid #00000061;
+			line-height: 1.5;
+        }
+
+        .order-details > div:nth-child(odd) {
+            border-right: 0.3px solid #00000061;
+			
+        }
+
+    
+
+        .buyer-section {
+            border: 0.3px solid #00000061;
+            border-top: none;
+            border-bottom: none;
+        }
+
+        .buyer-header {
+            /* background: #f5f5f5; */
+            padding: 1px 5px;
+            font-weight: bold;
+            font-size: 10px;
+            
+            /* border-bottom: 0.5px solid #00000061; */
+        }
+
+        .buyer-content {
+            display: flex;
+        }
+
+        .buyer-info {
+            width: 50%;
+            padding: 8px;
+           font-size: 12px;
+            line-height: 1.3;
+            border-right: 0.3px solid #00000061;
+        }
+
+        .buyer-info strong {
+            font-size: 14px;
+			
+        }
+
+        .purchase-order {
+            width: 50%;
+        }
+
+        .purchase-order > div {
+            padding: 5px 8px;
+            border-bottom: 0.3px solid #00000061;
+            font-size: 10px;
+        }
+
+        .purchase-order > div:last-child {
+            border-bottom: none;
+        }
+
+        .contact-section {
+            display: flex;
+            border: 0.3px solid #00000061;
+            border-top: none;
+        }
+
+        .contact-info {
+            width: 50%;
+            padding: 8px;
+            font-size: 10px;
+            line-height: 1.6;
+            border-right: 0.3px solid #00000061;
+        }
+
+        .empty-section {
+            width: 50%;
+        }
+
+        /* Invoice Table */
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 0.3px solid #00000061;
+            border-top: none;
+            font-size: 12px;
+            height: 350px;
+        }
+
+        .invoice-table th {
+            
+            padding: 3px 4px;
+            border: 0.3px solid #00000061;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .invoice-table td {
+            padding: 6px 4px;
+            border: 0.3px solid #00000061;
+            vertical-align: top;
+        }
+
+        .invoice-table .sl-no {
+            width: 30px;
+            text-align: center;
+        }
+
+        .invoice-table .description {
+            width: 370px;
+        }
+
+        .invoice-table .qty {
+            width: 60px;
+            text-align: center;
+        }
+
+        .invoice-table .rate {
+            width: 70px;
+            text-align: center;
+        }
+
+        .invoice-table .disc {
+            width: 50px;
+            text-align: center;
+        }
+
+        .invoice-table .amount {
+            width: 80px;
+            text-align: center;
+        }
+
+        .item-description {
+            font-weight: bold;
+			
+        }
+
+        .item-sub {
+            font-size:11px;
+            color: #333;
+            font-style: italic;
+			padding-top:4px;
+			line-height:1.4;
+        }
+
+        .tax-row td {
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .total-row {
+            
+            font-weight: bold;
+            height: 1px;
+        }
+
+        .grand-total {
+            
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .amount-words {
+            border: 0.3px solid #00000061;
+            border-top: none;
+            border-bottom: none;
+            padding: 12px 8px;
+            font-size: 12px;
+        }
+
+        .amount-words strong {
+            color: #000;
+			
+        }
+
+        /* HSN Table */
+        .hsn-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 0.3px solid #00000061;
+            border-top: none;
+            font-size: 12px;
+        }
+
+        .hsn-table th, .hsn-table td {
+            padding: 4px;
+            border: 0.3px solid #00000061;
+            text-align: center;
+        }
+
+        .hsn-table th {
+            
+        }
+
+        .tax-words {
+            border: 0.3px solid #00000061;
+            border-top: none;
+            border-bottom: none;
+            padding: 12px 8px;
+            font-size: 12px;
+        }
+
+        /* Footer Section */
+        .footer-section {
+            display: flex;
+            border: 0.3px solid #00000061;
+            border-top: none;
+            font-size: 12px;
+			
+        }
+
+        .footer-left {
+            width: 50%;
+            padding: 8px;
+                margin-top: 80px;
+            /* border-right: 0.5px solid #00000061; */
+        }
+
+        .footer-right {
+            width: 50%;
+            /* padding: 8px; */
+        }
+
+        .bank-details {
+            padding: 4px;
+            margin-bottom: -36px;
+        }
+
+        .bank-details table {
+            width: 100%;
+        }
+
+        .bank-details td {
+            padding: 2px 0;
+        }
+
+        .bank-details td:first-child {
+            width: 100px;
+        }
+
+        .declaration {
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .declaration strong {
+            text-decoration: underline;
+        }
+
+        .signature-area {
+              border-bottom: none;
+    border-top: 0.3px solid #00000061;
+    border-left: 0.5px solid #00000061;
+            text-align: right;
+            margin-top: 30px;
+            padding: 8px;
+            font-weight: bold;
+        }
+
+        .auth-signatory {
+            margin-top: 40px;
+            font-size: 12px;
+        }
+
+        .computer-generated {
+            text-align: center;
+            padding: 8px;
+            /* border: 0.5px solid #00000061; */
+            border-top: none;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .invoice-container {
+                box-shadow: none;
+                padding: 5mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <!-- Title -->
+        <div class="invoice-title">PROFORMA INVOICE</div>
+
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="company-info">
+                <strong>MS ERPWALE PVT. LTD.</strong><br>
+                Flat No. J-201, Sai Avishkar, Sr.No 12/5/9<br>
+                BH Omega, Haveli, Dhayari, Pune 411041<br>
+                GSTIN/UIN: 27AATCM3926B1ZC<br>
+                State Name : Maharashtra, Code : 27<br>
+                Contact : 7447893001<br>
+                E-Mail : info@erpwale.com
+            </div>
+            <div class="logo-order-section">
+                <div class="logo-area">
+                  <div class="logo">
+  <img src="D:\Manoj-ERP\CRM Data\logo.jpg" width="300" />
+ 
+</div>
+                </div>
+                <div class="order-details">
+                    <div>Sales Order Number
+
+                        <div><strong>SO/ERP/26-27/001</strong></div>
+                    </div>
+                    <div>Dated
+
+                        <div><strong>20-Apr-26</strong></div>
+                    </div>
+                    
+                    
+                    <div>Reference No. & Date.  
+                        <div>&nbsp;</div>
+                    </div>
+                    <div>Other References
+                       <div>&nbsp;</div>
+                    </div>
+                   <div>Buyer's PO No.
+                        <div>&nbsp;</div>
+                    
+                   </div>
+                   
+                    
+                    <div>Dated
+
+                            <div>&nbsp;</div>
+                    </div>
+                    
+                    
+                </div>
+                </div>
+            </div>
+            <div class="buyer-section">
+                
+                <div class="buyer-content">
+                    <div class="buyer-info">
+                        <div>Buyer (Bill to)</div>
+                        <strong>DECCAN WATER TREATMENT PVT LTD</strong><br>
+                        S.No.32, Behind Relax Hotel, Near Hari, Om Seri, Old<br>
+                        Kharadi-Mundhwa Road, Pune, Vadgaon Sheri<br>
+                        GSTIN/UIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 27AABCD9828K1Z7<br>
+                        State Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Maharashtra, Code : 27<br>
+                        Place of Supply : Maharashtra
+                       
+                    <div style="margin-top: 10px;">
+                        Contact person&nbsp;&nbsp;&nbsp;: SHARAD MORE<br>
+                        Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +91-8600141872<br>
+                        E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: deccan_watersaccount@yahoo.com
+                    </div>
+                    </div>
+                
+            </div>
+                </div>
+
+
+
+
+
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th class="sl-no">SI<br>No.</th>
+                            <th class="description">Description of Services</th>
+                            <th class="hsn">HSN/SAC</th>
+                            <th class="qty">Quantity</th>
+                            <th class="rate">Rate</th>
+                            <th>per</th>
+                            <th class="disc">Disc. %</th>
+                            <th class="amount">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="sl-no">1</td>
+                            <td>
+                                <div class="item-description">Tally Software Customization</div>
+                                <div class="item-sub">Last Purchase Rate POP Up in<br>Material Out Voucher - Tally Prime 7.0</div>
+                                <br><br><br>
+                                <div style="text-align: right; padding-right: 20px;">
+                                    <strong>Output CGST 9%</strong><br>
+                                    <strong>Output SGST 9%</strong>
+                                </div>
+                            </td>
+                            <td class="hsn">986532</td>
+                            <td class="qty">1 Nos</td>
+                            <td class="rate">3,600.00</td>
+                            <td style="text-align: center;">Nos
+                                 <br><br><br>
+                                    <div style="text-align: right; padding-top: 20px;">9 <br>9 </div>
+                            </td>
+                            <td class="disc">25 %
+                                <br><br><br>
+                                <div style="text-align: left; padding-top: 20px;">%<br>%</div>
+
+                            </td>
+                            <td class="amount">2,700.00<br><br><br><br><br><strong>243.00</strong><br><strong>243.00</strong></td>
+                        </tr>
+                       
+                        <tr class="total-row">
+                            <td>    </td>
+                            <td colspan="1" style="text-align: right; padding-right: 10px;">Total</td>
+                            <td></td>
+                            <td style="text-align: center;">1 Nos</td>
+                            <td ></td>
+                            <td ></td>
+                            <td></td>
+                            <td class="amount" style="font-size: 12px;">₹ 3,186.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+        
+                <!-- Amount in Words -->
+                <div class="amount-words">
+                    Amount Chargeable (in words)<br>
+                    <strong>INR Three Thousand One Hundred Eighty Six Only</strong>
+                    <span style="float: right;">E. & O.E</span>
+                </div>
+        
+                <!-- HSN/SAC Table -->
+                <table class="hsn-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="3">HSN/SAC</th>
+                            <th rowspan="2">Taxable<br>Value</th>
+                            <th colspan="2">CGST</th>
+                            <th colspan="2">SGST/UTGST</th>
+                            <th rowspan="2">Total<br>Tax Amount</th>
+                        </tr>
+                        <tr>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>997331</td>
+                            <td>2,700.00</td>
+                            <td>9%</td>
+                            <td>243.00</td>
+                            <td>9%</td>
+                            <td>243.00</td>
+                            <td>486.00</td>
+                        </tr>
+                        <tr style="font-weight: bold;">
+                            <td>Total</td>
+                            <td>2,700.00</td>
+                            <td></td>
+                            <td>243.00</td>
+                            <td></td>
+                            <td>243.00</td>
+                            <td>486.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+        
+                <!-- Tax Amount in Words -->
+                <div class="tax-words">
+                    Tax Amount (in words) : <strong>INR Four Hundred Eighty Six Only</strong>
+                </div>
+        
+                <!-- Footer Section -->
+                <div class="footer-section">
+                    <div class="footer-left">
+                        <div style="margin-bottom: 15px;">
+                            Company's PAN&nbsp;&nbsp;&nbsp;&nbsp;: <strong>AATCM3926B</strong>
+                        </div>
+                        <div class="declaration">
+                            <strong>Declaration</strong><br>
+                            We declare that this invoice shows the actual price of the<br>
+                            goods described and that all particulars are true and correct.
+                        </div>
+                    </div>
+                    <div class="footer-right">
+                        <div class="bank-details">
+                            <strong>Company's Bank Details</strong>
+                            <table>
+                                <tr>
+                                    <td>Bank Name</td>
+                                    <td>: <strong>SBI Bank</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>A/c No.</td>
+                                    <td>: 44294074252</td>
+                                </tr>
+                                <tr>
+                                    <td>Branch & IFSC</td>
+                                    <td>: Mveda Solapur & SBIN0007156</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="signature-area">
+                            for MS ERPWALE PVT. LTD.
+                            <div class="auth-signatory">Authorised Signatory</div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Computer Generated -->
+                <div class="computer-generated">
+                    This is a Computer Generated Invoice
+                </div>
+            </div>
+    
+            <!-- Contact Section -->
+           
+    
+            <!-- Invoice Table -->
+        </div>
+
+        <!-- Buyer Section -->
+    </div>
+</body>
+</html>
+
+    
+    
+    `
        const pdf = await generatePDF(html);
 
     res.set({
