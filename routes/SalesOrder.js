@@ -5,7 +5,11 @@ const SalesOrder = require("../models/SalesOrder.js")
 const opp = require("../models/Proposal"); // import model
 const generatePDF = require("../utils/generateInvoice.js");
 /* ✅ VALIDATION FUNCTION */
+const fs = require("fs");
+const path = require("path");
 
+const logoPath = path.join(__dirname, "../assets/erplogo.jpeg");
+const logoBase64 = fs.readFileSync(logoPath, "base64");
 const validate = (body) => {
   const {
     partyName,
@@ -535,26 +539,13 @@ router.get("/invoice-pdf", async (req, res) => {
             </div>
             <div class="logo-order-section">
                 <div class="logo-area">
-                    <div class="logo">
-                        <svg width="60" height="60" viewBox="0 0 100 100">
-                            <defs>
-                                <linearGradient id="cubeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#1a237e"/>
-                                    <stop offset="100%" style="stop-color:#5c6bc0"/>
-                                </linearGradient>
-                            </defs>
-                            <!-- Top face -->
-                            <polygon points="50,10 90,30 50,50 10,30" fill="#7986cb"/>
-                            <!-- Left face -->
-                            <polygon points="10,30 50,50 50,90 10,70" fill="#3949ab"/>
-                            <!-- Right face -->
-                            <polygon points="50,50 90,30 90,70 50,90" fill="#1a237e"/>
-                        </svg>
-                        <div>
-                            <div class="logo-text">ERPWALE</div>
-                            <div class="logo-subtext">PRIVATE LIMITED</div>
-                        </div>
-                    </div>
+                   <div class="logo">
+  <img src="data:image/png;base64,${logoBase64}" width="60" />
+  <div>
+    <div class="logo-text">ERPWALE</div>
+    <div class="logo-subtext">PRIVATE LIMITED</div>
+  </div>
+</div>
                 </div>
                 <div class="order-details">
                     <div>Sales Order Number
@@ -590,7 +581,7 @@ router.get("/invoice-pdf", async (req, res) => {
             </div>
             <div class="buyer-section">
                 
-                <div class="buyer-content">
+               <div class="buyer-content">
                     <div class="buyer-info">
                         <div> <strong>Bill To</strong></div>
                         <strong>DECCAN WATER TREATMENT PVT LTD</strong><br>
@@ -653,7 +644,8 @@ router.get("/invoice-pdf", async (req, res) => {
                         </tr>
                        
                         <tr class="total-row">
-                            <td colspan="2" style="text-align: right; padding-right: 10px;">Total</td>
+                            <td class="amount">2,700.00<br><br><br><br><br><strong>243.00</strong><br><strong>243.00</strong></td>
+
                             <td style="text-align: center;">1 Nos</td>
                             <td colspan="3"></td>
                             <td class="amount" style="font-size: 12px;">₹ 3,186.00</td>
