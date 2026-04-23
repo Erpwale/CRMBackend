@@ -165,7 +165,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .invoice-container {
-           width: 210mm;
+           width: 200mm;
             min-height: 297mm;
             background: white;
             margin: 0 auto;
@@ -356,7 +356,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .invoice-table .description {
-            width: 370px;
+            width: 340px;
         }
 
         .invoice-table .qty {
@@ -370,7 +370,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .invoice-table .disc {
-            width: 50px;
+            width: 70px;
             text-align: center;
         }
 
@@ -432,7 +432,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .hsn-table th, .hsn-table td {
-            padding: 4px;
+            padding: 0.7px;
             border: 0.3px solid #00000061;
             text-align: center;
         }
@@ -499,10 +499,10 @@ router.get("/invoice-pdf", async (req, res) => {
         .signature-area {
               border-bottom: none;
     border-top: 0.3px solid #00000061;
-    border-left: 0.5px solid #00000061;
+    border-left: 0.3px solid #00000061;
             text-align: right;
-            margin-top: 30px;
-            padding: 8px;
+            margin-top: 45px;
+            padding: 10px;
             font-weight: bold;
         }
 
@@ -622,7 +622,7 @@ router.get("/invoice-pdf", async (req, res) => {
                             <th class="qty">Quantity</th>
                             <th class="rate">Rate</th>
                             <th>per</th>
-                            <th class="disc">Disc. %</th>
+                            <th class="disc">Discount</th>
                             <th class="amount">Amount</th>
                         </tr>
                     </thead>
@@ -642,11 +642,11 @@ router.get("/invoice-pdf", async (req, res) => {
                             <td class="qty">1 Nos</td>
                             <td class="rate">3,600.00</td>
                             <td style="text-align: center;">Nos
-                                 <br><br><br>
+                                 <br><br><br><br><br>
                                     <div style="text-align: right; padding-top: 20px;">9 <br>9 </div>
                             </td>
                             <td class="disc">25 %
-                                <br><br><br>
+                                <br><br><br><br><br>
                                 <div style="text-align: left; padding-top: 20px;">%<br>%</div>
 
                             </td>
