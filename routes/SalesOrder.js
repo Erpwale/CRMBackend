@@ -128,16 +128,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-function formatAddress(address, wordsPerLine = 8) {
-  const words = address.split(" ");
-  let result = [];
 
-  for (let i = 0; i < words.length; i += wordsPerLine) {
-    result.push(words.slice(i, i + wordsPerLine).join(" "));
-  }
-
-  return result.join("<br>");
-}
 router.get("/business-lines", async (req, res) => {
   try {
     const lines = await SalesOrder.distinct("businessLine");
@@ -645,6 +636,15 @@ router.get("/invoice-pdf", async (req, res) => {
                         </tr>
                     </thead>
                     <tbody>
+<<<<<<< HEAD
+
+                    ${order.products.map((item, i) => `
+              <tr>
+               <td>${i + 1}</td>
+               <td>
+                                <div class="item-description">${item.name}</div>
+                                <div class="item-sub">${item.description}</div>
+=======
 
                     ${order.items.map((item, i) => `
               <tr>
@@ -652,6 +652,7 @@ router.get("/invoice-pdf", async (req, res) => {
                <td>
                                 <div class="item-description">${item.name}</div>
                                 <div class="item-sub">${item.description}</div>
+>>>>>>> 86f4259cded06007f97a064b8ffd84d8b57af000
                                 <br><br><br>
                                 <div style="text-align: right; padding-right: 20px;">
                                     <strong>Output CGST 9%</strong><br>
