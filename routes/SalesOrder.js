@@ -551,7 +551,7 @@ router.get("/invoice-pdf", async (req, res) => {
             <div class="logo-order-section">
                 <div class="logo-area">
                   <div class="logo">
-  <img src="D:\Manoj-ERP\CRM Data\logo.jpg" width="300" />
+   <img src="data:image/png;base64,${logoBase64}" width="260" />
  
 </div>
                 </div>
