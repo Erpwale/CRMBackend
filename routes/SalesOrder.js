@@ -165,7 +165,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .invoice-container {
-           width: 171mm;
+           width: 100mm;
             min-height: 297mm;
             background: white;
             margin: 0 auto;
