@@ -298,10 +298,9 @@ router.get("/proposal/title/:documentTitle", async (req, res) => {
 
 router.post("/send-mail", async (req, res) => {
   try {
-    const { to, subject, content, proposalId } = req.body;
-    
+    const { to, cc, subject, content, proposalId } = req.body;
 
-    console.log("➡️ Sending mail...",to);
+    console.log("➡️ Sending mail...", to);
 
     const proposal = await opp.findOne({ proposalId });
 
@@ -309,17 +308,19 @@ router.post("/send-mail", async (req, res) => {
       return res.status(404).json({ message: "Proposal not found" });
     }
 
-    // ✅ Correct link
     const pdfLink = `https://crmbackend-ozmq.onrender.com/api/Proposel/proposal/${proposalId}`;
-console.log("EMAIL:", process.env.EMAIL);
-
-
 
     try {
       await transporter.sendMail({
         from: process.env.EMAIL,
-        replyTo: proposal.email, // ⚠️ fix typo (, → .)
-        to,
+        replyTo: proposal.email,
+
+        // ✅ SAFE handling
+        to: Array.isArray(to) ? to.join(",") : to,
+
+        // ✅ ADD THIS (you missed cc)
+        cc: Array.isArray(cc) ? cc.join(",") : cc,
+
         subject,
         html: `
           ${content}
@@ -328,43 +329,33 @@ console.log("EMAIL:", process.env.EMAIL);
         `,
       });
 
-//       await transporter.sendMail({
-//   from: "Newsletters <service@mserpwale.com>",
-//   to: "deepalimore609@gmail.com",
-//   subject: "Hello pooled world",
-//   text: "Hi Alice!",
-// });
       console.log("✅ MAIL SENT");
 
-await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
-  method: "PUT",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    proposalId,
-    status: "Sent",
-  }),
-});
+      await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          proposalId,
+          status: "Sent",
+        }),
+      });
 
       res.json({ success: true });
 
     } catch (mailErr) {
       console.error("❌ Mail Error:", mailErr);
 
-   await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
-  method: "PUT",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    proposalId,
-    status: "Failed",
-  }),
-});
+      await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          proposalId,
+          status: "Failed",
+        }),
+      });
+
       res.status(500).json({ message: "Mail failed" });
     }
-
 
   } catch (err) {
     console.error("❌ Mail Error:", err);
