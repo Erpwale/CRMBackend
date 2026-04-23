@@ -158,7 +158,7 @@ router.get("/invoice-pdf", async (req, res) => {
      if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-    const formattedAddress = formatAddress(order.address);
+    // const formattedAddress = formatAddress(order.address);
     const html=`
     
     <!DOCTYPE html>
