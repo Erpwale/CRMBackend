@@ -161,7 +161,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .invoice-container {
-            width: 210mm;
+           width: 171mm;
             min-height: 297mm;
             background: white;
             margin: 0 auto;
@@ -174,20 +174,20 @@ router.get("/invoice-pdf", async (req, res) => {
             font-size: 16px;
             font-weight: bold;
             padding: 8px;
-            /* border: 1px solid #000; */
+            /* border: 0.5px solid #00000061; */
             border-bottom: none;
         }
 
         .header-section {
             display: flex;
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;;
             height: 120px;
         }
 
         .company-info {
             width: 50%;
             padding: 8px;
-            border-right: 1px solid #000;
+            border-right: 0.5px solid #00000061;
             font-size: 10px;
             line-height: 1.4;
         }
@@ -207,7 +207,7 @@ router.get("/invoice-pdf", async (req, res) => {
             justify-content: center;
             align-items: center;
             padding: 10px;
-            border-bottom: 1px solid #000;
+            border-bottom: 0.5px solid #00000061;
             min-height: 119px;
         }
 
@@ -245,20 +245,17 @@ router.get("/invoice-pdf", async (req, res) => {
 
         .order-details > div {
             padding: 5px 8px;
-            border-bottom: 1px solid #000;
+            border-bottom: 0.5px solid #00000061;
         }
 
         .order-details > div:nth-child(odd) {
-            border-right: 1px solid #000;
+            border-right: 0.5px solid #00000061;
         }
 
-        .order-details > div:last-child,
-        .order-details > div:nth-last-child(2) {
-            /* border-bottom: none; */
-        }
+    
 
         .buyer-section {
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;
             border-top: none;
         }
 
@@ -268,7 +265,7 @@ router.get("/invoice-pdf", async (req, res) => {
             font-weight: bold;
             font-size: 10px;
             
-            /* border-bottom: 1px solid #000; */
+            /* border-bottom: 0.5px solid #00000061; */
         }
 
         .buyer-content {
@@ -280,7 +277,7 @@ router.get("/invoice-pdf", async (req, res) => {
             padding: 8px;
             font-size: 10px;
             line-height: 1.5;
-            border-right: 1px solid #000;
+            border-right: 0.5px solid #00000061;
         }
 
         .buyer-info strong {
@@ -293,7 +290,7 @@ router.get("/invoice-pdf", async (req, res) => {
 
         .purchase-order > div {
             padding: 5px 8px;
-            border-bottom: 1px solid #000;
+            border-bottom: 0.5px solid #00000061;
             font-size: 10px;
         }
 
@@ -303,7 +300,7 @@ router.get("/invoice-pdf", async (req, res) => {
 
         .contact-section {
             display: flex;
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;
             border-top: none;
         }
 
@@ -312,7 +309,7 @@ router.get("/invoice-pdf", async (req, res) => {
             padding: 8px;
             font-size: 10px;
             line-height: 1.6;
-            border-right: 1px solid #000;
+            border-right: 0.5px solid #00000061;
         }
 
         .empty-section {
@@ -323,7 +320,7 @@ router.get("/invoice-pdf", async (req, res) => {
         .invoice-table {
             width: 100%;
             border-collapse: collapse;
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;
             border-top: none;
             font-size: 10px;
             height: 300px;
@@ -332,14 +329,14 @@ router.get("/invoice-pdf", async (req, res) => {
         .invoice-table th {
             background: #f5f5f5;
             padding: 6px 4px;
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;
             text-align: center;
             font-weight: bold;
         }
 
         .invoice-table td {
             padding: 6px 4px;
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;
             vertical-align: top;
         }
 
@@ -400,7 +397,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .amount-words {
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;
             border-top: none;
             padding: 6px 8px;
             font-size: 10px;
@@ -414,14 +411,14 @@ router.get("/invoice-pdf", async (req, res) => {
         .hsn-table {
             width: 100%;
             border-collapse: collapse;
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;
             border-top: none;
             font-size: 9px;
         }
 
         .hsn-table th, .hsn-table td {
             padding: 4px;
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;
             text-align: center;
         }
 
@@ -430,7 +427,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .tax-words {
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;
             border-top: none;
             padding: 6px 8px;
             font-size: 10px;
@@ -439,7 +436,7 @@ router.get("/invoice-pdf", async (req, res) => {
         /* Footer Section */
         .footer-section {
             display: flex;
-            border: 1px solid #000;
+            border: 0.5px solid #00000061;
             border-top: none;
             font-size: 10px;
         }
@@ -447,7 +444,8 @@ router.get("/invoice-pdf", async (req, res) => {
         .footer-left {
             width: 50%;
             padding: 8px;
-            /* border-right: 1px solid #000; */
+                margin-top: 80px;
+            /* border-right: 0.5px solid #00000061; */
         }
 
         .footer-right {
@@ -457,7 +455,7 @@ router.get("/invoice-pdf", async (req, res) => {
 
         .bank-details {
             padding: 8px;
-            margin-bottom: 10px;
+            margin-bottom: -36px;
         }
 
         .bank-details table {
@@ -482,7 +480,9 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .signature-area {
-            border: 1px solid #000;
+              border-bottom: none;
+    border-top: 0.5px solid #00000061;
+    border-left: 0.5px solid #00000061;
             text-align: right;
             margin-top: 30px;
             padding: 8px;
@@ -497,7 +497,7 @@ router.get("/invoice-pdf", async (req, res) => {
         .computer-generated {
             text-align: center;
             padding: 8px;
-            border: 1px solid #000;
+            /* border: 0.5px solid #00000061; */
             border-top: none;
             font-size: 10px;
             font-style: italic;
@@ -533,17 +533,27 @@ router.get("/invoice-pdf", async (req, res) => {
             </div>
             <div class="logo-order-section">
                 <div class="logo-area">
-  <div class="logo">
-    
-    <img src="https://crmbackend-ozmq.onrender.com/assets/erplogo.jpeg" alt="ERPWALE Logo" class="logo-img" />
-
-    <div>
-      <div class="logo-text">ERPWALE</div>
-      <div class="logo-subtext">PRIVATE LIMITED</div>
-    </div>
-
-  </div>
-</div>
+                    <div class="logo">
+                        <svg width="60" height="60" viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="cubeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#1a237e"/>
+                                    <stop offset="100%" style="stop-color:#5c6bc0"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Top face -->
+                            <polygon points="50,10 90,30 50,50 10,30" fill="#7986cb"/>
+                            <!-- Left face -->
+                            <polygon points="10,30 50,50 50,90 10,70" fill="#3949ab"/>
+                            <!-- Right face -->
+                            <polygon points="50,50 90,30 90,70 50,90" fill="#1a237e"/>
+                        </svg>
+                        <div>
+                            <div class="logo-text">ERPWALE</div>
+                            <div class="logo-subtext">PRIVATE LIMITED</div>
+                        </div>
+                    </div>
+                </div>
                 <div class="order-details">
                     <div>Sales Order Number
 
@@ -753,6 +763,7 @@ router.get("/invoice-pdf", async (req, res) => {
     </div>
 </body>
 </html>
+
 
 
     `;
