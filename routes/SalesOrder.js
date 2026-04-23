@@ -596,14 +596,14 @@ router.get("/invoice-pdf", async (req, res) => {
                         <strong>DECCAN WATER TREATMENT PVT LTD</strong><br>
                         S.No.32, Behind Relax Hotel, Near Hari, Om Seri, Old<br>
                         Kharadi-Mundhwa Road, Pune, Vadgaon Sheri<br>
-                        GSTIN/UIN&nbsp;&nbsp;&nbsp;&nbsp;: 27AABCD9828K1Z7<br>
-                        State Name&nbsp;&nbsp;: Maharashtra, Code : 27<br>
+                        GSTIN/UIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 27AABCD9828K1Z7<br>
+                        State Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Maharashtra, Code : 27<br>
                         Place of Supply : Maharashtra
                        
                     <div style="margin-top: 10px;">
                         Contact person&nbsp;&nbsp;&nbsp;: <strong>SHARAD MORE</strong><br>
-                        Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +91-8600141872<br>
-                        E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: deccan_watersaccount@yahoo.com
+                        Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +91-8600141872<br>
+                        E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: deccan_watersaccount@yahoo.com
                     </div>
                     </div>
                 
@@ -765,6 +765,7 @@ router.get("/invoice-pdf", async (req, res) => {
     </div>
 </body>
 </html>
+
 
 
 
