@@ -310,22 +310,41 @@ router.post("/send-mail", async (req, res) => {
 
     const pdfLink = `https://crmbackend-ozmq.onrender.com/api/Proposel/proposal/${proposalId}`;
 
+    // ✅ CONVERT STRING → ARRAY
+    const toArray = typeof to === "string"
+      ? to.split(",").map(e => e.trim()).filter(Boolean)
+      : Array.isArray(to) ? to : [];
+
+    const ccArray = typeof cc === "string"
+      ? cc.split(",").map(e => e.trim()).filter(Boolean)
+      : Array.isArray(cc) ? cc : [];
+
     try {
       await transporter.sendMail({
-        from: process.env.EMAIL,
+        from: `"Your Company" <${process.env.EMAIL}>`,
         replyTo: proposal.email,
 
-        // ✅ SAFE handling
-        to: Array.isArray(to) ? to.join(",") : to,
+        // ✅ JOIN BACK
+        to: toArray.join(","),
 
-        // ✅ ADD THIS (you missed cc)
-        cc: Array.isArray(cc) ? cc.join(",") : cc,
+        // ✅ OPTIONAL
+        cc: ccArray.length ? ccArray.join(",") : undefined,
 
         subject,
+
+        // ✅ ADD TEXT VERSION (reduces spam)
+        text: content.replace(/<[^>]+>/g, ""),
+
         html: `
-          ${content}
-          <br/><br/>
-          👉 <a href="${pdfLink}" target="_blank">View Proposal</a>
+          <p>Hello,</p>
+          <p>${content}</p>
+          <p>
+            <a href="${pdfLink}" target="_blank">
+              View Proposal
+            </a>
+          </p>
+          <br/>
+          <p>Regards,<br/>Your Company</p>
         `,
       });
 
