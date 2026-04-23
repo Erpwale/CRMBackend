@@ -207,7 +207,7 @@ router.get("/invoice-pdf", async (req, res) => {
             justify-content: center;
             align-items: center;
             padding: 10px;
-            border-bottom: 0.5px solid #00000061;
+            /* border-bottom: 0.5px solid #00000061; */
             min-height: 119px;
         }
 
@@ -257,6 +257,7 @@ router.get("/invoice-pdf", async (req, res) => {
         .buyer-section {
             border: 0.5px solid #00000061;
             border-top: none;
+            border-bottom: none;
         }
 
         .buyer-header {
@@ -399,6 +400,7 @@ router.get("/invoice-pdf", async (req, res) => {
         .amount-words {
             border: 0.5px solid #00000061;
             border-top: none;
+            border-bottom: none;
             padding: 6px 8px;
             font-size: 10px;
         }
@@ -763,6 +765,7 @@ router.get("/invoice-pdf", async (req, res) => {
     </div>
 </body>
 </html>
+
 
 
 

@@ -321,7 +321,7 @@ router.post("/send-mail", async (req, res) => {
 
     try {
       await transporter.sendMail({
-        from: `"Your Company" <${process.env.EMAIL}>`,
+        from: `"ERPWALE" <${process.env.EMAIL}>`,
         replyTo: proposal.email,
 
         // ✅ JOIN BACK
