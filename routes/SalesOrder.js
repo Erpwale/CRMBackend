@@ -296,7 +296,7 @@ router.get("/invoice-pdf", async (req, res) => {
         .purchase-order > div {
             padding: 5px 8px;
             border-bottom: 0.5px solid #00000061;
-            font-size: 10px;
+            font-size: 13px;
         }
 
         .purchase-order > div:last-child {
@@ -327,7 +327,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border-collapse: collapse;
             border: 0.5px solid #00000061;
             border-top: none;
-            font-size: 10px;
+            font-size: 13px;
             height: 300px;
         }
 
@@ -379,7 +379,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .item-sub {
-            font-size:11px;
+            font-size:13px;
             color: #333;
             font-style: italic;
         }
@@ -398,7 +398,7 @@ router.get("/invoice-pdf", async (req, res) => {
         .grand-total {
             background: #ffffcc;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .amount-words {
@@ -406,7 +406,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border-top: none;
             border-bottom: none;
             padding: 6px 8px;
-            font-size: 10px;
+            font-size: 13px;
         }
 
         .amount-words strong {
@@ -419,7 +419,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border-collapse: collapse;
             border: 0.5px solid #00000061;
             border-top: none;
-            font-size: 11px;
+            font-size: 13px;
         }
 
         .hsn-table th, .hsn-table td {
@@ -445,7 +445,7 @@ router.get("/invoice-pdf", async (req, res) => {
             display: flex;
             border: 0.5px solid #00000061;
             border-top: none;
-            font-size: 10px;
+            font-size: 13px;
         }
 
         .footer-left {
@@ -498,7 +498,7 @@ router.get("/invoice-pdf", async (req, res) => {
 
         .auth-signatory {
             margin-top: 40px;
-            font-size: 10px;
+            font-size: 13px;
         }
 
         .computer-generated {
