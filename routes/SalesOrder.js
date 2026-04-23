@@ -144,7 +144,8 @@ router.get("/business-lines", async (req, res) => {
 router.get("/invoice-pdf", async (req, res) => {
   try {
       const { ordid } = req.query;
-
+    console.log({ordid});
+    
     const order = await SalesOrder.findOne({ ordid });
     console.log(order);
      if (!order) {
