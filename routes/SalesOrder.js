@@ -140,7 +140,7 @@ router.get("/business-lines", async (req, res) => {
 router.get("/invoice-pdf", async (req, res) => {
   try {
     const html = `
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -174,13 +174,14 @@ router.get("/invoice-pdf", async (req, res) => {
             font-size: 16px;
             font-weight: bold;
             padding: 8px;
-           
+            /* border: 1px solid #000; */
             border-bottom: none;
         }
 
         .header-section {
             display: flex;
             border: 1px solid #000;
+            height: 120px;
         }
 
         .company-info {
@@ -207,7 +208,7 @@ router.get("/invoice-pdf", async (req, res) => {
             align-items: center;
             padding: 10px;
             border-bottom: 1px solid #000;
-            min-height: 80px;
+            min-height: 119px;
         }
 
         .logo {
@@ -253,7 +254,7 @@ router.get("/invoice-pdf", async (req, res) => {
 
         .order-details > div:last-child,
         .order-details > div:nth-last-child(2) {
-            border-bottom: none;
+            /* border-bottom: none; */
         }
 
         .buyer-section {
@@ -261,7 +262,14 @@ router.get("/invoice-pdf", async (req, res) => {
             border-top: none;
         }
 
-      
+        .buyer-header {
+            /* background: #f5f5f5; */
+            padding: 1px 5px;
+            font-weight: bold;
+            font-size: 10px;
+            
+            /* border-bottom: 1px solid #000; */
+        }
 
         .buyer-content {
             display: flex;
@@ -318,6 +326,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border: 1px solid #000;
             border-top: none;
             font-size: 10px;
+            height: 500px;
         }
 
         .invoice-table th {
@@ -340,7 +349,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .invoice-table .description {
-            width: 200px;
+            width: 370px;
         }
 
         .invoice-table .qty {
@@ -381,6 +390,7 @@ router.get("/invoice-pdf", async (req, res) => {
         .total-row {
             background: #f5f5f5;
             font-weight: bold;
+            height: 1px;
         }
 
         .grand-total {
@@ -437,15 +447,16 @@ router.get("/invoice-pdf", async (req, res) => {
         .footer-left {
             width: 50%;
             padding: 8px;
-            border-right: 1px solid #000;
+            /* border-right: 1px solid #000; */
         }
 
         .footer-right {
             width: 50%;
-            padding: 8px;
+            /* padding: 8px; */
         }
 
         .bank-details {
+            padding: 8px;
             margin-bottom: 10px;
         }
 
@@ -471,8 +482,10 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .signature-area {
+            border: 1px solid #000;
             text-align: right;
             margin-top: 30px;
+            padding: 8px;
             font-weight: bold;
         }
 
@@ -520,213 +533,227 @@ router.get("/invoice-pdf", async (req, res) => {
             </div>
             <div class="logo-order-section">
                 <div class="logo-area">
-                    <div class="logo">
-                        <svg width="60" height="60" viewBox="0 0 100 100">
-                            <defs>
-                                <linearGradient id="cubeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#1a237e"/>
-                                    <stop offset="100%" style="stop-color:#5c6bc0"/>
-                                </linearGradient>
-                            </defs>
-                            <!-- Top face -->
-                            <polygon points="50,10 90,30 50,50 10,30" fill="#7986cb"/>
-                            <!-- Left face -->
-                            <polygon points="10,30 50,50 50,90 10,70" fill="#3949ab"/>
-                            <!-- Right face -->
-                            <polygon points="50,50 90,30 90,70 50,90" fill="#1a237e"/>
-                        </svg>
-                        <div>
-                            <div class="logo-text">ERPWALE</div>
-                            <div class="logo-subtext">PRIVATE LIMITED</div>
+  <div class="logo">
+    
+    <img src="/assets/erplogo.jpeg" alt="ERPWALE Logo" class="logo-img" />
+
+    <div>
+      <div class="logo-text">ERPWALE</div>
+      <div class="logo-subtext">PRIVATE LIMITED</div>
+    </div>
+
+  </div>
+</div>
+                <div class="order-details">
+                    <div>Sales Order Number
+
+                        <div><strong>SO/ERP/26-27/001</strong></div>
+                    </div>
+                    <div>Dated
+
+                        <div><strong>20-Apr-26</strong></div>
+                    </div>
+                    
+                    
+                    <div>Reference No. & Date.  
+                        <div>&nbsp;</div>
+                    </div>
+                    <div>Other References
+                       <div>&nbsp;</div>
+                    </div>
+                   <div>Buyer's Purchase Order No.
+                        <div>&nbsp;</div>
+                    
+                   </div>
+                   
+                    
+                    <div>Dated.
+
+                            <div>&nbsp;</div>
+                    </div>
+                    
+                    
+                </div>
+                </div>
+            </div>
+            <div class="buyer-section">
+                
+                <div class="buyer-content">
+                    <div class="buyer-info">
+                        <div> <strong>Bill To</strong></div>
+                        <strong>DECCAN WATER TREATMENT PVT LTD</strong><br>
+                        S.No.32, Behind Relax Hotel, Near Hari, Om Seri, Old<br>
+                        Kharadi-Mundhwa Road, Pune, Vadgaon Sheri<br>
+                        GSTIN/UIN&nbsp;&nbsp;&nbsp;&nbsp;: 27AABCD9828K1Z7<br>
+                        State Name&nbsp;&nbsp;: Maharashtra, Code : 27<br>
+                        Place of Supply : Maharashtra
+                       
+                    <div style="margin-top: 10px;">
+                        Contact person&nbsp;&nbsp;&nbsp;: <strong>SHARAD MORE</strong><br>
+                        Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +91-8600141872<br>
+                        E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: deccan_watersaccount@yahoo.com
+                    </div>
+                    </div>
+                
+            </div>
+                </div>
+
+
+
+
+
+                <table class="invoice-table">
+                    <thead>
+                        <tr>
+                            <th class="sl-no">SI<br>No.</th>
+                            <th class="description">Description of<br>Services</th>
+                            <th class="qty">Quantity</th>
+                            <th class="rate">Rate</th>
+                            <th>per</th>
+                            <th class="disc">Disc. %</th>
+                            <th class="amount">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="sl-no">1</td>
+                            <td>
+                                <div class="item-description">Tally Software Customization</div>
+                                <div class="item-sub">Last Purchase Rate POP Up in<br>Material Out Voucher - Tally Prime 7.0</div>
+                                <br><br><br>
+                                <div style="text-align: right; padding-right: 20px;">
+                                    <strong>Output CGST 9%</strong><br>
+                                    <strong>Output SGST 9%</strong>
+                                </div>
+                            </td>
+                            <td class="qty">1 Nos</td>
+                            <td class="rate">3,600.00</td>
+                            <td style="text-align: center;">Nos
+                                 <br><br><br>
+                                    <div style="text-align: right; padding-top: 20px;">9 <br>9 </div>
+                            </td>
+                            <td class="disc">25 %
+                                <br><br><br>
+                                <div style="text-align: left; padding-top: 20px;">%<br>%</div>
+
+                            </td>
+                            <td class="amount">2,700.00<br><br><br><br><br><br><br>243.00<br>243.00</td>
+                        </tr>
+                       
+                        <tr class="total-row">
+                            <td colspan="2" style="text-align: right; padding-right: 10px;">Total</td>
+                            <td style="text-align: center;">1 Nos</td>
+                            <td colspan="3"></td>
+                            <td class="amount" style="font-size: 12px;">₹ 3,186.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+        
+                <!-- Amount in Words -->
+                <div class="amount-words">
+                    Amount Chargeable (in words)<br>
+                    <strong>INR Three Thousand One Hundred Eighty Six Only</strong>
+                    <span style="float: right;">E. & O.E</span>
+                </div>
+        
+                <!-- HSN/SAC Table -->
+                <table class="hsn-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="3">HSN/SAC</th>
+                            <th rowspan="2">Taxable<br>Value</th>
+                            <th colspan="2">CGST</th>
+                            <th colspan="2">SGST/UTGST</th>
+                            <th rowspan="2">Total<br>Tax Amount</th>
+                        </tr>
+                        <tr>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>997331</td>
+                            <td>2,700.00</td>
+                            <td>9%</td>
+                            <td>243.00</td>
+                            <td>9%</td>
+                            <td>243.00</td>
+                            <td>486.00</td>
+                        </tr>
+                        <tr style="font-weight: bold;">
+                            <td>Total</td>
+                            <td>2,700.00</td>
+                            <td></td>
+                            <td>243.00</td>
+                            <td></td>
+                            <td>243.00</td>
+                            <td>486.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+        
+                <!-- Tax Amount in Words -->
+                <div class="tax-words">
+                    Tax Amount (in words) : <strong>INR Four Hundred Eighty Six Only</strong>
+                </div>
+        
+                <!-- Footer Section -->
+                <div class="footer-section">
+                    <div class="footer-left">
+                        <div style="margin-bottom: 15px;">
+                            Company's PAN&nbsp;&nbsp;&nbsp;&nbsp;: <strong>AATCM3926B</strong>
+                        </div>
+                        <div class="declaration">
+                            <strong>Declaration</strong><br>
+                            We declare that this invoice shows the actual price of the<br>
+                            goods described and that all particulars are true and correct.
+                        </div>
+                    </div>
+                    <div class="footer-right">
+                        <div class="bank-details">
+                            <strong>Company's Bank Details</strong>
+                            <table>
+                                <tr>
+                                    <td>Bank Name</td>
+                                    <td>: <strong>SBI Bank</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>A/c No.</td>
+                                    <td>: 44294074252</td>
+                                </tr>
+                                <tr>
+                                    <td>Branch & IFS Code</td>
+                                    <td>: Mveda Solapur & SBIN0007156</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="signature-area">
+                            for MS ERPWALE PVT. LTD.
+                            <div class="auth-signatory">Authorised Signatory</div>
                         </div>
                     </div>
                 </div>
-                <div class="order-details">
-                    <div>Sales Order Number</div>
-                    <div>Dated</div>
-                    <div><strong>SO/ERP/26-27/001</strong></div>
-                    <div><strong>20-Apr-26</strong></div>
-                    <div>Reference No. & Date.</div>
-                    <div>Other References</div>
-                    <div></div>
-                    <div></div>
+        
+                <!-- Computer Generated -->
+                <div class="computer-generated">
+                    This is a Computer Generated Invoice
                 </div>
             </div>
+    
+            <!-- Contact Section -->
+           
+    
+            <!-- Invoice Table -->
         </div>
 
         <!-- Buyer Section -->
-        <div class="buyer-section">
-            <div class="buyer-header">Buyer (Bill to)</div>
-            <div class="buyer-content">
-                <div class="buyer-info">
-                    <strong>DECCAN WATER TREATMENT PVT LTD</strong><br>
-                    S.No.32, Behind Relax Hotel, Near Hari, Om Seri, Old<br>
-                    Kharadi-Mundhwa Road, Pune, Vadgaon Sheri<br>
-                    GSTIN/UIN&nbsp;&nbsp;&nbsp;&nbsp;: 27AABCD9828K1Z7<br>
-                    State Name&nbsp;&nbsp;: Maharashtra, Code : 27<br>
-                    Place of Supply : Maharashtra
-                </div>
-                <div class="purchase-order">
-                    <div>Buyer's Purchase Order No.</div>
-                    <div>Dated</div>
-                    <div>&nbsp;</div>
-                    <div>&nbsp;</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contact Section -->
-        <div class="contact-section">
-            <div class="contact-info">
-                Contact person&nbsp;&nbsp;&nbsp;: <strong>SHARAD MORE</strong><br>
-                Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +91-8600141872<br>
-                E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: deccan_watersaccount@yahoo.com
-            </div>
-            <div class="empty-section"></div>
-        </div>
-
-        <!-- Invoice Table -->
-        <table class="invoice-table">
-            <thead>
-                <tr>
-                    <th class="sl-no">SI<br>No.</th>
-                    <th class="description">Description of<br>Services</th>
-                    <th class="qty">Quantity</th>
-                    <th class="rate">Rate</th>
-                    <th>per</th>
-                    <th class="disc">Disc. %</th>
-                    <th class="amount">Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="sl-no">1</td>
-                    <td>
-                        <div class="item-description">Tally Software Customization</div>
-                        <div class="item-sub">Last Purchase Rate POP Up in<br>Material Out Voucher - Tally Prime 7.0</div>
-                        <br><br><br>
-                        <div style="text-align: right; padding-right: 20px;">
-                            <strong>Output CGST 9%</strong><br>
-                            <strong>Output SGST 9%</strong>
-                        </div>
-                    </td>
-                    <td class="qty">1 Nos</td>
-                    <td class="rate">3,600.00</td>
-                    <td style="text-align: center;">Nos</td>
-                    <td class="disc">25 %</td>
-                    <td class="amount">2,700.00<br><br><br><br><br><br><br>243.00<br>243.00</td>
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2" style="text-align: center;">9 %<br>9 %</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr class="total-row">
-                    <td colspan="2" style="text-align: right; padding-right: 10px;">Total</td>
-                    <td style="text-align: center;">1 Nos</td>
-                    <td colspan="3"></td>
-                    <td class="amount" style="font-size: 12px;">₹ 3,186.00</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Amount in Words -->
-        <div class="amount-words">
-            Amount Chargeable (in words)<br>
-            <strong>INR Three Thousand One Hundred Eighty Six Only</strong>
-            <span style="float: right;">E. & O.E</span>
-        </div>
-
-        <!-- HSN/SAC Table -->
-        <table class="hsn-table">
-            <thead>
-                <tr>
-                    <th rowspan="2">HSN/SAC</th>
-                    <th rowspan="2">Taxable<br>Value</th>
-                    <th colspan="2">CGST</th>
-                    <th colspan="2">SGST/UTGST</th>
-                    <th rowspan="2">Total<br>Tax Amount</th>
-                </tr>
-                <tr>
-                    <th>Rate</th>
-                    <th>Amount</th>
-                    <th>Rate</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>997331</td>
-                    <td>2,700.00</td>
-                    <td>9%</td>
-                    <td>243.00</td>
-                    <td>9%</td>
-                    <td>243.00</td>
-                    <td>486.00</td>
-                </tr>
-                <tr style="font-weight: bold;">
-                    <td>Total</td>
-                    <td>2,700.00</td>
-                    <td></td>
-                    <td>243.00</td>
-                    <td></td>
-                    <td>243.00</td>
-                    <td>486.00</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Tax Amount in Words -->
-        <div class="tax-words">
-            Tax Amount (in words) : <strong>INR Four Hundred Eighty Six Only</strong>
-        </div>
-
-        <!-- Footer Section -->
-        <div class="footer-section">
-            <div class="footer-left">
-                <div style="margin-bottom: 15px;">
-                    Company's PAN&nbsp;&nbsp;&nbsp;&nbsp;: <strong>AATCM3926B</strong>
-                </div>
-                <div class="declaration">
-                    <strong>Declaration</strong><br>
-                    We declare that this invoice shows the actual price of the<br>
-                    goods described and that all particulars are true and correct.
-                </div>
-            </div>
-            <div class="footer-right">
-                <div class="bank-details">
-                    <strong>Company's Bank Details</strong>
-                    <table>
-                        <tr>
-                            <td>Bank Name</td>
-                            <td>: <strong>SBI Bank</strong></td>
-                        </tr>
-                        <tr>
-                            <td>A/c No.</td>
-                            <td>: 44294074252</td>
-                        </tr>
-                        <tr>
-                            <td>Branch & IFS Code</td>
-                            <td>: Mveda Solapur & SBIN0007156</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="signature-area">
-                    for MS ERPWALE PVT. LTD.
-                    <div class="auth-signatory">Authorised Signatory</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Computer Generated -->
-        <div class="computer-generated">
-            This is a Computer Generated Invoice
-        </div>
     </div>
 </body>
 </html>
+
 
     `;
 
