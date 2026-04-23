@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const SalesOrder = require("../models/SalesOrder.js")
 const opp = require("../models/Proposal"); // import model
+const generatePDF = require("../utils/generateInvoice.js");
 /* ✅ VALIDATION FUNCTION */
 
 const validate = (body) => {
