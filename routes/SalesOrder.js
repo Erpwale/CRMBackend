@@ -128,7 +128,16 @@ router.get("/", async (req, res) => {
   }
 });
 
+function formatAddress(address, wordsPerLine = 8) {
+  const words = address.split(" ");
+  let result = [];
 
+  for (let i = 0; i < words.length; i += wordsPerLine) {
+    result.push(words.slice(i, i + wordsPerLine).join(" "));
+  }
+
+  return result.join("<br>");
+}
 router.get("/business-lines", async (req, res) => {
   try {
     const lines = await SalesOrder.distinct("businessLine");
@@ -151,7 +160,9 @@ router.get("/invoice-pdf", async (req, res) => {
      if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+    const formattedAddress = formatAddress(order.address);
     const html=`
+    
     <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -566,7 +577,7 @@ router.get("/invoice-pdf", async (req, res) => {
                 <div class="order-details">
                     <div>Sales Order Number
 
-                        <div><strong>SO/ERP/26-27/001</strong></div>
+                        <div><strong>${order.orderNo}</strong></div>
                     </div>
                     <div>Dated
 
@@ -600,10 +611,9 @@ router.get("/invoice-pdf", async (req, res) => {
                 <div class="buyer-content">
                     <div class="buyer-info">
                         <div>Buyer (Bill to)</div>
-                        <strong>DECCAN WATER TREATMENT PVT LTD</strong><br>
-                        S.No.32, Behind Relax Hotel, Near Hari, Om Seri, Old<br>
-                        Kharadi-Mundhwa Road, Pune, Vadgaon Sheri<br>
-                        GSTIN/UIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 27AABCD9828K1Z7<br>
+                        <strong>${order.partyName}</strong><br>
+                       ${formattedAddress}<br>
+                        GSTIN/UIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:${order.gstin}<br>
                         State Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Maharashtra, Code : 27<br>
                         Place of Supply : Maharashtra
                        
@@ -635,41 +645,49 @@ router.get("/invoice-pdf", async (req, res) => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="sl-no">1</td>
-                            <td>
-                                <div class="item-description">Tally Software Customization</div>
-                                <div class="item-sub">Last Purchase Rate POP Up in<br>Material Out Voucher - Tally Prime 7.0</div>
+
+                    ${order.items.map((item, i) => `
+              <tr>
+               <td>${i + 1}</td>
+               <td>
+                                <div class="item-description">${item.name}</div>
+                                <div class="item-sub">${item.description}</div>
                                 <br><br><br>
                                 <div style="text-align: right; padding-right: 20px;">
                                     <strong>Output CGST 9%</strong><br>
                                     <strong>Output SGST 9%</strong>
                                 </div>
                             </td>
-                            <td class="hsn">986532</td>
-                            <td class="qty">1 Nos</td>
-                            <td class="rate">3,600.00</td>
-                            <td style="text-align: center;">Nos
+               
+                <td class="hsn">986532</td>
+                <td>${item.qty}</td>
+                <td>${item.rate}</td>
+                 <td style="text-align: center;">Nos
                                  <br><br><br><br><br>
                                     <div style="text-align: right; padding-top: 20px;">9 <br>9 </div>
                             </td>
-                            <td class="disc">25 %
+                            <td class="disc">${item.discount}
                                 <br><br><br><br><br>
                                 <div style="text-align: left; padding-top: 20px;">%<br>%</div>
 
                             </td>
-                            <td class="amount">2,700.00<br><br><br><br><br><strong>243.00</strong><br><strong>243.00</strong></td>
-                        </tr>
+                  <td class="amount">2,700.00<br><br><br><br><br><strong>243.00</strong><br><strong>243.00</strong></td>
+
+              </tr>
+            `).join("")}
+
+
+                      
                        
                         <tr class="total-row">
                             <td>    </td>
                             <td colspan="1" style="text-align: right; padding-right: 10px;">Total</td>
                             <td></td>
-                            <td style="text-align: center;">1 Nos</td>
+                            <td style="text-align: center;">${order.qty}Nos</td>
                             <td ></td>
                             <td ></td>
                             <td></td>
-                            <td class="amount" style="font-size: 12px;">₹ 3,186.00</td>
+                            <td class="amount" style="font-size: 12px;">₹ ${order.grossTotal}</td>
                         </tr>
                     </tbody>
                 </table>
