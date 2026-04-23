@@ -146,7 +146,7 @@ router.get("/invoice-pdf", async (req, res) => {
       const { ordid } = req.query;
     console.log({ordid});
     
-    const order = await SalesOrder.findOne({ ordid });
+   const order = await SalesOrder.findOne({ orderNo: ordid });
     console.log(order);
      if (!order) {
       return res.status(404).json({ message: "Order not found" });
