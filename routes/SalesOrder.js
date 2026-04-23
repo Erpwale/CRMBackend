@@ -141,6 +141,13 @@ router.get("/business-lines", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+
+
+
+
+
+
 router.get("/invoice-pdf", async (req, res) => {
   try {
       const { ordid } = req.query;
@@ -603,7 +610,7 @@ router.get("/invoice-pdf", async (req, res) => {
                     <div class="buyer-info">
                         <div>Buyer (Bill to)</div>
                         <strong>${order.partyName}</strong><br>
-                       ${formattedAddress}<br>
+                       ${order.address}<br>
                         GSTIN/UIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:${order.gstin}<br>
                         State Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Maharashtra, Code : 27<br>
                         Place of Supply : Maharashtra
