@@ -174,7 +174,7 @@ router.get("/invoice-pdf", async (req, res) => {
             font-size: 16px;
             font-weight: bold;
             padding: 8px;
-            border: 1px solid #000;
+           
             border-bottom: none;
         }
 
@@ -261,13 +261,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border-top: none;
         }
 
-        .buyer-header {
-            background: #f5f5f5;
-            padding: 3px 8px;
-            font-weight: bold;
-            font-size: 10px;
-            border-bottom: 1px solid #000;
-        }
+      
 
         .buyer-content {
             display: flex;
