@@ -136,75 +136,6 @@ router.get("/business-lines", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-/* ========================= */
-/* ✅ GET ONE */
-/* ========================= */
-
-router.get("/:id", async (req, res) => {
-  try {
-    const data = await SalesOrder.findById(req.params.id);
-
-    if (!data) {
-      return res.status(404).json({ message: "Not found" });
-    }
-
-    res.json({ success: true, data });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-/* ========================= */
-/* ✅ UPDATE */
-/* ========================= */
-
-router.put("/:id", async (req, res) => {
-  try {
-    const error = validate(req.body);
-    if (error) return res.status(400).json({ message: error });
-
-    const updated = await SalesOrder.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-
-    if (!updated) {
-      return res.status(404).json({ message: "Not found" });
-    }
-
-    res.json({
-      success: true,
-      message: "Updated",
-      data: updated
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-/* ========================= */
-/* ✅ DELETE */
-/* ========================= */
-
-router.delete("/:id", async (req, res) => {
-  try {
-    const deleted = await SalesOrder.findByIdAndDelete(req.params.id);
-
-    if (!deleted) {
-      return res.status(404).json({ message: "Not found" });
-    }
-
-    res.json({
-      success: true,
-      message: "Deleted"
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
 router.get("/invoice-pdf", async (req, res) => {
   try {
     const html = `
@@ -450,5 +381,75 @@ router.get("/invoice-pdf", async (req, res) => {
     res.status(500).send("Error generating PDF");
   }
 });
+
+/* ========================= */
+/* ✅ GET ONE */
+/* ========================= */
+
+router.get("/:id", async (req, res) => {
+  try {
+    const data = await SalesOrder.findById(req.params.id);
+
+    if (!data) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/* ========================= */
+/* ✅ UPDATE */
+/* ========================= */
+
+router.put("/:id", async (req, res) => {
+  try {
+    const error = validate(req.body);
+    if (error) return res.status(400).json({ message: error });
+
+    const updated = await SalesOrder.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    res.json({
+      success: true,
+      message: "Updated",
+      data: updated
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/* ========================= */
+/* ✅ DELETE */
+/* ========================= */
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const deleted = await SalesOrder.findByIdAndDelete(req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    res.json({
+      success: true,
+      message: "Deleted"
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
 
 module.exports = router;
