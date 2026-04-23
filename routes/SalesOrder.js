@@ -192,12 +192,12 @@ router.get("/invoice-pdf", async (req, res) => {
             width: 50%;
             padding: 8px;
             border-right: 0.5px solid #00000061;
-            font-size: 10px;
+            font-size: 11px;
             line-height: 1.4;
         }
 
         .company-info strong {
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .logo-order-section {
@@ -280,13 +280,13 @@ router.get("/invoice-pdf", async (req, res) => {
         .buyer-info {
             width: 50%;
             padding: 8px;
-            font-size: 10px;
+            font-size: 11px;
             line-height: 1.5;
             border-right: 0.5px solid #00000061;
         }
 
         .buyer-info strong {
-            font-size: 11px;
+            font-size: 13px;
         }
 
         .purchase-order {
@@ -419,7 +419,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border-collapse: collapse;
             border: 0.5px solid #00000061;
             border-top: none;
-            font-size: 9px;
+            font-size: 11px;
         }
 
         .hsn-table th, .hsn-table td {
@@ -435,8 +435,9 @@ router.get("/invoice-pdf", async (req, res) => {
         .tax-words {
             border: 0.5px solid #00000061;
             border-top: none;
+            border-bottom: none;
             padding: 6px 8px;
-            font-size: 10px;
+            font-size: 12px;
         }
 
         /* Footer Section */
@@ -539,7 +540,7 @@ router.get("/invoice-pdf", async (req, res) => {
             </div>
             <div class="logo-order-section">
                 <div class="logo-area">
-                   <div class="logo">
+                  <div class="logo">
   <img src="data:image/png;base64,${logoBase64}" width="260" />
  
 </div>
@@ -578,7 +579,7 @@ router.get("/invoice-pdf", async (req, res) => {
             </div>
             <div class="buyer-section">
                 
-               <div class="buyer-content">
+                <div class="buyer-content">
                     <div class="buyer-info">
                         <div> <strong>Bill To</strong></div>
                         <strong>DECCAN WATER TREATMENT PVT LTD</strong><br>
@@ -589,7 +590,7 @@ router.get("/invoice-pdf", async (req, res) => {
                         Place of Supply : Maharashtra
                        
                     <div style="margin-top: 10px;">
-                        Contact person&nbsp;&nbsp;&nbsp;: <strong>SHARAD MORE</strong><br>
+                        Contact person&nbsp;&nbsp;&nbsp;: SHARAD MORE<br>
                         Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +91-8600141872<br>
                         E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: deccan_watersaccount@yahoo.com
                     </div>
@@ -637,12 +638,11 @@ router.get("/invoice-pdf", async (req, res) => {
                                 <div style="text-align: left; padding-top: 20px;">%<br>%</div>
 
                             </td>
-                            <td class="amount">2,700.00<br><br><br><br><br><br><br>243.00<br>243.00</td>
+                            <td class="amount">2,700.00<br><br><br><br><br><strong>243.00</strong><br><strong>243.00</strong></td>
                         </tr>
                        
                         <tr class="total-row">
-                            <td class="amount">2,700.00<br><br><br><br><br><strong>243.00</strong><br><strong>243.00</strong></td>
-
+                            <td colspan="2" style="text-align: right; padding-right: 10px;">Total</td>
                             <td style="text-align: center;">1 Nos</td>
                             <td colspan="3"></td>
                             <td class="amount" style="font-size: 12px;">₹ 3,186.00</td>
@@ -754,6 +754,7 @@ router.get("/invoice-pdf", async (req, res) => {
     </div>
 </body>
 </html>
+
 
 
 
