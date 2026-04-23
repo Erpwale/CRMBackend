@@ -189,11 +189,11 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .company-info {
-               width: 50%;
-    padding: 6px;
-    border-right: 0.5px solid #00000061;
-    font-size: 14px;
-    line-height: 1.1;
+            width: 50%;
+            padding: 8px;
+            border-right: 0.5px solid #00000061;
+            font-size: 14px;
+            line-height: 1;
         }
 
         .company-info strong {
@@ -244,7 +244,7 @@ router.get("/invoice-pdf", async (req, res) => {
         .order-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            font-size: 10px;
+            font-size: 12px;
         }
 
         .order-details > div {
@@ -278,11 +278,11 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .buyer-info {
-    width: 50%;
-    padding: 1px;
-    font-size: 14px;
-    line-height: 1.1;
-    border-right: 0.5px solid #00000061;
+            width: 50%;
+            padding: 8px;
+           font-size: 14px;
+            line-height: 1;
+            border-right: 0.5px solid #00000061;
         }
 
         .buyer-info strong {
@@ -296,7 +296,7 @@ router.get("/invoice-pdf", async (req, res) => {
         .purchase-order > div {
             padding: 5px 8px;
             border-bottom: 0.5px solid #00000061;
-            font-size: 13px;
+            font-size: 10px;
         }
 
         .purchase-order > div:last-child {
@@ -327,7 +327,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border-collapse: collapse;
             border: 0.5px solid #00000061;
             border-top: none;
-            font-size: 13px;
+            font-size: 11px;
             height: 300px;
         }
 
@@ -379,7 +379,7 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .item-sub {
-            font-size:13px;
+            font-size:11px;
             color: #333;
             font-style: italic;
         }
@@ -398,7 +398,7 @@ router.get("/invoice-pdf", async (req, res) => {
         .grand-total {
             background: #ffffcc;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .amount-words {
@@ -406,7 +406,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border-top: none;
             border-bottom: none;
             padding: 6px 8px;
-            font-size: 13px;
+            font-size: 10px;
         }
 
         .amount-words strong {
@@ -419,7 +419,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border-collapse: collapse;
             border: 0.5px solid #00000061;
             border-top: none;
-            font-size: 13px;
+            font-size: 11px;
         }
 
         .hsn-table th, .hsn-table td {
@@ -445,7 +445,7 @@ router.get("/invoice-pdf", async (req, res) => {
             display: flex;
             border: 0.5px solid #00000061;
             border-top: none;
-            font-size: 13px;
+            font-size: 10px;
         }
 
         .footer-left {
@@ -474,11 +474,11 @@ router.get("/invoice-pdf", async (req, res) => {
         }
 
         .bank-details td:first-child {
-            width: 100px;
+            width: 110px;
         }
 
         .declaration {
-            font-size: 9px;
+            font-size: 11px;
             margin-top: 10px;
         }
 
@@ -498,7 +498,7 @@ router.get("/invoice-pdf", async (req, res) => {
 
         .auth-signatory {
             margin-top: 40px;
-            font-size: 13px;
+            font-size: 10px;
         }
 
         .computer-generated {
@@ -646,12 +646,12 @@ router.get("/invoice-pdf", async (req, res) => {
                         <tr class="total-row">
                             <td>    </td>
                             <td colspan="1" style="text-align: right; padding-right: 10px;">Total</td>
+                            <td ></td>
                             <td style="text-align: center;">1 Nos</td>
                             <td ></td>
                             <td ></td>
                             <td ></td>
                             <td class="amount" style="font-size: 12px;">₹ 3,186.00</td>
-                            <td ></td>
                         </tr>
                     </tbody>
                 </table>
@@ -760,6 +760,7 @@ router.get("/invoice-pdf", async (req, res) => {
     </div>
 </body>
 </html>
+
 
 
 
