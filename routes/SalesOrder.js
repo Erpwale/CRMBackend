@@ -326,7 +326,7 @@ router.get("/invoice-pdf", async (req, res) => {
             border: 1px solid #000;
             border-top: none;
             font-size: 10px;
-            height: 500px;
+            height: 400px;
         }
 
         .invoice-table th {
@@ -535,7 +535,7 @@ router.get("/invoice-pdf", async (req, res) => {
                 <div class="logo-area">
   <div class="logo">
     
-    <img src="/assets/erplogo.jpeg" alt="ERPWALE Logo" class="logo-img" />
+    <img src="https://crmbackend-ozmq.onrender.com/assets/erplogo.jpeg" alt="ERPWALE Logo" class="logo-img" />
 
     <div>
       <div class="logo-text">ERPWALE</div>
