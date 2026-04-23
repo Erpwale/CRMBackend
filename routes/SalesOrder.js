@@ -143,7 +143,7 @@ router.get("/business-lines", async (req, res) => {
 });
 router.get("/invoice-pdf/:ordid", async (req, res) => {
   try {
-      const { ordid } = req.params;
+      const { ordid } = req.query;
 
     const order = await SalesOrder.findOne({ ordid });
     console.log(order);
