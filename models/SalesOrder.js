@@ -30,7 +30,7 @@ const productSchema = new mongoose.Schema({
     syncValue: Number,
     remoteValue: Number,
   },
-
+  hsn: Number,
   qty: Number,
   rate: Number,
 

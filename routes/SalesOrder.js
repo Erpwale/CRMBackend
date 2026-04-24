@@ -235,10 +235,14 @@ router.get("/invoice-pdf", async (req, res) => {
      if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+const total = Number(order.grossTotal);
+
 const amountInWords =
-  "INR " +
-  converter.toWords(order.grossTotal).replace(/^\w/, c => c.toUpperCase()) +
-  " Only";
+  total && !isNaN(total)
+    ? "INR " +
+      converter.toWords(total).replace(/^\w/, c => c.toUpperCase()) +
+      " Only"
+    : "INR Zero Only";
     // const formattedAddress = formatAddress(order.address);
     const html=`
     
