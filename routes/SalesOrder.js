@@ -805,7 +805,7 @@ console.log(totalQty);
                             <td>    </td>
                             <td colspan="1" style="text-align: right; padding-right: 10px;">Total</td>
                             <td></td>
-                            <td style="text-align: center;">${order.totalQty}Nos</td>
+                            <td style="text-align: center;">${totalQty}Nos</td>
                             <td ></td>
                             <td ></td>
                             <td></td>
