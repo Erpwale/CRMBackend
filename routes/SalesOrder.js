@@ -120,7 +120,7 @@ router.post("/", async (req, res) => {
 
       // 🔹 Financials (from proposal OR frontend if needed)
       discount: proposal.discount,
-      grossTotal: proposal.grossTotal,
+      grossTotal: proposal.total,
       cgstPercent: proposal.cgstPercent,
       sgstPercent: proposal.sgstPercent,
       cgst: proposal.cgst,
