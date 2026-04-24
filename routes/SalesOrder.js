@@ -877,31 +877,33 @@ console.log(totalQty);
                             goods described and that all particulars are true and correct.
                         </div>
                     </div>
-                     ${order.bankDetails `
+                 
                     <div class="footer-right">
                         <div class="bank-details">
                             <strong>Company's Bank Details</strong>
-                            <table>
-                                <tr>
-                                    <td>Bank Name</td>
-                                     <td>: <strong>${order.bankDetails.bankName}</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>A/c No.</td>
-                                    <td>: ${order.bankDetails.accountNumber}</td>
-                                </tr>
-                                <tr>
-                                    <td>Branch & IFSC</td>
-                                    <td>: ${order.bankDetails.branch} & ${order.bankDetails.ifsc}</td>
-                                </tr>
-                            </table>
+                           ${order.bankDetails ? `
+<table>
+    <tr>
+        <td>Bank Name</td>
+        <td>: <strong>${order.bankDetails.bankName}</strong></td>
+    </tr>
+    <tr>
+        <td>A/c No.</td>
+        <td>: ${order.bankDetails.accountNumber}</td>
+    </tr>
+    <tr>
+        <td>Branch & IFSC</td>
+        <td>: ${order.bankDetails.branch} & ${order.bankDetails.ifsc}</td>
+    </tr>
+</table>
+` : ''}
                         </div>
                         <div class="signature-area">
                             for MS ERPWALE PVT. LTD.
                             <div class="auth-signatory">Authorised Signatory</div>
                         </div>
                     </div>
-                </div>`}        
+                </div>    
                 <!-- Computer Generated -->
                 <div class="computer-generated">
                     This is a Computer Generated Invoice
