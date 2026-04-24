@@ -674,8 +674,8 @@ console.log(totalQty);
 
                 GSTIN/UIN &nbsp;&nbsp;&nbsp;&nbsp; :${company.gstin}<br>
                 State Name &nbsp;&nbsp;&nbsp;&nbsp;:${company.address.state}, Code : 27<br>
-                Contact &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:${company.phone}<br>
-                E-Mail &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:${company.email}
+                Contact &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;:${company.phone}<br>
+                E-Mail &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp:${company.email}
             </div>
             <div class="logo-order-section">
                 <div class="logo-area">
