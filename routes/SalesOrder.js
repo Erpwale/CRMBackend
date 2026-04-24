@@ -817,7 +817,7 @@ console.log(totalQty);
                 <!-- Amount in Words -->
                 <div class="amount-words">
                     Amount Chargeable (in words)<br>
-                    <strong>INR ${amountInWords} Only</strong>
+                    <strong>${amountInWords} </strong>
                     <span style="float: right;">E. & O.E</span>
                 </div>
         
