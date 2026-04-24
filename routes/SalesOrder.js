@@ -58,7 +58,7 @@ const validate = (body) => {
 
   return null;
 };
-
+const converter = require("number-to-words");
 /* ========================= */
 /* ✅ CREATE */
 /* ========================= */
@@ -83,13 +83,13 @@ router.post("/", async (req, res) => {
     const salesOrderData = {
       // 🔹 Proposal
       proposalId: proposal.proposalId,
-      companyName: proposal.companyName,
+      companyName: ledger.companyName,
       priceLevel: proposal.priceLevel,
       businessLine: proposal.businessLine,
       tallySerials: proposal.tallySerials,
 
       // 🔹 Ledger
-      companyId: ledger.companyId,
+    //   companyId: ledger.companyId,
 
       contactName: ledger.contactName,
       contactMobile: ledger.contactMobile,
@@ -235,6 +235,11 @@ router.get("/invoice-pdf", async (req, res) => {
      if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+
+    const amountInWords =
+  "INR " +
+  converter.toWords(order.totalValue).replace(/^\w/, c => c.toUpperCase()) +
+  " Only";
     // const formattedAddress = formatAddress(order.address);
     const html=`
     
@@ -687,15 +692,17 @@ router.get("/invoice-pdf", async (req, res) => {
                     <div class="buyer-info">
                         <div>Buyer (Bill to)</div>
                         <strong>${order.partyName}</strong><br>
-                       ${order.address}<br>
+                       ${order.address1}<br>
+                       ${order.address2}<br>
+                       ${order.address3}<br>
                         GSTIN/UIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:${order.gstin}<br>
-                        State Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Maharashtra, Code : 27<br>
+                        State Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${order.state}, Code : 27<br>
                         Place of Supply : Maharashtra
                        
                     <div style="margin-top: 10px;">
-                        Contact person&nbsp;&nbsp;&nbsp;: SHARAD MORE<br>
-                        Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: +91-8600141872<br>
-                        E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: deccan_watersaccount@yahoo.com
+                        Contact person&nbsp;&nbsp;&nbsp;: ${order.contactName}<br>
+                        Contact&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${order.contactMobile}<br>
+                        E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${order.contactEmail}
                     </div>
                     </div>
                 
@@ -722,36 +729,62 @@ router.get("/invoice-pdf", async (req, res) => {
                     <tbody>
 
 
-                    ${order.products.map((item, i) => `
-              <tr>
-               <td>${i + 1}</td>
-               <td>
-                                <div class="item-description">${item.name}</div>
-                                <div class="item-sub">${item.description}</div>
-                                <br><br><br>
-                                <div style="text-align: right; padding-right: 20px;">
-                                    <strong>Output CGST 9%</strong><br>
-                                    <strong>Output SGST 9%</strong>
-                                </div>
-                            </td>
-               
-                <td class="hsn">986532</td>
-                <td>${item.qty}</td>
-                <td>${item.rate}</td>
-                 <td style="text-align: center;">Nos
-                                 <br><br><br><br><br>
-                                    <div style="text-align: right; padding-top: 20px;">9 <br>9 </div>
-                            </td>
-                            <td class="disc">${item.discount}
-                                <br><br><br><br><br>
-                                <div style="text-align: left; padding-top: 20px;">%<br>%</div>
+                 ${order.products.map((item, i) => {
 
-                            </td>
-                  <td class="amount">2,700.00<br><br><br><br><br><strong>243.00</strong><br><strong>243.00</strong></td>
+  const cgstPercent = item.gst / 2;
+  const sgstPercent = item.gst / 2;
 
-              </tr>
-            `).join("")}
+  const cgstValue = (item.gstValue || 0) / 2;
+  const sgstValue = (item.gstValue || 0) / 2;
 
+  const amount = item.qty * item.rate;
+
+  return `
+<tr>
+  <td>${i + 1}</td>
+
+  <td>
+    <div class="item-description">${item.name}</div>
+    <div class="item-sub">${item.description}</div>
+
+    <br><br><br>
+
+    <div style="text-align: right; padding-right: 20px;">
+      <strong>Output CGST ${cgstPercent}%</strong><br>
+      <strong>Output SGST ${sgstPercent}%</strong>
+    </div>
+  </td>
+
+  <!-- ✅ FIX HSN -->
+  <td class="hsn">${item.hsn || "-"}</td>
+
+  <td>${item.qty}</td>
+  <td>${item.rate}</td>
+
+  <td style="text-align: center;">
+    Nos
+    <br><br><br><br><br>
+    <div style="text-align: right; padding-top: 20px;">
+      ${cgstPercent} <br> ${sgstPercent}
+    </div>
+  </td>
+
+  <td class="disc">
+    ${item.discount || 0}
+    <br><br><br><br><br>
+    <div style="text-align: left; padding-top: 20px;">%<br>%</div>
+  </td>
+
+  <td class="amount">
+    ${amount.toFixed(2)}
+    <br><br><br><br><br>
+    <strong>${cgstValue.toFixed(2)}</strong><br>
+    <strong>${sgstValue.toFixed(2)}</strong>
+  </td>
+</tr>
+`;
+}).join("")}
+                    
 
                       
                        
@@ -771,7 +804,7 @@ router.get("/invoice-pdf", async (req, res) => {
                 <!-- Amount in Words -->
                 <div class="amount-words">
                     Amount Chargeable (in words)<br>
-                    <strong>INR Three Thousand One Hundred Eighty Six Only</strong>
+                    <strong>INR ${amountInWords} Only</strong>
                     <span style="float: right;">E. & O.E</span>
                 </div>
         
@@ -831,21 +864,22 @@ router.get("/invoice-pdf", async (req, res) => {
                             goods described and that all particulars are true and correct.
                         </div>
                     </div>
+                     ${order.bankDetails.map((item, i) => `
                     <div class="footer-right">
                         <div class="bank-details">
                             <strong>Company's Bank Details</strong>
                             <table>
                                 <tr>
                                     <td>Bank Name</td>
-                                    <td>: <strong>SBI Bank</strong></td>
+                                    <td>: <strong>${item.bankName}</strong></td>
                                 </tr>
                                 <tr>
                                     <td>A/c No.</td>
-                                    <td>: 44294074252</td>
+                                    <td>:${item.accountNumber}</td>
                                 </tr>
                                 <tr>
                                     <td>Branch & IFSC</td>
-                                    <td>: Mveda Solapur & SBIN0007156</td>
+                                    <td>:${item.branch} & ${item.ifsc}</td>
                                 </tr>
                             </table>
                         </div>
@@ -854,8 +888,7 @@ router.get("/invoice-pdf", async (req, res) => {
                             <div class="auth-signatory">Authorised Signatory</div>
                         </div>
                     </div>
-                </div>
-        
+                </div>`)}        
                 <!-- Computer Generated -->
                 <div class="computer-generated">
                     This is a Computer Generated Invoice

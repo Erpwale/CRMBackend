@@ -29,7 +29,8 @@
     "qrcode": "^1.5.4",
     "socket.io": "^4.8.3",
     "speakeasy": "^2.0.0",
-    "nodemailer": "^8.0.4"
+    "nodemailer": "^8.0.4",
+     "number-to-words": "^1.2.4"
 
   },
   "devDependencies": {

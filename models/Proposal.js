@@ -5,7 +5,10 @@ const productSchema = new mongoose.Schema({
   name: String,
 
   description: { type: String, default: "" },
-
+ hsn: {
+    type: String,
+    default: ""
+  },
   tallySerials: {
     type: [String],
     default: []
