@@ -64,24 +64,100 @@ const validate = (body) => {
 
 router.post("/", async (req, res) => {
   try {
-    const error = validate(req.body);
-    if (error) return res.status(400).json({ message: error });
+    const { opid, partyName } = req.body;
 
-    const order = new SalesOrder(req.body);
+    // ✅ 1. FETCH PROPOSAL
+    const proposal = await opp.findOne({ proposalId: opid });
+    if (!proposal) {
+      return res.status(404).json({ message: "Proposal not found" });
+    }
+
+    // ✅ 2. FETCH LEDGER (IMPORTANT)
+    const ledger = await Ledger.findOne({ companyName: partyName });
+    if (!ledger) {
+      return res.status(404).json({ message: "Ledger not found" });
+    }
+
+    // ✅ 3. CREATE FULL SALES ORDER DATA
+    const salesOrderData = {
+      // 🔹 Proposal
+      proposalId: proposal.proposalId,
+      companyName: proposal.companyName,
+      priceLevel: proposal.priceLevel,
+      businessLine: proposal.businessLine,
+      tallySerials: proposal.tallySerials,
+
+      // 🔹 Ledger
+      companyId: ledger.companyId,
+
+      contactName: ledger.contactName,
+      contactMobile: ledger.contactMobile,
+      contactEmail: ledger.contactEmail,
+
+      address1: ledger.address1,
+      address2: ledger.address2,
+      address3: ledger.address3,
+      state: ledger.state,
+      district: ledger.district,
+      city: ledger.city,
+      pincode: ledger.pincode,
+
+      gstType: ledger.gstType,
+      gstin: ledger.gstin,
+      pan: ledger.pan,
+      tan: ledger.tan,
+      msme: ledger.msme,
+
+      // 🔹 Order Info (frontend)
+      orderNo: req.body.orderNo,
+      orderDate: req.body.orderDate,
+      userName: req.body.userName,
+      salesTeam: req.body.salesTeam,
+
+      // 🔹 Products (from proposal)
+      products: proposal.products,
+
+      // 🔹 Financials (from proposal OR frontend if needed)
+      discount: proposal.discount,
+      grossTotal: proposal.grossTotal,
+      cgstPercent: proposal.cgstPercent,
+      sgstPercent: proposal.sgstPercent,
+      cgst: proposal.cgst,
+      sgst: proposal.sgst,
+      roundoff: proposal.roundOff,
+      subtotal: proposal.subtotal,
+      net: proposal.net,
+
+      // 🔹 Terms
+      internalTerms: proposal.internalTerms,
+      specialTerms: proposal.specialTerms,
+
+      // 🔹 Bank
+      bankDetails: proposal.bankDetails,
+
+      // 🔹 Extra
+      narration: req.body.narration || ""
+    };
+
+    // ✅ 4. SAVE
+    const order = new SalesOrder(salesOrderData);
     await order.save();
 
-    // ✅ UPDATE PROPOSAL STATUS
-await opp.findOneAndUpdate(
-  { proposalId: req.body.opid },   // ✅ match your field
-  {
-    proposalStatus: true,
-    "statusDetails.status": "Close Won",
-    "statusDetails.statusDate": new Date().toISOString().split("T")[0]
-  }
-);
+    // ✅ 5. UPDATE PROPOSAL STATUS
+    await opp.findOneAndUpdate(
+      { proposalId: opid },
+      {
+        proposalStatus: true,
+        "statusDetails.status": "Close Won",
+        "statusDetails.statusDate": new Date()
+          .toISOString()
+          .split("T")[0]
+      }
+    );
+
     res.status(201).json({
       success: true,
-      message: "Created & Proposal Closed Won",
+      message: "Sales Order Created with Full Data ✅",
       data: order
     });
 

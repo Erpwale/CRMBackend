@@ -1,59 +1,131 @@
 const mongoose = require("mongoose");
 
+
+// ✅ PRODUCT (with AMC)
 const productSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: String,
   description: { type: String, default: "" },
-  license: { type: String, default: "" },
-  qty: { type: Number, required: true },
-  rate: { type: Number, required: true },
-  discount: { type: Number, default: 0 },
+
+  tallySerials: {
+    type: [String],
+    default: []
+  },
+
+  amcDetails: {
+    subType: String,
+    licenseNo: String,
+    licenseType: String,
+    location: String,
+    periodFrom: String,
+    periodTo: String,
+
+    supportType: String,
+    users: String,
+    inventoryType: String,
+    syncASC: String,
+
+    ascValue: Number,
+    addonASC: Number,
+    customizationASC: Number,
+    syncValue: Number,
+    remoteValue: Number,
+  },
+
+  qty: Number,
+  rate: Number,
+
   gst: { type: Number, default: 0 },
-  net: { type: Number, default: 0 }
+  gstValue: { type: Number, default: 0 },
+  discount: { type: Number, default: 0 },
+  subtotal: { type: Number, default: 0 },
+  totalValue: Number,
+
+  terms: {
+    type: [String],
+    default: []
+  }
 });
 
+
+// ✅ BANK DETAILS
+const bankSchema = new mongoose.Schema({
+  bankName: String,
+  accountNumber: String,
+  ifsc: String,
+  branch: String,
+  holderName: String
+});
+
+
+// ✅ SALES ORDER (FINAL)
 const salesOrderSchema = new mongoose.Schema(
-  {
-    partyName: { type: String, required: true },
-    address: { type: String, required: true },
-    gstin: {
-      type: String,
-      required: true,
-      match: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{3}$/
-    },
+{
+  // 🔹 Proposal Info
+  proposalId: Number,
+  companyName: String,
+  priceLevel: String,
+  businessLine: String,
 
-    priceLevel: { type: String, required: true },
-    businessLine: { type: String, required: true },
-
-    userName: { type: String, required: true },
-    salesTeam: { type: String, required: true },
-
-    orderNo: { type: String, required: true },
-    orderDate: { type: String, required: true },
-
-    products: {
-      type: [productSchema],
-      required: true
-    },
-
-    tallySerials: {
-      type: [String],
-      default: []
-    },
-      opid:{
-          type: Number,
-          required: true
-        },
-
-    // ✅ FROM FRONTEND (DO NOT CALCULATE)
-    cgst: { type: Number, default: 0 },
-    sgst: { type: Number, default: 0 },
-    grossTotal: { type: Number, default: 0 },
-    roundoff: { type: Number, default: 0 }, // ⚠️ match frontend exactly
-    net: { type: Number, required: true },
-
-    narration: { type: String, default: "" }
+  tallySerials: {
+    type: [String],
+    default: []
   },
-  { timestamps: true }
+
+  // 🔹 Ledger / Party Info
+  companyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Company"
+  },
+
+  contactName: String,
+  contactMobile: String,
+  contactEmail: String,
+
+  address1: String,
+  address2: String,
+  address3: String,
+  state: String,
+  district: String,
+  city: String,
+  pincode: String,
+
+  gstType: String,
+  gstin: String,
+  pan: String,
+  tan: String,
+  msme: String,
+
+  // 🔹 Order Info
+  orderNo: String,
+  orderDate: String,
+
+  userName: String,
+  salesTeam: String,
+
+  // 🔹 Products (FULL COPY)
+  products: [productSchema],
+
+  // 🔹 Financials (FROM FRONTEND)
+  discount: Number,
+  grossTotal: Number,
+  cgstPercent: Number,
+  sgstPercent: Number,
+  cgst: Number,
+  sgst: Number,
+  roundoff: Number,
+  subtotal: Number,
+  net: Number,
+
+  // 🔹 Terms
+  internalTerms: String,
+  specialTerms: String,
+
+  // 🔹 Bank Details
+  bankDetails: bankSchema,
+
+  narration: String
+},
+{ timestamps: true }
 );
 
 module.exports = mongoose.model("SalesOrder", salesOrderSchema);
