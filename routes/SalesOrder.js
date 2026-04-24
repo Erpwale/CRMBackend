@@ -235,7 +235,10 @@ router.get("/invoice-pdf", async (req, res) => {
      if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-
+const amountInWords =
+  "INR " +
+  converter.toWords(order.grossTotal).replace(/^\w/, c => c.toUpperCase()) +
+  " Only";
     // const formattedAddress = formatAddress(order.address);
     const html=`
     
@@ -727,10 +730,7 @@ router.get("/invoice-pdf", async (req, res) => {
 
                  ${order.products.map((item, i) => {
 
-    const amountInWords =
-  "INR " +
-  converter.toWords(item.totalValue).replace(/^\w/, c => c.toUpperCase()) +
-  " Only";
+    
   const cgstPercent = item.gst / 2;
   const sgstPercent = item.gst / 2;
 
