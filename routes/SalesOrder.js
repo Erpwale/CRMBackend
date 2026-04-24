@@ -7,6 +7,7 @@ const generatePDF = require("../utils/generateInvoice.js");
 /* ✅ VALIDATION FUNCTION */
 const fs = require("fs");
 const path = require("path");
+const Ledger = require("../models/Ledger.js");
 
 const logoPath = path.join(__dirname, "../assets/erplogo.jpeg");
 const logoBase64 = fs.readFileSync(logoPath, "base64");
