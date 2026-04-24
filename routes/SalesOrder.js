@@ -59,6 +59,7 @@ const validate = (body) => {
   return null;
 };
 const converter = require("number-to-words");
+const globalcompany = require("../models/globalcompany.js");
 /* ========================= */
 /* ✅ CREATE */
 /* ========================= */
@@ -229,6 +230,8 @@ router.get("/invoice-pdf", async (req, res) => {
   try {
       const { ordid } = req.query;
     console.log({ordid});
+    const company=await globalcompany.find()
+    console.log(company);
     
    const order = await SalesOrder.findOne({ orderNo: ordid });
     console.log(order);
