@@ -240,7 +240,7 @@ const company = {
   address: {
     line1: companyData?.address?.line1 || "",
     line2: companyData?.address?.line2 || "",
-    line3: companyData?.address?.line3 || "",
+    // line3: companyData?.address?.line3 || "",
     state: companyData?.address?.state || "",
     city: companyData?.address?.city || "",
     pincode: companyData?.address?.pincode || ""
@@ -671,11 +671,11 @@ console.log(totalQty);
                 <strong>${company.companyName}</strong><br>
                 ${company.address.line1}<br>
                    ${company.address.line2}<br>
-                   ${company.address.line2}<br>
+
                 GSTIN/UIN &nbsp;&nbsp;&nbsp;&nbsp; :${company.gstin}<br>
-                State Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :${company.address.state}, Code : 27<br>
-                Contact  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :${company.phone}<br>
-                E-Mail &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :${company.email}
+                State Name &nbsp;&nbsp;&nbsp;&nbsp; :${company.address.state}, Code : 27<br>
+                Contact  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :${company.phone}<br>
+                E-Mail &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :${company.email}
             </div>
             <div class="logo-order-section">
                 <div class="logo-area">
