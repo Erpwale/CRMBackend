@@ -230,7 +230,7 @@ router.get("/invoice-pdf", async (req, res) => {
   try {
       const { ordid } = req.query;
     console.log({ordid});
-const companyData = await Company.findOne();
+const companyData = await globalcompany.findOne();
 
 const company = {
   companyName: companyData?.companyName || "",
