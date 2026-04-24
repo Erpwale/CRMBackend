@@ -236,7 +236,7 @@ router.get("/invoice-pdf", async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 const total = Number(order.grossTotal);
-
+console.log(order.grossTotal)
 const amountInWords =
   total && !isNaN(total)
     ? "INR " +
@@ -244,6 +244,15 @@ const amountInWords =
       " Only"
     : "INR Zero Only";
     // const formattedAddress = formatAddress(order.address);
+
+    const totalQty = (order.products || []).reduce((sum, item) => {
+      return sum + Number(item.qty || 0);
+    }, 0);
+
+    console.log("Total Qty:", totalQty);
+    console.log("Amount in Words:", amountInWords);
+
+console.log(totalQty);
     const html=`
     
     <!DOCTYPE html>
@@ -694,7 +703,7 @@ const amountInWords =
                 <div class="buyer-content">
                     <div class="buyer-info">
                         <div>Buyer (Bill to)</div>
-                        <strong>${order.partyName}</strong><br>
+                        <strong>${order.companyName}</strong><br>
                        ${order.address1}<br>
                        ${order.address2}<br>
                        ${order.address3}<br>
@@ -796,7 +805,7 @@ const amountInWords =
                             <td>    </td>
                             <td colspan="1" style="text-align: right; padding-right: 10px;">Total</td>
                             <td></td>
-                            <td style="text-align: center;">${order.qty}Nos</td>
+                            <td style="text-align: center;">${order.totalQty}Nos</td>
                             <td ></td>
                             <td ></td>
                             <td></td>
@@ -868,32 +877,31 @@ const amountInWords =
                             goods described and that all particulars are true and correct.
                         </div>
                     </div>
-                  ${order.bankDetails ? `
-<div class="footer-right">
-    <div class="bank-details">
-        <strong>Company's Bank Details</strong>
-        <table>
-            <tr>
-                <td>Bank Name</td>
-                <td>: <strong>${order.bankDetails.bankName}</strong></td>
-            </tr>
-            <tr>
-                <td>A/c No.</td>
-                <td>: ${order.bankDetails.accountNumber}</td>
-            </tr>
-            <tr>
-                <td>Branch & IFSC</td>
-                <td>: ${order.bankDetails.branch} & ${order.bankDetails.ifsc}</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="signature-area">
-        for ${order.bankDetails.holderName}
-        <div class="auth-signatory">Authorised Signatory</div>
-    </div>
-</div>
-` : ""}
+                     ${order.bankDetails `
+                    <div class="footer-right">
+                        <div class="bank-details">
+                            <strong>Company's Bank Details</strong>
+                            <table>
+                                <tr>
+                                    <td>Bank Name</td>
+                                     <td>: <strong>${order.bankDetails.bankName}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>A/c No.</td>
+                                    <td>: ${order.bankDetails.accountNumber}</td>
+                                </tr>
+                                <tr>
+                                    <td>Branch & IFSC</td>
+                                    <td>: ${order.bankDetails.branch} & ${order.bankDetails.ifsc}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="signature-area">
+                            for MS ERPWALE PVT. LTD.
+                            <div class="auth-signatory">Authorised Signatory</div>
+                        </div>
+                    </div>
+                </div>`}        
                 <!-- Computer Generated -->
                 <div class="computer-generated">
                     This is a Computer Generated Invoice
