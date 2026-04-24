@@ -654,13 +654,14 @@ console.log(totalQty);
         <!-- Header Section -->
         <div class="header-section">
             <div class="company-info">
-                <strong>MS ERPWALE PVT. LTD.</strong><br>
-                Flat No. J-201, Sai Avishkar, Sr.No 12/5/9<br>
-                BH Omega, Haveli, Dhayari, Pune 411041<br>
-                GSTIN/UIN: 27AATCM3926B1ZC<br>
-                State Name : Maharashtra, Code : 27<br>
-                Contact : 7447893001<br>
-                E-Mail : info@erpwale.com
+                <strong>${company.companyName}</strong><br>
+                ${company.address.line1}<br>
+                   ${company.address.line2}<br>
+                   ${company.address.line2}<br>
+                GSTIN/UIN &nbsp;&nbsp;&nbsp;&nbsp; :${company.gstin}<br>
+                State Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :${company.address.state}, Code : 27<br>
+                Contact  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :${company.phone}<br>
+                E-Mail &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :${company.email}
             </div>
             <div class="logo-order-section">
                 <div class="logo-area">
