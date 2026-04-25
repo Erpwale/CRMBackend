@@ -243,12 +243,32 @@ router.get("/me", authMiddleware, async (req, res) => {
 
 router.get("/fix-users", async (req, res) => {
   try {
-    await User.updateMany(
+    console.log("🔧 Fixing users...");
+
+    // ✅ Step 1: Fix username (set = email)
+    const usersWithoutUsername = await User.find({
+      $or: [
+        { username: { $exists: false } },
+        { username: null },
+        { username: "" }
+      ]
+    });
+
+    for (const user of usersWithoutUsername) {
+      await User.updateOne(
+        { _id: user._id },
+        { $set: { username: user.email } }
+      );
+    }
+
+    console.log(`✅ Username fixed for ${usersWithoutUsername.length} users`);
+
+    // ✅ Step 2: Fix other missing fields
+    const result = await User.updateMany(
       {
         $or: [
           { firstName: { $exists: false } },
           { lastName: { $exists: false } },
-          { username: { $exists: false } },
           { phone: { $exists: false } },
           { zone: { $exists: false } }
         ]
@@ -263,16 +283,20 @@ router.get("/fix-users", async (req, res) => {
       }
     );
 
-    // fix username separately
-    await User.updateMany(
-      { username: { $exists: false } },
-      [{ $set: { username: "$email" } }]
-    );
+    console.log(`✅ Other fields fixed: ${result.modifiedCount}`);
 
-    res.send("Users fixed ✅");
+    res.json({
+      message: "Users fixed successfully ✅",
+      usernameUpdated: usersWithoutUsername.length,
+      otherFieldsUpdated: result.modifiedCount
+    });
+
   } catch (err) {
-    console.log(err);
-    res.status(500).send("Error");
+    console.error("❌ ERROR:", err);
+    res.status(500).json({
+      message: "Error fixing users",
+      error: err.message
+    });
   }
 });
 module.exports = router;
