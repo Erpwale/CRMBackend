@@ -17,7 +17,7 @@ const buildXML = (order) => {
   return `${yyyy}${mm}${dd}`;
 };
   const date = formatDate(order.orderDate);
-
+ console.log(date)
   return `
 <ENVELOPE>
  <HEADER>
