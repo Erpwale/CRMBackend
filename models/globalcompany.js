@@ -6,7 +6,7 @@ const globalSchema = new mongoose.Schema({
   phone: String,
   gstin: String,
   msme: String,
-  pan: String,
+  companyPan: String,
   placeOfSupply: String,
 
   address: {
