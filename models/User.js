@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true, // 🚀 prevents duplicate
+    unique: true,
     trim: true
   },
   email: {
@@ -29,32 +29,45 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    match: /^[0-9]{10}$/ // ✅ 10 digit validation
+    match: /^[0-9]{10}$/
   },
   password: {
     type: String,
     required: true
   },
-monthlyTargets: [
-  {
-    date: {
-      type: String, // or Date if you prefer
-      required: true
-    },
-    amount: {
-      type: Number,
-      required: true
-    },
-    revise: {
-      type: String,
-      default: "Per Month"
+
+  monthlyTargets: [
+    {
+      date: {
+        type: String,
+        required: true
+      },
+      amount: {
+        type: Number,
+        required: true
+      },
+      revise: {
+        type: String,
+        default: "Per Month"
+      }
     }
-  }
-],
+  ],
+
   zone: {
     type: String,
     required: true
+  },
+
+  // ✅ ADD THESE (this is your fix)
+  twoFactorSecret: {
+    type: String,
+    default: null
+  },
+  isTwoFactorEnabled: {
+    type: Boolean,
+    default: false
   }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);
