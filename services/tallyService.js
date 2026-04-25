@@ -7,17 +7,18 @@ const MIDDLEWARE_URL = "https://antarctic-whacky-hastiness.ngrok-free.dev/tally"
 
 // 🔥 Convert SalesOrder → Tally XML
 const buildXML = (order) => {
-    const formatDate = (input) => {
-  const d = new Date(input);
+  const formatDate = (input) => {
+    const d = new Date(input);
 
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
 
-  return `${yyyy}${mm}${dd}`;
-};
+    return `${yyyy}${mm}${dd}`;
+  };
+
   const date = formatDate(order.orderDate);
- console.log(date)
+
   return `
 <ENVELOPE>
  <HEADER>
@@ -30,9 +31,12 @@ const buildXML = (order) => {
    </REQUESTDESC>
    <REQUESTDATA>
     <TALLYMESSAGE>
-     <VOUCHER VCHTYPE="Sales" ACTION="Create">
+     <VOUCHER VCHTYPE="Sales" VOUCHERTYPENAME="Sales" ACTION="Create">
 
       <DATE>${date}</DATE>
+      <EFFECTIVEDATE>${date}</EFFECTIVEDATE>
+      <ISINVOICE>Yes</ISINVOICE>
+
       <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
       <PARTYNAME>${order.companyName}</PARTYNAME>
 
@@ -40,6 +44,7 @@ const buildXML = (order) => {
       <ALLLEDGERENTRIES.LIST>
         <LEDGERNAME>${order.companyName}</LEDGERNAME>
         <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+        <ISPARTYLEDGER>Yes</ISPARTYLEDGER>
         <AMOUNT>-${order.net}</AMOUNT>
       </ALLLEDGERENTRIES.LIST>
 
@@ -54,12 +59,13 @@ const buildXML = (order) => {
         </ALLINVENTORYENTRIES.LIST>
       `).join("")}
 
-      <!-- GST -->
+      <!-- CGST -->
       <ALLLEDGERENTRIES.LIST>
         <LEDGERNAME>CGST</LEDGERNAME>
         <AMOUNT>${order.cgst}</AMOUNT>
       </ALLLEDGERENTRIES.LIST>
 
+      <!-- SGST -->
       <ALLLEDGERENTRIES.LIST>
         <LEDGERNAME>SGST</LEDGERNAME>
         <AMOUNT>${order.sgst}</AMOUNT>
