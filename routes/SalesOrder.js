@@ -472,12 +472,11 @@ console.log(totalQty);
             font-weight: bold;
         }
 
-        .invoice-table td {
-            padding: 6px 4px;
-            border: 0.3px solid #00000061;
-               border-top: none;
-            vertical-align: top;
-        }
+      .invoice-table td {
+    padding: 6px 4px;
+    border: none;
+    vertical-align: top;
+}
 
         .invoice-table .sl-no {
             width: 30px;
