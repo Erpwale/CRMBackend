@@ -238,4 +238,41 @@ router.get("/me", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Error fetching user" });
   }
 });
+
+
+
+router.get("/fix-users", async (req, res) => {
+  try {
+    await User.updateMany(
+      {
+        $or: [
+          { firstName: { $exists: false } },
+          { lastName: { $exists: false } },
+          { username: { $exists: false } },
+          { phone: { $exists: false } },
+          { zone: { $exists: false } }
+        ]
+      },
+      {
+        $set: {
+          firstName: "User",
+          lastName: "User",
+          phone: "0000000000",
+          zone: "Default Zone"
+        }
+      }
+    );
+
+    // fix username separately
+    await User.updateMany(
+      { username: { $exists: false } },
+      [{ $set: { username: "$email" } }]
+    );
+
+    res.send("Users fixed ✅");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error");
+  }
+});
 module.exports = router;
