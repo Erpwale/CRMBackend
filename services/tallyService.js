@@ -101,6 +101,7 @@ router.post("/push-to-tally/:id", async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: err.message
+      console.log(err)
     });
   }
 });
