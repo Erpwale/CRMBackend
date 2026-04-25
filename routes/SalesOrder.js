@@ -282,6 +282,13 @@ order.products.forEach(item => {
   totalSGST += gstValue / 2;
   totalGST += gstValue;
 });
+
+const tsxInWords =
+  total && !isNaN(total)
+    ? "INR " +
+      converter.toWords(totalGST).replace(/^\w/, c => c.toUpperCase()) +
+      " Only"
+    : "INR Zero Only";
 console.log(totalQty);
     const html=`
     
@@ -926,7 +933,7 @@ console.log(totalQty);
                             <td></td>
                             <td>${totalCGST }</td>
                             <td></td>
-                            <td>>${totalSGST }</td>
+                            <td>${totalSGST }</td>
                             <td>${totalGST }</td>
                         </tr>
                     </tbody>
@@ -934,7 +941,7 @@ console.log(totalQty);
         
                 <!-- Tax Amount in Words -->
                 <div class="tax-words">
-                    Tax Amount (in words) : <strong>INR Four Hundred Eighty Six Only</strong>
+                    Tax Amount (in words) : <strong>${tsxInWords}</strong>
                 </div>
         
                 <!-- Footer Section -->
