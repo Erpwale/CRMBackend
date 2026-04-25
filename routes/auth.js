@@ -106,7 +106,7 @@ router.post("/login", async (req, res) => {
   const tempToken = jwt.sign(
     { id: user._id},
     process.env.JWT_SECRET,
-    { expiresIn: "5m" }
+    { expiresIn: "10m" }
   );
 
   // ✅ Generate secret only once
@@ -198,9 +198,13 @@ console.log("VERIFIED LOG:", verified);
     });
 
   } catch (err) {
-    return res.status(401).json({
-      message: "Session expired or invalid"
-    });
+  console.log("JWT ERROR:", err.message); // 👈 ADD THIS
+
+  return res.status(401).json({
+    message: err.message.includes("expired")
+      ? "Session expired"
+      : "Invalid session"
+  });
   }
 });
 router.get("/users", authMiddleware, async (req, res) => {
