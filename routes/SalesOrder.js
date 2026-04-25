@@ -314,7 +314,8 @@ order.products.forEach(item => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proforma Invoice</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arimo&display=swap" rel="stylesheet">
+
 
     <style>
         * {
@@ -324,7 +325,7 @@ order.products.forEach(item => {
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+           font-family: 'Arimo', sans-serif;
             font-size: 11px;
             background: #f0f0f0;
             padding: 20px;
