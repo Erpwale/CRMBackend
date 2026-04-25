@@ -816,6 +816,7 @@ console.log(totalQty);
     <div style="text-align: right; padding-right: 20px;">
       <strong>Output CGST ${cgstPercent}%</strong><br>
       <strong>Output SGST ${sgstPercent}%</strong>
+      <br><br><br>
     </div>
   </td>
 
@@ -837,6 +838,7 @@ console.log(totalQty);
     
     <strong>${cgstValue.toFixed(2)}</strong><br>
     <strong>${sgstValue.toFixed(2)}</strong>
+     <br><br><br>
   </td>
 </tr>
 `;
