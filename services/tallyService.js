@@ -37,6 +37,7 @@ const formatDate = (input) => {
    </REQUESTDESC>
 
    <REQUESTDATA>
+       <DATA>   
     <TALLYMESSAGE>
 
      <VOUCHER VCHTYPE="Sales" ACTION="Create">
@@ -63,6 +64,9 @@ const formatDate = (input) => {
      </VOUCHER>
 
     </TALLYMESSAGE>
+
+    </DATA>
+
    </REQUESTDATA>
   </IMPORTDATA>
  </BODY>
