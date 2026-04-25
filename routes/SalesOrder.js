@@ -455,29 +455,31 @@ console.log(totalQty);
         }
 
         /* Invoice Table */
-        .invoice-table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 0.3px solid #00000061;
-            border-top: none;
-            font-size: 12px;
-            height: 350px;
-        }
-
-        .invoice-table th {
-            
-            padding: 3px 4px;
-            border: 0.3px solid #00000061;
-            text-align: center;
-            font-weight: bold;
-        }
-
-      .invoice-table td {
-    padding: 6px 4px;
-    border: none;
-    vertical-align: top;
+       .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 0.3px solid #00000061;
 }
 
+/* ✅ Header: full border */
+.invoice-table th {
+    padding: 3px 4px;
+    border: 0.3px solid #00000061;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* ✅ Rows: only column (vertical) borders */
+.invoice-table td {
+    padding: 6px 4px;
+    vertical-align: top;
+
+    border-left: 0.3px solid #00000061;
+    border-right: 0.3px solid #00000061;
+
+    border-top: none;
+    border-bottom: none;
+}
         .invoice-table .sl-no {
             width: 30px;
             text-align: center;
