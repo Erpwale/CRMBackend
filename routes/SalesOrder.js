@@ -778,12 +778,8 @@ console.log(totalQty);
     <div class="item-description">${item.name}</div>
     <div class="item-sub">${item.description}</div>
 
-    <br><br><br>
+  
 
-    <div style="text-align: right; padding-right: 20px;">
-      <strong>Output CGST ${cgstPercent}%</strong><br>
-      <strong>Output SGST ${sgstPercent}%</strong>
-    </div>
   </td>
 
   <!-- ✅ FIX HSN -->
@@ -813,7 +809,7 @@ console.log(totalQty);
     <strong>${sgstValue.toFixed(2)}</strong>
   </td>
 </tr>
-<tr>
+<tr  style="border-top:none;">
   <td></td>
 
   <td>
