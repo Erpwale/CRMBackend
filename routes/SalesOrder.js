@@ -454,14 +454,13 @@ console.log(totalQty);
             width: 50%;
         }
 
-        /* Invoice Table */
-       .invoice-table {
+     .invoice-table {
     width: 100%;
     border-collapse: collapse;
     border: 0.3px solid #00000061;
 }
 
-/* ✅ Header: full border */
+/* ✅ Header */
 .invoice-table th {
     padding: 3px 4px;
     border: 0.3px solid #00000061;
@@ -469,7 +468,7 @@ console.log(totalQty);
     font-weight: bold;
 }
 
-/* ✅ Rows: only column (vertical) borders */
+/* ✅ Body rows (only vertical borders) */
 .invoice-table td {
     padding: 6px 4px;
     vertical-align: top;
@@ -479,6 +478,11 @@ console.log(totalQty);
 
     border-top: none;
     border-bottom: none;
+}
+
+/* ✅ Last row → add bottom border */
+.invoice-table tr:last-child td {
+    border-bottom: 0.3px solid #00000061;
 }
         .invoice-table .sl-no {
             width: 30px;
