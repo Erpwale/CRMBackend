@@ -830,6 +830,21 @@ console.log(totalQty);
    
   </td>
 </tr>
+`;
+}).join("")}
+
+ ${order.products.map((item, i) => {
+
+    
+  const cgstPercent = item.gst / 2;
+  const sgstPercent = item.gst / 2;
+
+  const cgstValue = (item.gstValue || 0) / 2;
+  const sgstValue = (item.gstValue || 0) / 2;
+
+  const amount = item.qty * item.rate;
+
+  return `
 <tr  style="border-top:none;">
   <td></td>
 
