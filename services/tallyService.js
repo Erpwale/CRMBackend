@@ -21,68 +21,37 @@ const buildXML = (order) => {
 <ENVELOPE>
  <HEADER>
   <TALLYREQUEST>Import Data</TALLYREQUEST>
+  <TYPE>Data</TYPE>
+  <ID>Vouchers</ID>
  </HEADER>
- 
+
  <BODY>
-  <DESC>
-    <STATICVARIABLES>
-      <SVCURRENTCOMPANY>Tally Company</SVCURRENTCOMPANY>
-      <SVCurrentDate>${date}</SVCurrentDate>
-    </STATICVARIABLES>
-  </DESC>
   <IMPORTDATA>
    <REQUESTDESC>
     <REPORTNAME>Vouchers</REPORTNAME>
    </REQUESTDESC>
+
    <REQUESTDATA>
     <TALLYMESSAGE>
-    
-     <VOUCHER ACTION="Create" OBJVIEW="Invoice Voucher View">
 
+     <VOUCHER VCHTYPE="Sales" ACTION="Create">
+
+      <DATE>${date}</DATE>
       <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
       <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
 
-  <DATE>${date}</DATE>
-<EFFECTIVEDATE>${date}</EFFECTIVEDATE>
       <PARTYNAME>${order.companyName}</PARTYNAME>
 
-      <ISINVOICE>Yes</ISINVOICE>
-      <PERSISTEDVIEW>Invoice Voucher View</PERSISTEDVIEW>
-
-      <!-- Party -->
       <ALLLEDGERENTRIES.LIST>
         <LEDGERNAME>${order.companyName}</LEDGERNAME>
         <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
-        <ISPARTYLEDGER>Yes</ISPARTYLEDGER>
         <AMOUNT>-${order.net}</AMOUNT>
       </ALLLEDGERENTRIES.LIST>
 
-      <!-- Products -->
-    ${order.products.map(p => `
-  <ALLINVENTORYENTRIES.LIST>
-    <STOCKITEMNAME>${p.name.trim()}</STOCKITEMNAME>
-    <RATE>${p.rate}</RATE>
-    <AMOUNT>${p.totalValue}</AMOUNT>
-    <ACTUALQTY>${p.qty} Nos</ACTUALQTY>
-    <BILLEDQTY>${p.qty} Nos</BILLEDQTY>
-
-    <ACCOUNTINGALLOCATIONS.LIST>
-      <LEDGERNAME>Sales A/c</LEDGERNAME>
-      <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-      <AMOUNT>${p.totalValue}</AMOUNT>
-    </ACCOUNTINGALLOCATIONS.LIST>
-
-  </ALLINVENTORYENTRIES.LIST>
-`).join("")}
-      <!-- GST -->
       <ALLLEDGERENTRIES.LIST>
-        <LEDGERNAME>CGST</LEDGERNAME>
-        <AMOUNT>${order.cgst}</AMOUNT>
-      </ALLLEDGERENTRIES.LIST>
-
-      <ALLLEDGERENTRIES.LIST>
-        <LEDGERNAME>SGST</LEDGERNAME>
-        <AMOUNT>${order.sgst}</AMOUNT>
+        <LEDGERNAME>Sales A/c</LEDGERNAME>
+        <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+        <AMOUNT>${order.net}</AMOUNT>
       </ALLLEDGERENTRIES.LIST>
 
      </VOUCHER>
