@@ -322,7 +322,7 @@ order.products.forEach(item => {
         }
 
         body {
-            font-family:Arial, sans-serif;
+            font-family:cursive;
             font-size: 11px;
             background: #f0f0f0;
             padding: 20px;
