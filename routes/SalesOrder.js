@@ -899,8 +899,8 @@ console.log(totalQty);
                         </tr>
                     </thead>
                     <tbody>
-                      ${order.products.map((item, i) => {
-                         const cgstPercent = item.gst / 2;
+                     ${order.products.map((item, i) => {
+  const cgstPercent = item.gst / 2;
   const sgstPercent = item.gst / 2;
 
   const cgstValue = (item.gstValue || 0) / 2;
@@ -908,17 +908,18 @@ console.log(totalQty);
 
   const amount = item.qty * item.rate;
 
-                        return
-                       ` <tr>
-                            <td>${item.hsn || "-"}</td>
-                            <td>${item.subtotal}</td>
-                            <td>${cgstPercent}%</td>
-                            <td>${cgstValue}</td>
-                            <td>${sgstPercent}%</td>
-                            <td>${sgstValue}</td>
-                            <td>${item.gstValue}</td>
-                        </tr>
-                       `})}
+  return `
+    <tr>
+        <td>${item.hsn || "-"}</td>
+        <td>${item.subtotal}</td>
+        <td>${cgstPercent}%</td>
+        <td>${cgstValue}</td>
+        <td>${sgstPercent}%</td>
+        <td>${sgstValue}</td>
+        <td>${item.gstValue}</td>
+    </tr>
+  `;
+}).join("")}
                         <tr style="font-weight: bold;">
                             <td>Total</td>
                             <td>${totalAmount }</td>
