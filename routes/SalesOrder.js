@@ -813,6 +813,37 @@ console.log(totalQty);
     <strong>${sgstValue.toFixed(2)}</strong>
   </td>
 </tr>
+<tr>
+  <td></td>
+
+  <td>
+    <div style="text-align: right; padding-right: 20px;">
+      <strong>Output CGST ${cgstPercent}%</strong><br>
+      <strong>Output SGST ${sgstPercent}%</strong>
+    </div>
+  </td>
+
+  <!-- ✅ FIX HSN -->
+  <td class="hsn"></td>
+
+  <td></td>
+  <td></td>
+
+  <td style="text-align: center;">
+   
+  </td>
+
+  <td class="disc">
+    
+  </td>
+
+  <td class="amount">
+    ${amount.toFixed(2)}
+    <br><br><br><br><br>
+    <strong>${cgstValue.toFixed(2)}</strong><br>
+    <strong>${sgstValue.toFixed(2)}</strong>
+  </td>
+</tr>
 `;
 }).join("")}
                     
