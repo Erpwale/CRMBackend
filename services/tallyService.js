@@ -35,8 +35,8 @@ const buildXML = (order) => {
       <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
       <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
 
-      <DATE>${date}</DATE>
-      <EFFECTIVEDATE>${date}</EFFECTIVEDATE>
+      <DATE>20260425</DATE>
+<EFFECTIVEDATE>20260425</EFFECTIVEDATE>
 
       <PARTYNAME>${order.companyName}</PARTYNAME>
 
