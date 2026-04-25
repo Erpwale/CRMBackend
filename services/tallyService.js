@@ -22,7 +22,14 @@ const buildXML = (order) => {
  <HEADER>
   <TALLYREQUEST>Import Data</TALLYREQUEST>
  </HEADER>
+ 
  <BODY>
+  <DESC>
+    <STATICVARIABLES>
+      <SVCURRENTCOMPANY>Tally Company</SVCURRENTCOMPANY>
+      <SVCurrentDate>${date}</SVCurrentDate>
+    </STATICVARIABLES>
+  </DESC>
   <IMPORTDATA>
    <REQUESTDESC>
     <REPORTNAME>Vouchers</REPORTNAME>
@@ -35,9 +42,8 @@ const buildXML = (order) => {
       <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
       <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
 
-   <DATE>20260401</DATE>
-      <VCHSTATUSDATE>20260401</VCHSTATUSDATE>
-
+  <DATE>${date}</DATE>
+<EFFECTIVEDATE>${date}</EFFECTIVEDATE>
       <PARTYNAME>${order.companyName}</PARTYNAME>
 
       <ISINVOICE>Yes</ISINVOICE>
@@ -52,16 +58,22 @@ const buildXML = (order) => {
       </ALLLEDGERENTRIES.LIST>
 
       <!-- Products -->
-      ${order.products.map(p => `
-        <ALLINVENTORYENTRIES.LIST>
-          <STOCKITEMNAME>${p.name}</STOCKITEMNAME>
-          <RATE>${p.rate}</RATE>
-          <AMOUNT>${p.totalValue}</AMOUNT>
-          <ACTUALQTY>${p.qty} Nos</ACTUALQTY>
-          <BILLEDQTY>${p.qty} Nos</BILLEDQTY>
-        </ALLINVENTORYENTRIES.LIST>
-      `).join("")}
+    ${order.products.map(p => `
+  <ALLINVENTORYENTRIES.LIST>
+    <STOCKITEMNAME>${p.name.trim()}</STOCKITEMNAME>
+    <RATE>${p.rate}</RATE>
+    <AMOUNT>${p.totalValue}</AMOUNT>
+    <ACTUALQTY>${p.qty} Nos</ACTUALQTY>
+    <BILLEDQTY>${p.qty} Nos</BILLEDQTY>
 
+    <ACCOUNTINGALLOCATIONS.LIST>
+      <LEDGERNAME>Sales A/c</LEDGERNAME>
+      <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+      <AMOUNT>${p.totalValue}</AMOUNT>
+    </ACCOUNTINGALLOCATIONS.LIST>
+
+  </ALLINVENTORYENTRIES.LIST>
+`).join("")}
       <!-- GST -->
       <ALLLEDGERENTRIES.LIST>
         <LEDGERNAME>CGST</LEDGERNAME>
