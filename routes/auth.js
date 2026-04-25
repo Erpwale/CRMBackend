@@ -9,46 +9,85 @@ const router = express.Router();
 
 
 router.post("/register", async (req, res) => {
-  const { name, email, password, confirmPassword, role } = req.body;
-
-  if (!email || !password || !confirmPassword|| !name)
-    return res.status(400).json({ message: "All fields required" });
-
-  // Email lowercase
-  const formattedEmail = email.toLowerCase().trim();
-
-  // Check password match
-  if (password !== confirmPassword)
-    return res.status(400).json({ message: "Passwords do not match" });
-
-  // Strong password validation
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
-
-  if (!passwordRegex.test(password))
-    return res.status(400).json({
-      message:
-        "Password must contain 8+ characters, uppercase, lowercase, number & special symbol"
-    });
-
   try {
-    const existingUser = await User.findOne({ email: formattedEmail });
-    if (existingUser)
-      return res.status(400).json({ message: "Email already exists" });
+    const {
+      firstName,
+      lastName,
+      username,
+      email,
+      role,
+      phone,
+      password,
+      confirmPassword,
+      monthlyTarget,
+      zone
+    } = req.body;
 
+    // ✅ 1. Check all required fields
+    if (
+      !firstName || !lastName || !username || !email ||
+      !role || !phone || !password || !confirmPassword ||
+      !monthlyTarget || !zone
+    ) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // ✅ 2. Username duplicate check
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: "Username already exists" });
+    }
+
+    // ✅ 3. Phone validation
+    if (!/^[0-9]{10}$/.test(phone)) {
+      return res.status(400).json({ message: "Phone must be 10 digits" });
+    }
+
+    // ✅ 4. Password validation
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        message:
+          "Password must contain uppercase, lowercase, number, and special character"
+      });
+    }
+
+    // ✅ 5. Confirm password match
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+    if (!monthlyTargets || monthlyTargets.length === 0) {
+  return res.status(400).json({ message: "At least one target required" });
+}
+
+    // ✅ 6. Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-      email: formattedEmail,
+    // ✅ 7. Save user
+    const newUser = new User({
+      firstName,
+      lastName,
+      username,
+      email,
+      role,
+      phone,
       password: hashedPassword,
-      role: role || "user"
+      monthlyTarget,
+      zone
     });
 
-    res.json({ message: "User Registered Successfully" });
+    await newUser.save();
 
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(201).json({
+      message: "User created successfully",
+      user: newUser
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
