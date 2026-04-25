@@ -33,12 +33,12 @@ const formatDate = (input) => {
  <BODY>
   <IMPORTDATA>
    <REQUESTDESC>
-    <REPORTNAME>Vouchers</REPORTNAME>
+    <REPORTNAME>All Masters</REPORTNAME>
    </REQUESTDESC>
 
    <REQUESTDATA>
        <DATA>   
-    <TALLYMESSAGE>
+<TALLYMESSAGE xmlns:UDF="TallyUDF">
 
      <VOUCHER VCHTYPE="Sales" ACTION="Create">
 
@@ -87,7 +87,7 @@ router.post("/push-to-tally/:id", async (req, res) => {
 
     const response = await axios.post(
       MIDDLEWARE_URL,
-      { xml },
+       xml,
       {
         headers: {
             "Content-Type": "application/xml",
