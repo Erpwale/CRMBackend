@@ -290,6 +290,22 @@ const tsxInWords =
       " Only"
     : "INR Zero Only";
 console.log(totalQty);
+// Step 1: Group GST
+const gstMap = {};
+
+order.products.forEach(item => {
+  const gst = item.gst || 0;
+
+  if (!gstMap[gst]) {
+    gstMap[gst] = {
+      cgst: 0,
+      sgst: 0
+    };
+  }
+
+  gstMap[gst].cgst += (item.gstValue || 0) / 2;
+  gstMap[gst].sgst += (item.gstValue || 0) / 2;
+});
     const html=`
     
     <!DOCTYPE html>
@@ -833,19 +849,12 @@ console.log(totalQty);
 `;
 }).join("")}
 
- ${order.products.map((item, i) => {
-
-    
-  const cgstPercent = item.gst / 2;
-  const sgstPercent = item.gst / 2;
-
-  const cgstValue = (item.gstValue || 0) / 2;
-  const sgstValue = (item.gstValue || 0) / 2;
-
-  const amount = item.qty * item.rate;
+${Object.keys(gstMap).map((gst) => {
+  const cgstPercent = gst / 2;
+  const sgstPercent = gst / 2;
 
   return `
-<tr  style="border-top:none;">
+<tr style="border-top:none;">
   <td></td>
 
   <td>
@@ -856,25 +865,16 @@ console.log(totalQty);
     </div>
   </td>
 
-  <!-- ✅ FIX HSN -->
   <td class="hsn"></td>
-
   <td></td>
   <td></td>
-
-  <td style="text-align: center;">
-   
-  </td>
-
-  <td class="disc">
-  
-  </td>
+  <td></td>
+  <td class="disc"></td>
 
   <td class="amount">
-    
-    <strong>${cgstValue.toFixed(2)}</strong><br>
-    <strong>${sgstValue.toFixed(2)}</strong>
-     <br><br><br>
+    <strong>${gstMap[gst].cgst.toFixed(2)}</strong><br>
+    <strong>${gstMap[gst].sgst.toFixed(2)}</strong>
+    <br><br><br>
   </td>
 </tr>
 `;
