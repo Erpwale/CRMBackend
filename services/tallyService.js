@@ -7,14 +7,19 @@ const MIDDLEWARE_URL = "https://antarctic-whacky-hastiness.ngrok-free.dev/tally"
 
 // 🔥 Convert SalesOrder → Tally XML
 const buildXML = (order) => {
-  const formatDate = (input) => {
-    const d = new Date(input);
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}${mm}${dd}`;
-  };
+const formatDate = (input) => {
+  if (!input) return "20260425"; // fallback (for testing)
 
+  const d = new Date(input);
+
+  if (isNaN(d.getTime())) return "20260425";
+
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+
+  return `${yyyy}${mm}${dd}`;
+};
   const date = formatDate(order.orderDate);
 
   return `
@@ -36,7 +41,8 @@ const buildXML = (order) => {
 
      <VOUCHER VCHTYPE="Sales" ACTION="Create">
 
-      <DATE>${date}</DATE>
+     <DATE>${date}</DATE>
+<EFFECTIVEDATE>${date}</EFFECTIVEDATE>
       <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
       <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
 
@@ -80,6 +86,8 @@ router.post("/push-to-tally/:id", async (req, res) => {
       { xml },
       {
         headers: {
+            "Content-Type": "application/xml",
+
           "ngrok-skip-browser-warning": "true"
         }
       }
