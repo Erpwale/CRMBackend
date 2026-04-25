@@ -19,31 +19,36 @@ router.post("/register", async (req, res) => {
       phone,
       password,
       confirmPassword,
-      monthlyTarget,
+      monthlyTargets,
       zone
     } = req.body;
 
-    // ✅ 1. Check all required fields
+    // 1. Required fields
     if (
       !firstName || !lastName || !username || !email ||
       !role || !phone || !password || !confirmPassword ||
-      !monthlyTarget || !zone
+      !monthlyTargets || !zone
     ) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // ✅ 2. Username duplicate check
+    // 2. Monthly targets check
+    if (monthlyTargets.length === 0) {
+      return res.status(400).json({ message: "At least one target required" });
+    }
+
+    // 3. Username check
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: "Username already exists" });
     }
 
-    // ✅ 3. Phone validation
+    // 4. Phone validation
     if (!/^[0-9]{10}$/.test(phone)) {
       return res.status(400).json({ message: "Phone must be 10 digits" });
     }
 
-    // ✅ 4. Password validation
+    // 5. Password validation
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
 
@@ -54,18 +59,15 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    // ✅ 5. Confirm password match
+    // 6. Confirm password
     if (password !== confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
-    if (!monthlyTargets || monthlyTargets.length === 0) {
-  return res.status(400).json({ message: "At least one target required" });
-}
 
-    // ✅ 6. Hash password
+    // 7. Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ 7. Save user
+    // 8. Save
     const newUser = new User({
       firstName,
       lastName,
@@ -74,7 +76,7 @@ router.post("/register", async (req, res) => {
       role,
       phone,
       password: hashedPassword,
-      monthlyTarget,
+      monthlyTargets,
       zone
     });
 
@@ -90,7 +92,6 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 

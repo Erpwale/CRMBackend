@@ -50,7 +50,7 @@ monthlyTargets: [
       default: "Per Month"
     }
   }
-]
+],
   zone: {
     type: String,
     required: true
