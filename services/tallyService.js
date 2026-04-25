@@ -9,11 +9,9 @@ const MIDDLEWARE_URL = "https://antarctic-whacky-hastiness.ngrok-free.dev/tally"
 const buildXML = (order) => {
   const formatDate = (input) => {
     const d = new Date(input);
-
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, "0");
     const dd = String(d.getDate()).padStart(2, "0");
-
     return `${yyyy}${mm}${dd}`;
   };
 
@@ -31,16 +29,21 @@ const buildXML = (order) => {
    </REQUESTDESC>
    <REQUESTDATA>
     <TALLYMESSAGE>
-     <VOUCHER VCHTYPE="Sales" VOUCHERTYPENAME="Sales" ACTION="Create">
+    
+     <VOUCHER ACTION="Create" OBJVIEW="Invoice Voucher View">
+
+      <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
+      <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
 
       <DATE>${date}</DATE>
       <EFFECTIVEDATE>${date}</EFFECTIVEDATE>
-      <ISINVOICE>Yes</ISINVOICE>
 
-      <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
       <PARTYNAME>${order.companyName}</PARTYNAME>
 
-      <!-- Party Ledger -->
+      <ISINVOICE>Yes</ISINVOICE>
+      <PERSISTEDVIEW>Invoice Voucher View</PERSISTEDVIEW>
+
+      <!-- Party -->
       <ALLLEDGERENTRIES.LIST>
         <LEDGERNAME>${order.companyName}</LEDGERNAME>
         <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
@@ -59,19 +62,19 @@ const buildXML = (order) => {
         </ALLINVENTORYENTRIES.LIST>
       `).join("")}
 
-      <!-- CGST -->
+      <!-- GST -->
       <ALLLEDGERENTRIES.LIST>
         <LEDGERNAME>CGST</LEDGERNAME>
         <AMOUNT>${order.cgst}</AMOUNT>
       </ALLLEDGERENTRIES.LIST>
 
-      <!-- SGST -->
       <ALLLEDGERENTRIES.LIST>
         <LEDGERNAME>SGST</LEDGERNAME>
         <AMOUNT>${order.sgst}</AMOUNT>
       </ALLLEDGERENTRIES.LIST>
 
      </VOUCHER>
+
     </TALLYMESSAGE>
    </REQUESTDATA>
   </IMPORTDATA>
