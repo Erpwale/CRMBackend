@@ -57,7 +57,7 @@ app.use("/api/bank", require("./routes/bankRoutes"));
 app.use("/api/sales-order", require("./routes/SalesOrder"));
 app.use("/api/sales-Voucher", require("./routes/salesvoucherConfig"));
 app.use("/api/globalcompany", require("./routes/gloabalcompany"));
-app.use("/api/tally", require("./services/tallySync"));
+app.use("/api/tally", require("./services/tallyService"));
 global.io = io; // ✅ ADD THIS
 
 // ❗ VERY IMPORTANT: export io
