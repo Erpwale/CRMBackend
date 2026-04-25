@@ -812,6 +812,8 @@ order.products.forEach(item => {
   const sgstValue = (item.gstValue || 0) / 2;
 
   const amount = item.qty * item.rate;
+   const formattedDescription = (item.description || "").replace(/\n/g, "<br>");
+
 
   return `
 <tr>
@@ -819,8 +821,7 @@ order.products.forEach(item => {
 
   <td>
     <div class="item-description">${item.name}</div>
-    <div class="item-sub">${item.description}</div>
-
+    <div class="item-sub">${formattedDescription}</div>
   
 
   </td>
