@@ -475,6 +475,7 @@ console.log(totalQty);
         .invoice-table td {
             padding: 6px 4px;
             border: 0.3px solid #00000061;
+               border-top: none;
             vertical-align: top;
         }
 
@@ -790,23 +791,17 @@ console.log(totalQty);
 
   <td style="text-align: center;">
     Nos
-    <br><br><br><br><br>
-    <div style="text-align: right; padding-top: 20px;">
-      ${cgstPercent} <br> ${sgstPercent}
-    </div>
+
   </td>
 
   <td class="disc">
     ${item.discount || 0}
-    <br><br><br><br><br>
-    <div style="text-align: left; padding-top: 20px;">%<br>%</div>
+   
   </td>
 
   <td class="amount">
     ${amount.toFixed(2)}
-    <br><br><br><br><br>
-    <strong>${cgstValue.toFixed(2)}</strong><br>
-    <strong>${sgstValue.toFixed(2)}</strong>
+   
   </td>
 </tr>
 <tr  style="border-top:none;">
