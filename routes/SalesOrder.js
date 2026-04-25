@@ -268,7 +268,20 @@ const amountInWords =
 
     console.log("Total Qty:", totalQty);
     console.log("Amount in Words:", amountInWords);
+let totalAmount = 0;
+let totalCGST = 0;
+let totalSGST = 0;
+let totalGST = 0;
 
+order.products.forEach(item => {
+  const amount = item.qty * item.rate;
+  const gstValue = item.gstValue || 0;
+
+  totalAmount += amount;
+  totalCGST += gstValue / 2;
+  totalSGST += gstValue / 2;
+  totalGST += gstValue;
+});
 console.log(totalQty);
     const html=`
     
@@ -886,23 +899,34 @@ console.log(totalQty);
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>997331</td>
-                            <td>2,700.00</td>
-                            <td>9%</td>
-                            <td>243.00</td>
-                            <td>9%</td>
-                            <td>243.00</td>
-                            <td>486.00</td>
+                      ${order.products.map((item, i) => {
+                         const cgstPercent = item.gst / 2;
+  const sgstPercent = item.gst / 2;
+
+  const cgstValue = (item.gstValue || 0) / 2;
+  const sgstValue = (item.gstValue || 0) / 2;
+
+  const amount = item.qty * item.rate;
+
+                        return
+                       ` <tr>
+                            <td>${item.hsn || "-"}</td>
+                            <td>${item.subtotal}</td>
+                            <td>${cgstPercent}%</td>
+                            <td>${cgstValue}</td>
+                            <td>${sgstPercent}%</td>
+                            <td>${sgstValue}</td>
+                            <td>${item.gstValue}</td>
                         </tr>
+                       `})}
                         <tr style="font-weight: bold;">
                             <td>Total</td>
-                            <td>2,700.00</td>
+                            <td>${totalAmount }</td>
                             <td></td>
-                            <td>243.00</td>
+                            <td>${totalCGST }</td>
                             <td></td>
-                            <td>243.00</td>
-                            <td>486.00</td>
+                            <td>>${totalSGST }</td>
+                            <td>${totalGST }</td>
                         </tr>
                     </tbody>
                 </table>
