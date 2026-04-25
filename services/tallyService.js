@@ -23,7 +23,7 @@ const buildXML = (order) => {
     <TALLYMESSAGE>
      <VOUCHER VCHTYPE="Sales" ACTION="Create">
 
-      <DATE>${date}</DATE>
+      <DATE>${orderDate}</DATE>
       <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
       <PARTYNAME>${order.companyName}</PARTYNAME>
 
