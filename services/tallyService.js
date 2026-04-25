@@ -7,7 +7,16 @@ const MIDDLEWARE_URL = "https://antarctic-whacky-hastiness.ngrok-free.dev/tally"
 
 // 🔥 Convert SalesOrder → Tally XML
 const buildXML = (order) => {
-  const date = order.orderDate.replace(/-/g, "");
+    const formatDate = (input) => {
+  const d = new Date(input);
+
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+
+  return `${yyyy}${mm}${dd}`;
+};
+  const date = formatDate(order.orderDate);
 
   return `
 <ENVELOPE>
@@ -23,7 +32,7 @@ const buildXML = (order) => {
     <TALLYMESSAGE>
      <VOUCHER VCHTYPE="Sales" ACTION="Create">
 
-      <DATE>${orderDate}</DATE>
+      <DATE>${date}</DATE>
       <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
       <PARTYNAME>${order.companyName}</PARTYNAME>
 
