@@ -483,6 +483,7 @@ console.log(totalQty);
 /* ✅ Last row → add bottom border */
 .invoice-table tr:last-child td {
     border-bottom: 0.3px solid #00000061;
+    border-top: 0.3px solid #00000061;
 }
         .invoice-table .sl-no {
             width: 30px;
