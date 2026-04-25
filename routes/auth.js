@@ -143,7 +143,17 @@ router.post("/verify-2fa", async (req, res) => {
       return res.status(400).json({ message: "Missing data" });
 
     // Verify temporary session
-    const decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+  let decoded;
+
+try {
+  decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+} catch (err) {
+  console.log("VERIFY ERROR:", err.message);
+
+  return res.status(401).json({
+    message: "Invalid session"
+  });
+}
 
     const user = await User.findById(decoded.id);
 
