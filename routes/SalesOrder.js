@@ -834,12 +834,11 @@ console.log(totalQty);
   </td>
 
   <td class="disc">
-    
+  
   </td>
 
   <td class="amount">
-    ${amount.toFixed(2)}
-    <br><br><br><br><br>
+    
     <strong>${cgstValue.toFixed(2)}</strong><br>
     <strong>${sgstValue.toFixed(2)}</strong>
   </td>
