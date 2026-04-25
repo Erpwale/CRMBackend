@@ -42,8 +42,8 @@ const formatDate = (input) => {
 
      <VOUCHER VCHTYPE="Sales" ACTION="Create">
 
-     <DATE>${date}</DATE>
-<EFFECTIVEDATE>${date}</EFFECTIVEDATE>
+     <DATE>20260101</DATE>
+<EFFECTIVEDATE>20260101</EFFECTIVEDATE>
       <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
       <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
 
