@@ -206,6 +206,18 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/sales-orders", async (req, res) => {
+  try {
+    const data = await SalesOrder.find({
+      isBill: false,
+      isOutstanding: true
+    });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 router.get("/business-lines", async (req, res) => {
   try {
