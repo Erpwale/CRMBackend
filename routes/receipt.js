@@ -40,22 +40,13 @@ router.post("/create", async (req, res) => {
   try {
     const { companyId, salesOrders, paymentMode, utrNumber } = req.body;
 
-    // 🔹 1. Get Company (for TAN check)
-    const company = await Company.findById(companyId);
-
-    if (!company) {
-      return res.status(404).json({ message: "Company not found" });
-    }
-
-    const hasTAN = !!company.tanNumber;
-
     let totalReceived = 0;
     let totalTDS = 0;
     let advanceAmount = 0;
 
     const updatedOrders = [];
 
-    // 🔹 2. Loop Orders
+    // 🔹 LOOP ORDERS
     for (const item of salesOrders) {
       const order = await SalesOrder.findById(item.orderId);
 
@@ -63,11 +54,13 @@ router.post("/create", async (req, res) => {
 
       let received = Number(item.receivedAmount || 0);
 
-      // ✅ TDS Logic
+      // ✅ TAN FROM ORDER
+      const hasTAN = !!order.tanNumber;
+
       let tdsPercent = hasTAN ? Number(item.tdsPercent || 0) : 0;
       let tdsAmount = (received * tdsPercent) / 100;
 
-      // ❌ If no TAN → force TDS 0
+      // ❌ If no TAN → force 0
       if (!hasTAN) {
         tdsPercent = 0;
         tdsAmount = 0;
@@ -76,10 +69,9 @@ router.post("/create", async (req, res) => {
       const totalPaid = received + tdsAmount;
 
       const pendingBefore = order.pendingAmount;
-
       let pendingAfter = pendingBefore - totalPaid;
 
-      // 🔥 EXTRA PAYMENT → ADVANCE
+      // 🔥 EXTRA → ADVANCE
       if (pendingAfter < 0) {
         advanceAmount += Math.abs(pendingAfter);
         pendingAfter = 0;
@@ -108,10 +100,9 @@ router.post("/create", async (req, res) => {
       });
     }
 
-    // 🔥 3. CREATE RECEIPT
+    // 🔥 CREATE RECEIPT
     const receipt = await Receipt.create({
       receiptNo: await generateReceiptNo(),
-      companyName: company.companyName,
       companyId,
       salesOrders: updatedOrders,
       totalReceived,
@@ -125,6 +116,7 @@ router.post("/create", async (req, res) => {
       message: "Receipt created successfully",
       data: receipt,
     });
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server Error" });
