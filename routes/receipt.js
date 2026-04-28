@@ -81,6 +81,8 @@ router.post("/create", async (req, res) => {
       order.pendingAmount = pendingAfter;
       order.isOutstanding = pendingAfter > 0;
       order.isBill = true;
+      order.isOutstanding = fasle;
+      order.receivedAmount = (order.receivedAmount || 0) + received;
 
       await order.save();
 
