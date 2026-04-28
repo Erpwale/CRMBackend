@@ -1,3 +1,9 @@
+const express = require("express");
+const router = express.Router();
+const mongoose = require("mongoose");
+const SalesOrder = require("../models/SalesOrder.js")
+
+
 const generateReceiptNo = async () => {
   const last = await Receipt.findOne().sort({ createdAt: -1 });
 
