@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const SalesOrder = require("../models/SalesOrder.js")
-
+const Receipt = require("../models/Receipt");   // 🔥 MISSING
+const Company = require("../models/Company");   // 🔥 MISSING
 
 const generateReceiptNo = async () => {
   const last = await Receipt.findOne().sort({ createdAt: -1 });
@@ -129,3 +130,5 @@ router.post("/create", async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
+
+module.exports = router;
