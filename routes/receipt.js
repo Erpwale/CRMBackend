@@ -39,7 +39,11 @@ router.get("/next-receipt-no", async (req, res) => {
 router.post("/create", async (req, res) => {
   try {
     const { companyId, salesOrders, paymentMode, utrNumber } = req.body;
+    const company = await Company.findById(companyId);
 
+if (!company) {
+  return res.status(404).json({ message: "Company not found" });
+}
     let totalReceived = 0;
     let totalTDS = 0;
     let advanceAmount = 0;
@@ -104,6 +108,8 @@ router.post("/create", async (req, res) => {
     const receipt = await Receipt.create({
       receiptNo: await generateReceiptNo(),
       companyId,
+        companyName: company.companyName || company.partyName, // ✅ ADD THIS
+
       salesOrders: updatedOrders,
       totalReceived,
       totalTDS,
