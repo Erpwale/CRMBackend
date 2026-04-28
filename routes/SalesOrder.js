@@ -138,7 +138,17 @@ router.post("/", async (req, res) => {
       bankDetails: proposal.bankDetails,
 
       // 🔹 Extra
-      narration: req.body.narration || ""
+      narration: req.body.narration || "",
+      // 🔹 Billing / Invoice Info (NEW)
+isBill: false,
+isOutstanding: true,
+
+invoiceNo: "",
+invoiceDate: "",
+
+invoiceAmount: proposal.net || 0,   // usually net amount
+receivedAmount: 0,
+pendingAmount: proposal.net || 0,
     };
 
     // ✅ 4. SAVE
