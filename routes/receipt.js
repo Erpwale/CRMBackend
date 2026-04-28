@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const SalesOrder = require("../models/SalesOrder.js")
 const Receipt = require("../models/Receipt");   // 🔥 MISSING
-const Company = require("../models/Company");   // 🔥 MISSING
+const Company = require("../models/ledger");   // 🔥 MISSING
 
 const generateReceiptNo = async () => {
   const last = await Receipt.findOne().sort({ createdAt: -1 });
