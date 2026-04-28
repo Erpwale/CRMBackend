@@ -66,18 +66,7 @@ const globalcompany = require("../models/globalcompany.js");
 
 router.post("/", async (req, res) => {
   try {
-    const { opid, partyName, orderNo, orderDate } = req.body;
-
-    // ✅ Basic validation
-    if (!orderNo || !orderDate) {
-      return res.status(400).json({ message: "OrderNo & OrderDate required" });
-    }
-
-    // ✅ Prevent duplicate order
-    const existing = await SalesOrder.findOne({ orderNo });
-    if (existing) {
-      return res.status(400).json({ message: "Order already exists" });
-    }
+    const { opid, partyName } = req.body;
 
     // ✅ 1. FETCH PROPOSAL
     const proposal = await opp.findOne({ proposalId: opid });
@@ -85,21 +74,23 @@ router.post("/", async (req, res) => {
       return res.status(404).json({ message: "Proposal not found" });
     }
 
-    // ✅ 2. FETCH LEDGER
+    // ✅ 2. FETCH LEDGER (IMPORTANT)
     const ledger = await Ledger.findOne({ companyName: partyName });
     if (!ledger) {
       return res.status(404).json({ message: "Ledger not found" });
     }
 
-    const netAmount = Number(proposal.net || 0);
-
-    // ✅ 3. CREATE DATA
+    // ✅ 3. CREATE FULL SALES ORDER DATA
     const salesOrderData = {
+      // 🔹 Proposal
       proposalId: proposal.proposalId,
       companyName: ledger.companyName,
       priceLevel: proposal.priceLevel,
       businessLine: proposal.businessLine,
       tallySerials: proposal.tallySerials,
+
+      // 🔹 Ledger
+    //   companyId: ledger.companyId,
 
       contactName: ledger.contactName,
       contactMobile: ledger.contactMobile,
@@ -119,47 +110,52 @@ router.post("/", async (req, res) => {
       tan: ledger.tan,
       msme: ledger.msme,
 
-      orderNo,
-      orderDate,
+      // 🔹 Order Info (frontend)
+      orderNo: req.body.orderNo,
+      orderDate: req.body.orderDate,
       userName: req.body.userName,
       salesTeam: req.body.salesTeam,
 
-      products: proposal.products || [],
+      // 🔹 Products (from proposal)
+      products: proposal.products,
 
-      discount: proposal.discount || 0,
-      grossTotal: proposal.total || 0,
+      // 🔹 Financials (from proposal OR frontend if needed)
+      discount: proposal.discount,
+      grossTotal: proposal.total,
       cgstPercent: proposal.cgstPercent,
       sgstPercent: proposal.sgstPercent,
       cgst: proposal.cgst,
       sgst: proposal.sgst,
       roundoff: proposal.roundOff,
       subtotal: proposal.subtotal,
-      net: netAmount,
+      net: proposal.net,
 
+      // 🔹 Terms
       internalTerms: proposal.internalTerms,
       specialTerms: proposal.specialTerms,
 
+      // 🔹 Bank
       bankDetails: proposal.bankDetails,
 
+      // 🔹 Extra
       narration: req.body.narration || "",
+      // 🔹 Billing / Invoice Info (NEW)
+isBill: false,
+isOutstanding: true,
 
-      // ✅ Billing (manual only)
-      isBill: false,
-      isOutstanding: true,
+invoiceNo: "",
+invoiceDate: "",
 
-      invoiceNo: "",
-      invoiceDate: "",
-
-      invoiceAmount: netAmount,
-      receivedAmount: 0,
-      pendingAmount: netAmount
+invoiceAmount:  0,   // usually net amount
+receivedAmount: 0,
+pendingAmount: proposal.grossTotal || 0,
     };
 
-    // ✅ SAVE
+    // ✅ 4. SAVE
     const order = new SalesOrder(salesOrderData);
     await order.save();
 
-    // ✅ UPDATE PROPOSAL
+    // ✅ 5. UPDATE PROPOSAL STATUS
     await opp.findOneAndUpdate(
       { proposalId: opid },
       {
@@ -173,7 +169,7 @@ router.post("/", async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Sales Order Created ✅",
+      message: "Sales Order Created with Full Data ✅",
       data: order
     });
 
