@@ -7,20 +7,51 @@ const MIDDLEWARE_URL = "https://antarctic-whacky-hastiness.ngrok-free.dev/tally"
 
 // 🔥 Convert SalesOrder → Tally XML
 const buildXML = (order) => {
-const formatDate = (input) => {
-  if (!input) return "20260425"; // fallback (for testing)
 
-  const d = new Date(input);
+  const formatDate = (input) => {
+    if (!input) return "20260425";
+    const d = new Date(input);
+    if (isNaN(d.getTime())) return "20260425";
 
-  if (isNaN(d.getTime())) return "20260425";
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
 
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}${mm}${dd}`;
+  };
 
-  return `${yyyy}${mm}${dd}`;
-};
   const date = formatDate(order.orderDate);
+
+  const products = order.products || [];
+
+  // 🔥 MULTIPLE ITEMS FROM YOUR SCHEMA
+  const inventoryEntries = products.map(p => `
+    <INVENTORYENTRIES.LIST>
+      <STOCKITEMNAME>${p.name}</STOCKITEMNAME>
+      <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+      <RATE>${p.rate}/Nos</RATE>
+      <AMOUNT>${p.totalValue}</AMOUNT>
+      <ACTUALQTY>${p.qty} Nos</ACTUALQTY>
+      <BILLEDQTY>${p.qty} Nos</BILLEDQTY>
+    </INVENTORYENTRIES.LIST>
+  `).join("");
+
+  // 🔥 GST LEDGERS (ONLY IF EXISTS)
+  const gstEntries = `
+    ${order.cgst > 0 ? `
+    <ALLLEDGERENTRIES.LIST>
+      <LEDGERNAME>CGST</LEDGERNAME>
+      <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+      <AMOUNT>${order.cgst}</AMOUNT>
+    </ALLLEDGERENTRIES.LIST>` : ""}
+
+    ${order.sgst > 0 ? `
+    <ALLLEDGERENTRIES.LIST>
+      <LEDGERNAME>SGST</LEDGERNAME>
+      <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+      <AMOUNT>${order.sgst}</AMOUNT>
+    </ALLLEDGERENTRIES.LIST>` : ""}
+  `;
 
   return `
 <ENVELOPE>
@@ -37,36 +68,37 @@ const formatDate = (input) => {
    </REQUESTDESC>
 
    <REQUESTDATA>
-       <DATA>   
-<TALLYMESSAGE xmlns:UDF="TallyUDF">
+    <DATA>
+     <TALLYMESSAGE xmlns:UDF="TallyUDF">
 
-     <VOUCHER VCHTYPE="Sales" ACTION="Create">
+      <VOUCHER VCHTYPE="Sales" ACTION="Create">
 
-     <DATE>20260101</DATE>
-<EFFECTIVEDATE>20260101</EFFECTIVEDATE>
-      <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
-      <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
+        <DATE>20260101</DATE>
+        <EFFECTIVEDATE>20260101</EFFECTIVEDATE>
+        <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
+        <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
 
-      <PARTYNAME>${order.companyName}</PARTYNAME>
+        <PARTYNAME>${order.companyName}</PARTYNAME>
+        <PERSISTEDVIEW>Invoice Voucher View</PERSISTEDVIEW>
+        <ISINVOICE>Yes</ISINVOICE>
 
-      <ALLLEDGERENTRIES.LIST>
-        <LEDGERNAME>${order.companyName}</LEDGERNAME>
-        <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
-        <AMOUNT>-${order.net}</AMOUNT>
-      </ALLLEDGERENTRIES.LIST>
+        <!-- 🔹 PARTY -->
+        <ALLLEDGERENTRIES.LIST>
+          <LEDGERNAME>${order.companyName}</LEDGERNAME>
+          <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+          <AMOUNT>-${order.net}</AMOUNT>
+        </ALLLEDGERENTRIES.LIST>
 
-      <ALLLEDGERENTRIES.LIST>
-        <LEDGERNAME>Sales A/c</LEDGERNAME>
-        <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-        <AMOUNT>${order.net}</AMOUNT>
-      </ALLLEDGERENTRIES.LIST>
+        <!-- 🔥 ITEMS -->
+        ${inventoryEntries}
 
-     </VOUCHER>
+        <!-- 🔥 GST -->
+        ${gstEntries}
 
-    </TALLYMESSAGE>
+      </VOUCHER>
 
+     </TALLYMESSAGE>
     </DATA>
-
    </REQUESTDATA>
   </IMPORTDATA>
  </BODY>
