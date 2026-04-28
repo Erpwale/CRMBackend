@@ -44,17 +44,7 @@ const productSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
-  // 🔹 Billing / Invoice Info
-isBill: { type: Boolean, default: false },   // Invoice created or not
-isOutstanding: { type: Boolean, default: true }, // Pending or cleared
 
-invoiceNo: { type: String, default: "" },
-invoiceDate: { type: String, default: "" },
-
-invoiceAmount: { type: Number, default: 0 },
-
-receivedAmount: { type: Number, default: 0 },
-pendingAmount: { type: Number, default: 0 },
 });
 
 
@@ -134,7 +124,18 @@ const salesOrderSchema = new mongoose.Schema(
   // 🔹 Bank Details
   bankDetails: bankSchema,
 
-  narration: String
+  narration: String,
+    // 🔹 Billing / Invoice Info
+isBill: { type: Boolean, default: false },   // Invoice created or not
+isOutstanding: { type: Boolean, default: true }, // Pending or cleared
+
+invoiceNo: { type: String, default: "" },
+invoiceDate: { type: String, default: "" },
+
+invoiceAmount: { type: Number, default: 0 },
+
+receivedAmount: { type: Number, default: 0 },
+pendingAmount: { type: Number, default: 0 },
 },
 { timestamps: true }
 );
