@@ -39,4 +39,4 @@ const receiptSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Receipt", receiptSchema);
+module.exports = mongoose.model("SalesOrder", salesOrderSchema);
