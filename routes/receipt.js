@@ -80,8 +80,12 @@ router.post("/create", async (req, res) => {
       // 🔥 UPDATE ORDER
       order.pendingAmount = pendingAfter;
       order.isOutstanding = pendingAfter > 0;
-      order.isBill = true;
-      order.isOutstanding = false;
+     if (pendingAfter === 0) {
+  order.isBill = true;
+  order.isOutstanding = false;
+} else {
+  order.isOutstanding = true; // still pending
+}
       order.receivedAmount = (order.receivedAmount || 0) + received;
 
       await order.save();
