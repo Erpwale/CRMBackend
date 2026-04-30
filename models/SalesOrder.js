@@ -77,8 +77,21 @@ const salesOrderSchema = new mongoose.Schema(
     type: mongoose.Schema.Types.ObjectId,
     ref: "Company"
   },
+payments: [
+  {
+    amount: Number,
+    tdsPercent: Number,
+    tdsAmount: Number,
+    paymentMode: String,
+    utrNumber: String,
+    date: {
+      type: Date,
+      default: Date.now
+    }
+  }
+], // ✅ FIXED
 
-  contactName: String,
+contactName: String,
   contactMobile: String,
   contactEmail: String,
 

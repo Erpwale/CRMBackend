@@ -70,9 +70,10 @@ router.post("/create", async (req, res) => {
 
       // ✅ Correct calculation
       const billAmount = order.grossTotal || 0;
-
-      const totalReceivedSoFar =
-        (order.receivedAmount || 0) + received + tdsAmount;
+const totalReceivedSoFar = order.payments.reduce((sum, p) => {
+  return sum + p.amount + p.tdsAmount;
+}, 0);
+ 
 
       let pendingAfter = billAmount - totalReceivedSoFar;
 
@@ -84,7 +85,16 @@ router.post("/create", async (req, res) => {
 
       // 🔥 Update Order
       order.pendingAmount = pendingAfter;
-      order.receivedAmount = totalReceivedSoFar;
+      // 🔥 Add payment entry
+order.payments = order.payments || [];
+
+order.payments.push({
+  amount: received,
+  tdsPercent,
+  tdsAmount,
+  paymentMode,
+  utrNumber
+});
 
       order.isBill = totalReceivedSoFar > 0;
       order.isOutstanding = pendingAfter > 0;
