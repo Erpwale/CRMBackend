@@ -57,8 +57,8 @@ router.post("/create", async (req, res) => {
       // ✅ Store previous pending
       const pendingBefore = order.pendingAmount || 0;
 
-      // ✅ TAN check
-      const hasTAN = !!order.tanNumber;
+      // ✅ TAN check (FIXED)
+      const hasTAN = !!order.tan;
 
       let tdsPercent = hasTAN ? Number(item.tdsPercent || 0) : 0;
       let tdsAmount = (received * tdsPercent) / 100;
@@ -68,13 +68,27 @@ router.post("/create", async (req, res) => {
         tdsAmount = 0;
       }
 
-      // ✅ Correct calculation
+      // ✅ Bill amount
       const billAmount = order.grossTotal || 0;
-const totalReceivedSoFar = order.payments.reduce((sum, p) => {
-  return sum + p.amount + p.tdsAmount;
-}, 0);
- 
 
+      // 🔥 Ensure payments array exists
+      order.payments = order.payments || [];
+
+      // 🔥 Add payment FIRST (IMPORTANT FIX)
+      order.payments.push({
+        amount: received,
+        tdsPercent,
+        tdsAmount,
+        paymentMode,
+        utrNumber,
+      });
+
+      // 🔥 Calculate total received from ALL payments
+      const totalReceivedSoFar = order.payments.reduce((sum, p) => {
+        return sum + (p.amount || 0) + (p.tdsAmount || 0);
+      }, 0);
+
+      // 🔥 Pending calculation
       let pendingAfter = billAmount - totalReceivedSoFar;
 
       // 🔥 Handle Advance
@@ -83,25 +97,16 @@ const totalReceivedSoFar = order.payments.reduce((sum, p) => {
         pendingAfter = 0;
       }
 
-      // 🔥 Update Order
+      // 🔥 Update order fields
+      order.receivedAmount = totalReceivedSoFar;
       order.pendingAmount = pendingAfter;
-      // 🔥 Add payment entry
-order.payments = order.payments || [];
-console.log("recived",received)
-order.payments.push({
-  amount: received,
-  tdsPercent,
-  tdsAmount,
-  paymentMode,
-  utrNumber
-});
 
       order.isBill = totalReceivedSoFar > 0;
       order.isOutstanding = pendingAfter > 0;
 
       await order.save();
 
-      // 🔥 Totals
+      // 🔥 Totals for receipt
       totalReceived += received;
       totalTDS += tdsAmount;
 
@@ -132,13 +137,13 @@ order.payments.push({
     });
 
     return res.json({
-      message: "Receipt created successfully",
+      message: "✅ Receipt created successfully",
       data: receipt,
     });
 
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ message: "❌ Server Error", error: err.message });
   }
 });
 
