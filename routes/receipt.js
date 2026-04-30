@@ -66,26 +66,30 @@ router.post("/create", async (req, res) => {
         tdsAmount = 0;
       }
 
-      const totalPaid = received + tdsAmount;
+   const billAmount = order.grossTotal || 0;
 
-      const pendingBefore = order.pendingAmount;
-      let pendingAfter = pendingBefore - totalPaid;
+// total received so far (including current payment)
+const totalReceivedSoFar = (order.receivedAmount || 0) + received + tdsAmount;
+
+let pendingAfter = billAmount - totalReceivedSoFar;
+
 
       // 🔥 EXTRA → ADVANCE
-      if (pendingAfter < 0) {
-        advanceAmount += Math.abs(pendingAfter);
-        pendingAfter = 0;
-      }
-
+   if (pendingAfter < 0) {
+  advanceAmount += Math.abs(pendingAfter);
+  pendingAfter = 0;
+}
+      console.log("pending",pendingAfter)
       // 🔥 UPDATE ORDER
       order.pendingAmount = pendingAfter;
       order.isOutstanding = pendingAfter > 0;
-     if (pendingAfter === 0) {
-  order.isBill = true;
-  order.isOutstanding = false;
-} else {
-  order.isOutstanding = true; // still pending
-}
+    order.pendingAmount = pendingAfter;
+
+// Bill becomes true once any payment happens
+order.isBill = totalReceivedSoFar > 0;
+
+// Outstanding depends only on pending
+order.isOutstanding = pendingAfter > 0;
       order.receivedAmount = (order.receivedAmount || 0) + received;
 
       await order.save();
