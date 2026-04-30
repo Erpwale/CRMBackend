@@ -219,7 +219,7 @@ router.get("/", async (req, res) => {
 router.get("/sales-orders", async (req, res) => {
   try {
     const data = await SalesOrder.find({
-      isBill: false,
+     
       isOutstanding: true
     });
     res.json(data);
