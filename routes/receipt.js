@@ -87,7 +87,7 @@ const totalReceivedSoFar = order.payments.reduce((sum, p) => {
       order.pendingAmount = pendingAfter;
       // 🔥 Add payment entry
 order.payments = order.payments || [];
-
+console.log("recived",received)
 order.payments.push({
   amount: received,
   tdsPercent,
