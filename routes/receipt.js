@@ -39,7 +39,7 @@ router.get("/next-receipt-no", async (req, res) => {
 router.post("/create", async (req, res) => {
   try {
     const { companyName, salesOrders, paymentMode, utrNumber } = req.body;
-   
+
     let totalReceived = 0;
     let totalTDS = 0;
     let advanceAmount = 0;
@@ -52,51 +52,50 @@ router.post("/create", async (req, res) => {
 
       if (!order) continue;
 
-      let received = Number(item.receivedAmount || 0);
+      const received = Number(item.receivedAmount || 0);
 
-      // ✅ TAN FROM ORDER
+      // ✅ Store previous pending
+      const pendingBefore = order.pendingAmount || 0;
+
+      // ✅ TAN check
       const hasTAN = !!order.tanNumber;
 
       let tdsPercent = hasTAN ? Number(item.tdsPercent || 0) : 0;
       let tdsAmount = (received * tdsPercent) / 100;
 
-      // ❌ If no TAN → force 0
       if (!hasTAN) {
         tdsPercent = 0;
         tdsAmount = 0;
       }
 
-   const billAmount = order.grossTotal || 0;
+      // ✅ Correct calculation
+      const billAmount = order.grossTotal || 0;
 
-// total received so far (including current payment)
-const totalReceivedSoFar = (order.receivedAmount || 0) + received + tdsAmount;
+      const totalReceivedSoFar =
+        (order.receivedAmount || 0) + received + tdsAmount;
 
-let pendingAfter = billAmount - totalReceivedSoFar;
+      let pendingAfter = billAmount - totalReceivedSoFar;
 
+      // 🔥 Handle Advance
+      if (pendingAfter < 0) {
+        advanceAmount += Math.abs(pendingAfter);
+        pendingAfter = 0;
+      }
 
-      // 🔥 EXTRA → ADVANCE
-   if (pendingAfter < 0) {
-  advanceAmount += Math.abs(pendingAfter);
-  pendingAfter = 0;
-}
-      console.log("pending",pendingAfter)
-      // 🔥 UPDATE ORDER
+      // 🔥 Update Order
       order.pendingAmount = pendingAfter;
+      order.receivedAmount = totalReceivedSoFar;
+
+      order.isBill = totalReceivedSoFar > 0;
       order.isOutstanding = pendingAfter > 0;
-    order.pendingAmount = pendingAfter;
-
-// Bill becomes true once any payment happens
-order.isBill = totalReceivedSoFar > 0;
-
-// Outstanding depends only on pending
-order.isOutstanding = pendingAfter > 0;
-      order.receivedAmount = (order.receivedAmount || 0) + received;
 
       await order.save();
 
+      // 🔥 Totals
       totalReceived += received;
       totalTDS += tdsAmount;
 
+      // 🔥 Store for receipt
       updatedOrders.push({
         orderId: order._id,
         orderNo: order.orderNo,
@@ -110,12 +109,10 @@ order.isOutstanding = pendingAfter > 0;
       });
     }
 
-    // 🔥 CREATE RECEIPT
+    // 🔥 Create Receipt
     const receipt = await Receipt.create({
       receiptNo: await generateReceiptNo(),
-    
-        companyName: companyName, // ✅ ADD THIS
-
+      companyName,
       salesOrders: updatedOrders,
       totalReceived,
       totalTDS,
