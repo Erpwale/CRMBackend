@@ -179,12 +179,19 @@ router.post("/create", async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const receipts = await Receipt.find()
-      .sort({ createdAt: -1 }); // latest first
+      .populate({
+        path: "salesOrders.orderId", // if ref exists
+        model: "SalesOrder",
+      })
+      .sort({ createdAt: -1 });
 
-    res.json(receipts);
+    res.json({
+      success: true,
+      data: receipts,
+    });
   } catch (err) {
     res.status(500).json({
-      message: "❌ Error fetching receipts",
+      message: "Error fetching receipts",
       error: err.message,
     });
   }
