@@ -176,4 +176,18 @@ router.post("/create", async (req, res) => {
   }
 });
 
+router.get("/all", async (req, res) => {
+  try {
+    const receipts = await Receipt.find()
+      .sort({ createdAt: -1 }); // latest first
+
+    res.json(receipts);
+  } catch (err) {
+    res.status(500).json({
+      message: "❌ Error fetching receipts",
+      error: err.message,
+    });
+  }
+});
+
 module.exports = router;
