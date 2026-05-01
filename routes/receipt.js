@@ -46,35 +46,55 @@ router.post("/create", async (req, res) => {
 
     const updatedOrders = [];
 
+    // ✅ GET COMPANY FROM LEDGER
+    const company = await Company.findOne({ companyName: companyName });
+
+    if (!company) {
+      return res.status(400).json({ message: "Company not found in ledger" });
+    }
+
+    const hasTAN = !!company.tan;
+
     // 🔹 LOOP ORDERS
     for (const item of salesOrders) {
       const order = await SalesOrder.findById(item.orderId);
-
       if (!order) continue;
 
       const received = Number(item.receivedAmount || 0);
 
-      // ✅ Store previous pending
+      // ✅ Pending before payment
       const pendingBefore = order.pendingAmount || 0;
 
-      // ✅ TAN check (FIXED)
-      const hasTAN = !!order.tan;
-
-      let tdsPercent = hasTAN ? Number(item.tdsPercent || 0) : 0;
-      let tdsAmount = (received * tdsPercent) / 100;
-
-      if (!hasTAN) {
-        tdsPercent = 0;
-        tdsAmount = 0;
+      // 🚫 VALIDATION: received cannot exceed pending
+      if (received > pendingBefore) {
+        return res.status(400).json({
+          message: `Received amount cannot exceed pending for order ${order.orderNo}`,
+        });
       }
 
-      // ✅ Bill amount
-      const billAmount = order.grossTotal || 0;
+      // ✅ TDS LOGIC FROM LEDGER
+      let tdsPercent = 0;
+      let tdsAmount = 0;
+
+      if (hasTAN) {
+        const allowedTDS = [2, 10];
+
+        if (item.tdsPercent && !allowedTDS.includes(Number(item.tdsPercent))) {
+          return res.status(400).json({
+            message: "TDS must be either 2% or 10%",
+          });
+        }
+
+        tdsPercent = Number(item.tdsPercent || 0);
+
+        // ✅ APPLY ON PENDING (IMPORTANT FIX)
+        tdsAmount = (pendingBefore * tdsPercent) / 100;
+      }
 
       // 🔥 Ensure payments array exists
       order.payments = order.payments || [];
 
-      // 🔥 Add payment FIRST (IMPORTANT FIX)
+      // 🔥 ADD PAYMENT
       order.payments.push({
         amount: received,
         tdsPercent,
@@ -83,34 +103,40 @@ router.post("/create", async (req, res) => {
         utrNumber,
       });
 
-      // 🔥 Calculate total received from ALL payments
+      // 🔥 TOTAL RECEIVED (including TDS)
       const totalReceivedSoFar = order.payments.reduce((sum, p) => {
         return sum + (p.amount || 0) + (p.tdsAmount || 0);
       }, 0);
 
-      // 🔥 Pending calculation
+      const billAmount = order.grossTotal || 0;
+
       let pendingAfter = billAmount - totalReceivedSoFar;
 
-      // 🔥 Handle Advance
+      // 🔥 ADVANCE HANDLING
       if (pendingAfter < 0) {
         advanceAmount += Math.abs(pendingAfter);
         pendingAfter = 0;
       }
 
-      // 🔥 Update order fields
+      // 🔥 UPDATE ORDER
       order.receivedAmount = totalReceivedSoFar;
       order.pendingAmount = pendingAfter;
-
       order.isBill = totalReceivedSoFar > 0;
       order.isOutstanding = pendingAfter > 0;
 
       await order.save();
 
-      // 🔥 Totals for receipt
+      // 🔥 UPDATE LEDGER BALANCE
+      company.totalReceived = (company.totalReceived || 0) + received;
+      company.totalTDS = (company.totalTDS || 0) + tdsAmount;
+      company.balance = (company.balance || 0) - (received + tdsAmount);
+
+      await company.save();
+
+      // 🔥 TOTALS
       totalReceived += received;
       totalTDS += tdsAmount;
 
-      // 🔥 Store for receipt
       updatedOrders.push({
         orderId: order._id,
         orderNo: order.orderNo,
@@ -124,7 +150,7 @@ router.post("/create", async (req, res) => {
       });
     }
 
-    // 🔥 Create Receipt
+    // 🔥 CREATE RECEIPT
     const receipt = await Receipt.create({
       receiptNo: await generateReceiptNo(),
       companyName,
@@ -143,7 +169,10 @@ router.post("/create", async (req, res) => {
 
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "❌ Server Error", error: err.message });
+    res.status(500).json({
+      message: "❌ Server Error",
+      error: err.message,
+    });
   }
 });
 
