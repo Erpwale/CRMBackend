@@ -218,11 +218,28 @@ router.get("/", async (req, res) => {
 
 router.get("/sales-orders", async (req, res) => {
   try {
-    const data = await SalesOrder.find({
-     
-      isOutstanding: true
+    const orders = await SalesOrder.find({ isOutstanding: true });
+
+    // 🔥 Get unique company names
+    const companyNames = [...new Set(orders.map(o => o.companyName))];
+
+    // 🔥 Fetch ledger for those companies
+    const ledgers = await Ledger.find({
+      companyName: { $in: companyNames },
     });
-    res.json(data);
+
+    // 🔥 Return only one entry per company
+    const result = companyNames.map((name) => {
+      const ledger = ledgers.find(l => l.companyName === name);
+
+      return {
+        companyName: name,
+        balance: ledger?.balance || 0,
+      };
+    });
+
+    res.json(result);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
