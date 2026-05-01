@@ -220,23 +220,41 @@ router.get("/sales-orders", async (req, res) => {
   try {
     const orders = await SalesOrder.find({ isOutstanding: true });
 
-    // 🔥 Get unique company names
-    const companyNames = [...new Set(orders.map(o => o.companyName))];
+    // 🔥 Group orders by company
+    const companyMap = {};
 
-    // 🔥 Fetch ledger for those companies
+    orders.forEach((order) => {
+      const name = order.companyName;
+
+      if (!companyMap[name]) {
+        companyMap[name] = {
+          companyName: name,
+          orders: [],
+        };
+      }
+
+      companyMap[name].orders.push(order);
+    });
+
+    const companyNames = Object.keys(companyMap);
+
+    // 🔥 Fetch ledger data
     const ledgers = await Ledger.find({
       companyName: { $in: companyNames },
     });
 
-    // 🔥 Return only one entry per company
-    const result = companyNames.map((name) => {
-      const ledger = ledgers.find(l => l.companyName === name);
-
-      return {
-        companyName: name,
-        balance: ledger?.balance || 0,
-      };
+    // 🔥 Map ledger balance
+    const ledgerMap = {};
+    ledgers.forEach((l) => {
+      ledgerMap[l.companyName] = l.balance || 0;
     });
+
+    // 🔥 Final result
+    const result = companyNames.map((name) => ({
+      companyName: name,
+      balance: ledgerMap[name] || 0,
+      orders: companyMap[name].orders,
+    }));
 
     res.json(result);
 
