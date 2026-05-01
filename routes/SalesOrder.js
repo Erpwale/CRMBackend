@@ -280,8 +280,39 @@ router.get("/business-lines", async (req, res) => {
 
 
 
+router.get("/sales-order", async (req, res) => {
+  try {
+    const { userName, search, businessLine, startDate, endDate } = req.query;
 
+    const filter = {};
 
+    // ✅ username filter
+    if (userName) {
+      filter.userName = userName;
+    }
+
+    if (businessLine) {
+      filter.businessLine = businessLine;
+    }
+
+    if (search) {
+      filter.companyName = { $regex: search, $options: "i" };
+    }
+
+    if (startDate && endDate) {
+      filter.createdAt = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
+      };
+    }
+
+    const data = await SalesOrder.find(filter);
+
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 router.get("/invoice-pdf", async (req, res) => {
   try {
