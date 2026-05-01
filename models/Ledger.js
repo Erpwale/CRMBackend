@@ -60,6 +60,11 @@ const ledgerSchema = new mongoose.Schema(
       uppercase: true,
       trim: true,
     },
+        balance: {
+      type: Number,
+      default: 0, // remaining amount to receive
+    },
+
   },
   { timestamps: true }
 );
