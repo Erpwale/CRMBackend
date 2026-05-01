@@ -148,7 +148,7 @@ invoiceDate: "",
 
 invoiceAmount:  0,   // usually net amount
 receivedAmount: 0,
-pendingAmount: proposal.grossTotal || 0,
+pendingAmount: proposal.total || 0,
     };
 
     // ✅ 4. SAVE
