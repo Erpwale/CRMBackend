@@ -38,7 +38,7 @@ router.get("/next-receipt-no", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   try {
-    const { companyName, salesOrders, paymentMode, utrNumber } = req.body;
+    const { companyName, salesOrders, paymentMode, utrNumber,remainingAmount } = req.body;
 
     let totalReceived = 0;
     let totalTDS = 0;
@@ -129,7 +129,7 @@ router.post("/create", async (req, res) => {
       // 🔥 UPDATE LEDGER BALANCE
       company.totalReceived = (company.totalReceived || 0) + received;
       company.totalTDS = (company.totalTDS || 0) + tdsAmount;
-      company.balance = (company.balance || 0) - (received + tdsAmount);
+      company.balance = remainingAmount;
 
       await company.save();
 
