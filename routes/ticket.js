@@ -59,14 +59,21 @@ router.post("/get-full-details", async (req, res) => {
 });
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+host: "smtp.hostinger.com",
   port: 587,
   secure: false,
+  requireTLS:true,
+  pool: true, // Enable connection pooling
+  maxConnections: 5, // Maximum number of simultaneous connections (default: 5)
+  maxMessages: 100, // Messages per connection before reconnecting (default: 100)
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
   },
+  logger: true,
+  debug: true
 });
+module.exports = transporter;
 
 const generatePassword = () => {
   const chars =
