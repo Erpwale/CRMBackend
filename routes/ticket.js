@@ -7,19 +7,27 @@ const router = express.Router();
 
 router.post("/get-full-details", async (req, res) => {
   try {
-    const { mobile } = req.body;
+        const { search } = req.body;
 
-    if (!mobile) {
-      return res.status(400).json({ message: "Mobile number required" });
+    if (!search) {
+      return res.status(400).json({
+        message: "Mobile or email is required"
+      });
     }
 
-    // 1. Find Contact using mobile
-    const contact = await Contact.findOne({ mobile });
+    // 1. Find contact using mobile OR email
+    const contact = await Contact.findOne({
+      $or: [
+        { mobile: search },
+        { email: search }
+      ]
+    });
 
     if (!contact) {
-      return res.status(404).json({ message: "Contact not found" });
+      return res.status(404).json({
+        message: "Contact not found"
+      });
     }
-
     // 2. Get Company using companyId
     const company = await Company.findById(contact.companyId);
 
