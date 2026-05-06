@@ -88,7 +88,7 @@ const sendPasswordMail = async (user) => {
 
   const templatePath = path.join(
     __dirname,
-    "assets",
+    "templates",
     "template.html"
   );
 
@@ -113,7 +113,7 @@ router.post("/send-password", async (req, res) => {
   try {
     const user = {
       firstName: "Deepali",
-      email: "test@gmail.com",
+      email: "deepalimore609@gmail.com",
     };
 
     const password = await sendPasswordMail(user);
