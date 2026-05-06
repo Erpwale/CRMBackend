@@ -140,7 +140,7 @@ router.post("/send-password", async (req, res) => {
 });
 
 
-router.get("/:companyId", authMiddleware, async (req, res) => {
+router.get("/:companyId",  async (req, res) => {
   try {
 
     const contacts = await Contact.find({
