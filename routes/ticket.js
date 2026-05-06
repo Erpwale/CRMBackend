@@ -138,4 +138,26 @@ router.post("/send-password", async (req, res) => {
     });
   }
 });
+
+
+router.get("/:companyId", authMiddleware, async (req, res) => {
+  try {
+
+    const contacts = await Contact.find({
+      companyId: req.params.companyId
+    }).sort({ _id: -1 }); // 🔥 latest first
+
+    res.json({
+      success: true,
+      data: contacts
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+
 module.exports = router;
+
+
