@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Reset</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background: #eef1f5;
+    font-family: Arial, sans-serif;
+}
+
+.wrapper {
+    width: 100%;
+    padding: 40px 0;
+}
+
+.main-box {
+    max-width: 600px;
+    margin: auto;
+}
+
+
+.password-box {
+ background: rgba(255,255,255,0.1);
+ border: 1px dashed #2575fc; 
+ padding: 15px; border-radius: 8px; 
+ font-size: 20px; font-weight: bold; 
+ letter-spacing: 2px; margin: 20px auto;
+ width: fit-content; 
+ }
+
+/* Logo */
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    color: #e53935;
+    margin-bottom: 25px;
+    text-align: center; /* left aligned */
+}
+
+/* Card */
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 40px 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+/* Icon circle (center only this) */
+.icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 23px;
+    letter-spacing: 3px;
+    text-align: center;
+    line-height: 80px; /* vertical center */
+    display: block;
+}
+
+/* Heading */
+h2 {
+    margin: 10px 0;
+    font-size: 22px;
+    color: #333;
+    text-align: center;
+}
+
+/* Text */
+p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    margin: 10px 0;
+    text-align: left;
+}
+
+/* Button */
+.btn {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 12px 25px;
+    background: #111;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Link */
+.link {
+    font-size: 13px;
+    color: #3b82f6;
+    word-break: break-all;
+}
+
+/*Support Link*/
+
+.helplink{
+font-size: 13px;
+    color: #3b82f6;
+    word-break: break-all;
+}
+
+
+/* Footer */
+.footer {
+    margin-top: 25px;
+    font-size: 12px;
+    color: #888;
+    text-align: center; /* left aligned */
+}
+
+.footer-links a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #3b82f6;
+}
+
+/* Responsive */
+@media(max-width:600px){
+    .card {
+        padding: 25px 15px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="wrapper">
+    <div class="main-box">
+
+    <!-- Logo 
+    <div class="logo">
+        ERPWale
+    </div>
+	-->
+    <!-- Card -->
+    <div class="card">
+
+        <!-- Icon (center aligned) -->
+        <div class="icon">
+            *****
+        </div>
+
+        <!-- Title -->
+        <h2>Password Reset Sucessfull</h2>
+
+        <p>
+		</br>
+            Hello <b>{{Contact_Name}},</b></br><p> We received a request to reset your password for your email: <b>{email}</b> on our Support Portal.</b> 
+			</br>
+			<p>As part of our commitment to keeping your account secure, we’re requesting that please do not share this Password to anyone.</p>
+        </p>
+
+        <!-- Button -->
+        <div class="password-box"> XCsn!23A </div>
+
+         <p>
+            If you didn’t request a password change, you can safely ignore this email.
+        </p>
+		<p>
+		Need help? Visit our Help Center or contact us: <br>Mail us on <b class="helplink"> support@erpwale.com</b> or call us on <b class="helplink"> +91 744 789 3001. </b>
+		</P>
+
+        <p style="margin-top:20px;">
+            Thank you,<br>
+            <b>MS ERPWale Team</b>
+        </p>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        ©2026 MS ERPWale Pvt. Ltd.<br><br>
+
+        <div class="footer-links">
+            <a href="#">Portal</a>
+            <a href="#">Website</a>
+            <a href="#">LinkedIn</a>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

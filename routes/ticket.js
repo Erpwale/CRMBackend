@@ -4,6 +4,9 @@ const Company = require("../models/Company");
 const User = require("../models/User");
 const express = require("express");
 const router = express.Router();
+const nodemailer = require("nodemailer");
+const fs = require("fs");
+const path = require("path");
 
 router.post("/get-full-details", async (req, res) => {
   try {
@@ -55,5 +58,77 @@ router.post("/get-full-details", async (req, res) => {
   }
 });
 
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
+const generatePassword = () => {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$!";
+
+  let password = "";
+
+  for (let i = 0; i < 8; i++) {
+    password += chars.charAt(
+      Math.floor(Math.random() * chars.length)
+    );
+  }
+
+  return password;
+};
+
+const sendPasswordMail = async (user) => {
+  const password = generatePassword();
+
+  const templatePath = path.join(
+    __dirname,
+    "assets",
+    "template.html"
+  );
+
+  let htmlTemplate = fs.readFileSync(templatePath, "utf8");
+
+  htmlTemplate = htmlTemplate
+    .replace("{{Contact_Name}}", user.firstName)
+    .replace("{email}", user.email)
+    .replace("XCsn!23A", password);
+
+  await transporter.sendMail({
+    from: `"ERPWale Support" <${process.env.EMAIL_USER}>`,
+    to: user.email,
+    subject: "Your Auto Generated Password",
+    html: htmlTemplate,
+  });
+
+  return password;
+};
+
+router.post("/send-password", async (req, res) => {
+  try {
+    const user = {
+      firstName: "Deepali",
+      email: "test@gmail.com",
+    };
+
+    const password = await sendPasswordMail(user);
+
+    res.json({
+      success: true,
+      password,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Mail sending failed",
+    });
+  }
+});
 module.exports = router;
