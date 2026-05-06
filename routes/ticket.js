@@ -35,7 +35,7 @@ router.post("/get-full-details", async (req, res) => {
     res.json({
       contact,
       company,
-      orders,
+      salesOrders,
     });
 
   } catch (error) {
