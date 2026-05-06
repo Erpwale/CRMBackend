@@ -1,9 +1,9 @@
 const Contact = require("../models/Contact");
 const SalesOrder = require("../models/SalesOrder");
 const Company = require("../models/Company");
-
 const express = require("express");
 const router = express.Router();
+
 router.post("/get-full-details", async (req, res) => {
   try {
     const { mobile } = req.body;
@@ -43,3 +43,6 @@ router.post("/get-full-details", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
+module.exports = router;
