@@ -27,8 +27,8 @@ router.post("/get-full-details", async (req, res) => {
     }
 
     // 3. Get Sales Orders using companyId
-    const orders = await SalesOrder.find({
-      companyId: company._id,
+     const salesOrders = await SalesOrder.find({
+      companyName: company.companyName
     });
 
     // 4. Return everything
