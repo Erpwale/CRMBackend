@@ -1,6 +1,7 @@
 const Contact = require("../models/Contact");
 const SalesOrder = require("../models/SalesOrder");
 const Company = require("../models/Company");
+const User = require("../models/User");
 const express = require("express");
 const router = express.Router();
 
@@ -30,12 +31,14 @@ router.post("/get-full-details", async (req, res) => {
      const salesOrders = await SalesOrder.find({
       companyName: company.companyName
     });
+   const user = await User.findById(company.createdBy);
 
     // 4. Return everything
     res.json({
       contact,
       company,
       salesOrders,
+      user
     });
 
   } catch (error) {
