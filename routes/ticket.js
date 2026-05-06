@@ -42,7 +42,7 @@ router.post("/get-full-details", async (req, res) => {
      const salesOrders = await SalesOrder.find({
       companyName: company.companyName
     });
-   const user = await User.findById(company.createdBy).select("firstName lastName role");
+   const user = await User.findById(company.createdBy).select("firstName lastName role email");
 
     // 4. Return everything
     res.json({
