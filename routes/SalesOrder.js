@@ -10,7 +10,7 @@ const path = require("path");
 const Ledger = require("../models/Ledger.js");
 
 const logoPath = path.join(__dirname, "../assets/erplogo.jpeg");
-const erpstamp = path.join(__dirname, "../assets/erpstamp.jpeg");
+const erpstamp = path.join(__dirname, "../assets/erpstamp.png");
 const logoBase64 = fs.readFileSync(logoPath, "base64");
 const stampBase64 = fs.readFileSync(erpstamp, "base64");
 const validate = (body) => {
