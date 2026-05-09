@@ -424,4 +424,89 @@ router.get("/opportunity/:id", async (req, res) => {
     });
   }
 });
+
+// ✅ UPDATE OPPORTUNITY
+router.put("/:id", authMiddleware, async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    // ✅ CALCULATIONS
+    const subtotal = req.body.subtotal || 0;
+    const totalGST = req.body.gstTotal || 0;
+
+    const totalBeforeRound =
+      subtotal + totalGST;
+
+    const roundedTotal =
+      Math.round(totalBeforeRound);
+
+    const roundOff = +(
+      roundedTotal - totalBeforeRound
+    ).toFixed(2);
+
+    // ✅ UPDATE DATA
+    const updatedData = {
+      ...req.body,
+
+      cgst: +(totalGST / 2).toFixed(2),
+
+      sgst: +(totalGST / 2).toFixed(2),
+
+      roundOff,
+
+      total: roundedTotal,
+    };
+
+    // ✅ UPDATE
+    const updatedOpportunity =
+      await Proposal.findByIdAndUpdate(
+        id,
+        updatedData,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
+    if (!updatedOpportunity) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Opportunity not found",
+      });
+    }
+
+    // ✅ SOCKET
+    if (global.io) {
+      global.io.emit(
+        "opportunityUpdated",
+        {
+          type: "UPDATE",
+          data: updatedOpportunity,
+        }
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Opportunity updated successfully",
+      data: updatedOpportunity,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message:
+        "Failed to update opportunity",
+      error: error.message,
+    });
+  }
+});
+
+
 module.exports = router;
