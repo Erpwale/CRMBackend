@@ -10,7 +10,9 @@ const path = require("path");
 const Ledger = require("../models/Ledger.js");
 
 const logoPath = path.join(__dirname, "../assets/erplogo.jpeg");
+const erpstamp = path.join(__dirname, "../assets/erpstamp.jpeg");
 const logoBase64 = fs.readFileSync(logoPath, "base64");
+const stampBase64 = fs.readFileSync(erpstamp, "base64");
 const validate = (body) => {
   const {
     partyName,
@@ -1087,6 +1089,7 @@ ${Object.keys(gstMap).map((gst) => {
                         </div>
                         <div class="signature-area">
                             for MS ERPWALE PVT. LTD.
+                       <img src="data:image/png;base64,${stampBase64}" width="80" height="80" style="display: block; margin-top: 10px; margin-left: auto;" />
                             <div class="auth-signatory">Authorised Signatory</div>
                         </div>
                     </div>
