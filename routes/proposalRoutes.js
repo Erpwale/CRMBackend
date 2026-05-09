@@ -54,7 +54,7 @@ await opp.findOneAndUpdate(
       global.io.emit("ProposelUpdated", {
         type: "CREATE",
         data: updatedOpportunity,
-        { new: true }
+        new: true
       });
     } else {
       console.log("❌ Socket not initialized or companyId missing");
