@@ -380,39 +380,48 @@ router.put("/status/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-router.put("/statusp/:id", async (req, res) => {
+router.put("/status/:id", async (req, res) => {
   try {
-    
+    const { statusDetails } = req.body;
+
+    // ✅ If postponed
+    if (statusDetails.status === "Postponded") {
+      statusDetails.closeReason = "";
+      statusDetails.closeRemark = "";
+    }
+
+    // ✅ If close
+    if (statusDetails.status.includes("Close")) {
+      statusDetails.postponedDate = "";
+    }
+
     const updated = await Proposal.findByIdAndUpdate(
       req.params.id,
-      {
-
-        proposalStatus: true   // ✅ ADD THIS LINE
-      },
+      { statusDetails },
       { new: true }
     );
- if (global.io) {
 
-        global.io.emit(
-          "opportunityUpdated",
-          {
-            type: "UPDATE",
-            data: updated,
-          }
-        );
+    // ✅ SOCKET EMIT
+    if (global.io) {
 
-        console.log(
-          "✅ Socket emitted for UPDATE"
-        );
+      global.io.emit(
+        "opportunityUpdated",
+        {
+          type: "STATUS_UPDATE",
+          data: updated,
+        }
+      );
 
-      } else {
+      console.log("✅ Socket emitted for STATUS UPDATE");
 
-        console.log(
-          "❌ Socket not initialized"
-        );
-      }
+    } else {
+
+      console.log("❌ Socket not initialized");
+
+    }
 
     res.json(updated);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
