@@ -428,7 +428,7 @@ router.get("/opportunity/:id", async (req, res) => {
 // ✅ UPDATE OPPORTUNITY
 // ✅ UPDATE OPPORTUNITY
 router.put(
-  "/opportunity/:id",
+  "/:id",
   authMiddleware,
   async (req, res) => {
     try {
