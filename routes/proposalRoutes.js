@@ -44,7 +44,8 @@ router.post("/create", authMiddleware, async (req, res) => {
 
     const saved = await proposal.save();
  // ✅ 🔥 UPDATE OPPORTUNITY HERE
- await opp.findOneAndUpdate(
+     const updatedOpportunity =
+await opp.findOneAndUpdate(
   { proposalId: opid },  // 👈 match your number field
   { proposalStatus: true }
 );
@@ -52,7 +53,8 @@ router.post("/create", authMiddleware, async (req, res) => {
  if (global.io) {
       global.io.emit("ProposelUpdated", {
         type: "CREATE",
-        data: savedData,
+        data: updatedOpportunity,
+        { new: true }
       });
     } else {
       console.log("❌ Socket not initialized or companyId missing");
