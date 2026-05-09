@@ -956,8 +956,8 @@ text-align: center
   <!-- ✅ FIX HSN -->
   <td class="hsn">${item.hsn || "-"}</td>
 
-  <td>${item.qty}</td>
-  <td>${item.rate}</td>
+  <td class="hsn">${item.qty}</td>
+  <td class="hsn">${item.rate}</td>
 
   <td style="text-align: center;">
     Nos
