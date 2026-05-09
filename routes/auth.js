@@ -202,6 +202,7 @@ console.log("VERIFIED LOG:", verified);
       { id: user._id,
          name: user.name,
       role: user.role
+      userName: user.username
        },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
