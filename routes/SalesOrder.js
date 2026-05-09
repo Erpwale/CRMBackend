@@ -658,6 +658,7 @@ text-align: center
         .invoice-table .qty {
             width: 60px;
             text-align: center;
+            margin: auto
         }
 
         .invoice-table .rate {
