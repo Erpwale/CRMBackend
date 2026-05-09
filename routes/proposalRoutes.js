@@ -48,6 +48,16 @@ router.post("/create", authMiddleware, async (req, res) => {
   { proposalId: opid },  // 👈 match your number field
   { proposalStatus: true }
 );
+
+ if (global.io) {
+      global.io.emit("ProposelUpdated", {
+        type: "CREATE",
+        data: savedData,
+      });
+    } else {
+      console.log("❌ Socket not initialized or companyId missing");
+    }
+
     res.status(201).json({
       success: true,
       message: "Proposal created",
