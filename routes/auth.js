@@ -103,12 +103,17 @@ router.post("/login", async (req, res) => {
   if (!isMatch)
     return res.status(400).json({ message: "Invalid credentials" });
 
-  const tempToken = jwt.sign(
-    { id: user._id},
-    process.env.JWT_SECRET,
-    { expiresIn: "10m" }
-  );
-
+const tempToken = jwt.sign(
+  {
+    id: user._id,
+    userName: user.username,
+    email: user.email,
+  },
+  process.env.JWT_SECRET,
+  {
+    expiresIn: "10m",
+  }
+);
   // ✅ Generate secret only once
   if (!user.twoFactorSecret) {
     const secret = speakeasy.generateSecret({ length: 20 });
