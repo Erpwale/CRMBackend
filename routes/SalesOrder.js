@@ -618,7 +618,9 @@ order.products.forEach(item => {
     border-collapse: collapse;
     border: 0.3px solid #00000061;
 }
-
+.hsn{
+text-align: center
+}
 /* ✅ Header */
 .invoice-table th {
     padding: 3px 4px;
