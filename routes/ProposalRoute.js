@@ -391,6 +391,26 @@ router.put("/statusp/:id", async (req, res) => {
       },
       { new: true }
     );
+ if (global.io) {
+
+        global.io.emit(
+          "opportunityUpdated",
+          {
+            type: "UPDATE",
+            data: updated,
+          }
+        );
+
+        console.log(
+          "✅ Socket emitted for UPDATE"
+        );
+
+      } else {
+
+        console.log(
+          "❌ Socket not initialized"
+        );
+      }
 
     res.json(updated);
   } catch (err) {
