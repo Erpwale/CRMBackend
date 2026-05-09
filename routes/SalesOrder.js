@@ -585,6 +585,7 @@ order.products.forEach(item => {
         }
 
      .invoice-table {
+     height:300px;
     width: 100%;
     border-collapse: collapse;
     border: 0.3px solid #00000061;
@@ -772,7 +773,7 @@ order.products.forEach(item => {
         }
 
         .auth-signatory {
-            margin-top: 40px;
+            
             font-size: 12px;
         }
 
@@ -1089,7 +1090,7 @@ ${Object.keys(gstMap).map((gst) => {
                         </div>
                         <div class="signature-area">
                             for MS ERPWALE PVT. LTD.
-                       <img src="data:image/png;base64,${stampBase64}" width="80" height="80" style="display: block; margin-top: 10px; margin-left: auto;" />
+                       <img src="data:image/png;base64,${stampBase64}" width="80" height="80" style="display: block; margin-left: auto;" />
                             <div class="auth-signatory">Authorised Signatory</div>
                         </div>
                     </div>
