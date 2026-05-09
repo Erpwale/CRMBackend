@@ -300,6 +300,7 @@ router.get("/sales-order", async (req, res) => {
         message: "Username is required",
       });
     }
+    console.log("username",userName)
 
     const filter = {
       userName, // ✅ always filter by username
