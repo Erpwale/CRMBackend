@@ -426,87 +426,113 @@ router.get("/opportunity/:id", async (req, res) => {
 });
 
 // ✅ UPDATE OPPORTUNITY
-router.put("/:id", authMiddleware, async (req, res) => {
-  try {
+// ✅ UPDATE OPPORTUNITY
+router.put(
+  "/opportunity/:id",
+  authMiddleware,
+  async (req, res) => {
+    try {
 
-    const { id } = req.params;
+      const { id } = req.params;
 
-    // ✅ CALCULATIONS
-    const subtotal = req.body.subtotal || 0;
-    const totalGST = req.body.gstTotal || 0;
+      // ✅ VALUES
+      const subtotal =
+        req.body.subtotal || 0;
 
-    const totalBeforeRound =
-      subtotal + totalGST;
+      const totalGST =
+        req.body.gstTotal || 0;
 
-    const roundedTotal =
-      Math.round(totalBeforeRound);
+      // ✅ CALCULATE TOTAL
+      const totalBeforeRound =
+        subtotal + totalGST;
 
-    const roundOff = +(
-      roundedTotal - totalBeforeRound
-    ).toFixed(2);
+      const roundedTotal =
+        Math.round(totalBeforeRound);
 
-    // ✅ UPDATE DATA
-    const updatedData = {
-      ...req.body,
+      const roundOff = +(
+        roundedTotal -
+        totalBeforeRound
+      ).toFixed(2);
 
-      cgst: +(totalGST / 2).toFixed(2),
+      // ✅ UPDATE DATA
+      const updatedData = {
+        ...req.body,
 
-      sgst: +(totalGST / 2).toFixed(2),
+        cgst: +(
+          totalGST / 2
+        ).toFixed(2),
 
-      roundOff,
+        sgst: +(
+          totalGST / 2
+        ).toFixed(2),
 
-      total: roundedTotal,
-    };
+        roundOff,
 
-    // ✅ UPDATE
-    const updatedOpportunity =
-      await Proposal.findByIdAndUpdate(
-        id,
-        updatedData,
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
+        total: roundedTotal,
+      };
 
-    if (!updatedOpportunity) {
-      return res.status(404).json({
+      // ✅ UPDATE DB
+      const updatedOpportunity =
+        await Proposal.findByIdAndUpdate(
+          id,
+          updatedData,
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+
+      if (!updatedOpportunity) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Opportunity not found",
+        });
+      }
+
+      // ✅ SOCKET EMIT
+      if (global.io) {
+
+        global.io.emit(
+          "opportunityUpdated",
+          {
+            type: "UPDATE",
+            data: updatedOpportunity,
+          }
+        );
+
+        console.log(
+          "✅ Socket emitted for UPDATE"
+        );
+
+      } else {
+
+        console.log(
+          "❌ Socket not initialized"
+        );
+      }
+
+      // ✅ RESPONSE
+      res.status(200).json({
+        success: true,
+        message:
+          "Opportunity updated successfully",
+        data: updatedOpportunity,
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
         success: false,
         message:
-          "Opportunity not found",
+          "Failed to update opportunity",
+        error: error.message,
       });
     }
-
-    // ✅ SOCKET
-    if (global.io) {
-      global.io.emit(
-        "opportunityUpdated",
-        {
-          type: "UPDATE",
-          data: updatedOpportunity,
-        }
-      );
-    }
-
-    res.status(200).json({
-      success: true,
-      message:
-        "Opportunity updated successfully",
-      data: updatedOpportunity,
-    });
-
-  } catch (error) {
-
-    console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message:
-        "Failed to update opportunity",
-      error: error.message,
-    });
   }
-});
+);
 
 
 module.exports = router;
