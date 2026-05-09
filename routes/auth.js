@@ -199,14 +199,17 @@ console.log("VERIFIED LOG:", verified);
     await user.save();
 
     const finalToken = jwt.sign(
-      { id: user._id,
-         name: user.name,
-      role: user.role
-      userName: user.username
-       },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+  {
+    id: user._id,
+    userName: user.username,
+    email: user.email,
+    role: user.role,
+  },
+  process.env.JWT_SECRET,
+  {
+    expiresIn: "1d",
+  }
+);
 
     return res.json({
       message: "Login successful",
