@@ -284,23 +284,41 @@ router.get("/business-lines", async (req, res) => {
 
 router.get("/sales-order", async (req, res) => {
   try {
-    const { userName, search, businessLine, startDate, endDate } = req.query;
 
-    const filter = {};
+    const {
+      userName,
+      search,
+      businessLine,
+      startDate,
+      endDate,
+    } = req.query;
 
-    // ✅ username filter
-    if (userName) {
-      filter.userName = userName;
+    // ✅ username compulsory
+    if (!userName) {
+      return res.status(400).json({
+        success: false,
+        message: "Username is required",
+      });
     }
 
+    const filter = {
+      userName, // ✅ always filter by username
+    };
+
+    // ✅ company search
+    if (search) {
+      filter.companyName = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+
+    // ✅ business line
     if (businessLine) {
       filter.businessLine = businessLine;
     }
 
-    if (search) {
-      filter.companyName = { $regex: search, $options: "i" };
-    }
-
+    // ✅ date filter
     if (startDate && endDate) {
       filter.createdAt = {
         $gte: new Date(startDate),
@@ -308,11 +326,20 @@ router.get("/sales-order", async (req, res) => {
       };
     }
 
-    const data = await SalesOrder.find(filter);
+    const data = await SalesOrder.find(filter)
+      .sort({ createdAt: -1 });
 
-    res.json({ success: true, data });
+    res.json({
+      success: true,
+      data,
+    });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message,
+    });
+
   }
 });
 
