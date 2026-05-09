@@ -727,7 +727,8 @@ order.products.forEach(item => {
         .footer-left {
             width: 50%;
             padding: 8px;
-                margin-top: 80px;
+                margin-top: 190px;
+
             /* border-right: 0.5px solid #00000061; */
         }
 
