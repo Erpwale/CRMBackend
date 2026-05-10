@@ -1151,7 +1151,7 @@ ${Object.keys(gstMap).map((gst) => {
 
     res.set({
       "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename=invoice.pdf"
+      "Content-Disposition": `attachment; filename="${order.companyName}.pdf"`
     });
 
     res.send(pdf);
