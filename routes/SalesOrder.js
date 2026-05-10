@@ -406,12 +406,11 @@ router.get("/invoice-pdf", async (req, res) => {
 
     res.set({
       "Content-Type": "application/pdf",
-<<<<<<< HEAD
+
       "Content-Disposition": `attachment; filename="${safeCompanyName}.pdf"`,
       "Content-Length": pdf.length,
-=======
       "Content-Disposition": `attachment; filename="${order.companyName}.pdf"`
->>>>>>> bc8c9f7e62689b025f3049f66becf8073353e3c7
+
     });
 
     // =========================
