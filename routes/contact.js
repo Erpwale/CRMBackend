@@ -9,15 +9,16 @@ const { io } = require("../server");
 // CREATE CONTACT
 router.post("/create", authMiddleware, async (req, res) => {
   try {
-    const {
-      name,
-      designation,
-      mobile,
-      email,
-      primary,
-      companyId,
-      replacePrimary // ✅ IMPORTANT
-    } = req.body;
+   const {
+  name,
+  designation,
+  mobile,
+  email,
+  primary,
+  companyId,
+  replacePrimary,
+  contactType
+} = req.body;
 
     // ---------- VALIDATIONS ----------
     if (!name || !mobile || !email || !designation) {
@@ -47,7 +48,15 @@ router.post("/create", authMiddleware, async (req, res) => {
         message: "Invalid email format"
       });
     }
-
+if (
+  contactType &&
+  !["employee", "customer"].includes(contactType)
+) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid contact type"
+  });
+}
     // ---------- DUPLICATE CHECK ----------
     const existingContact = await Contact.findOne({ mobile })
       .populate("companyId", "companyName");
@@ -92,10 +101,11 @@ router.post("/create", authMiddleware, async (req, res) => {
     }
 
     // ---------- CREATE ----------
-    const contact = new Contact({
-      ...req.body,
-      createdBy: req.user.id
-    });
+const contact = new Contact({
+  ...req.body,
+  contactType: contactType || "employee",
+  createdBy: req.user.id
+});
 
     await contact.save();
 

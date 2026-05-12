@@ -12,6 +12,11 @@ const ContactSchema = new mongoose.Schema(
     mobile: String,
     email: String,
     designation: String,
+  contactType: {
+  type: String,
+  enum: ["employee", "customer"],
+  default: "employee"
+}
 
     inactive: {
       type: Boolean,
