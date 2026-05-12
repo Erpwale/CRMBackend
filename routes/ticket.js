@@ -8,55 +8,55 @@ const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
 
-router.post("/get-full-details", async (req, res) => {
-  try {
-        const { search } = req.body;
+// router.post("/get-full-details", async (req, res) => {
+//   try {
+//         const { search } = req.body;
 
-    if (!search) {
-      return res.status(400).json({
-        message: "Mobile or email is required"
-      });
-    }
+//     if (!search) {
+//       return res.status(400).json({
+//         message: "Mobile or email is required"
+//       });
+//     }
 
-    // 1. Find contact using mobile OR email
-    const contact = await Contact.findOne({
-      $or: [
-        { mobile: search },
-        { email: search }
-      ]
-    });
+//     // 1. Find contact using mobile OR email
+//     const contact = await Contact.findOne({
+//       $or: [
+//         { mobile: search },
+//         { email: search }
+//       ]
+//     });
 
-    if (!contact) {
-      return res.status(404).json({
-        message: "Contact not found"
-      });
-    }
-    // 2. Get Company using companyId
-    const company = await Company.findById(contact.companyId);
+//     if (!contact) {
+//       return res.status(404).json({
+//         message: "Contact not found"
+//       });
+//     }
+//     // 2. Get Company using companyId
+//     const company = await Company.findById(contact.companyId);
 
-    if (!company) {
-      return res.status(404).json({ message: "Company not found" });
-    }
+//     if (!company) {
+//       return res.status(404).json({ message: "Company not found" });
+//     }
 
-    // 3. Get Sales Orders using companyId
-     const salesOrders = await SalesOrder.find({
-      companyName: company.companyName
-    });
-   const user = await User.findById(company.createdBy).select("firstName lastName role email");
+//     // 3. Get Sales Orders using companyId
+//      const salesOrders = await SalesOrder.find({
+//       companyName: company.companyName
+//     });
+//    const user = await User.findById(company.createdBy).select("firstName lastName role email");
 
-    // 4. Return everything
-    res.json({
-      contact,
-      company,
-      salesOrders,
-      user
-    });
+//     // 4. Return everything
+//     res.json({
+//       contact,
+//       company,
+//       salesOrders,
+//       user
+//     });
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
 
 const transporter = nodemailer.createTransport({
 host: "smtp.hostinger.com",
@@ -139,7 +139,88 @@ router.post("/send-password", async (req, res) => {
   }
 });
 
+const jwt = require("jsonwebtoken");
 
+router.get("/get-full-details/:id", async (req, res) => {
+  try {
+
+    // =========================
+    // VERIFY TOKEN
+    // =========================
+
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      return res.status(401).json({
+        message: "Token missing"
+      });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    // VERIFY + DECODE
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
+    console.log(decoded);
+
+    // =========================
+    // PARAM ID
+    // =========================
+
+    const { id } = req.params;
+
+    // Optional security check
+    if (decoded.id !== id) {
+      return res.status(403).json({
+        message: "Unauthorized access"
+      });
+    }
+
+    // 1. Find contact by ID
+    const contact = await Contact.findById(id);
+
+    if (!contact) {
+      return res.status(404).json({
+        message: "Contact not found",
+      });
+    }
+
+    // 2. Company
+    const company = await Company.findById(
+      contact.companyId
+    );
+
+    // 3. Sales Orders
+    const salesOrders = await SalesOrder.find({
+      companyId: company._id
+    });
+
+    // 4. User
+    const user = await User.findById(
+      company.createdBy
+    ).select(
+      "firstName lastName role email"
+    );
+
+    res.json({
+      contact,
+      company,
+      salesOrders,
+      user,
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+});
 router.get("/:companyId",  async (req, res) => {
   try {
 
