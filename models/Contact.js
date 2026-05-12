@@ -12,11 +12,21 @@ const ContactSchema = new mongoose.Schema(
     mobile: String,
     email: String,
     designation: String,
-  contactType: {
-  type: String,
-  enum: ["employee", "customer"],
-  default: "employee"
-},
+
+ // ✅ WHO CREATED THIS CONTACT
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false
+    },
+
+    // ✅ CREATED BY USER OR CUSTOMER
+    createdByType: {
+      type: String,
+      enum: ["user", "customer"],
+       default: "user"
+      required: false
+
+    },
 
     inactive: {
       type: Boolean,

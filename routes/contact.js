@@ -104,7 +104,7 @@ if (
 const contact = new Contact({
   ...req.body,
   contactType: contactType || "employee",
-  createdBy: req.user.id
+  createdBy: req.user?.id || req.contact?.id
 });
 
     await contact.save();
