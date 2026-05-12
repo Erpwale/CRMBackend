@@ -16,7 +16,7 @@ const ContactSchema = new mongoose.Schema(
   type: String,
   enum: ["employee", "customer"],
   default: "employee"
-}
+},
 
     inactive: {
       type: Boolean,
