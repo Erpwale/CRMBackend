@@ -17,7 +17,7 @@ exports.authMiddleware = async (req, res, next) => {
       token,
       process.env.JWT_SECRET
     );
-    console.log(decode)
+    console.log(decoded)
 
     // ✅ First check User
     const user = await User.findById(decoded.id);
