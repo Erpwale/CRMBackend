@@ -19,8 +19,10 @@ const {
   replacePrimary,
   contactType
 } = req.body;
+const companyId= req.body.companyId
+console.log("company Id", companyId)
 const finalCompanyId =
-  req.user?.companyId ||
+  companyId ||
   req.customerCompanyId;
     // ---------- VALIDATIONS ----------
     if (!name || !mobile || !email || !designation) {
