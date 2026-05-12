@@ -92,7 +92,7 @@ router.post("/", async (req, res) => {
       tallySerials: proposal.tallySerials,
 
       // 🔹 Ledger
-    //   companyId: ledger.companyId,
+      companyId: ledger.companyId,
 
       contactName: ledger.contactName,
       contactMobile: ledger.contactMobile,
