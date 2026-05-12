@@ -21,6 +21,7 @@ const {
 } = req.body;
 const companyId= req.body.companyId
 console.log("company Id", companyId)
+console.log("cust company Id",  req.customerCompanyId)
 const finalCompanyId =
   companyId ||
   req.customerCompanyId;
