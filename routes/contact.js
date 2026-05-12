@@ -9,17 +9,19 @@ const { io } = require("../server");
 // CREATE CONTACT
 router.post("/create", authMiddleware, async (req, res) => {
   try {
-   const {
+const {
   name,
   designation,
   mobile,
   email,
   primary,
-  companyId,
+
   replacePrimary,
   contactType
 } = req.body;
-
+const finalCompanyId =
+  req.user?.companyId ||
+  req.customerCompanyId;
     // ---------- VALIDATIONS ----------
     if (!name || !mobile || !email || !designation) {
       return res.status(400).json({
@@ -77,11 +79,13 @@ if (
         message: `Email already exists in company: ${existingMail.companyId?.companyName}`
       });
     }
-
+const customer = await Contact.findById(
+  req.customer._id
+);
     // ---------- PRIMARY LOGIC ----------
     if (primary) {
       const existingPrimary = await Contact.findOne({
-        companyId,
+        companyId: finalCompanyId,
         primary: true
       });
 
@@ -103,8 +107,18 @@ if (
     // ---------- CREATE ----------
 const contact = new Contact({
   ...req.body,
-  contactType: contactType || "employee",
-  createdBy: req.user?.id || req.contact?.id
+
+  companyId: finalCompanyId,
+
+  contactType:
+    contactType || "employee",
+
+  createdBy:
+    req.user?._id ||
+    req.customer?._id,
+
+  createdByType:
+    req.user ? "user" : "customer"
 });
 
     await contact.save();
@@ -114,7 +128,8 @@ const contact = new Contact({
 
     
     // ---------- SOCKET ----------
-const companyRoom = companyId.toString();
+const companyRoom =
+  finalCompanyId.toString();
 
 if (global.io) {
   console.log("📡 Emitting contactUpdated to:", companyRoom);

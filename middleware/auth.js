@@ -36,6 +36,7 @@ exports.authMiddleware = async (req, res, next) => {
     if (customer) {
       req.customer = customer;
       req.authType = "customer";
+        req.customerCompanyId = decoded.companyId;
       return next();
     }
 

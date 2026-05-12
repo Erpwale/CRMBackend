@@ -109,7 +109,8 @@ router.post("/verify-otp", async (req, res) => {
       const token = jwt.sign(
         {
           id: contact._id,
-          type: "customer"
+          type: "customer",
+           companyId: contact.companyId
         },
         process.env.JWT_SECRET,
         {
