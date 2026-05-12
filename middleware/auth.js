@@ -28,7 +28,7 @@ exports.authMiddleware = async (req, res, next) => {
     }
 
     // ✅ Then check CustomerLogin
-    const customer = await CustomerLogin.findById(
+    const customer = await Contact.findById(
       decoded.id
     );
 
