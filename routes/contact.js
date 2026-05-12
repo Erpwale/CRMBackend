@@ -79,9 +79,7 @@ if (
         message: `Email already exists in company: ${existingMail.companyId?.companyName}`
       });
     }
-const customer = await Contact.findById(
-  req.customer._id
-);
+
     // ---------- PRIMARY LOGIC ----------
     if (primary) {
       const existingPrimary = await Contact.findOne({
