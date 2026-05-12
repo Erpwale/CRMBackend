@@ -9,24 +9,17 @@ const dns = require("dns");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 dns.setDefaultResultOrder("ipv4first");
 const transporter = nodemailer.createTransport({
-  host: "172.65.255.143", // direct IPv4
-  port: 465,
-  secure: true,
-
+host: "smtp.hostinger.com",
+  port: 587,
+  secure: false,
+  requireTLS:true,
+  pool: true, // Enable connection pooling
+  maxConnections: 5, // Maximum number of simultaneous connections (default: 5)
+  maxMessages: 100, // Messages per connection before reconnecting (default: 100)
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
   },
-
-  tls: {
-    rejectUnauthorized: false,
-    family: 4
-  },
-
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-
   logger: true,
   debug: true
 });
