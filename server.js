@@ -60,6 +60,8 @@ app.use("/api/recipt", require("./routes/receipt.js"));
 app.use("/api/globalcompany", require("./routes/gloabalcompany"));
 app.use("/api/tally", require("./services/tallyService"));
 app.use("/api/ticket", require("./routes/ticket"));
+app.use("/api/tickets", require("./routes/ticketcontact"));
+
 global.io = io; // ✅ ADD THIS
 
 // ❗ VERY IMPORTANT: export io
