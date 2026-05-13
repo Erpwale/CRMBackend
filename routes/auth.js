@@ -16,82 +16,127 @@ router.post("/register", async (req, res) => {
       username,
       email,
       role,
+      department,
+      reportingManager,
       phone,
       password,
       confirmPassword,
       monthlyTargets,
-      zone
+      zones,
+      joiningDate,
+      linkedinLink,
+      whatsappLink,
+      calendlyLink
     } = req.body;
 
-    // 1. Required fields
+    // Required validations
     if (
-      !firstName || !lastName || !username || !email ||
-      !role || !phone || !password || !confirmPassword ||
-      !monthlyTargets || !zone
+      !firstName ||
+      !lastName ||
+      !username ||
+      !email ||
+      !role ||
+      !department ||
+      !phone ||
+      !password ||
+      !confirmPassword
     ) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({
+        message: "All required fields are mandatory"
+      });
     }
 
-    // 2. Monthly targets check
-    if (monthlyTargets.length === 0) {
-      return res.status(400).json({ message: "At least one target required" });
+    // Username exists
+    const existingUsername = await User.findOne({ username });
+
+    if (existingUsername) {
+      return res.status(400).json({
+        message: "Username already exists"
+      });
     }
 
-    // 3. Username check
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: "Username already exists" });
+    // Email exists
+    const existingEmail = await User.findOne({ email });
+
+    if (existingEmail) {
+      return res.status(400).json({
+        message: "Email already exists"
+      });
     }
 
-    // 4. Phone validation
+    // Phone validation
     if (!/^[0-9]{10}$/.test(phone)) {
-      return res.status(400).json({ message: "Phone must be 10 digits" });
+      return res.status(400).json({
+        message: "Phone number must be 10 digits"
+      });
     }
 
-    // 5. Password validation
+    // Password validation
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
 
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
         message:
-          "Password must contain uppercase, lowercase, number, and special character"
+          "Password must contain uppercase, lowercase, number and special character"
       });
     }
 
-    // 6. Confirm password
+    // Confirm password
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Passwords do not match" });
+      return res.status(400).json({
+        message: "Passwords do not match"
+      });
     }
 
-    // 7. Hash password
+    // Monthly target validation
+    if (
+      !monthlyTargets ||
+      !Array.isArray(monthlyTargets) ||
+      monthlyTargets.length === 0
+    ) {
+      return res.status(400).json({
+        message: "At least one monthly target required"
+      });
+    }
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 8. Save
+    // Create user
     const newUser = new User({
       firstName,
       lastName,
       username,
       email,
       role,
+      department,
+      reportingManager,
       phone,
       password: hashedPassword,
       monthlyTargets,
-      zone
+      zones,
+      joiningDate,
+      linkedinLink,
+      whatsappLink,
+      calendlyLink
     });
 
     await newUser.save();
 
     res.status(201).json({
-      message: "User created successfully",
+      message: "User registered successfully",
       user: newUser
     });
-
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    console.log(error);
+
+    res.status(500).json({
+      message: "Server Error"
+    });
   }
 });
+
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
