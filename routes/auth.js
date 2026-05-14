@@ -293,7 +293,24 @@ router.get("/me", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/managers", async (req, res) => {
+  try {
+    const { department, role } = req.query;
 
+    const managers = await User.find({
+      department,
+      role
+    }).select("firstName lastName username");
+
+    res.json(managers);
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Server Error"
+    });
+  }
+});
 
 router.get("/fix-users", async (req, res) => {
   try {
