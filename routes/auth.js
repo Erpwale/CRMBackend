@@ -273,10 +273,22 @@ console.log("VERIFIED LOG:", verified);
 });
 router.get("/users", authMiddleware, async (req, res) => {
   try {
+
+    // only admin can access
+    if (req.user.role !== "admin") {
+      return res.status(403).json({
+        message: "Access denied"
+      });
+    }
+
     const users = await User.find().select("-password");
+
     res.json(users);
+
   } catch (error) {
-    res.status(500).json({ message: "Error fetching users" });
+    res.status(500).json({
+      message: "Error fetching users"
+    });
   }
 });
 router.get("/me", authMiddleware, async (req, res) => {
