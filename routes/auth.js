@@ -7,6 +7,7 @@ const User = require("../models/User");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const router = express.Router();
 const geoip = require("geoip-lite");
+const history = require("../models/History")
 
 router.post("/register", async (req, res) => {
   try {
@@ -223,13 +224,7 @@ router.post("/login", async (req, res) => {
     // DEVICE INFO
     // =========================
 
-    const parser = new UAParser(
-      req.headers["user-agent"]
-    );
-
-    const browser = parser.getBrowser();
-    const os = parser.getOS();
-    const device = parser.getDevice();
+  
 
     // =========================
     // IP + LOCATION
@@ -245,7 +240,7 @@ router.post("/login", async (req, res) => {
     // SAVE LOGIN HISTORY
     // =========================
 
-    await Activity.create({
+    await history.create({
 
       userId: user._id,
 
