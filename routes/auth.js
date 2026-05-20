@@ -364,6 +364,65 @@ router.get("/me", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/teams", async (req, res) => {
+
+  try {
+
+    const { department, search } = req.query;
+
+    // Validation
+    if (!department) {
+      return res.status(400).json({
+        message: "Department is required"
+      });
+    }
+
+    // Query
+    const query = {
+      department
+    };
+
+    // Search by team name
+    if (search) {
+      query.team = {
+        $regex: search,
+        $options: "i"
+      };
+    }
+
+    // Find teams
+    const users = await User.find(query)
+      .select("team department")
+      .lean();
+
+    // Remove duplicate teams
+    const uniqueTeams = [
+      ...new Map(
+        users.map((item) => [
+          item.team.toLowerCase(),
+          item
+        ])
+      ).values()
+    ];
+
+    // Sort alphabetically
+    uniqueTeams.sort((a, b) =>
+      a.team.localeCompare(b.team)
+    );
+
+    res.status(200).json(uniqueTeams);
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      message: "Server Error"
+    });
+
+  }
+
+});
 router.get("/managers", async (req, res) => {
   try {
     const { department, role } = req.query;
