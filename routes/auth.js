@@ -17,6 +17,7 @@ router.post("/register", async (req, res) => {
       email,
       role,
       department,
+      team,
       reportingManager,
       phone,
       password,
@@ -37,6 +38,7 @@ router.post("/register", async (req, res) => {
       !email ||
       !role ||
       !department ||
+      !team ||
       !phone ||
       !password ||
       !confirmPassword
@@ -89,6 +91,61 @@ router.post("/register", async (req, res) => {
       });
     }
 
+    // Manager roles
+    const managerRoles = [
+      "Sales Manager",
+      "Support Manager",
+      "Accounts Manager",
+      "HR Manager"
+    ];
+
+    const isManager = managerRoles.includes(role);
+
+    // Find existing team
+    const existingTeam = await User.findOne({
+      team: team.trim()
+    });
+
+    // TEAM EXISTS
+    if (existingTeam) {
+
+      // Team exists in another department
+      if (existingTeam.department !== department) {
+        return res.status(400).json({
+          message:
+            `Team already belongs to ${existingTeam.department} department`
+        });
+      }
+
+      // Only one manager per team
+      if (isManager) {
+
+        const existingManager = await User.findOne({
+          team: team.trim(),
+          role: { $in: managerRoles }
+        });
+
+        if (existingManager) {
+          return res.status(400).json({
+            message:
+              `Team already has manager ${existingManager.firstName} ${existingManager.lastName}`
+          });
+        }
+      }
+    }
+
+    // TEAM DOES NOT EXIST
+    else {
+
+      // First user of team must be manager
+      if (!isManager) {
+        return res.status(400).json({
+          message:
+            "Team does not exist. First member must be a manager"
+        });
+      }
+    }
+
     // Monthly target validation
     if (
       !monthlyTargets ||
@@ -111,6 +168,7 @@ router.post("/register", async (req, res) => {
       email,
       role,
       department,
+      team,
       reportingManager,
       phone,
       password: hashedPassword,
@@ -128,6 +186,7 @@ router.post("/register", async (req, res) => {
       message: "User registered successfully",
       user: newUser
     });
+
   } catch (error) {
     console.log(error);
 

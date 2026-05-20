@@ -53,6 +53,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    team: {
+  type: String,
+  required: true,
+  trim: true
+},
 
     reportingManager: {
       type: String,
