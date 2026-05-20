@@ -291,7 +291,7 @@ router.get(
       // =========================
       // ADMIN
       // =========================
-      console.log(req.user.role)
+      console.log(req.user)
 
       if (req.user.role === "admin") {
 
