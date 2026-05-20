@@ -1,21 +1,19 @@
 const mongoose = require("mongoose");
-
 const monthlyTargetSchema = new mongoose.Schema({
   date: {
-    type: String,
-    required: true
+    type: String
   },
+
   amount: {
-    type: Number,
-    required: true
+    type: Number
   },
+
   revise: {
     type: String,
     enum: ["Per Month", "Per Year"],
     default: "Per Month"
   }
 });
-
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -75,7 +73,18 @@ const userSchema = new mongoose.Schema(
       required: true
     },
 
-    monthlyTargets: [monthlyTargetSchema],
+    monthlyTargets: {
+  type: [monthlyTargetSchema],
+
+  required: function () {
+    return (
+      this.role === "Sales Manager" ||
+      this.role === "Sales Person"
+    );
+  },
+
+  default: []
+},
 
     zones: [
       {
