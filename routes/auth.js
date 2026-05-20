@@ -632,8 +632,25 @@ router.post(
       const ip = forwarded
         ? forwarded.split(",")[0].trim()
         : req.socket.remoteAddress;
+const geo = geoip.lookup(ip);
 
-      await history.create({
+console.log("IP:", ip);
+console.log("Location:", geo);
+      // Logout reason
+      const reason = req.body.reason;
+
+      let description =
+        `${user.username} logged out from CRM`;
+
+      // Auto inactivity logout
+      if (reason === "INACTIVE") {
+
+        description =
+          `${user.username} was automatically logged out due to inactivity`;
+
+      }
+
+      await Activity.create({
 
         userId: user._id,
 
@@ -645,10 +662,19 @@ router.post(
 
         module: "AUTH",
 
-        details:
-          `${user.username} logged out from CRM`,
+        details: description,
 
         ipAddress: ip,
+         location: geo
+        ? `${geo.city || ""}, ${geo.region || ""}, ${geo.country || ""}`
+        : "Unknown",
+
+      coordinates: geo
+        ? {
+            lat: geo.ll[0],
+            lng: geo.ll[1]
+          }
+        : null,
 
         logoutTime: new Date()
 
