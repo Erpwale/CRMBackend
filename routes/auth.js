@@ -650,7 +650,7 @@ console.log("Location:", geo);
 
       }
 
-      await Activity.create({
+      await history.create({
 
         userId: user._id,
 
