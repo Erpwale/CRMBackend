@@ -317,9 +317,11 @@ router.get(
         const salesPersonIds = salesPersons.map(
           (sp) => sp._id
         );
+        console.log(salesPersonIds)
 
         // include manager own companies also
         salesPersonIds.push(req.user.id);
+
 
         companies = await Company.find({
           createdBy: {
