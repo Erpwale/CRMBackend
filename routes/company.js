@@ -306,14 +306,14 @@ router.get(
       else if (
         req.user.role === "Sales Manager"
       ) {
-
+         console.log("sales pers", req.user.userName)
         // Find all sales persons under manager
 
         const salesPersons = await User.find({
           reportingManager: req.user.userName,
           role: "Sales Person"
         }).select("_id");
-
+          console.log("sales pers",salesPersons)
         const salesPersonIds = salesPersons.map(
           (sp) => sp._id
         );
