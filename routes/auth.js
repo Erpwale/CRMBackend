@@ -425,11 +425,12 @@ router.get("/teams", async (req, res) => {
 });
 router.get("/managers", async (req, res) => {
   try {
-    const { department, role } = req.query;
+    const { department, role, team } = req.query;
 
     const managers = await User.find({
       department,
-      role
+      role,
+      team
     }).select("firstName lastName username");
 
     res.json(managers);
