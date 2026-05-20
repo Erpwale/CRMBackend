@@ -614,4 +614,62 @@ router.get("/fix-users", async (req, res) => {
     });
   }
 });
+
+router.post(
+  "/logout",
+  authMiddleware,
+  async (req, res) => {
+
+    try {
+
+      const user = await User.findById(
+        req.user.id
+      );
+
+      const forwarded =
+        req.headers["x-forwarded-for"];
+
+      const ip = forwarded
+        ? forwarded.split(",")[0].trim()
+        : req.socket.remoteAddress;
+
+      await history.create({
+
+        userId: user._id,
+
+        username: user.username,
+
+        role: user.role,
+
+        action: "LOGOUT",
+
+        module: "AUTH",
+
+        details:
+          `${user.username} logged out from CRM`,
+
+        ipAddress: ip,
+
+        logoutTime: new Date()
+
+      });
+
+      res.status(200).json({
+        message: "Logout successful"
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+        message: "Server Error"
+      });
+
+    }
+
+  }
+);
+
+
 module.exports = router;
