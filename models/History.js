@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const activitySchema = new mongoose.Schema({
+const historySchema = new mongoose.Schema({
 
   userId: {
     type: mongoose.Schema.Types.ObjectId,
