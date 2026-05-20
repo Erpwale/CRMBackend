@@ -251,34 +251,151 @@ console.log(req.body);
 });
 
 // GET USER COMPANIES
-router.get("/my-companies", authMiddleware, async (req, res) => {
-  try {
-    const companies = await Company.find({
-      createdBy: req.user.id
-    });
+// router.get("/my-companies", authMiddleware, async (req, res) => {
+//   try {
+//     const companies = await Company.find({
+//       createdBy: req.user.id
+//     });
 
-    // 🔥 attach primary contact to each company
-    const result = await Promise.all(
-      companies.map(async (company) => {
-        const primaryContact = await Contact.findOne({
-          companyId: company._id,
-          primary: true
-        }).select("name email mobile designation");
+//     // 🔥 attach primary contact to each company
+//     const result = await Promise.all(
+//       companies.map(async (company) => {
+//         const primaryContact = await Contact.findOne({
+//           companyId: company._id,
+//           primary: true
+//         }).select("name email mobile designation");
 
-        return {
-          ...company.toObject(),
-          primaryContact
-        };
-      })
-    );
+//         return {
+//           ...company.toObject(),
+//           primaryContact
+//         };
+//       })
+//     );
 
-    res.json(result);
+//     res.json(result);
 
-  } catch (err) {
-    res.status(500).json({ message: "Server Error" });
+//   } catch (err) {
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// });
+router.get(
+  "/my-companies",
+  authMiddleware,
+  async (req, res) => {
+
+    try {
+
+      let companies = [];
+
+      // =========================
+      // ADMIN
+      // =========================
+
+      if (req.user.role === "admin") {
+
+        companies = await Company.find();
+
+      }
+
+      // =========================
+      // SALES MANAGER
+      // =========================
+
+      else if (
+        req.user.role === "Sales Manager"
+      ) {
+
+        // Find all sales persons under manager
+
+        const salesPersons = await User.find({
+          reportingManager: req.user.userName,
+          role: "Sales Person"
+        }).select("_id");
+
+        const salesPersonIds = salesPersons.map(
+          (sp) => sp._id
+        );
+
+        // include manager own companies also
+        salesPersonIds.push(req.user.id);
+
+        companies = await Company.find({
+          createdBy: {
+            $in: salesPersonIds
+          }
+        });
+
+      }
+
+      // =========================
+      // SALES PERSON
+      // =========================
+
+      else if (
+        req.user.role === "Sales Person"
+      ) {
+
+        companies = await Company.find({
+          createdBy: req.user.id
+        });
+
+      }
+
+      // =========================
+      // OTHER ROLES
+      // =========================
+
+      else {
+
+        companies = [];
+
+      }
+
+      // =========================
+      // ATTACH PRIMARY CONTACT
+      // =========================
+
+      const result = await Promise.all(
+
+        companies.map(async (company) => {
+
+          const primaryContact =
+            await Contact.findOne({
+
+              companyId: company._id,
+
+              primary: true
+
+            }).select(
+              "name email mobile designation"
+            );
+
+          return {
+
+            ...company.toObject(),
+
+            primaryContact
+
+          };
+
+        })
+
+      );
+
+      res.json(result);
+
+    } catch (err) {
+
+      console.log(err);
+
+      res.status(500).json({
+        message: "Server Error"
+      });
+
+    }
+
   }
-});
-
+);
 // ADMIN GET ALL COMPANIES
 router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
   try {
