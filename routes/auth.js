@@ -6,7 +6,7 @@ const QRCode = require("qrcode");
 const User = require("../models/User");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const router = express.Router();
-
+const geoip = require("geoip-lite");
 
 router.post("/register", async (req, res) => {
   try {
@@ -197,48 +197,157 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
-  if (!user)
-    return res.status(400).json({ message: "Invalid credentials" });
+  try {
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch)
-    return res.status(400).json({ message: "Invalid credentials" });
+    const { email, password } = req.body;
 
-const tempToken = jwt.sign(
-  {
-    id: user._id,
-    userName: user.username,
-    email: user.email,
-  },
-  process.env.JWT_SECRET,
-  {
-    expiresIn: "10m",
-  }
-);
-  // ✅ Generate secret only once
-  if (!user.twoFactorSecret) {
-    const secret = speakeasy.generateSecret({ length: 20 });
+    const user = await User.findOne({ email });
 
-    user.twoFactorSecret = secret.base32;
-    await user.save();
+    if (!user)
+      return res.status(400).json({
+        message: "Invalid credentials"
+      });
 
-    const qrCode = await QRCode.toDataURL(secret.otpauth_url);
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (!isMatch)
+      return res.status(400).json({
+        message: "Invalid credentials"
+      });
+
+    // =========================
+    // DEVICE INFO
+    // =========================
+
+    const parser = new UAParser(
+      req.headers["user-agent"]
+    );
+
+    const browser = parser.getBrowser();
+    const os = parser.getOS();
+    const device = parser.getDevice();
+
+    // =========================
+    // IP + LOCATION
+    // =========================
+
+    const ip =
+      req.headers["x-forwarded-for"] ||
+      req.socket.remoteAddress;
+
+    const geo = geoip.lookup(ip);
+
+    // =========================
+    // SAVE LOGIN HISTORY
+    // =========================
+
+    await Activity.create({
+
+      userId: user._id,
+
+      username: user.username,
+
+      role: user.role,
+
+      action: "LOGIN",
+
+      module: "AUTH",
+
+      details: `${user.username} logged into CRM`,
+
+      ipAddress: ip,
+
+      location: geo
+        ? `${geo.city || ""}, ${geo.region || ""}, ${geo.country || ""}`
+        : "Unknown",
+
+      coordinates: geo
+        ? {
+            lat: geo.ll[0],
+            lng: geo.ll[1]
+          }
+        : null,
+
+      // browser:
+      //   `${browser.name || ""} ${browser.version || ""}`,
+
+      // operatingSystem:
+      //   `${os.name || ""} ${os.version || ""}`,
+
+      // deviceName:
+      //   device.model || "Desktop",
+
+      // deviceType:
+      //   device.type || "Desktop",
+
+      loginTime: new Date()
+
+    });
+
+    // =========================
+    // TEMP TOKEN
+    // =========================
+
+    const tempToken = jwt.sign(
+      {
+        id: user._id,
+        userName: user.username,
+        email: user.email,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "10m",
+      }
+    );
+
+    // =========================
+    // 2FA SETUP
+    // =========================
+
+    if (!user.twoFactorSecret) {
+
+      const secret = speakeasy.generateSecret({
+        length: 20
+      });
+
+      user.twoFactorSecret = secret.base32;
+
+      await user.save();
+
+      const qrCode = await QRCode.toDataURL(
+        secret.otpauth_url
+      );
+
+      return res.json({
+        require2FASetup: true,
+        qrCode,
+        tempToken
+      });
+    }
+
+    // =========================
+    // VERIFY 2FA
+    // =========================
 
     return res.json({
-      require2FASetup: true,
-      qrCode,
+      require2FAVerification: true,
       tempToken
     });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      message: "Server Error"
+    });
+
   }
 
-  // If secret already exists → just verify
-  return res.json({
-    require2FAVerification: true,
-    tempToken
-  });
 });
 
 
