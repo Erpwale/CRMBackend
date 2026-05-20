@@ -230,11 +230,20 @@ router.post("/login", async (req, res) => {
     // IP + LOCATION
     // =========================
 
-    const ip =
-      req.headers["x-forwarded-for"] ||
-      req.socket.remoteAddress;
+    // const ip =
+    //   req.headers["x-forwarded-for"] ||
+    //   req.socket.remoteAddress;
 
-    const geo = geoip.lookup(ip);
+  const forwarded = req.headers["x-forwarded-for"];
+
+const ip = forwarded
+  ? forwarded.split(",")[0].trim()
+  : req.socket.remoteAddress;
+
+const geo = geoip.lookup(ip);
+
+console.log("IP:", ip);
+console.log("Location:", geo);
 
     // =========================
     // SAVE LOGIN HISTORY
