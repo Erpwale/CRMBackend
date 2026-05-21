@@ -1090,7 +1090,7 @@ ${Object.keys(gstMap).map((gst) => {
                 <!-- Footer Section -->
                 <div class="footer-section">
                     <div class="footer-left">
-                        <div style="margin-bottom: 15px;">
+                        <div style="margin-bottom: 5px;">
                             Company's PAN&nbsp;&nbsp;&nbsp;&nbsp;: <strong>AATCM3926B</strong>
                         </div>
                         <div class="declaration">
