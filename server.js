@@ -61,7 +61,9 @@ app.use("/api/globalcompany", require("./routes/gloabalcompany"));
 app.use("/api/tally", require("./services/tallyService"));
 app.use("/api/ticket", require("./routes/ticket"));
 app.use("/api/tickets", require("./routes/ticketcontact"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.use("/api/training",  require("./routes/trainingRoutes"));
 global.io = io; // ✅ ADD THIS
 
 // ❗ VERY IMPORTANT: export io
