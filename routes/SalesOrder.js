@@ -758,7 +758,7 @@ text-align: center
         .footer-left {
             width: 50%;
             padding: 8px;
-                margin-top: 160px;
+                margin-top: 170px;
 
             /* border-right: 0.5px solid #00000061; */
         }
