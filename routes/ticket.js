@@ -451,6 +451,55 @@ router.get(
   }
 );
 
+router.get(
+  "/company-tickets",
+  authMiddleware,
+  async (req, res) => {
+
+    try {
+
+      const companyId = req.user.companyId;
+
+      const tickets = await Ticket.find({
+        companyId
+      })
+
+      .populate({
+        path: "companyId",
+        select: "companyName"
+      })
+
+      .populate({
+        path: "customerId",
+        select: "name email"
+      })
+
+      .populate({
+        path: "contactId",
+        select: "name mobile"
+      })
+
+      .sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        count: tickets.length,
+        tickets
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch tickets"
+      });
+
+    }
+  }
+);
+
 module.exports = router;
 
 
