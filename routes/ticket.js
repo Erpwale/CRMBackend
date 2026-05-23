@@ -317,6 +317,43 @@ router.post("/create", authMiddleware, async (req, res) => {
   }
 });
 
+router.get(
+  "/details/:id",
+  authMiddleware,
+  async (req, res) => {
+    try {
+
+      const ticket = await Ticket.findById(
+        req.params.id
+      )
+      .populate("companyId")
+      .populate("contactId")
+      .populate("customerId");
+
+      if (!ticket) {
+        return res.status(404).json({
+          success: false,
+          message: "Ticket not found"
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        ticket
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch ticket"
+      });
+
+    }
+  }
+);
 module.exports = router;
 
 
