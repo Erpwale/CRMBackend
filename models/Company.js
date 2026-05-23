@@ -41,11 +41,12 @@ primaryContact: {
       location: String,
       name:String
     }
-  ],us: {
-    type: String,
-    enum: ["live", "not live"],
-    default: "not live"
-  },
+  ],
+  status: {
+  type: String,
+  enum: ["live", "not live"],
+  default: "not live"
+},
   remark: String,
 
   createdBy: {

@@ -153,4 +153,31 @@ pendingAmount: { type: Number, default: 0 },
 { timestamps: true }
 );
 
+salesOrderSchema.post("save", async function (doc) {
+  try {
+    // ✅ If bill generated and no outstanding
+    if (doc.isBill === true && doc.isOutstanding === false) {
+
+      await mongoose.model("Company").findByIdAndUpdate(
+        doc.companyId,
+        {
+          status: "live"
+        }
+      );
+
+    } else {
+
+      // Optional: revert to not live
+      await mongoose.model("Company").findByIdAndUpdate(
+        doc.companyId,
+        {
+          status: "not live"
+        }
+      );
+
+    }
+  } catch (err) {
+    console.log("Company status update error:", err);
+  }
+});
 module.exports = mongoose.model("SalesOrder", salesOrderSchema);
