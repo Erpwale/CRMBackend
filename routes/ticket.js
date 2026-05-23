@@ -276,7 +276,7 @@ router.post("/create", authMiddleware, async (req, res) => {
       subCategory,
       description,
       contactPerson,
-      ticketNumber,
+     
       contactId,
       contactNumber,
       preferredDate,
@@ -293,6 +293,7 @@ router.post("/create", authMiddleware, async (req, res) => {
       description,
       contactPerson,
       contactId,
+       ticketNumber,
       contactNumber,
       preferredDate,
       preferredTime,
