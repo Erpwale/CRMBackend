@@ -408,8 +408,8 @@ router.get(
 );
 router.get(
   "/all",
-  
   async (req, res) => {
+
     try {
 
       const tickets = await Ticket.find()
@@ -452,7 +452,6 @@ router.get(
     }
   }
 );
-
 router.get(
   "/company-tickets",
   
