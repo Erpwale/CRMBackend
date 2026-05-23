@@ -8,7 +8,7 @@ const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
-
+const Ticket= require("../models/TicketSchema")
 
 // router.post("/get-full-details", async (req, res) => {
 //   try {
