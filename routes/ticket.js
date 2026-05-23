@@ -412,27 +412,7 @@ router.get(
 
     try {
 
-      const tickets = await Ticket.find()
-
-        .populate({
-          path: "companyId",
-          select:
-            "companyName email mobile status"
-        })
-
-        .populate({
-          path: "customerId",
-          select:
-            "name email mobile"
-        })
-
-        .populate({
-          path: "contactId",
-          select:
-            "name mobile email designation"
-        })
-
-        .sort({ createdAt: -1 });
+      const tickets = await Ticket.find();
 
       res.status(200).json({
         success: true,
@@ -446,7 +426,7 @@ router.get(
 
       res.status(500).json({
         success: false,
-        message: "Failed to fetch tickets"
+        message: error.message
       });
 
     }
