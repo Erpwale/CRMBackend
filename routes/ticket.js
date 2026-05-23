@@ -408,7 +408,7 @@ router.get(
 );
 router.get(
   "/all",
-  authMiddleware,
+  
   async (req, res) => {
     try {
 
