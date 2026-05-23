@@ -7,6 +7,8 @@ const router = express.Router();
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
+const { authMiddleware, adminOnly } = require("../middleware/auth");
+
 
 // router.post("/get-full-details", async (req, res) => {
 //   try {
