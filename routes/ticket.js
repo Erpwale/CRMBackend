@@ -354,6 +354,103 @@ router.get(
     }
   }
 );
+router.get(
+  "/company/:companyId",
+  authMiddleware,
+  async (req, res) => {
+    try {
+
+      const { companyId } = req.params;
+
+      const tickets = await Ticket.find({
+        companyId
+      })
+
+        .populate({
+          path: "companyId",
+          select:
+            "companyName email mobile status"
+        })
+
+        .populate({
+          path: "customerId",
+          select:
+            "name email mobile"
+        })
+
+        .populate({
+          path: "contactId",
+          select:
+            "name mobile designation"
+        })
+
+        .sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        count: tickets.length,
+        tickets
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch company tickets"
+      });
+
+    }
+  }
+);
+router.get(
+  "/all",
+  authMiddleware,
+  async (req, res) => {
+    try {
+
+      const tickets = await Ticket.find()
+
+        .populate({
+          path: "companyId",
+          select:
+            "companyName email mobile status"
+        })
+
+        .populate({
+          path: "customerId",
+          select:
+            "name email mobile"
+        })
+
+        .populate({
+          path: "contactId",
+          select:
+            "name mobile email designation"
+        })
+
+        .sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        count: tickets.length,
+        tickets
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch tickets"
+      });
+
+    }
+  }
+);
+
 module.exports = router;
 
 
