@@ -355,36 +355,38 @@ router.get(
   }
 );
 router.get(
-  "/company/:companyId",
-  authMiddleware,
+  "/company-tickets/:companyId",
   async (req, res) => {
+
     try {
 
       const { companyId } = req.params;
+
+      console.log(companyId);
 
       const tickets = await Ticket.find({
         companyId
       })
 
-        .populate({
-          path: "companyId",
-          select:
-            "companyName email mobile status"
-        })
+      .populate({
+        path: "companyId",
+        select:
+          "companyName email mobile status"
+      })
 
-        .populate({
-          path: "customerId",
-          select:
-            "name email mobile"
-        })
+      .populate({
+        path: "customerId",
+        select:
+          "name email mobile"
+      })
 
-        .populate({
-          path: "contactId",
-          select:
-            "name mobile designation"
-        })
+      .populate({
+        path: "contactId",
+        select:
+          "name mobile designation"
+      })
 
-        .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 });
 
       res.status(200).json({
         success: true,
@@ -398,7 +400,7 @@ router.get(
 
       res.status(500).json({
         success: false,
-        message: "Failed to fetch company tickets"
+        message: error.message
       });
 
     }
@@ -453,7 +455,7 @@ router.get(
 
 router.get(
   "/company-tickets",
-  authMiddleware,
+  
   async (req, res) => {
 
     try {
