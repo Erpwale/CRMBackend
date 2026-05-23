@@ -459,6 +459,8 @@ router.get(
     try {
 
       const companyId = req.user.companyId;
+      console.log("hii",companyId);
+      
 
       const tickets = await Ticket.find({
         companyId
