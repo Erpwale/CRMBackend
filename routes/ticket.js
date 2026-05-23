@@ -237,7 +237,53 @@ router.get("/:companyId",  async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
+router.post("/create", authMiddleware, async (req, res) => {
+  try {
+    const {
+      companyId,
+      tallySerialNo,
+      category,
+      subCategory,
+      description,
+      contactPerson,
+      contactId,
+      contactNumber,
+      preferredDate,
+      preferredTime,
+      customerId,
+      status
+    } = req.body;
 
+    const ticket = await Ticket.create({
+      companyId,
+      tallySerialNo,
+      category,
+      subCategory,
+      description,
+      contactPerson,
+      contactId,
+      contactNumber,
+      preferredDate,
+      preferredTime,
+      customerId,
+      status
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Ticket created successfully",
+      ticket
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to create ticket"
+    });
+  }
+});
 
 module.exports = router;
 

@@ -13,7 +13,7 @@ const {
   name,
   designation,
   mobile,
-  email,
+  email,  
   primary,
 
   replacePrimary,
