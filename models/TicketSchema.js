@@ -26,6 +26,10 @@ const ticketSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Contact"
     },
+ticketNumber: {
+      type: String,
+      unique: true
+    },
 
     contactNumber: String,
 
@@ -42,5 +46,7 @@ const ticketSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+
 
 module.exports = mongoose.model("Ticket", ticketSchema);

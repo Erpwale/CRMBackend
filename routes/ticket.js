@@ -9,7 +9,34 @@ const fs = require("fs");
 const path = require("path");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Ticket= require("../models/TicketSchema")
+const generateTicketNumber = async () => {
 
+  const now = new Date();
+
+  const yy = String(now.getFullYear()).slice(-2);
+
+  const mm = String(now.getMonth() + 1).padStart(2, "0");
+
+  const dd = String(now.getDate()).padStart(2, "0");
+
+  const datePart = `${yy}${mm}${dd}`;
+
+  // random 4 digit
+  const random = Math.floor(1000 + Math.random() * 9000);
+
+  let ticketNumber = `#TLY-${random}-${datePart}`;
+
+  // check duplicate
+  const existing = await Ticket.findOne({
+    ticketNumber
+  });
+
+  if (existing) {
+    return generateTicketNumber();
+  }
+
+  return ticketNumber;
+};
 // router.post("/get-full-details", async (req, res) => {
 //   try {
 //         const { search } = req.body;
@@ -241,6 +268,7 @@ router.get("/:companyId",  async (req, res) => {
 });
 router.post("/create", authMiddleware, async (req, res) => {
   try {
+    const ticketNumber = await generateTicketNumber();
     const {
       companyId,
       tallySerialNo,
@@ -248,6 +276,7 @@ router.post("/create", authMiddleware, async (req, res) => {
       subCategory,
       description,
       contactPerson,
+      ticketNumber,
       contactId,
       contactNumber,
       preferredDate,
