@@ -1189,6 +1189,90 @@ router.get("/company/:companyId", async (req, res) => {
 
   }
 });
+
+router.get("/amc/:companyId", async (req, res) => {
+  try {
+
+    const orders = await SalesOrder.find({
+      companyId: req.params.companyId
+    });
+
+    const updatedOrders = orders.map((order) => {
+
+      let amcStatus = "No AMC";
+
+      // ✅ check support products
+      const supportProduct = order.products?.find((p) =>
+        p.name?.toLowerCase().includes("support") ||
+        p.name?.toLowerCase().includes("amc") ||
+        p.name?.toLowerCase().includes("annual")
+      );
+
+      if (supportProduct) {
+
+        // ✅ payment check
+        const paymentDone =
+          order.receivedAmount >= order.net ||
+          order.paymentStatus === "Paid";
+
+        // ✅ expiry date
+        const expiryDate = new Date(
+          supportProduct.periodTo || supportProduct.expiryDate
+        );
+
+        const today = new Date();
+
+        const diffTime = expiryDate - today;
+
+        const diffDays = Math.ceil(
+          diffTime / (1000 * 60 * 60 * 24)
+        );
+
+        if (!paymentDone) {
+
+          amcStatus = "Payment Pending";
+
+        } else if (diffDays < 0) {
+
+          amcStatus = "Expired";
+
+        } else if (diffDays <= 30) {
+
+          amcStatus = "About to Expire";
+
+        } else {
+
+          amcStatus = "Active";
+
+        }
+
+        return {
+          ...order.toObject(),
+          amcStatus,
+          expiryDate
+        };
+      }
+
+      return {
+        ...order.toObject(),
+        amcStatus
+      };
+
+    });
+
+    res.json({
+      success: true,
+      data: updatedOrders
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      message: err.message
+    });
+
+  }
+});
 /* ========================= */
 /* ✅ GET ONE */
 /* ========================= */
