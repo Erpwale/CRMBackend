@@ -540,89 +540,103 @@ router.get("/company/:companyId", async (req, res) => {
 
 
 router.get("/amc/:companyId", async (req, res) => {
+
   try {
 
+    // ✅ fetch all company orders
     const orders = await SalesOrder.find({
       companyId: req.params.companyId
-    });
+    }).sort({ createdAt: -1 });
 
+    // ✅ add AMC status in every order
     const data = orders.map((order) => {
 
       let supportStatus = "No Support Cover";
+      let expiryDate = null;
+      let daysLeft = null;
 
-      // ✅ Annual Support Cover check
+      // ✅ payment check
+      const paymentDone =
+        order.pendingAmount <= 0 ||
+        order.receivedAmount >= order.grossTotal;
+
+      // ✅ only Annual Support Cover
       if (
         order.businessLine === "Annual Support Cover"
       ) {
 
-        // ✅ payment check
-        const paymentDone =
-          order.receivedAmount >= order.net ||
-          order.paymentStatus === "Paid";
-
-        // ✅ support end date
-        const expiryDate = new Date(order.orderDate);
-
-        // add 1 year
-        expiryDate.setFullYear(
-          expiryDate.getFullYear() + 1
-        );
-
-        const today = new Date();
-
-        const diffTime = expiryDate - today;
-
-        const diffDays = Math.ceil(
-          diffTime / (1000 * 60 * 60 * 24)
-        );
-
+        // ✅ unpaid
         if (!paymentDone) {
 
           supportStatus = "Payment Pending";
 
-        } else if (diffDays < 0) {
-
-          supportStatus = "Expired";
-
-        } else if (diffDays <= 30) {
-
-          supportStatus = "About to Expire";
-
         } else {
 
-          supportStatus = "Active";
+          // ✅ calculate expiry
+          expiryDate = new Date(order.orderDate);
+
+          // add 1 year
+          expiryDate.setFullYear(
+            expiryDate.getFullYear() + 1
+          );
+
+          const today = new Date();
+
+          daysLeft = Math.ceil(
+            (expiryDate - today) /
+            (1000 * 60 * 60 * 24)
+          );
+
+          // ✅ status
+          if (daysLeft < 0) {
+
+            supportStatus = "Expired";
+
+          } else if (daysLeft <= 30) {
+
+            supportStatus = "About to Expire";
+
+          } else {
+
+            supportStatus = "Active";
+
+          }
 
         }
 
-        return {
-          ...order.toObject(),
-          supportStatus,
-          expiryDate,
-          daysLeft: diffDays
-        };
       }
 
       return {
         ...order.toObject(),
-        supportStatus
+        supportStatus,
+        expiryDate,
+        daysLeft
       };
 
     });
 
+    // ✅ only show paid AMC plans
+    const paidAMC = data.filter(
+      (item) =>
+        item.businessLine === "Annual Support Cover" &&
+        item.supportStatus !== "Payment Pending"
+    );
+
     res.json({
       success: true,
-      data
+      data: paidAMC
     });
 
   } catch (err) {
 
     res.status(500).json({
+      success: false,
       message: err.message
     });
 
   }
-});
 
+});
 
 
 
