@@ -489,7 +489,7 @@ router.get("/support-persons", async (req, res) => {
 
   try {
 
-    const persons = await User.findBy({role:"Sales Person"});
+    const persons = await User.find({role:"Sales Person"});
 
     res.status(200).json({
       success: true,
