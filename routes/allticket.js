@@ -538,6 +538,7 @@ router.get("/company/:companyId", async (req, res) => {
   }
 });
 
+
 router.get("/amc/:companyId", async (req, res) => {
   try {
 
@@ -545,27 +546,26 @@ router.get("/amc/:companyId", async (req, res) => {
       companyId: req.params.companyId
     });
 
-    const updatedOrders = orders.map((order) => {
+    const data = orders.map((order) => {
 
-      let amcStatus = "No AMC";
+      let supportStatus = "No Support Cover";
 
-      // ✅ check support products
-      const supportProduct = order.businessLine?.find((p) =>
-        p.name?.toLowerCase().includes("support") ||
-        p.name?.toLowerCase().includes("amc") ||
-        p.name?.toLowerCase().includes("annual")
-      );
-
-      if (supportProduct) {
+      // ✅ Annual Support Cover check
+      if (
+        order.businessLine === "Annual Support Cover"
+      ) {
 
         // ✅ payment check
         const paymentDone =
           order.receivedAmount >= order.net ||
           order.paymentStatus === "Paid";
 
-        // ✅ expiry date
-        const expiryDate = new Date(
-          supportProduct.periodTo || supportProduct.expiryDate
+        // ✅ support end date
+        const expiryDate = new Date(order.orderDate);
+
+        // add 1 year
+        expiryDate.setFullYear(
+          expiryDate.getFullYear() + 1
         );
 
         const today = new Date();
@@ -578,39 +578,40 @@ router.get("/amc/:companyId", async (req, res) => {
 
         if (!paymentDone) {
 
-          amcStatus = "Payment Pending";
+          supportStatus = "Payment Pending";
 
         } else if (diffDays < 0) {
 
-          amcStatus = "Expired";
+          supportStatus = "Expired";
 
         } else if (diffDays <= 30) {
 
-          amcStatus = "About to Expire";
+          supportStatus = "About to Expire";
 
         } else {
 
-          amcStatus = "Active";
+          supportStatus = "Active";
 
         }
 
         return {
           ...order.toObject(),
-          amcStatus,
-          expiryDate
+          supportStatus,
+          expiryDate,
+          daysLeft: diffDays
         };
       }
 
       return {
         ...order.toObject(),
-        amcStatus
+        supportStatus
       };
 
     });
 
     res.json({
       success: true,
-      data: updatedOrders
+      data
     });
 
   } catch (err) {
@@ -621,6 +622,9 @@ router.get("/amc/:companyId", async (req, res) => {
 
   }
 });
+
+
+
 
 module.exports = router;
 
