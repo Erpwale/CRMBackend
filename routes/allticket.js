@@ -485,6 +485,30 @@ router.get(
 //   }
 // );
 
+router.get("/support-persons", async (req, res) => {
+
+  try {
+
+    const persons = await User.find();
+
+    res.status(200).json({
+      success: true,
+      persons,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch persons",
+    });
+
+  }
+
+});
+
 module.exports = router;
 
 
