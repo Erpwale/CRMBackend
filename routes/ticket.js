@@ -411,9 +411,11 @@ router.get(
   async (req, res) => {
 
     try {
+      console.log("all")
 
       const tickets = await Ticket.find();
-
+      console.log(tickets);
+      
       res.status(200).json({
         success: true,
         count: tickets.length,
