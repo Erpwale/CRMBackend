@@ -1161,7 +1161,34 @@ ${Object.keys(gstMap).map((gst) => {
     res.status(500).send("Error generating PDF");
   }
 });
+/* ========================= */
+/* ✅ GET SALES ORDER BY COMPANY ID */
+/* ========================= */
 
+router.get("/company/:companyId", async (req, res) => {
+  try {
+
+    const { companyId } = req.params;
+
+    const orders = await SalesOrder.find({
+      companyId: companyId
+    }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: orders.length,
+      data: orders
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
+
+  }
+});
 /* ========================= */
 /* ✅ GET ONE */
 /* ========================= */
