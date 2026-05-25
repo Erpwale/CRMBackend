@@ -49,11 +49,12 @@ router.post(
     try {
       const { message, senderType } =
         req.body;
-
+ const senderId =
+        req.user?._id || req.customer?._id;
       const newMessage =
         await TicketMessage.create({
           ticketId: req.params.ticketId,
-          senderId: req.user.id,
+          senderId,
           senderType,
           message,
         });
