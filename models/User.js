@@ -56,6 +56,10 @@ const userSchema = new mongoose.Schema(
   required: true,
   trim: true
 },
+activeTickets: {
+  type: Number,
+  default: 0
+},
 
     reportingManager: {
       type: String,
