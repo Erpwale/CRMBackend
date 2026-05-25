@@ -614,7 +614,7 @@ router.get("/amc/:companyId", async (req, res) => {
       };
 
     });
-
+    console.log("data",data)
     // ✅ only show paid AMC plans
     const paidAMC = data.filter(
       (item) =>
@@ -622,6 +622,7 @@ router.get("/amc/:companyId", async (req, res) => {
         item.supportStatus !== "Payment Pending"
     );
 
+    console.log("paidAMC",paidAMC)
     res.json({
       success: true,
       data: paidAMC
