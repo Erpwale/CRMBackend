@@ -63,6 +63,7 @@ app.use("/api/tally", require("./services/tallyService"));
 app.use("/api/ticket", require("./routes/ticket"));
 app.use("/api/tickets", require("./routes/ticketcontact"));
 app.use("/api/alltickets", require("./routes/allticket"));
+app.use("/api/message", require("./routes/Message"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/training",  require("./routes/trainingRoutes"));
