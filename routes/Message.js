@@ -51,8 +51,8 @@ router.post(
 
       const senderType =
         req.user.role === "admin" ||
-        req.user.role === "agent"
-          ? "agent"
+        req.user.role === "Support Executive"
+          ? "Support Executive"
           : "customer";
 
       const newMessage =
