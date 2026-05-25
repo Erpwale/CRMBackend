@@ -316,6 +316,70 @@ router.post("/create", authMiddleware, async (req, res) => {
     });
   }
 });
+
+router.put("/assign-ticket/:ticketId", async (req, res) => {
+  try {
+
+    const { ticketId } = req.params;
+
+    const {
+      supportPersonId,
+      assignedBy
+    } = req.body;
+
+    const ticket = await Ticket.findById(ticketId);
+
+    if (!ticket) {
+      return res.status(404).json({
+        success: false,
+        message: "Ticket not found"
+      });
+    }
+
+    const supportPerson = await User.findById(
+      supportPersonId
+    );
+
+    if (!supportPerson) {
+      return res.status(404).json({
+        success: false,
+        message: "Support person not found"
+      });
+    }
+
+    ticket.assignedTo = supportPersonId;
+
+    ticket.assignedBy = assignedBy;
+
+    ticket.assignedAt = new Date();
+
+    ticket.status = "assigned";
+
+    await ticket.save();
+
+    supportPerson.activeTickets += 1;
+
+    await supportPerson.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Ticket assigned successfully",
+      ticket
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+
+  }
+});
+
+
 router.get(
   "/all",
   async (req, res) => {
