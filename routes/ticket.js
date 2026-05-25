@@ -380,6 +380,35 @@ router.put("/assign-ticket/:ticketId", async (req, res) => {
   }
 });
 
+router.put(
+  "/update-status/:id",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const { status } = req.body;
+
+      const ticket = await Ticket.findByIdAndUpdate(
+        req.params.id,
+        {
+          status,
+          updatedAt: new Date(),
+        },
+        { new: true }
+      );
+
+      res.json({
+        success: true,
+        ticket,
+      });
+
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+);
 
 router.get(
   "/all",
