@@ -464,35 +464,24 @@ router.get(
   authMiddleware,
   async (req, res) => {
     try {
+      const ticket = await Ticket.findById(req.params.id);
 
-      const ticket = await Ticket.findById(
-        req.params.id
-      )
-      .populate("companyId")
-      .populate("contactId")
-      .populate("customerId");
+      const messages = await TicketMessage.find({
+        ticketId: req.params.id,
+      })
+        .populate("senderId", "fullName email")
+        .sort({ createdAt: 1 });
 
-      if (!ticket) {
-        return res.status(404).json({
-          success: false,
-          message: "Ticket not found"
-        });
-      }
-
-      res.status(200).json({
+      res.json({
         success: true,
-        ticket
+        ticket,
+        messages,
       });
-
     } catch (error) {
-
-      console.log(error);
-
       res.status(500).json({
         success: false,
-        message: "Failed to fetch ticket"
+        error: error.message,
       });
-
     }
   }
 );
