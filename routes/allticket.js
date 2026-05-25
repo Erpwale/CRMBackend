@@ -640,7 +640,31 @@ router.get("/amc/:companyId", async (req, res) => {
 });
 
 
+router.get("/support/:supportId", async (req, res) => {
+  try {
+    const { supportId } = req.params;
 
+    const tickets = await Ticket.find({
+      assignedTo: supportId,
+    })
+      .populate("assignedTo", "name email")
+      .populate("customerId", "name email")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: tickets.length,
+      data: tickets,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch support tickets",
+    });
+  }
+});
 module.exports = router;
 
 
