@@ -380,6 +380,8 @@ router.put("/assign-ticket/:ticketId", async (req, res) => {
   }
 });
 
+const User = require("../models/User");
+
 router.put(
   "/update-status/:id",
   authMiddleware,
@@ -387,14 +389,37 @@ router.put(
     try {
       const { status } = req.body;
 
-      const ticket = await Ticket.findByIdAndUpdate(
-        req.params.id,
-        {
-          status,
-          updatedAt: new Date(),
-        },
-        { new: true }
-      );
+      const ticket = await Ticket.findById(req.params.id);
+
+      if (!ticket) {
+        return res.status(404).json({
+          success: false,
+          message: "Ticket not found",
+        });
+      }
+
+      // if already resolved then do nothing
+      if (ticket.status === "Resolved") {
+        return res.status(400).json({
+          success: false,
+          message: "Ticket already resolved",
+        });
+      }
+
+      ticket.status = status;
+      ticket.updatedAt = new Date();
+
+      await ticket.save();
+
+      // decrease activeTickets only when resolved
+      if (status === "Resolved" && ticket.assignedTo) {
+        await User.findByIdAndUpdate(
+          ticket.assignedTo,
+          {
+            $inc: { activeTickets: -1 },
+          }
+        );
+      }
 
       res.json({
         success: true,
