@@ -559,7 +559,7 @@ router.get("/amc/:companyId", async (req, res) => {
       const paymentDone =
         order.pendingAmount <= 0 ||
         order.receivedAmount >= order.grossTotal;
-
+      console.log("payment done",paymentDone)
       // ✅ only Annual Support Cover
       if (
         order.businessLine === "Annual Support Cover"
