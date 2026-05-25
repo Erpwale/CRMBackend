@@ -62,6 +62,7 @@ const validate = (body) => {
 };
 const converter = require("number-to-words");
 const globalcompany = require("../models/globalcompany.js");
+const { authMiddleware } = require("../middleware/auth.js");
 /* ========================= */
 /* ✅ CREATE */
 /* ========================= */
