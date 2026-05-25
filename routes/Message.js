@@ -47,13 +47,8 @@ router.post(
   authMiddleware,
   async (req, res) => {
     try {
-      const { message } = req.body;
-
-      const senderType =
-        req.user.role === "admin" ||
-        req.user.role === "Support Executive"
-          ? "Support Executive"
-          : "customer";
+      const { message, senderType } =
+        req.body;
 
       const newMessage =
         await TicketMessage.create({
@@ -63,19 +58,13 @@ router.post(
           message,
         });
 
-      await Ticket.findByIdAndUpdate(
-        req.params.ticketId,
-        {
-          lastMessage: message,
-          lastMessageAt: new Date(),
-        }
-      );
-
       res.status(201).json({
         success: true,
         message: newMessage,
       });
     } catch (error) {
+      console.log(error);
+
       res.status(500).json({
         success: false,
         error: error.message,
@@ -83,5 +72,4 @@ router.post(
     }
   }
 );
-
 module.exports = router;
