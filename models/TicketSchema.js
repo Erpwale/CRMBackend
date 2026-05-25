@@ -62,11 +62,11 @@ assignedAt: {
   }
 );
 
-await TicketMessage.create({
-  ticketId: ticket._id,
-  senderId: customerId,
-  senderType: "customer",
-  message: description,
-});
+// await TicketMessage.create({
+//   ticketId: ticket._id,
+//   senderId: customerId,
+//   senderType: "customer",
+//   message: description,
+// });
 
 module.exports = mongoose.model("Ticket", ticketSchema);
