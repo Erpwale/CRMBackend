@@ -380,7 +380,7 @@ router.put("/assign-ticket/:ticketId", async (req, res) => {
   }
 });
 
-const User = require("../models/User");
+
 
 router.put(
   "/update-status/:id",
