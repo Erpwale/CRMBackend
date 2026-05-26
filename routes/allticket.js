@@ -650,6 +650,7 @@ router.get("/support/:supportId", async (req, res) => {
     })
       .populate("assignedTo", "name email")
       .populate("customerId", "name email")
+       .populate("companyId", "companyName phone email")
       .sort({ createdAt: -1 });
 
     res.status(200).json({
