@@ -592,7 +592,51 @@ router.get(
     }
   }
 );
+router.get(
+  "/support-stats/:supportId",
+  async (req, res) => {
+    try {
 
+      const { supportId } = req.params;
+
+      // TOTAL ASSIGNED
+      const totalAssigned = await Ticket.countDocuments({
+        assignedTo: supportId
+      });
+
+      // TOTAL RESOLVED
+      const totalResolved = await Ticket.countDocuments({
+        assignedTo: supportId,
+        status: "Resolved"
+      });
+
+      // TOTAL PENDING
+      const totalPending = await Ticket.countDocuments({
+        assignedTo: supportId,
+        status: "Waiting on Cust"
+      });
+
+      res.status(200).json({
+        success: true,
+        data: {
+          totalAssigned,
+          totalResolved,
+          totalPending
+        }
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
+        message: error.message
+      });
+
+    }
+  }
+);
 module.exports = router;
 
 
