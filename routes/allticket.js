@@ -646,7 +646,7 @@ router.get("/support/:supportId", async (req, res) => {
 
     const tickets = await Ticket.find({
       assignedTo: supportId,
-      status: "Assigned",
+      status: "assigned",
     })
       .populate("assignedTo", "name email")
       .populate("customerId", "name email")
