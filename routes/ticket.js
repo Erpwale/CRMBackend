@@ -519,7 +519,8 @@ router.get(
   authMiddleware,
   async (req, res) => {
     try {
-      const ticket = await Ticket.findById(req.params.id);
+      const ticket = await Ticket.findById(req.params.id)
+       .populate("companyId", "companyName");
 
       const messages = await TicketMessage.find({
         ticketId: req.params.id,
