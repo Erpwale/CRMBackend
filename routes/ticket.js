@@ -608,7 +608,7 @@ router.get(
       // TOTAL RESOLVED
       const totalResolved = await Ticket.countDocuments({
         assignedTo: supportId,
-        status: "Resolved"
+        status: "resolved"
       });
 
       // TOTAL PENDING
@@ -638,6 +638,56 @@ router.get(
     }
   }
 );
+
+router.get("/customer-stats/:customerId", async (req, res) => {
+  try {
+
+    const { customerId } = req.params;
+
+    // TOTAL RAISED TICKETS
+    const totalRaised = await Ticket.countDocuments({
+      customerId: customerId
+    });
+
+    // TOTAL RESOLVED
+    const totalResolved = await Ticket.countDocuments({
+      customerId: customerId,
+      status: "resolved"
+    });
+
+    // TOTAL PENDING
+    const totalPending = await Ticket.countDocuments({
+      customerId: customerId,
+      status: "open"
+    });
+
+    // TOTAL ONGOING
+    const totalOngoing = await Ticket.countDocuments({
+      customerId: customerId,
+      status: "assigned"
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalRaised,
+        totalResolved,
+        totalPending,
+        totalOngoing
+      }
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+
+  }
+});
 module.exports = router;
 
 

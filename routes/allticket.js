@@ -667,6 +667,7 @@ router.get("/support/:supportId", async (req, res) => {
     });
   }
 });
+
 router.get("/support/ticket/:supportId", async (req, res) => {
   try {
     const { supportId } = req.params;
