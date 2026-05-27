@@ -521,7 +521,7 @@ router.get(
     try {
       const ticket = await Ticket.findById(req.params.id)
        .populate("companyId", "companyName");
-       .populate("assignedTo", "firstName LastName Role");
+       .populate("assignedTo", "firstName lastName");
 
       const messages = await TicketMessage.find({
         ticketId: req.params.id,
