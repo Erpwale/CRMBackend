@@ -4,12 +4,12 @@ const ticketSchema = new mongoose.Schema(
   {
     companyId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company"
+      ref: "Company",
     },
 
     customerId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
     },
 
     tallySerialNo: String,
@@ -24,74 +24,72 @@ const ticketSchema = new mongoose.Schema(
 
     contactId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Contact"
+      ref: "Contact",
     },
-ticketNumber: {
+
+    ticketNumber: {
       type: String,
-      unique: true
+      unique: true,
     },
 
     contactNumber: String,
-assignedTo: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "User",
-  default: null
-},
 
-assignedBy: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "User",
-  default: null
-},
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
 
-assignedAt: {
-  type: Date,
-  default: null
-},
+    assignedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+
+    assignedAt: {
+      type: Date,
+      default: null,
+    },
+
     preferredDate: String,
 
     preferredTime: String,
 
     status: {
       type: String,
-      default: "open"
-    }
+      default: "open",
+    },
+
+    // ✅ INSIDE MAIN OBJECT
+    statusHistory: [
+      {
+        updatedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+
+        role: {
+          type: String,
+        },
+
+        oldStatus: {
+          type: String,
+        },
+
+        newStatus: {
+          type: String,
+        },
+
+        updatedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
-  statusHistory: [
   {
-    updatedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-
-    role: {
-      type: String,
-    },
-
-    oldStatus: {
-      type: String,
-    },
-
-    newStatus: {
-      type: String,
-    },
-
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-],
-  {
-    timestamps: true
+    timestamps: true,
   }
 );
-
-// await TicketMessage.create({
-//   ticketId: ticket._id,
-//   senderId: customerId,
-//   senderType: "customer",
-//   message: description,
-// });
 
 module.exports = mongoose.model("Ticket", ticketSchema);
