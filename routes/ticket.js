@@ -398,7 +398,7 @@ router.put(
         });
       }
 
-      // if already resolved then do nothing
+      // prevent updating resolved ticket
       if (ticket.status === "Resolved") {
         return res.status(400).json({
           success: false,
@@ -406,19 +406,29 @@ router.put(
         });
       }
 
+      // store old status
+      const oldStatus = ticket.status;
+
+      // update status
       ticket.status = status;
       ticket.updatedAt = new Date();
 
+      // add history log
+      ticket.statusHistory.push({
+        updatedBy: req.user._id, // from auth middleware
+        role: req.user.role, // customer/support/admin
+        oldStatus: oldStatus,
+        newStatus: status,
+        updatedAt: new Date(),
+      });
+
       await ticket.save();
 
-      // decrease activeTickets only when resolved
+      // decrease active ticket count
       if (status === "Resolved" && ticket.assignedTo) {
-        await User.findByIdAndUpdate(
-          ticket.assignedTo,
-          {
-            $inc: { activeTickets: -1 },
-          }
-        );
+        await User.findByIdAndUpdate(ticket.assignedTo, {
+          $inc: { activeTickets: -1 },
+        });
       }
 
       res.json({

@@ -57,6 +57,31 @@ assignedAt: {
       default: "open"
     }
   },
+  statusHistory: [
+  {
+    updatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+
+    role: {
+      type: String,
+    },
+
+    oldStatus: {
+      type: String,
+    },
+
+    newStatus: {
+      type: String,
+    },
+
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+],
   {
     timestamps: true
   }
