@@ -399,7 +399,7 @@ router.put(
       }
 
       // prevent duplicate resolve
-      if (ticket.status === "Resolved") {
+      if (ticket.status === "resolved") {
         return res.status(400).json({
           success: false,
           message: "Ticket already resolved",
@@ -415,14 +415,19 @@ router.put(
       if (!ticket.statusHistory) {
         ticket.statusHistory = [];
       }
+const updatedBy =
+  req.user?._id || req.customer?._id;
 
-      ticket.statusHistory.push({
-        updatedBy: req.user._id,
-        role: req.user.role,
-        oldStatus: oldStatus,
-        newStatus: status,
-        updatedAt: new Date(),
-      });
+const role =
+  req.user?.role || "customer";
+  
+ ticket.statusHistory.push({
+  updatedBy,
+  role,
+  oldStatus,
+  newStatus: status,
+  updatedAt: new Date(),
+});
 
       await ticket.save();
 
