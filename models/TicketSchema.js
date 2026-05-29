@@ -19,7 +19,11 @@ const ticketSchema = new mongoose.Schema(
     subCategory: String,
 
     description: String,
-
+ priority: {
+      type: String,
+      enum: ["Low", "Medium", "High", "Urgent"],
+      default: "Low",
+    },
     contactPerson: String,
 
     contactId: {
