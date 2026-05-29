@@ -12,6 +12,10 @@ const ContactSchema = new mongoose.Schema(
     mobile: String,
     email: String,
     designation: String,
+     termsAccepted: {
+    type: Boolean,
+    default: false
+  }
 
  // ✅ WHO CREATED THIS CONTACT
     createdBy: {

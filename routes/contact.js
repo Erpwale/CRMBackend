@@ -155,6 +155,66 @@ if (global.io) {
   }
 });
 
+router.put(
+  "/accept-terms",
+  async (req, res) => {
+    try {
+
+      // GET TOKEN
+      const token = req.header("Authorization")?.replace(
+        "Bearer ",
+        ""
+      );
+
+      if (!token) {
+        return res.status(401).json({
+          success: false,
+          message: "No token found",
+        });
+      }
+
+      // VERIFY TOKEN
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET
+      );
+
+      // UPDATE USER
+      const updatedUser =
+        await Contact.findByIdAndUpdate(
+          decoded.id,
+          {
+            termsAccepted: true,
+          },
+          {
+            new: true,
+          }
+        );
+
+      if (!updatedUser) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message:
+          "Terms accepted successfully",
+        user: updatedUser,
+      });
+
+    } catch (error) {
+      console.log(error);
+
+      return res.status(500).json({
+        success: false,
+        message: "Server Error",
+      });
+    }
+  }
+);
 
 // FETCH CONTACTS
 router.get("/:companyId", authMiddleware, async (req, res) => {
