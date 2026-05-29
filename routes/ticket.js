@@ -595,6 +595,12 @@ router.get(
           "name mobile designation"
       })
 
+      .populate({
+        path: "assignedTo",
+        select: "name mobile"
+      })
+
+
       .sort({ createdAt: -1 });
 
       res.status(200).json({
