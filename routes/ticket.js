@@ -597,7 +597,7 @@ router.get(
 
       .populate({
         path: "assignedTo",
-        select: "name mobile"
+        select: "firstName lastName phone"
       })
 
 
