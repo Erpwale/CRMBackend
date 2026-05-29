@@ -15,7 +15,7 @@ const ContactSchema = new mongoose.Schema(
     designation: String,
        password: {
       type: String,
-      required: true,
+      // required: true,
     },
      termsAccepted: {
     type: Boolean,
