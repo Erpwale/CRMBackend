@@ -509,6 +509,10 @@ router.get(
         path: "contactId",
         select: "name mobile"
       })
+      .populate({
+        path: "assignedTo",
+        select: "name mobile"
+      })
 
       .sort({ createdAt: -1 });
 
