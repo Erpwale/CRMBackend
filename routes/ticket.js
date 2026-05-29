@@ -292,6 +292,8 @@ router.post("/create", authMiddleware, async (req, res) => {
       tallySerialNo,
       category,
       subCategory,
+        priority, // ✅ ADD THIS
+
       description,
       contactPerson,
       contactId,
