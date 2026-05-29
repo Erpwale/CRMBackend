@@ -111,7 +111,7 @@ router.post("/verify-otp", async (req, res) => {
           id: contact._id,
           type: "customer",
            companyId: contact.companyId,
-           termsAccepted: customer.termsAccepted || false
+           termsAccepted: contact.termsAccepted || false
         },
         process.env.JWT_SECRET,
         {
