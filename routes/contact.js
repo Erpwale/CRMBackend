@@ -348,7 +348,7 @@ router.post("/customer-login", async (req, res) => {
         email: customer.email,
         role: "customer",
       },
-      "SECRETKEY",
+         process.env.JWT_SECRET,
       {
         expiresIn: "7d",
       }
