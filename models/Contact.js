@@ -44,7 +44,7 @@ const ContactSchema = new mongoose.Schema(
 
     autoMail: {
       type: Boolean,
-      default: false
+      default: true
     },
 
     primary: {
