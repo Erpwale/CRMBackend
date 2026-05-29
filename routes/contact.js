@@ -347,7 +347,7 @@ router.post("/customer-login", async (req, res) => {
         id: customer._id,
         email: customer.email,
           type: "customer",
-         companyId: Contact.companyId
+         companyId: customer.companyId
       },
          process.env.JWT_SECRET,
       {
