@@ -15,7 +15,7 @@ const ContactSchema = new mongoose.Schema(
      termsAccepted: {
     type: Boolean,
     default: false
-  }
+  },
 
  // ✅ WHO CREATED THIS CONTACT
     createdBy: {
