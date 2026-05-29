@@ -312,4 +312,105 @@ if (primary) {
   }
 });
 
+router.post("/customer-login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // FIND USER
+    const customer = await Contact.findOne({ email });
+
+    if (!customer) {
+      return res.status(400).json({
+        success: false,
+        message: "Customer not found",
+      });
+    }
+
+    // CHECK PASSWORD
+    const isMatch = await bcrypt.compare(
+      password,
+      customer.password
+    );
+
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid password",
+      });
+    }
+
+    // TOKEN
+    const token = jwt.sign(
+      {
+        id: customer._id,
+        email: customer.email,
+        role: "customer",
+      },
+      "SECRETKEY",
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      token,
+      customer,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+});
+
+
+router.put("/forgot-password", async (req, res) => {
+  try {
+
+    const { email, newPassword } = req.body;
+
+    const customer = await Contact.findOne({ email });
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        message: "Customer not found",
+      });
+    }
+
+    // HASH NEW PASSWORD
+    const salt = await bcrypt.genSalt(10);
+
+    const hashedPassword = await bcrypt.hash(
+      newPassword,
+      salt
+    );
+
+    // UPDATE PASSWORD
+    customer.password = hashedPassword;
+
+    await customer.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password updated successfully",
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+
+  }
+});
+
 module.exports = router;
