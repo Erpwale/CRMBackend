@@ -354,7 +354,35 @@ console.log("Location:", geo);
 
 });
 
+const blacklistedTokens = [];
 
+router.post("/logout", async (req, res) => {
+  try {
+
+    const authHeader =
+      req.headers.authorization;
+
+    const token = authHeader?.split(" ")[1];
+
+    if (token) {
+      blacklistedTokens.push(token);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Logout successful"
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Logout failed"
+    });
+  }
+});
 // ✅ Verify 2FA Token
 router.post("/verify-2fa", async (req, res) => {
   try {
