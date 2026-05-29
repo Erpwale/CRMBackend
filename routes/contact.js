@@ -385,17 +385,10 @@ router.put("/forgot-password", async (req, res) => {
       });
     }
 
-    // HASH NEW PASSWORD
-    const salt = await bcrypt.genSalt(10);
+    // SET NEW PASSWORD
+    customer.password = newPassword;
 
-    const hashedPassword = await bcrypt.hash(
-      newPassword,
-      salt
-    );
-
-    // UPDATE PASSWORD
-    customer.password = hashedPassword;
-
+    // AUTO HASH FROM SCHEMA
     await customer.save();
 
     res.status(200).json({
