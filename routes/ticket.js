@@ -716,6 +716,61 @@ router.get("/customer-stats/:customerId", async (req, res) => {
 
   }
 });
+
+router.put("/resolve-ticket/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { resolveRemark } = req.body;
+
+    if (!resolveRemark) {
+      return res.status(400).json({
+        success: false,
+        message: "Resolve remark is required",
+      });
+    }
+
+    const ticket = await Ticket.findById(id);
+
+    if (!ticket) {
+      return res.status(404).json({
+        success: false,
+        message: "Ticket not found",
+      });
+    }
+
+    const oldStatus = ticket.status;
+
+    ticket.status = "resolved";
+
+    ticket.resolveRemark = resolveRemark;
+
+    ticket.resolvedAt = new Date();
+
+    ticket.statusHistory.push({
+      oldStatus: oldStatus,
+      newStatus: "resolved",
+    });
+
+    await ticket.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Ticket resolved successfully",
+      ticket,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+});
+
+
 module.exports = router;
 
 

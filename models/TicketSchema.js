@@ -54,7 +54,21 @@ const ticketSchema = new mongoose.Schema(
     preferredDate: String,
 
     preferredTime: String,
+resolveRemark: {
+  type: String,
+  default: "",
+},
 
+resolvedAt: {
+  type: Date,
+  default: null,
+},
+
+resolvedBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  default: null,
+},
     status: {
       type: String,
       default: "open",
