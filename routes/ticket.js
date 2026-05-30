@@ -724,12 +724,19 @@ router.put("/resolve-ticket/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { resolveRemark } = req.body;
+    const { resolveRemark, resolvedBy } = req.body;
 
     if (!resolveRemark) {
       return res.status(400).json({
         success: false,
         message: "Resolve remark is required",
+      });
+    }
+
+    if (!resolvedBy) {
+      return res.status(400).json({
+        success: false,
+        message: "Resolved by is required",
       });
     }
 
@@ -745,14 +752,17 @@ router.put("/resolve-ticket/:id", async (req, res) => {
     const oldStatus = ticket.status;
 
     ticket.status = "resolved";
-
     ticket.resolveRemark = resolveRemark;
+
+    // add resolved by
+    ticket.resolvedBy = resolvedBy;
 
     ticket.resolvedAt = new Date();
 
     ticket.statusHistory.push({
       oldStatus: oldStatus,
       newStatus: "resolved",
+      changedBy: resolvedBy,
     });
 
     await ticket.save();
