@@ -43,25 +43,37 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ message: "Required fields missing" });
     }
 
-    // ✅ VALIDATION FUNCTIONS
-    const isValidGSTIN = (gstin) =>
-      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{3}$/.test(gstin);
-    
+ // ✅ VALIDATION FUNCTIONS
 
-   const isValidPAN = (pan) =>
-  /^[A-Z]{3}[PCGHABFTJL][A-Z][0-9]{4}[A-Z]$/.test(pan);
+const isValidGSTIN = (gstin) =>
+  /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(gstin);
 
- const isValidTAN = (tan) =>
-  /^[A-Z]{3}[A-Z][0-9]{5}[A-Z]$/.test(tan);
+const isValidPAN = (pan) =>
+  /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan);
 
-   const isValidMSME = (msme) =>
-  /^UDYAM-[A-Z]{2}-[0-9]{2}-[0-9]{7}$/.test(msme);
+const isValidTAN = (tan) =>
+  /^[A-Z]{4}[0-9]{5}[A-Z]$/.test(tan);
 
-    // ✅ APPLY VALIDATION
-    if (!isValidGSTIN(gstin)) {
-      return res.status(400).json({ message: "Invalid GSTIN format" });
-    }
-    const gstPan = gstin.substring(2, 12);
+const isValidMSME = (msme) =>
+  /^UDYAM-[A-Z]{2}-\d{2}-\d{7}$/.test(msme);
+
+
+// ✅ APPLY VALIDATION
+
+if (!isValidPAN(pan)) {
+  return res.status(400).json({
+    message: "Invalid PAN format",
+  });
+}
+
+if (!isValidGSTIN(gstin)) {
+  return res.status(400).json({
+    message: "Invalid GSTIN format",
+  });
+}
+
+// ✅ GST PAN MATCH CHECK
+const gstPan = gstin.substring(2, 12);
 
 if (gstPan !== pan) {
   return res.status(400).json({
@@ -69,18 +81,17 @@ if (gstPan !== pan) {
   });
 }
 
-    if (!isValidPAN(pan)) {
-      return res.status(400).json({ message: "Invalid PAN format" });
-    }
+if (tan && !isValidTAN(tan)) {
+  return res.status(400).json({
+    message: "Invalid TAN format",
+  });
+}
 
-    if (tan && !isValidTAN(tan)) {
-      return res.status(400).json({ message: "Invalid TAN format" });
-    }
-
-    if (msme && !isValidMSME(msme)) {
-      return res.status(400).json({ message: "Invalid MSME format" });
-    }
-
+if (msme && !isValidMSME(msme)) {
+  return res.status(400).json({
+    message: "Invalid MSME format",
+  });
+}
     // 🔥 DUPLICATE CHECK
     const existing = await Ledger.findOne({
       companyId,
