@@ -55,4 +55,35 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Error fetching deal" });
   }
 });
+router.get("/last-asc/:serialNo", async (req, res) => {
+  try {
+    const { serialNo } = req.params;
+
+    const deal = await Deal.findOne({
+      businessLine: "Annual Support Cover",
+      "products.amcDetails.licenseNo": serialNo,
+    }).sort({ createdAt: -1 });
+
+    if (!deal) {
+      return res.status(404).json({
+        success: false,
+        message: "No previous ASC found",
+      });
+    }
+
+    const product = deal.products.find(
+      (p) => p.amcDetails?.licenseNo === serialNo
+    );
+
+    res.json({
+      success: true,
+      amcDetails: product?.amcDetails || null,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 module.exports = router; // ✅ THIS WAS MISSING
