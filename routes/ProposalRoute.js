@@ -567,7 +567,7 @@ router.get("/last-asc/:serialNo", async (req, res) => {
   try {
     const { serialNo } = req.params;
 
-    const deal = await Deal.findOne({
+    const deal = await Proposal.findOne({
       businessLine: "Annual Support Cover",
       "products.amcDetails.licenseNo": serialNo,
     }).sort({ createdAt: -1 });
