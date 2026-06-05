@@ -25,7 +25,7 @@ const mm = now.toLocaleString("en-US", { month: "short" });
   // random 4 digit
   const random = Math.floor(1000 + Math.random() * 9000);
 
-  let ticketNumber = `#TLY-${random}-${datePart}`;
+  let ticketNumber = `#ERP-${random}-${datePart}`;
 
   // check duplicate
   const existing = await Ticket.findOne({
