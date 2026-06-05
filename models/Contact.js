@@ -36,7 +36,11 @@ const ContactSchema = new mongoose.Schema(
 
 
     },
-
+      salutation: {
+    type: String,
+    enum: ["Mr.", "Ms.", "Mrs.", "Dr."],
+    default: "Mr."
+  },
     inactive: {
       type: Boolean,
       default: false

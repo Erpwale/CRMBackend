@@ -12,6 +12,7 @@ const { io } = require("../server");
 router.post("/create", authMiddleware, async (req, res) => {
   try {
 const {
+    salutation,
   name,
   designation,
   mobile,
@@ -110,7 +111,7 @@ if (
     // ---------- CREATE ----------
 const contact = new Contact({
   ...req.body,
-
+salutation,
   companyId: finalCompanyId,
 
   contactType:
