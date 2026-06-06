@@ -44,12 +44,115 @@ router.post("/", async (req, res) => {
     }
 
  // ✅ VALIDATION FUNCTIONS
+// ================= STATE CODES =================
 
-const isValidGSTIN = (gstin) =>
-  /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(gstin);
+const GST_STATE_CODES = {
+  "Jammu & Kashmir": "01",
+  "Himachal Pradesh": "02",
+  "Punjab": "03",
+  "Chandigarh": "04",
+  "Uttarakhand": "05",
+  "Haryana": "06",
+  "Delhi": "07",
+  "Rajasthan": "08",
+  "Uttar Pradesh": "09",
+  "Bihar": "10",
+  "Sikkim": "11",
+  "Arunachal Pradesh": "12",
+  "Nagaland": "13",
+  "Manipur": "14",
+  "Mizoram": "15",
+  "Tripura": "16",
+  "Meghalaya": "17",
+  "Assam": "18",
+  "West Bengal": "19",
+  "Jharkhand": "20",
+  "Odisha": "21",
+  "Chhattisgarh": "22",
+  "Madhya Pradesh": "23",
+  "Gujarat": "24",
+  "Daman & Diu": "25",
+  "Dadra & Nagar Haveli": "26",
+  "Maharashtra": "27",
+  "Andhra Pradesh (Old)": "28",
+  "Karnataka": "29",
+  "Goa": "30",
+  "Lakshadweep": "31",
+  "Kerala": "32",
+  "Tamil Nadu": "33",
+  "Puducherry": "34",
+  "Andaman & Nicobar Islands": "35",
+  "Telangana": "36",
+  "Andhra Pradesh": "37",
+  "Ladakh": "38",
+  "Other Territory": "97",
+  "Centre Jurisdiction": "99",
+};
+
+// ================= VALIDATORS =================
 
 const isValidPAN = (pan) =>
-  /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan);
+  /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(
+    pan?.toUpperCase().trim()
+  );
+
+const isValidTAN = (tan) =>
+  /^[A-Z]{4}[0-9]{5}[A-Z]$/.test(
+    tan?.toUpperCase().trim()
+  );
+
+const isValidMSME = (msme) =>
+  /^UDYAM-[A-Z]{2}-\d{2}-\d{7}$/.test(
+    msme?.toUpperCase().trim()
+  );
+
+const isValidGSTIN = (gstin, selectedState, pan) => {
+  gstin = gstin?.toUpperCase().trim();
+  pan = pan?.toUpperCase().trim();
+
+  const gstRegex =
+    /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
+
+  if (!gstRegex.test(gstin)) {
+    return {
+      valid: false,
+      message: "Invalid GSTIN format",
+    };
+  }
+
+  const expectedStateCode =
+    GST_STATE_CODES[selectedState];
+
+  if (!expectedStateCode) {
+    return {
+      valid: false,
+      message: "Invalid State Selected",
+    };
+  }
+
+  const gstStateCode = gstin.substring(0, 2);
+
+  if (gstStateCode !== expectedStateCode) {
+    return {
+      valid: false,
+      message: `GST State Code should be ${expectedStateCode} for ${selectedState}`,
+    };
+  }
+
+  const gstPan = gstin.substring(2, 12);
+
+  if (gstPan !== pan) {
+    return {
+      valid: false,
+      message: "GSTIN PAN does not match PAN Number",
+    };
+  }
+
+  return {
+    valid: true,
+    message: "Valid GSTIN",
+  };
+};
 
 const isValidTAN = (tan) =>
   /^[A-Z]{4}[0-9]{5}[A-Z]$/.test(tan);
@@ -59,6 +162,7 @@ const isValidMSME = (msme) =>
 
 
 // ✅ APPLY VALIDATION
+// ================= PAN =================
 
 if (!isValidPAN(pan)) {
   return res.status(400).json({
@@ -66,26 +170,29 @@ if (!isValidPAN(pan)) {
   });
 }
 
-if (!isValidGSTIN(gstin)) {
+// ================= GST =================
+
+const gstValidation = isValidGSTIN(
+  gstin,
+  state,
+  pan
+);
+
+if (!gstValidation.valid) {
   return res.status(400).json({
-    message: "Invalid GSTIN format",
+    message: gstValidation.message,
   });
 }
 
-// ✅ GST PAN MATCH CHECK
-const gstPan = gstin.substring(2, 12);
-
-if (gstPan !== pan) {
-  return res.status(400).json({
-    message: "PAN does not match GSTIN",
-  });
-}
+// ================= TAN =================
 
 if (tan && !isValidTAN(tan)) {
   return res.status(400).json({
     message: "Invalid TAN format",
   });
 }
+
+// ================= MSME =================
 
 if (msme && !isValidMSME(msme)) {
   return res.status(400).json({
@@ -184,25 +291,35 @@ router.post("/check-duplicate", async (req, res) => {
 });
 router.put("/ledger/:id", async (req, res) => {
   try {
-    console.log("gg",req)
     const updated = await Ledger.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
-    if (global.io) {
-      console.log("📡 Emitting ledgerUpdated (UPDATE) to:", companyRoom);
 
-      global.io.to(companyRoom).emit("ledgerUpdated", {
-        type: "UPDATE",
-        data: updated,
+    if (!updated) {
+      return res.status(404).json({
+        message: "Ledger not found",
       });
     }
 
+    const companyRoom = updated.companyId.toString();
+
+    if (global.io) {
+      global.io.to(companyRoom).emit(
+        "ledgerUpdated",
+        {
+          type: "UPDATE",
+          data: updated,
+        }
+      );
+    }
 
     res.json(updated);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      error: err.message,
+    });
   }
 });
 router.get("/company/:companyId", async (req, res) => {
