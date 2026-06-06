@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
     // ✅ REQUIRED CHECK
   console.log("logs",req.body)
     if (
-      !companyId || !companyName || !gstin || !pan || !contactEmail || !address1 || !state ||
+      !companyId  || !gstin || !pan || !contactEmail || !address1 || !state ||
       !district || !city || !pincode || !gstType|| !userName
     ) {
       return res.status(400).json({ message: "Required fields missing" });
@@ -222,7 +222,7 @@ if (msme && !isValidMSME(msme)) {
     // ✅ SAVE ALL FIELDS (IMPORTANT FIX)
     const ledger = await Ledger.create({
       companyId,
-      companyName,
+      
       contactEmail,
       userName,
       contactMobile,
