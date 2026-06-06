@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
   try {
     const {
       companyId,
-      companyName,
+      // companyName,
   
       userName,
       contactEmail,
