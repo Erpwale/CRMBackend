@@ -7,6 +7,13 @@ const generateProposalPDF= require("../utils/generateProposalPDF.js")
 const nodemailer = require("nodemailer");
 const dns = require("dns");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
+const { SendMailClient } = require("zeptomail");
+
+const client = new SendMailClient({
+  url: "https://api.zeptomail.in/v1.1/email",
+  token: process.env.ZEPTO_TOKEN,
+});
+
 dns.setDefaultResultOrder("ipv4first");
 const transporter = nodemailer.createTransport({
 host: "smtp.hostinger.com",
@@ -331,50 +338,54 @@ router.post("/send-mail", async (req, res) => {
       ? cc.split(",").map(e => e.trim()).filter(Boolean)
       : Array.isArray(cc) ? cc : [];
 
-    try {
-      await transporter.sendMail({
-        from: `"ERPWALE" <${process.env.EMAIL}>`,
-        replyTo: proposal.email,
 
-        // ✅ JOIN BACK
-        to: toArray.join(","),
+const html = `
+  <p>Hello,</p>
+  <p>${content}</p>
 
-        // ✅ OPTIONAL
-        cc: ccArray.length ? ccArray.join(",") : undefined,
+  <p>
+    <a href="${pdfLink}" target="_blank">
+      View Proposal
+    </a>
+  </p>
 
-        subject,
+  <br/>
 
-        // ✅ ADD TEXT VERSION (reduces spam)
-        text: content.replace(/<[^>]+>/g, ""),
+  <p>Regards,<br/>ERPWALE</p>
+`;
 
-        html: `
-          <p>Hello,</p>
-          <p>${content}</p>
-          <p>
-            <a href="${pdfLink}" target="_blank">
-              View Proposal
-            </a>
-          </p>
-          <br/>
-          <p>Regards,<br/>Your Company</p>
-        `,
-      });
+await client.sendMail({
+  from: {
+    address: "noreply@erpwale.com",
+    name: "ERPWALE",
+  },
 
-      console.log("✅ MAIL SENT");
+  to: toArray.map(email => ({
+    email_address: {
+      address: email,
+    },
+  })),
 
-      await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          proposalId,
-          status: "Sent",
-        }),
-      });
+  cc: ccArray.map(email => ({
+    email_address: {
+      address: email,
+    },
+  })),
 
-      res.json({ success: true });
+  subject,
+  htmlbody: html,
+});
 
-    } catch (mailErr) {
-      console.error("❌ Mail Error:", mailErr);
+
+
+
+
+
+
+
+
+
+   
 
       await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
         method: "PUT",

@@ -32,7 +32,8 @@
     "nodemailer": "^8.0.4",
      "number-to-words": "^1.2.4",
       "geoip-lite": "^1.4.10",
-       "axios": "^1.15.2"
+       "axios": "^1.15.2",
+           "zeptomail": "^8.0.1"
 
   },
   "devDependencies": {
