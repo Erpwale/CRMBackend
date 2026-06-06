@@ -9,11 +9,11 @@ const ledgerSchema = new mongoose.Schema(
       index: true,
     },
 
-    // companyName: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    // },
+    companyName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     // ✅ CONTACT DETAILS
     contactId: {
