@@ -10,6 +10,7 @@ const path = require("path");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Ticket= require("../models/TicketSchema")
 const TicketMessage= require("../models/ticketMessageSchema")
+const ticket = require("../models/Counter")
 const generateTicketNumber = async () => {
 
   const now = new Date();
@@ -21,7 +22,11 @@ const mm = now.toLocaleString("en-US", { month: "short" });
   const dd = String(now.getDate()).padStart(2, "0");
 
   const datePart = `${dd}${mm}${yy}`;
-
+const counter = await Counter.findOneAndUpdate(
+    { _id: "erpTicket" },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
   // random 4 digit
   const random = Math.floor(1000 + Math.random() * 9000);
 
