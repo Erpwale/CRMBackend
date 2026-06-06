@@ -324,84 +324,124 @@ router.post("/send-mail", async (req, res) => {
     const proposal = await opp.findOne({ proposalId });
 
     if (!proposal) {
-      return res.status(404).json({ message: "Proposal not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Proposal not found",
+      });
     }
 
     const pdfLink = `https://crmbackend-ozmq.onrender.com/api/Proposel/proposal/${proposalId}`;
 
-    // ✅ CONVERT STRING → ARRAY
-    const toArray = typeof to === "string"
-      ? to.split(",").map(e => e.trim()).filter(Boolean)
-      : Array.isArray(to) ? to : [];
+    // Convert TO emails
+    const toArray =
+      typeof to === "string"
+        ? to.split(",").map((e) => e.trim()).filter(Boolean)
+        : Array.isArray(to)
+        ? to
+        : [];
 
-    const ccArray = typeof cc === "string"
-      ? cc.split(",").map(e => e.trim()).filter(Boolean)
-      : Array.isArray(cc) ? cc : [];
+    // Convert CC emails
+    const ccArray =
+      typeof cc === "string"
+        ? cc.split(",").map((e) => e.trim()).filter(Boolean)
+        : Array.isArray(cc)
+        ? cc
+        : [];
 
+    const html = `
+      <p>Hello,</p>
 
-const html = `
-  <p>Hello,</p>
-  <p>${content}</p>
+      <p>${content}</p>
 
-  <p>
-    <a href="${pdfLink}" target="_blank">
-      View Proposal
-    </a>
-  </p>
+      <p>
+        <a href="${pdfLink}" target="_blank">
+          View Proposal PDF
+        </a>
+      </p>
 
-  <br/>
+      <br/>
 
-  <p>Regards,<br/>ERPWALE</p>
-`;
+      <p>Regards,<br/>ERPWALE</p>
+    `;
 
-await client.sendMail({
-  from: {
-    address: "noreply@erpwale.com",
-    name: "ERPWALE",
-  },
+    try {
+      const response = await client.sendMail({
+        from: {
+          address: "noreply@erpwale.com",
+          name: "ERPWALE",
+        },
 
-  to: toArray.map(email => ({
-    email_address: {
-      address: email,
-    },
-  })),
+        to: toArray.map((email) => ({
+          email_address: {
+            address: email,
+          },
+        })),
 
-  cc: ccArray.map(email => ({
-    email_address: {
-      address: email,
-    },
-  })),
+        cc: ccArray.map((email) => ({
+          email_address: {
+            address: email,
+          },
+        })),
 
-  subject,
-  htmlbody: html,
-});
-
-
-
-
-
-
-
-
-
-
-   
-
-      await fetch("https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          proposalId,
-          status: "Failed",
-        }),
+        subject,
+        htmlbody: html,
       });
 
-      res.status(500).json({ message: "Mail failed" });
+      console.log("✅ Mail Sent:", response);
+
+      // Update status = Sent
+      await fetch(
+        "https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            proposalId,
+            status: "Sent",
+          }),
+        }
+      );
+
+      return res.json({
+        success: true,
+        message: "Mail sent successfully",
+      });
+
+    } catch (mailErr) {
+      console.error("❌ ZeptoMail Error:", mailErr);
+
+      // Update status = Failed
+      await fetch(
+        "https://crmbackend-j0pp.onrender.com/api/Proposel/update-mail-status",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            proposalId,
+            status: "Failed",
+          }),
+        }
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Mail failed",
+        error: mailErr.message,
+      });
     }
 
   } catch (err) {
-    console.error("❌ Mail Error:", err);
-    res.status(500).json({ message: "Mail failed" });
+    console.error("❌ Route Error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Mail failed",
+      error: err.message,
+    });
   }
 });
 
