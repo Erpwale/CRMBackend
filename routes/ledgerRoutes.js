@@ -154,11 +154,11 @@ const isValidGSTIN = (gstin, selectedState, pan) => {
   };
 };
 
-const isValidTAN = (tan) =>
-  /^[A-Z]{4}[0-9]{5}[A-Z]$/.test(tan);
+// const isValidTAN = (tan) =>
+//   /^[A-Z]{4}[0-9]{5}[A-Z]$/.test(tan);
 
-const isValidMSME = (msme) =>
-  /^UDYAM-[A-Z]{2}-\d{2}-\d{7}$/.test(msme);
+// const isValidMSME = (msme) =>
+//   /^UDYAM-[A-Z]{2}-\d{2}-\d{7}$/.test(msme);
 
 
 // ✅ APPLY VALIDATION
