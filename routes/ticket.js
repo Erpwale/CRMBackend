@@ -9,8 +9,8 @@ const fs = require("fs");
 const path = require("path");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Ticket= require("../models/TicketSchema")
-const TicketMessage= require("../models/Ticketcounter")
-const Counter = require("../models/ticketcounterSchema")
+const TicketMessage= require("../models/ticketMessageSchema")
+const Counter = require("../models/Ticketcounter")
 const generateTicketNumber = async () => {
 
   const now = new Date();
