@@ -1,10 +1,14 @@
 const mongoose = require("mongoose");
 
-const ticketcounterSchema = new mongoose.Schema({
+const ticketCounterSchema = new mongoose.Schema({
   _id: String,
   seq: {
     type: Number,
     default: 1999
   }
 });
-module.exports = mongoose.model("ticketcounterSchema", ticketcounterSchema);
+
+module.exports = mongoose.model(
+  "TicketCounter",
+  ticketCounterSchema
+);

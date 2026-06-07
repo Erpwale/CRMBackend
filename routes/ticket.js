@@ -12,34 +12,25 @@ const Ticket= require("../models/TicketSchema")
 const TicketMessage= require("../models/ticketMessageSchema")
 const Counter = require("../models/Ticketcounter")
 const generateTicketNumber = async () => {
-
   const now = new Date();
 
   const yy = String(now.getFullYear()).slice(-2);
-
-const mm = now.toLocaleString("en-US", { month: "short" });
-
+  const mm = now.toLocaleString("en-US", { month: "short" });
   const dd = String(now.getDate()).padStart(2, "0");
 
   const datePart = `${dd}${mm}${yy}`;
-const counter = await Counter.findOneAndUpdate(
+
+  const counter = await Counter.findOneAndUpdate(
     { _id: "erpTicket" },
     { $inc: { seq: 1 } },
-    { new: true, upsert: true }
+    {
+      new: true,
+      upsert: true,
+      setDefaultsOnInsert: true
+    }
   );
-  // random 4 digit
-  const random = Math.floor(1000 + Math.random() * 9000);
 
-  let ticketNumber = `#ERP-${random}-${datePart}`;
-
-  // check duplicate
-  const existing = await Ticket.findOne({
-    ticketNumber
-  });
-
-  if (existing) {
-    return generateTicketNumber();
-  }
+  const ticketNumber = `#ERP-${counter.seq}-${datePart}`;
 
   return ticketNumber;
 };
