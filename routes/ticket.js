@@ -20,15 +20,16 @@ const generateTicketNumber = async () => {
 
   const datePart = `${dd}${mm}${yy}`;
 
-  const counter = await Counter.findOneAndUpdate(
-    { _id: "erpTicket" },
-    { $inc: { seq: 1 } },
-    {
-      new: true,
-      upsert: true,
-      setDefaultsOnInsert: true
-    }
-  );
+ const counter = await Counter.findOneAndUpdate(
+  { _id: "erpTicket" },
+  { $inc: { seq: 1 } },
+  {
+    new: true,
+    upsert: true,
+    setDefaultsOnInsert: true
+  }
+);
+
 
   const ticketNumber = `#ERP-${counter.seq}-${datePart}`;
 
