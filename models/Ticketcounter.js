@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const ticketcounterSchema = new mongoose.Schema({
   _id: String,
   seq: {
