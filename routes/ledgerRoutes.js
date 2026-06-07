@@ -37,12 +37,31 @@ router.post("/", async (req, res) => {
     // ✅ REQUIRED CHECK
   console.log("logs",req.body)
     if (
-      !companyId || !companyName || !gstin || !pan || !contactEmail || !address1 || !state ||
-      !district || !city || !pincode || !gstType|| !userName
-    ) {
-      return res.status(400).json({ message: "Required fields missing" });
-    }
+  !companyId ||
+  !companyName ||
+  !pan ||
+  !contactEmail ||
+  !address1 ||
+  !state ||
+  !district ||
+  !city ||
+  !pincode ||
+  !gstType ||
+  !userName
+) {
+  return res.status(400).json({ message: "Required fields missing" });
+}
 
+// GSTIN required only for GST registered types
+if (
+  gstType !== "Unregistered" &&
+  gstType !== "Consumer" &&
+  !gstin
+) {
+  return res.status(400).json({
+    message: "GSTIN is required for registered businesses"
+  });
+}
  // ✅ VALIDATION FUNCTIONS
 // ================= STATE CODES =================
 
