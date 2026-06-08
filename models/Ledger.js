@@ -35,12 +35,12 @@ const ledgerSchema = new mongoose.Schema(
 
     // ✅ GST DETAILS
     gstType: String,
-    gstin: {
-      type: String,
-      required: true,
-      uppercase: true,
-      trim: true,
-    },
+  gstin: {
+  type: String,
+  uppercase: true,
+  trim: true,
+  default: "",
+},
 
     pan: {
       type: String,
