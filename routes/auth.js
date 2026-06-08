@@ -748,8 +748,74 @@ console.log("Location:", geo);
 
   }
 );
+router.put("/users/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
 
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    Object.assign(user, req.body);
+
+    if (req.body.password) {
+      user.password = await bcrypt.hash(
+        req.body.password,
+        10
+      );
+    }
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "User updated successfully",
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+});
 // Fetch History of user
+router.put("/users/:id/status", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!["Active", "Inactive"].includes(status)) {
+      return res.status(400).json({
+        message: "Invalid status",
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      message: `User ${status} successfully`,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+});
 
 router.get(
   "/activity/:userId",

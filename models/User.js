@@ -170,7 +170,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null
     },
-
+status: {
+  type: String,
+  enum: ["Active", "Inactive"],
+  default: "Active"
+},
     isTwoFactorEnabled: {
       type: Boolean,
       default: false
