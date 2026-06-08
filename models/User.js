@@ -79,6 +79,44 @@ activeTickets: {
 
     monthlyTargets: {
   type: [monthlyTargetSchema],
+  mailPassword: {
+  type: String,
+  default: ""
+},
+  MailApiKey: {
+  type: String,
+  default: ""
+},
+
+address: {
+  type: String,
+  default: ""
+},
+
+city: {
+  type: String,
+  default: ""
+},
+
+state: {
+  type: String,
+  default: ""
+},
+
+pincode: {
+  type: String,
+  default: ""
+},
+
+bloodGroup: {
+  type: String,
+  default: ""
+},
+
+emergencyNumber: {
+  type: String,
+  default: ""
+},
 
   required: function () {
     return (

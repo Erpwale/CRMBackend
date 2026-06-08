@@ -11,25 +11,34 @@ const history = require("../models/History")
 
 router.post("/register", async (req, res) => {
   try {
-    const {
-      firstName,
-      lastName,
-      username,
-      email,
-      role,
-      department,
-      team,
-      reportingManager,
-      phone,
-      password,
-      confirmPassword,
-      monthlyTargets,
-      zones,
-      joiningDate,
-      linkedinLink,
-      whatsappLink,
-      calendlyLink
-    } = req.body;
+  const {
+  firstName,
+  lastName,
+  username,
+  email,
+  role,
+  department,
+  team,
+  reportingManager,
+  phone,
+  password,
+  confirmPassword,
+  monthlyTargets,
+  zones,
+  joiningDate,
+  linkedinLink,
+  whatsappLink,
+  calendlyLink,
+
+  mailApiKey,
+  mailPassword,
+  address,
+  city,
+  state,
+  pincode,
+  bloodGroup,
+  emergencyNumber
+} = req.body;
 
     // Required validations
     if (
@@ -147,39 +156,54 @@ router.post("/register", async (req, res) => {
       }
     }
 
-    // Monthly target validation
-    if (
-      !monthlyTargets ||
-      !Array.isArray(monthlyTargets) ||
-      monthlyTargets.length === 0
-    ) {
-      return res.status(400).json({
-        message: "At least one monthly target required"
-      });
-    }
+   if (
+  department === "Sales" &&
+  (
+    !monthlyTargets ||
+    !Array.isArray(monthlyTargets) ||
+    monthlyTargets.length === 0
+  )
+) {
+  return res.status(400).json({
+    message: "At least one monthly target required"
+  });
+}
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    const newUser = new User({
-      firstName,
-      lastName,
-      username,
-      email,
-      role,
-      department,
-      team,
-      reportingManager,
-      phone,
-      password: hashedPassword,
-      monthlyTargets,
-      zones,
-      joiningDate,
-      linkedinLink,
-      whatsappLink,
-      calendlyLink
-    });
+  const newUser = new User({
+  firstName,
+  lastName,
+  username,
+  email,
+  role,
+  department,
+  team,
+  reportingManager,
+  phone,
+  password: hashedPassword,
+
+  monthlyTargets,
+  zones,
+  joiningDate,
+
+  linkedinLink,
+  whatsappLink,
+  calendlyLink,
+
+  mailApiKey,
+  mailPassword,
+
+  address,
+  city,
+  state,
+  pincode,
+
+  bloodGroup,
+  emergencyNumber
+});
 
     await newUser.save();
 
