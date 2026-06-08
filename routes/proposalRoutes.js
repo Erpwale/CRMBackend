@@ -317,6 +317,8 @@ router.get("/proposal/title/:documentTitle", async (req, res) => {
 
 router.post("/send-mail", async (req, res) => {
   try {
+      console.log("BODY RECEIVED:", req.body);
+  console.log("CONTENT TYPE:", req.headers["content-type"]);
     const { to, cc, subject, content, proposalId } = req.body;
 
     console.log("➡️ Sending mail...", to);
