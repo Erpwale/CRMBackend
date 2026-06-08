@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
+
 const monthlyTargetSchema = new mongoose.Schema({
   date: {
     type: String
   },
-
   amount: {
     type: Number
   },
-
   revise: {
     type: String,
     enum: ["Per Month", "Per Year"],
     default: "Per Month"
   }
 });
+
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -51,15 +51,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+
     team: {
-  type: String,
-  required: true,
-  trim: true
-},
-activeTickets: {
-  type: Number,
-  default: 0
-},
+      type: String,
+      required: true,
+      trim: true
+    },
+
+    activeTickets: {
+      type: Number,
+      default: 0
+    },
 
     reportingManager: {
       type: String,
@@ -78,55 +80,15 @@ activeTickets: {
     },
 
     monthlyTargets: {
-  type: [monthlyTargetSchema],
-  mailPassword: {
-  type: String,
-  default: ""
-},
-  MailApiKey: {
-  type: String,
-  default: ""
-},
-
-address: {
-  type: String,
-  default: ""
-},
-
-city: {
-  type: String,
-  default: ""
-},
-
-state: {
-  type: String,
-  default: ""
-},
-
-pincode: {
-  type: String,
-  default: ""
-},
-
-bloodGroup: {
-  type: String,
-  default: ""
-},
-
-emergencyNumber: {
-  type: String,
-  default: ""
-},
-
-  required: function () {
-    return (
-      this.role === "Sales Manager" ||
-      this.role === "Sales Person"
-    );
-  },
-
-  default: []
-},
+      type: [monthlyTargetSchema],
+      required: function () {
+        return (
+          this.role === "Sales Manager" ||
+          this.role === "Sales Person"
+        );
+      },
+      default: []
+    },
 
     zones: [
       {
@@ -139,6 +101,49 @@ emergencyNumber: {
       default: ""
     },
 
+    // Email Configuration
+    mailPassword: {
+      type: String,
+      default: ""
+    },
+
+    mailApiKey: {
+      type: String,
+      default: ""
+    },
+
+    // Personal Details
+    address: {
+      type: String,
+      default: ""
+    },
+
+    city: {
+      type: String,
+      default: ""
+    },
+
+    state: {
+      type: String,
+      default: ""
+    },
+
+    pincode: {
+      type: String,
+      default: ""
+    },
+
+    bloodGroup: {
+      type: String,
+      default: ""
+    },
+
+    emergencyNumber: {
+      type: String,
+      default: ""
+    },
+
+    // Social Links
     linkedinLink: {
       type: String,
       default: ""
@@ -154,6 +159,7 @@ emergencyNumber: {
       default: ""
     },
 
+    // Profile
     profileImage: {
       type: String,
       default: ""
