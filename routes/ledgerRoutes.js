@@ -240,10 +240,7 @@ if (msme && !isValidMSME(msme)) {
   });
 }
     // 🔥 DUPLICATE CHECK
-    const existing = await Ledger.findOne({
-      companyId,
-      $or: [{ gstin }, { pan }, { tan }, { msme }],
-    });
+ 
 const duplicateChecks = [];
 
 if (gstin) duplicateChecks.push({ gstin });
