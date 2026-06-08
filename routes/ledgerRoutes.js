@@ -244,20 +244,42 @@ if (msme && !isValidMSME(msme)) {
       companyId,
       $or: [{ gstin }, { pan }, { tan }, { msme }],
     });
+const duplicateChecks = [];
 
-    if (existing) {
-      if (existing.gstin === gstin)
-        return res.status(400).json({ message: "GSTIN exists in this company" });
+if (gstin) duplicateChecks.push({ gstin });
+if (pan) duplicateChecks.push({ pan });
+if (tan) duplicateChecks.push({ tan });
+if (msme) duplicateChecks.push({ msme });
 
-      if (existing.pan === pan)
-        return res.status(400).json({ message: "PAN exists in this company" });
+const existing =
+  duplicateChecks.length > 0
+    ? await Ledger.findOne({
+        companyId,
+        $or: duplicateChecks,
+      })
+    : null;
 
-      if (existing.tan === tan)
-        return res.status(400).json({ message: "TAN exists in this company" });
+   if (existing) {
+  if (gstin && existing.gstin === gstin)
+    return res.status(400).json({
+      message: "GSTIN exists in this company",
+    });
 
-      if (existing.msme === msme)
-        return res.status(400).json({ message: "MSME exists in this company" });
-    }
+  if (pan && existing.pan === pan)
+    return res.status(400).json({
+      message: "PAN exists in this company",
+    });
+
+  if (tan && existing.tan === tan)
+    return res.status(400).json({
+      message: "TAN exists in this company",
+    });
+
+  if (msme && existing.msme === msme)
+    return res.status(400).json({
+      message: "MSME exists in this company",
+    });
+}
 
     // ✅ SAVE ALL FIELDS (IMPORTANT FIX)
     const ledger = await Ledger.create({
