@@ -125,29 +125,40 @@ const isValidMSME = (msme) =>
     msme?.toUpperCase().trim()
   );
 
-const isValidGSTIN = (gstin, selectedState, pan) => {
+const isValidGSTIN = (
+  gstin,
+  selectedState,
+  pan,
+  gstType
+) => {
+  const gstTypeValue = (gstType || "")
+    .trim()
+    .toLowerCase();
+
+  // Skip GST validation for Unregistered & Consumer
+  if (
+    gstTypeValue === "unregistered" ||
+    gstTypeValue === "consumer"
+  ) {
+    return {
+      valid: true,
+      message: "GST validation skipped",
+    };
+  }
+
   gstin = gstin?.toUpperCase().trim();
   pan = pan?.toUpperCase().trim();
 
   const gstRegex =
     /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
-const gstTypeValue = gstType?.trim().toLowerCase();
-if (
- gstTypeValue !== "unregistered" &&
-  gstTypeValue !== "consumer"
-) {
-  const gstValidation = isValidGSTIN(
-    gstin,
-    state,
-    pan
-  );
 
-  if (!gstValidation.valid) {
-    return res.status(400).json({
-      message: gstValidation.message,
-    });
+  if (!gstRegex.test(gstin)) {
+    return {
+      valid: false,
+      message: "Invalid GSTIN format",
+    };
   }
-}
+
   const expectedStateCode =
     GST_STATE_CODES[selectedState];
 
@@ -203,7 +214,8 @@ if (!isValidPAN(pan)) {
 const gstValidation = isValidGSTIN(
   gstin,
   state,
-  pan
+  pan,
+  gstType
 );
 
 if (!gstValidation.valid) {
