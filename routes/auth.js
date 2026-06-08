@@ -758,14 +758,19 @@ router.put("/users/:id", async (req, res) => {
       });
     }
 
-    Object.assign(user, req.body);
+  const updateData = { ...req.body };
 
-    if (req.body.password) {
-      user.password = await bcrypt.hash(
-        req.body.password,
-        10
-      );
-    }
+delete updateData.password;
+delete updateData.confirmPassword;
+
+Object.assign(user, updateData);
+
+if (req.body.password && req.body.password.trim() !== "") {
+  user.password = await bcrypt.hash(
+    req.body.password,
+    10
+  );
+}
 
     await user.save();
 
