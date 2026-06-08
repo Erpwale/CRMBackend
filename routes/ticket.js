@@ -228,10 +228,7 @@ router.get("/get-full-details/:id", async (req, res) => {
     // 4. User
     const user = await User.findById(
       company.createdBy
-    ).select(
-      "firstName lastName role email"
-    );
-
+    )
     res.json({
       contact,
       company,
