@@ -13,22 +13,18 @@ const ResourceSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    fileUrl: {
-      type: String,
-      default: "",
-    },
+ 
     externalUrl: {
       type: String,
       default: "",
     },
-    fileName: {
-      type: String,
-      default: "",
-    },
-    fileSize: {
-      type: Number,
-      default: 0,
-    },
+   files: [
+  {
+    fileName: String,
+    fileUrl: String,
+    fileSize: Number,
+  },
+],
     isPublic: {
       type: Boolean,
       default: true,

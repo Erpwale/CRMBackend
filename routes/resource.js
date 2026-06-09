@@ -29,7 +29,7 @@ const upload = multer({
 });
 
 // CREATE RESOURCE
-router.post("/create", upload.single("file"), async (req, res) => {
+router.post("/create", upload.array("files", 10), async (req, res) => {
   try {
     const {
       title,
@@ -45,12 +45,11 @@ router.post("/create", upload.single("file"), async (req, res) => {
     let fileName = "";
     let fileSize = 0;
 
-    if (req.file) {
-      fileUrl = `/uploads/resources/${req.file.filename}`;
-      fileName = req.file.originalname;
-      fileSize = req.file.size;
-    }
-
+const files = req.files?.map((file) => ({
+  fileName: file.originalname,
+  fileUrl: `/uploads/resources/${file.filename}`,
+  fileSize: file.size,
+})) || [];
     const resource = await Resource.create({
       title,
       category,
@@ -116,7 +115,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // UPDATE RESOURCE
-router.put("/:id", upload.single("file"), async (req, res) => {
+router.put("/:id", upload.array("files", 10), async (req, res) => {
   try {
     const updated = await Resource.findByIdAndUpdate(
       req.params.id,
