@@ -70,7 +70,7 @@ app.use(
   express.static(path.join(__dirname, "uploads"))
 );
 
-app.use("/api/resources", require("./routes/resourceRoutes"));
+app.use("/api/resources", require("./routes/resource"));
 app.use("/api/training",  require("./routes/trainingRoutes"));
 global.io = io; // ✅ ADD THIS
 
