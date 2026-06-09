@@ -65,8 +65,12 @@ app.use("/api/tickets", require("./routes/ticketcontact"));
 app.use("/api/alltickets", require("./routes/allticket"));
 app.use("/api/message", require("./routes/Message"));
 app.use("/api/workbench", require("./routes/workTracker"));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
 
+app.use("/api/resources", require("./routes/resourceRoutes"));
 app.use("/api/training",  require("./routes/trainingRoutes"));
 global.io = io; // ✅ ADD THIS
 
