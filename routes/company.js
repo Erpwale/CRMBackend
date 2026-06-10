@@ -421,25 +421,34 @@ router.get("/company/:id", authMiddleware, async (req, res) => {
     const company = await Company.findById(req.params.id)
       .populate("createdBy", "username email");
 
-    if (!company)
+    if (!company) {
       return res.status(404).json({ message: "Company not found" });
+    }
 
-    // ✅ Get primary contact from Contact table
+    // Primary Contact
     const primaryContact = await Contact.findOne({
       companyId: req.params.id,
-      primary: true
+      primary: true,
     }).select("name email mobile designation");
+
+    // Sales Orders
+    const salesOrders = await SalesOrder.find({
+      companyId: req.params.id,
+      isBill: true,
+      isOutstanding: false,
+    })
+      .sort({ createdAt: -1 });
 
     res.json({
       ...company.toObject(),
-      primaryContact
+      primaryContact,
+      salesOrders,
     });
-
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server Error" });
   }
 });
-
 router.get("/search", async (req, res) => {
   try {
     const { keyword } = req.query;
