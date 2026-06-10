@@ -3,7 +3,8 @@ const Company = require("../models/Company");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const router = express.Router();
 const Contact = require("../models/Contact");
-const User  = require("../models/User")
+const User  = require("../models/User");
+const SalesOrder  = require("../models/SalesOrder");
 
 // CREATE COMPANY
 router.post("/create-company", authMiddleware, async (req, res) => {
