@@ -8,7 +8,11 @@ const nodemailer = require("nodemailer");
 const dns = require("dns");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const { SendMailClient } = require("zeptomail");
+const multer = require("multer");
 
+const upload = multer({
+  storage: multer.memoryStorage(),
+});
 const client = new SendMailClient({
   url: "https://api.zeptomail.in/v1.1/email",
   token: process.env.ZEPTO_TOKEN,
@@ -315,7 +319,10 @@ router.get("/proposal/title/:documentTitle", async (req, res) => {
 //   }
 // });
 
-router.post("/send-mail", async (req, res) => {
+router.post(
+  "/send-mail",
+  upload.array("attachments"),
+  async (req, res) => {
   try {
       console.log("BODY RECEIVED:", req.body);
   console.log("CONTENT TYPE:", req.headers["content-type"]);
@@ -367,27 +374,48 @@ router.post("/send-mail", async (req, res) => {
     `;
 
     try {
-      const response = await client.sendMail({
-        from: {
-          address: "noreply@erpwale.com",
-          name: "ERPWALE",
-        },
+const pdfResponse = await fetch(pdfLink);
 
-        to: toArray.map((email) => ({
-          email_address: {
-            address: email,
-          },
-        })),
+if (!pdfResponse.ok) {
+  throw new Error("Failed to fetch PDF");
+}
 
-        cc: ccArray.map((email) => ({
-          email_address: {
-            address: email,
-          },
-        })),
+const pdfBuffer = Buffer.from(await pdfResponse.arrayBuffer());
+ const attachments = [
+  {
+    name: `Proposal-${proposalId}.pdf`,
+    content: pdfBuffer.toString("base64"),
+    mime_type: "application/pdf",
+  },
+];
 
-        subject,
-        htmlbody: html,
-      });
+if (req.files?.length) {
+  req.files.forEach((file) => {
+    attachments.push({
+      name: file.originalname,
+      content: file.buffer.toString("base64"),
+      mime_type: file.mimetype,
+    });
+  });
+}
+const response = await client.sendMail({
+  from: {
+    address: "noreply@erpwale.com",
+    name: "ERPWALE",
+  },
+
+  to: toArray.map((email) => ({
+    email_address: { address: email },
+  })),
+
+  cc: ccArray.map((email) => ({
+    email_address: { address: email },
+  })),
+
+  subject,
+  htmlbody: html,
+  attachments,
+});
 
       console.log("✅ Mail Sent:", response);
 
