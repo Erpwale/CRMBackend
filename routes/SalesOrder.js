@@ -265,6 +265,52 @@ router.get("/sales-orders", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+router.get("/sales-all", async (req, res) => {
+  try {
+    const orders = await SalesOrder.find();
+
+    // 🔥 Group orders by company
+    const companyMap = {};
+
+    orders.forEach((order) => {
+      const name = order.companyName;
+
+      if (!companyMap[name]) {
+        companyMap[name] = {
+          companyName: name,
+          orders: [],
+        };
+      }
+
+      companyMap[name].orders.push(order);
+    });
+
+    const companyNames = Object.keys(companyMap);
+
+    // 🔥 Fetch ledger data
+    const ledgers = await Ledger.find({
+      companyName: { $in: companyNames },
+    });
+
+    // 🔥 Map ledger balance
+    const ledgerMap = {};
+    ledgers.forEach((l) => {
+      ledgerMap[l.companyName] = l.balance || 0;
+    });
+
+    // 🔥 Final result
+    const result = companyNames.map((name) => ({
+      companyName: name,
+      balance: ledgerMap[name] || 0,
+      orders: companyMap[name].orders,
+    }));
+
+    res.json(result);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 
 router.get("/business-lines", async (req, res) => {
