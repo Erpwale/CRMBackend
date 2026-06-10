@@ -353,6 +353,8 @@ router.get("/sales-order", async (req, res) => {
       userName, // ✅ always filter by username
     };
 
+    console.log("filter",filter)
+
     // ✅ company search
     if (search) {
       filter.companyName = {
