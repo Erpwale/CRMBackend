@@ -321,12 +321,12 @@ router.get("/sales-order", async (req, res) => {
     }
 
     // ✅ date filter
-    if (startDate && endDate) {
-      filter.createdAt = {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
-      };
-    }
+  if (startDate && endDate) {
+  filter.orderDate = {
+    $gte: startDate,
+    $lte: endDate,
+  };
+}
 
     const data = await SalesOrder.find(filter)
       .sort({ createdAt: -1 });
