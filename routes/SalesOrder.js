@@ -376,8 +376,7 @@ router.get("/sales-order", async (req, res) => {
   };
 }
 
-    const data = await SalesOrder.find(filter)
-      .sort({ createdAt: -1 });
+    const data = await SalesOrder.find(filter);
   console.log("data",data);
   
     res.json({
