@@ -424,6 +424,8 @@ router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
       const activeServices = companyOrders.flatMap(order =>
         order.products || [] // replace products with your actual product array field
       );
+      console.log(activeServices);
+      
 
       return {
         ...company,
