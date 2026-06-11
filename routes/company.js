@@ -284,121 +284,94 @@ router.get(
   "/my-companies",
   authMiddleware,
   async (req, res) => {
-
     try {
-
       let companies = [];
 
       // =========================
       // ADMIN
       // =========================
-      console.log(req.user)
-
       if (req.user.role === "admin") {
-
         companies = await Company.find();
-
       }
 
       // =========================
       // SALES MANAGER
       // =========================
-
-      else if (
-        req.user.role === "Sales Manager"
-      ) {
-         console.log("sales pers", req.user.username)
-        // Find all sales persons under manager
-
+      else if (req.user.role === "Sales Manager") {
         const salesPersons = await User.find({
           reportingManager: req.user.username,
-          role: "Sales Person"
+          role: "Sales Person",
         }).select("_id");
-          console.log("sales pers",salesPersons)
+
         const salesPersonIds = salesPersons.map(
           (sp) => sp._id
         );
-        console.log(salesPersonIds)
 
-        // include manager own companies also
+        // Include manager's own companies
         salesPersonIds.push(req.user.id);
-
 
         companies = await Company.find({
           createdBy: {
-            $in: salesPersonIds
-          }
+            $in: salesPersonIds,
+          },
         });
-
       }
 
       // =========================
       // SALES PERSON
       // =========================
-
-      else if (
-        req.user.role === "Sales Person"
-      ) {
-
+      else if (req.user.role === "Sales Person") {
         companies = await Company.find({
-          createdBy: req.user.id
+          createdBy: req.user.id,
         });
-
       }
 
       // =========================
       // OTHER ROLES
       // =========================
-
       else {
-
         companies = [];
-
       }
 
       // =========================
       // ATTACH PRIMARY CONTACT
+      // + ACTIVE SERVICES
       // =========================
-
       const result = await Promise.all(
-
         companies.map(async (company) => {
+          const primaryContact = await Contact.findOne({
+            companyId: company._id,
+            primary: true,
+          }).select(
+            "name email mobile designation"
+          );
 
-          const primaryContact =
-            await Contact.findOne({
+          const salesOrders = await SalesOrder.find({
+            companyId: company._id, // change if your field name is different
+            isOutstanding: false,
+            isBill: true,
+          }).lean();
 
-              companyId: company._id,
-
-              primary: true
-
-            }).select(
-              "name email mobile designation"
-            );
+          const activeServices = salesOrders.flatMap(
+            (order) => order.products || [] // change if your field name is different
+          );
 
           return {
-
             ...company.toObject(),
-
-            primaryContact
-
+            primaryContact,
+            activeServices,
           };
-
         })
-
       );
 
       res.json(result);
-
     } catch (err) {
-
       console.log(err);
 
       res.status(500).json({
-        message: "Server Error"
+        message: "Server Error",
       });
-
     }
-
   }
 );
 // ADMIN GET ALL COMPANIES
