@@ -404,13 +404,36 @@ router.get(
 // ADMIN GET ALL COMPANIES
 router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
   try {
-
     const companies = await Company.find()
-      .populate("createdBy", "name email role");
+      .populate("createdBy", "name email role lastName firstName")
+      .lean();
 
-    res.json(companies);
+    const companyIds = companies.map(c => c._id);
 
+    const salesOrders = await SalesOrder.find({
+      company: { $in: companyIds }, // replace with your company field name
+      isOutstanding: false,
+      isBill: true,
+    }).lean();
+
+    const companiesWithServices = companies.map(company => {
+      const companyOrders = salesOrders.filter(
+        so => so.company?.toString() === company._id.toString()
+      );
+
+      const activeServices = companyOrders.flatMap(order =>
+        order.products || [] // replace products with your actual product array field
+      );
+
+      return {
+        ...company,
+        activeServices,
+      };
+    });
+
+    res.json(companiesWithServices);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server Error" });
   }
 });
@@ -420,7 +443,7 @@ router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
 router.get("/company/:id", authMiddleware, async (req, res) => {
   try {
     const company = await Company.findById(req.params.id)
-      .populate("createdBy", "username email");
+      .populate("createdBy", "name email role lastName firstName");
 
     if (!company) {
       return res.status(404).json({ message: "Company not found" });
