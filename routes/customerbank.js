@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Bank = require("../models/Bank");
+const Bank = require("../models/Customerbank");
 
 
 // =========================
