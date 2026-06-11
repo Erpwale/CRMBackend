@@ -415,6 +415,8 @@ router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
       isOutstanding: false,
       isBill: true,
     }).lean();
+    console.log("salesOrders",salesOrders);
+    
 
     const companiesWithServices = companies.map(company => {
       const companyOrders = salesOrders.filter(
