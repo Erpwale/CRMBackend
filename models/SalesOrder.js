@@ -155,27 +155,21 @@ pendingAmount: { type: Number, default: 0 },
 
 salesOrderSchema.post("save", async function (doc) {
   try {
-    // ✅ If bill generated and no outstanding
-    if (doc.isBill === true && doc.isOutstanding === false) {
+    const SalesOrder = mongoose.model("SalesOrder");
 
-      await mongoose.model("Company").findByIdAndUpdate(
-        doc.companyId,
-        {
-          status: "live"
-        }
-      );
+    // Check if ANY sales order for this company qualifies
+    const hasLiveOrder = await SalesOrder.exists({
+      companyId: doc.companyId,
+      isBill: true,
+      isOutstanding: false,
+    });
 
-    } else {
-
-      // Optional: revert to not live
-      await mongoose.model("Company").findByIdAndUpdate(
-        doc.companyId,
-        {
-          status: "not live"
-        }
-      );
-
-    }
+    await mongoose.model("Company").findByIdAndUpdate(
+      doc.companyId,
+      {
+        status: hasLiveOrder ? "live" : "not live",
+      }
+    );
   } catch (err) {
     console.log("Company status update error:", err);
   }
