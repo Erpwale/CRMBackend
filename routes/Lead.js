@@ -69,9 +69,25 @@ router.get("/:id", async (req, res) => {
 // UPDATE LEAD
 router.put("/:id", async (req, res) => {
   try {
+    const { status, remark, addedBy } = req.body;
+
+    const updateData = {
+      status,
+    };
+
+    if (remark && remark.trim() !== "") {
+      updateData.$push = {
+        remark: {
+          text: remark,
+          addedBy,
+          addedAt: new Date(),
+        },
+      };
+    }
+
     const lead = await Lead.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       {
         new: true,
         runValidators: true,
@@ -85,9 +101,8 @@ router.put("/:id", async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    res.json({
       success: true,
-      message: "Lead updated successfully",
       data: lead,
     });
   } catch (error) {
