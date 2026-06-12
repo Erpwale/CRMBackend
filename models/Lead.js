@@ -42,18 +42,28 @@ const leadSchema = new mongoose.Schema(
       default: "",
     },
 
-    status: {
-      type: String,
-      enum: [
-        "New",
-        "Contacted",
-        "Qualified",
-        "Proposal Sent",
-        "Won",
-        "Lost",
-      ],
-      default: "New",
+  remark: [
+  {
+    text: String,
+    addedBy: String,
+    addedAt: {
+      type: Date,
+      default: Date.now,
     },
+  },
+],
+
+   status: {
+  type: String,
+  enum: [
+    "Untouched",
+    "Contacted",
+    "Qualified",
+    "Accepted",
+    "Rejected",
+  ],
+  default: "Untouched",
+},
   },
   {
     timestamps: true,
