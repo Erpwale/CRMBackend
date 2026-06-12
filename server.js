@@ -66,6 +66,7 @@ app.use("/api/alltickets", require("./routes/allticket"));
 app.use("/api/message", require("./routes/Message"));
 app.use("/api/workbench", require("./routes/workTracker"));
 app.use("/api/bank", require("./routes/customerbank"));
+app.use("/api/leads", require("./routes/Lead.js"));
 app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
