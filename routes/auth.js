@@ -859,7 +859,7 @@ router.get("/last-login/:id", async (req, res) => {
 
     const lastLogin = await history.findOne({
       userId: req.params.id,
-      action: "login"
+      action: "LOGIN"
     }).sort({ createdAt: -1 });
 
     console.log("Last Login:", lastLogin);
