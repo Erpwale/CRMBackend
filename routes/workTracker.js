@@ -11,7 +11,7 @@ const getTodayRecord = async (userId) => {
     throw new Error("User not found");
   }
 
-  if (!["admin", "support", "sales"].includes(user.role)) {
+  if (!["admin", "Support Executive", "sales"].includes(user.role)) {
     throw new Error("User role not allowed");
   }
 
