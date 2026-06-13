@@ -778,6 +778,22 @@ router.put("/resolve-ticket/:id", async (req, res) => {
 });
 
 
+
+router.get("/assigned/:userId", async (req, res) => {
+  try {
+    const tickets = await Ticket.find({
+      assignedTo: req.params.userId
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json(tickets);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+});
+
+
 module.exports = router;
 
 
