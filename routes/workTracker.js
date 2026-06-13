@@ -1,3 +1,6 @@
+const express = require("express");
+const router = express.Router();
+
 router.post("/start-work/:id", async (req, res) => {
   const user = await Support.findById(req.params.id);
 
@@ -60,3 +63,6 @@ router.get("/timer/:id", async (req, res) => {
     benchSeconds,
   });
 });
+
+
+module.exports = router;
