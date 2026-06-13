@@ -1,167 +1,62 @@
-const express = require("express");
-const router = express.Router();
+router.post("/start-work/:id", async (req, res) => {
+  const user = await Support.findById(req.params.id);
 
-const WorkTracker = require(
-  "../models/workTrackerSchema"
-);
+  const now = new Date();
 
-const { authMiddleware } = require(
-  "../middleware/auth.js"
-);
+  if (user.currentStatus === "bench") {
+    const benchTime =
+      Math.floor((now - user.statusStartedAt) / 1000);
 
-const getTodayDate = () => {
-  return new Date()
-    .toISOString()
-    .split("T")[0]///////////////////////////////////////;
-};
-
-router.post(
-  "/start",
-  authMiddleware,
-  async (req, res) => {
-    try {
-      const todayDate =
-        getTodayDate();
-
-      let tracker =
-        await WorkTracker.findOne({
-          supportId: req.user.id,
-          date: todayDate,
-        });
-
-      if (!tracker) {
-        tracker =
-          await WorkTracker.create({
-            supportId: req.user.id,
-
-            date: todayDate,
-
-            status: "Working",
-
-            totalSeconds: 0,
-
-            benchTotalSeconds: 0,
-
-            benchReasons: [],
-
-            loginTime: new Date(),
-          });
-      }
-
-      res.json({
-        success: true,
-        tracker,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message,
-      });
-    }
+    user.totalBenchSeconds += benchTime;
   }
-);
 
-router.put(
-  "/update/:id",
-  authMiddleware,
-  async (req, res) => {
-    try {
-      const {
-        totalSeconds,
-        benchTotalSeconds,
-        status,
-        benchReason,
-      } = req.body;
+  user.currentStatus = "work";
+  user.statusStartedAt = now;
 
-      const updateData = {
-        totalSeconds,
-        benchTotalSeconds,
-        status,
-      };
+  await user.save();
 
-      if (benchReason) {
-        updateData.$push = {
-          benchReasons: benchReason,
-        };
-      }
+  res.json(user);
+});
 
-      const tracker =
-        await WorkTracker.findByIdAndUpdate(
-          req.params.id,
-          updateData,
-          {
-            new: true,
-          }
-        );
+router.post("/start-bench/:id", async (req, res) => {
+  const user = await Support.findById(req.params.id);
 
-      res.json({
-        success: true,
-        tracker,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message,
-      });
-    }
+  const now = new Date();
+
+  if (user.currentStatus === "work") {
+    const workTime =
+      Math.floor((now - user.statusStartedAt) / 1000);
+
+    user.totalWorkSeconds += workTime;
   }
-);
 
-router.post(
-  "/end-shift/:id",
-  authMiddleware,
-  async (req, res) => {
-    try {
-      const tracker =
-        await WorkTracker.findByIdAndUpdate(
-          req.params.id,
-          {
-            logoutTime: new Date(),
-            status: "Completed",
-          },
-          {
-            new: true,
-          }
-        );
+  user.currentStatus = "bench";
+  user.statusStartedAt = now;
 
-      res.json({
-        success: true,
-        tracker,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message,
-      });
-    }
+  await user.save();
+
+  res.json(user);
+});
+router.get("/timer/:id", async (req, res) => {
+  const user = await Support.findById(req.params.id);
+
+  const now = new Date();
+
+  const currentSeconds =
+    Math.floor((now - user.statusStartedAt) / 1000);
+
+  let workSeconds = user.totalWorkSeconds;
+  let benchSeconds = user.totalBenchSeconds;
+
+  if (user.currentStatus === "work") {
+    workSeconds += currentSeconds;
+  } else {
+    benchSeconds += currentSeconds;
   }
-);
 
-router.get(
-  "/today",
-  authMiddleware,
-  async (req, res) => {
-    try {
-      const todayDate =
-        getTodayDate();
-
-      const tracker =
-        await WorkTracker.findOne({
-          supportId: req.user.id,
-          date: todayDate,
-        });
-
-      res.json({
-        success: true,
-        tracker,
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message,
-      });
-    }
-  }
-);
-
-module.exports = router;
+  res.json({
+    status: user.currentStatus,
+    workSeconds,
+    benchSeconds,
+  });
+});
