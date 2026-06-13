@@ -200,6 +200,7 @@ router.post("/register", async (req, res) => {
   address,
   city,
   state,
+  district
   pincode,
 
   bloodGroup,
