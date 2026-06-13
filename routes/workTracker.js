@@ -46,12 +46,26 @@ router.post("/start-work/:id", async (req, res) => {
     const now = new Date();
 
     if (record.currentStatus === "bench") {
-      record.totalBenchSeconds += Math.floor(
+      const duration = Math.floor(
         (now - record.statusStartedAt) / 1000
       );
+
+      record.totalBenchSeconds += duration;
+
+      // Save completed bench session
+      record.history.push({
+        status: "bench",
+        reason: record.benchReason,
+        remark: record.benchRemark,
+        startTime: record.statusStartedAt,
+        endTime: now,
+        durationSeconds: duration,
+      });
     }
 
     record.currentStatus = "work";
+    record.benchReason = "";
+    record.benchRemark = "";
     record.statusStartedAt = now;
 
     await record.save();
@@ -68,34 +82,36 @@ router.post("/start-work/:id", async (req, res) => {
   }
 });
 
-
 router.post("/start-bench/:id", async (req, res) => {
-  try {
-    const record = await getTodayRecord(req.params.id);
+  const { reason, remark } = req.body;
 
-    const now = new Date();
+  const record = await getTodayRecord(req.params.id);
 
-    if (record.currentStatus === "work") {
-      record.totalWorkSeconds += Math.floor(
-        (now - record.statusStartedAt) / 1000
-      );
-    }
+  const now = new Date();
 
-    record.currentStatus = "bench";
-    record.statusStartedAt = now;
+  if (record.currentStatus === "work") {
+    const duration = Math.floor(
+      (now - record.statusStartedAt) / 1000
+    );
 
-    await record.save();
+    record.totalWorkSeconds += duration;
 
-    res.json({
-      success: true,
-      status: record.currentStatus,
-    });
-  } catch (err) {
-    res.status(400).json({
-      success: false,
-      message: err.message,
+    record.history.push({
+      status: "work",
+      startTime: record.statusStartedAt,
+      endTime: now,
+      durationSeconds: duration,
     });
   }
+
+  record.currentStatus = "bench";
+  record.benchReason = reason;
+  record.benchRemark = remark;
+  record.statusStartedAt = now;
+
+  await record.save();
+
+  res.json(record);
 });
 
 
