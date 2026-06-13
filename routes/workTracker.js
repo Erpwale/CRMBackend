@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const WorkBench = require("../models/WorkBench");
+const WorkBench = require("../models/workTrackerSchema");
 
 
 const getTodayRecord = async (userId) => {
