@@ -850,4 +850,19 @@ router.get(
 
   }
 );
+
+
+
+router.get("/last-login/:userId", async (req, res) => {
+  try {
+    const lastLogin = await history.findOne({
+      userId: req.params.userId,
+      action: "login"
+    }).sort({ createdAt: -1 });
+
+    res.json(lastLogin);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 module.exports = router;
