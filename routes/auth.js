@@ -34,6 +34,7 @@ router.post("/register", async (req, res) => {
   mailPassword,
   address,
   city,
+  district,
   state,
   pincode,
   bloodGroup,
