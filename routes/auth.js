@@ -853,16 +853,21 @@ router.get(
 
 
 
-router.get("/last-login/:userId", async (req, res) => {
+router.get("/last-login/:id", async (req, res) => {
   try {
-    const lastLogin = await history.findOne({
-      userId: req.params.userId,
+    console.log("User Id:", req.params.id);
+
+    const lastLogin = await History.findOne({
+      userId: req.params.id,
       action: "login"
     }).sort({ createdAt: -1 });
 
+    console.log("Last Login:", lastLogin);
+
     res.json(lastLogin);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.log(err);
+    res.status(500).json(err);
   }
 });
 module.exports = router;
