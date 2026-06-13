@@ -1,30 +1,40 @@
 const mongoose = require("mongoose");
 
-const workReportSchema = new mongoose.Schema({
-  name: String,
+const workBenchSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
 
-  currentStatus: {
-    type: String,
-    enum: ["work", "bench"],
-    default: "bench",
-  },
+    date: {
+      type: String, // 6/13/2026
+      required: true,
+    },
 
-  statusStartedAt: {
-    type: Date,
-    default: Date.now,
-  },
+    currentStatus: {
+      type: String,
+      enum: ["work", "bench"],
+      default: "bench",
+    },
 
-  totalWorkSeconds: {
-    type: Number,
-    default: 0,
-  },
+    statusStartedAt: {
+      type: Date,
+      default: Date.now,
+    },
 
-  totalBenchSeconds: {
-    type: Number,
-    default: 0,
+    totalWorkSeconds: {
+      type: Number,
+      default: 0,
+    },
+
+    totalBenchSeconds: {
+      type: Number,
+      default: 0,
+    },
   },
-});
-module.exports = mongoose.model(
-  "WorkReport",
-  workReportSchema
+  { timestamps: true }
 );
+
+module.exports = mongoose.model("WorkBench", workBenchSchema);

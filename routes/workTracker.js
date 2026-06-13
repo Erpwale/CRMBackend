@@ -1,68 +1,135 @@
 const express = require("express");
 const router = express.Router();
+const User = require("../models/User");
+const WorkBench = require("../models/WorkBench");
+
+
+const getTodayRecord = async (userId) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (!["admin", "support", "sales"].includes(user.role)) {
+    throw new Error("User role not allowed");
+  }
+
+  const date = new Date().toLocaleDateString("en-US");
+
+  let record = await WorkBench.findOne({
+    userId,
+    date,
+  });
+
+  if (!record) {
+    record = await WorkBench.create({
+      userId,
+      date,
+      currentStatus: "bench",
+      statusStartedAt: new Date(),
+      totalWorkSeconds: 0,
+      totalBenchSeconds: 0,
+    });
+  }
+
+  return record;
+};
+
+
+
 
 router.post("/start-work/:id", async (req, res) => {
-  const user = await Support.findById(req.params.id);
+  try {
+    const record = await getTodayRecord(req.params.id);
 
-  const now = new Date();
+    const now = new Date();
 
-  if (user.currentStatus === "bench") {
-    const benchTime =
-      Math.floor((now - user.statusStartedAt) / 1000);
+    if (record.currentStatus === "bench") {
+      record.totalBenchSeconds += Math.floor(
+        (now - record.statusStartedAt) / 1000
+      );
+    }
 
-    user.totalBenchSeconds += benchTime;
+    record.currentStatus = "work";
+    record.statusStartedAt = now;
+
+    await record.save();
+
+    res.json({
+      success: true,
+      status: record.currentStatus,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: err.message,
+    });
   }
-
-  user.currentStatus = "work";
-  user.statusStartedAt = now;
-
-  await user.save();
-
-  res.json(user);
 });
+
 
 router.post("/start-bench/:id", async (req, res) => {
-  const user = await Support.findById(req.params.id);
+  try {
+    const record = await getTodayRecord(req.params.id);
 
-  const now = new Date();
+    const now = new Date();
 
-  if (user.currentStatus === "work") {
-    const workTime =
-      Math.floor((now - user.statusStartedAt) / 1000);
+    if (record.currentStatus === "work") {
+      record.totalWorkSeconds += Math.floor(
+        (now - record.statusStartedAt) / 1000
+      );
+    }
 
-    user.totalWorkSeconds += workTime;
+    record.currentStatus = "bench";
+    record.statusStartedAt = now;
+
+    await record.save();
+
+    res.json({
+      success: true,
+      status: record.currentStatus,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: err.message,
+    });
   }
-
-  user.currentStatus = "bench";
-  user.statusStartedAt = now;
-
-  await user.save();
-
-  res.json(user);
 });
+
+
+
 router.get("/timer/:id", async (req, res) => {
-  const user = await Support.findById(req.params.id);
+  try {
+    const record = await getTodayRecord(req.params.id);
 
-  const now = new Date();
+    const now = new Date();
 
-  const currentSeconds =
-    Math.floor((now - user.statusStartedAt) / 1000);
+    const currentSeconds = Math.floor(
+      (now - record.statusStartedAt) / 1000
+    );
 
-  let workSeconds = user.totalWorkSeconds;
-  let benchSeconds = user.totalBenchSeconds;
+    let workSeconds = record.totalWorkSeconds;
+    let benchSeconds = record.totalBenchSeconds;
 
-  if (user.currentStatus === "work") {
-    workSeconds += currentSeconds;
-  } else {
-    benchSeconds += currentSeconds;
+    if (record.currentStatus === "work") {
+      workSeconds += currentSeconds;
+    } else {
+      benchSeconds += currentSeconds;
+    }
+
+    res.json({
+      status: record.currentStatus,
+      workSeconds,
+      benchSeconds,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: err.message,
+    });
   }
-
-  res.json({
-    status: user.currentStatus,
-    workSeconds,
-    benchSeconds,
-  });
 });
-
 
 module.exports = router;
