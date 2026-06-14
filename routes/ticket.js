@@ -327,7 +327,7 @@ router.post("/create", authMiddleware, async (req, res) => {
     contactId,
   });
 
-  return res.status(200).json({
+  return res.status(201).json({
     success: false,
     message:
       "Company is not active. Lead created successfully instead of ticket.",
