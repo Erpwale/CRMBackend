@@ -292,7 +292,7 @@ router.post("/create", authMiddleware, async (req, res) => {
     }
 
     // If company is inactive create Lead
-    if (company.status !== "Active") {
+    if (company.status !== "live") {
       const lead = await Lead.create({
         companyId,
         tallySerialNo,
