@@ -236,11 +236,11 @@ router.post("/login", async (req, res) => {
         message: "Invalid credentials"
       });
  // ✅ Check user status
-    if (user.status !== "active") {
-      return res.status(403).json({
-        message: "Your account is inactive. Please contact administrator.",
-      });
-    }
+    // if (user.status !== "active") {
+    //   return res.status(403).json({
+    //     message: "Your account is inactive. Please contact administrator.",
+    //   });
+    // }
     const isMatch = await bcrypt.compare(
       password,
       user.password
