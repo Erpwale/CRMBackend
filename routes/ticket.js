@@ -2,6 +2,7 @@ const Contact = require("../models/Contact");
 const SalesOrder = require("../models/SalesOrder");
 const Company = require("../models/Company");
 const User = require("../models/User");
+const User = require("../models/Lead");
 const express = require("express");
 const router = express.Router();
 const nodemailer = require("nodemailer");
@@ -264,58 +265,103 @@ router.get("/:companyId",  async (req, res) => {
 });
 router.post("/create", authMiddleware, async (req, res) => {
   try {
-    const ticketNumber = await generateTicketNumber();
     const {
       companyId,
       tallySerialNo,
       category,
       subCategory,
-        priority, // 
+      priority,
       description,
       contactPerson,
-     
       contactId,
       contactNumber,
       preferredDate,
       preferredTime,
       customerId,
-      status
+      status,
     } = req.body;
 
+    // Check Company Status
+    const company = await Company.findById(companyId);
+
+    if (!company) {
+      return res.status(404).json({
+        success: false,
+        message: "Company not found",
+      });
+    }
+
+    // If company is inactive create Lead
+    if (company.status !== "Active") {
+      const lead = await Lead.create({
+        companyId,
+        tallySerialNo,
+        category,
+        subCategory,
+        priority,
+        description,
+        contactPerson,
+        contactId,
+        contactNumber,
+        preferredDate,
+        preferredTime,
+        customerId,
+        status: "New",
+        remarks:
+          "Ticket creation failed because company is not active.",
+      });
+
+      // Send failure mail
+      await sendTicketFailedMail({
+        companyName: company.companyName,
+        contactPerson,
+        contactId,
+      });
+
+      return res.status(200).json({
+        success: false,
+        message:
+          "Company is not active. Lead created instead of ticket.",
+        lead,
+      });
+    }
+
+    // Generate Ticket Number
+    const ticketNumber = await generateTicketNumber();
+
+    // Create Ticket
     const ticket = await Ticket.create({
       companyId,
       tallySerialNo,
       category,
       subCategory,
-        priority, // ✅ ADD THIS
-
+      priority,
       description,
       contactPerson,
       contactId,
-       ticketNumber,
+      ticketNumber,
       contactNumber,
       preferredDate,
       preferredTime,
       customerId,
-      status
+      status,
     });
 
-    // Send Email
+    // Send Ticket Mail
     await sendTicketMail(ticket);
 
-
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Ticket created successfully",
-      ticket
+      ticket,
     });
-
   } catch (error) {
     console.log(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "Failed to create ticket"
+      message: "Failed to create ticket",
+      error: error.message,
     });
   }
 });
