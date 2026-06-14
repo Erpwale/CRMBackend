@@ -702,9 +702,19 @@ const response = await client.sendMail({
     name: "ERPWALE",
   },
 
-  to: toArray.map((email) => ({
-    email_address: { address: email },
-  })),
+  // to: toArray.map((email) => ({
+  //   email_address: { address: email },
+  // })),
+  "to": 
+    [
+        {
+        "email_address": 
+            {
+                "address": "deepalimore609@gmail.com",
+                "name": "ERPWale"
+            }
+        }
+    ],
 
   cc: ccArray.map((email) => ({
     email_address: { address: email },
@@ -738,7 +748,8 @@ const response = await client.sendMail({
       });
 
     } catch (mailErr) {
-      console.error("❌ ZeptoMail Error:", mailErr);
+      console.error("❌ ZeptoMail Error:", JSON.stringify(mailErr, null, 2));
+      
 
       // Update status = Failed
       await fetch(
