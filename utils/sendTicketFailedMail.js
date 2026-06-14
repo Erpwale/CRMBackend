@@ -110,7 +110,7 @@ Dear ${ticket.contactPerson},
 We are unable to process your request at this time because your
 Annual Support Cover (ASC) for Serial No.
 <strong style="color:#191c1e;">
-${ticket.tallySerialNo}
+${tallySerialNo}
 </strong>
 has expired.
 </p>
