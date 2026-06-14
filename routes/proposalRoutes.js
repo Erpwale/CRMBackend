@@ -651,8 +651,8 @@ const pdfBuffer = Buffer.from(await pdfResponse.arrayBuffer());
 // }
 const response = await client.sendMail({
   from: {
-    address: "noreply@erpwale.com",
-    name: "ERPWALE",
+    address: "support@erpwale.com",
+    name: "Support-ERPWALE ",
   },
 
   // to: toArray.map((email) => ({
