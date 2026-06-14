@@ -105,12 +105,12 @@ color:#434655;
 max-width:520px;
 margin:0 auto 35px auto;
 ">
-Dear ${contactPerson},
+Dear ${ticket.contactPerson},
 <br><br>
 We are unable to process your request at this time because your
 Annual Support Cover (ASC) for Serial No.
 <strong style="color:#191c1e;">
-${serialNo}
+${ticket.tallySerialNo}
 </strong>
 has expired.
 </p>
