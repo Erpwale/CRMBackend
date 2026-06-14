@@ -13,6 +13,7 @@ const Ticket= require("../models/TicketSchema")
 const TicketMessage= require("../models/ticketMessageSchema")
 const Counter = require("../models/Ticketcounter")
 const sendTicketMail = require("../utils/sendTicketMail");
+const sendTicketFailedMail = require("../utils/sendTicketFailedMail");
 const generateTicketNumber = async () => {
   const now = new Date();
 
