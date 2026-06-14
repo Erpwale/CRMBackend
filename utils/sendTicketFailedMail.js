@@ -8,6 +8,8 @@ const client = new SendMailClient({ url, token });
 
 const sendTicketFailedMail = async (ticket) => {
   try {
+    console.log(ticket);
+    
     // Fetch contact details
     const contact = await Contact.findById(ticket.contactId);
 
