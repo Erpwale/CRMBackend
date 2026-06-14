@@ -27,7 +27,7 @@ const sendTicketFailedMail = async (ticket) => {
         {
           email_address: {
             address: contact.email,
-            name: contact.contactPerson || contact.name,
+            name:  contact.name,
           },
         },
       ],
