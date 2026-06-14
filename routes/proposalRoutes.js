@@ -360,7 +360,7 @@ router.post(
     const html = `
       <!DOCTYPE html>
 
-html
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -391,7 +391,7 @@ alt="Support Journey Begins">
 Your Support Journey Begins!
 </h2>
 
-<p style="margin:0;color:#2563eb;font-size:20px;font-weight:bold;">
+<p style="margin:0;color:#326808;font-size:20px;font-weight:bold;">
 Ticket Confirmed
 </p>
 
@@ -548,7 +548,7 @@ based on your category and sub-category selection.
 
 <br><br>
 
-<div style="
+<!-- <div style="
 font-family:monospace;
 font-size:18px;
 letter-spacing:3px;
@@ -566,7 +566,7 @@ margin-top:10px;
 color:#6b7280;
 ">
 #TLY-8821-250626
-</div>
+</div> -->
 
 </td>
 
@@ -619,6 +619,7 @@ support@erpwale.com
 
 </body>
 </html>
+
 
 
     `;
