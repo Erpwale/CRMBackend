@@ -1,3 +1,11 @@
+const { SendMailClient } = require("zeptomail");
+const Contact = require("../models/Contact"); // adjust path
+
+const url = "https://api.zeptomail.in/v1.1/email";
+const token = process.env.ZEPTO_TOKEN;
+
+const client = new SendMailClient({ url, token });
+
 const sendTicketFailedMail = async (ticket) => {
   try {
     // Fetch contact details
@@ -248,3 +256,5 @@ ERPWALE Support Team
     );
   }
 };
+
+module.exports = sendTicketFailedMail;
