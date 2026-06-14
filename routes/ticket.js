@@ -313,7 +313,7 @@ router.post("/create", authMiddleware, async (req, res) => {
     remark: [
       {
         text: `Ticket creation failed because company "${company.companyName}" is not active.`,
-        addedBy: req.user.name || "System",
+        addedBy: "System",
       },
     ],
 
