@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const companySchema = new mongoose.Schema(
 {
+  companyId: {
+    type: String,
+    unique: true
+  },
+
   companyName: {
     type: String,
     required: true,
@@ -18,35 +23,37 @@ const companySchema = new mongoose.Schema(
   turnover: String,
 
   address: {
-    line1: String,  
+    line1: String,
     zone: String,
     sector: String,
     city: String,
-    district:String,
+    district: String,
     state: String,
     pincode: String,
-    country:String
+    country: String
   },
 
-primaryContact: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "Contact"
-},
+  primaryContact: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Contact"
+  },
 
- tallyLicense: [
+  tallyLicense: [
     {
       srNo: String,
       licenseType: String,
       tssDate: Date,
       location: String,
-      name:String
+      name: String
     }
   ],
+
   status: {
-  type: String,
-  enum: ["live", "not live"],
-  default: "not live"
-},
+    type: String,
+    enum: ["live", "not live"],
+    default: "not live"
+  },
+
   remark: String,
 
   createdBy: {
@@ -54,9 +61,10 @@ primaryContact: {
     ref: "User",
     required: true
   }
-
 },
 { timestamps: true }
 );
+
+
 
 module.exports = mongoose.model("Company", companySchema);

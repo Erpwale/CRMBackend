@@ -210,34 +210,48 @@ router.post("/", async (req, res) => {
       });
     }
 
-    // ✅ 3. CHECK ACTIVE ANNUAL COVER SUPPORT
-    for (const product of proposal.products) {
+    // ✅ 3. CHECK ACTIVE ANNUAL SUPPORT COVER
+    if (proposal.businessLine === "Annual Support Cover") {
 
-      const activeSupport = await AnnualCoverSupport.findOne({
-        licenseId: product.licenseId, // change field if needed
-        expiryDate: { $gte: new Date() }
-      });
+      const licenseNo =
+        proposal.products?.[0]?.amcDetails?.licenseNo;
 
-      if (activeSupport) {
-        return res.status(400).json({
-          success: false,
-          message: `${product.productName || product.name} already has an active Annual Cover Support till ${new Date(
-            activeSupport.expiryDate
-          ).toLocaleDateString()}`
+      if (licenseNo) {
+
+        const existingOrders = await SalesOrder.find({
+          businessLine: "Annual Support Cover",
+          "products.amcDetails.licenseNo": licenseNo
         });
+
+        const today = new Date();
+
+        for (const order of existingOrders) {
+
+          const periodTo =
+            order.products?.[0]?.amcDetails?.periodTo;
+
+          if (!periodTo) continue;
+
+          const expiryDate = new Date(periodTo);
+
+          if (expiryDate >= today) {
+            return res.status(400).json({
+              success: false,
+              message: `Annual Support Cover already exists for License No ${licenseNo} till ${periodTo}`
+            });
+          }
+        }
       }
     }
 
     // ✅ 4. CREATE SALES ORDER DATA
     const salesOrderData = {
-      // Proposal
       proposalId: proposal.proposalId,
       companyName: ledger.companyName,
       priceLevel: proposal.priceLevel,
       businessLine: proposal.businessLine,
       tallySerials: proposal.tallySerials,
 
-      // Ledger
       companyId: ledger.companyId,
 
       contactName: ledger.contactName,
@@ -259,16 +273,13 @@ router.post("/", async (req, res) => {
       tan: ledger.tan,
       msme: ledger.msme,
 
-      // Order Info
       orderNo: req.body.orderNo,
       orderDate: req.body.orderDate,
       userName: req.body.userName,
       salesTeam: req.body.salesTeam,
 
-      // Products
       products: proposal.products,
 
-      // Financials
       discount: proposal.discount,
       grossTotal: proposal.total,
       cgstPercent: proposal.cgstPercent,
@@ -279,17 +290,13 @@ router.post("/", async (req, res) => {
       subtotal: proposal.subtotal,
       net: proposal.net,
 
-      // Terms
       internalTerms: proposal.internalTerms,
       specialTerms: proposal.specialTerms,
 
-      // Bank
       bankDetails: proposal.bankDetails,
 
-      // Extra
       narration: req.body.narration || "",
 
-      // Billing
       isBill: false,
       isOutstanding: true,
 
@@ -303,7 +310,6 @@ router.post("/", async (req, res) => {
 
     // ✅ 5. SAVE SALES ORDER
     const order = new SalesOrder(salesOrderData);
-
     await order.save();
 
     // ✅ 6. UPDATE PROPOSAL STATUS
@@ -319,7 +325,7 @@ router.post("/", async (req, res) => {
     );
 
     // ✅ 7. RESPONSE
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       message: "Sales Order Created with Full Data ✅",
       data: order
@@ -328,7 +334,7 @@ router.post("/", async (req, res) => {
   } catch (err) {
     console.error(err);
 
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: err.message
     });
