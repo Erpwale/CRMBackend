@@ -325,6 +325,7 @@ router.post("/create", authMiddleware, async (req, res) => {
     companyName: company.companyName,
     contactPerson,
     contactId,
+    tallySerialNo
   });
 
   return res.status(201).json({
