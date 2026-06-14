@@ -456,7 +456,8 @@ router.get(
     try {
       console.log("all")
 
-      const tickets = await Ticket.find();
+      const tickets = await Ticket.find()
+       .sort({ createdAt: -1 });
       console.log(tickets);
       
       res.status(200).json({
