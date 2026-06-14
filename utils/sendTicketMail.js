@@ -31,55 +31,268 @@ console.log(contact);
         },
       ],
       subject: `Ticket Created - ${ticket.ticketNumber}`,
-      htmlbody: `
-        <div style="font-family: Arial, sans-serif;">
-          <h2>Support Ticket Created Successfully</h2>
+    htmlbody: `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERPWALE Support Ticket</title>
+</head>
 
-          <p>Hello ${contact.contactPerson || contact.name},</p>
+<body style="margin:0;padding:0;background:#f7f9fb;font-family:Arial,Helvetica,sans-serif;">
 
-          <p>Your support ticket has been created successfully.</p>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f7f9fb;">
+<tr>
+<td align="center" style="padding:30px 15px;">
 
-          <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
-            <tr>
-              <td><b>Ticket Number</b></td>
-              <td>${ticket.ticketNumber}</td>
-            </tr>
-            <tr>
-              <td><b>Category</b></td>
-              <td>${ticket.category}</td>
-            </tr>
-            <tr>
-              <td><b>Sub Category</b></td>
-              <td>${ticket.subCategory}</td>
-            </tr>
-            <tr>
-              <td><b>Priority</b></td>
-              <td>${ticket.priority}</td>
-            </tr>
-            <tr>
-              <td><b>Description</b></td>
-              <td>${ticket.description}</td>
-            </tr>
-            <tr>
-              <td><b>Preferred Date</b></td>
-              <td>${ticket.preferredDate || "-"}</td>
-            </tr>
-            <tr>
-              <td><b>Preferred Time</b></td>
-              <td>${ticket.preferredTime || "-"}</td>
-            </tr>
-          </table>
+<table width="800" cellpadding="0" cellspacing="0" border="0"
+style="background:#ffffff;border-radius:16px;border:1px solid #e5e7eb;">
 
-          <br>
+<tr>
+<td align="center" style="padding:30px 20px;">
 
-          <p>Our support team will contact you shortly.</p>
+<img
+src="YOUR_LOGO_URL"
+width="220"
+style="display:block;border:none;max-width:220px;"
+alt="Support Journey Begins">
 
-          <p>
-            Regards,<br>
-            ERPWale Support Team
-          </p>
-        </div>
-      `,
+<h2 style="margin:25px 0 10px;color:#111827;font-size:32px;">
+Your Support Journey Begins!
+</h2>
+
+<p style="margin:0;color:#326808;font-size:20px;font-weight:bold;">
+Ticket Confirmed
+</p>
+
+</td>
+</tr>
+
+<tr>
+<td style="padding:0 30px 30px 30px;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+style="
+background:#ffffff;
+border:1px solid #d1d5db;
+border-radius:16px;
+">
+
+<tr>
+
+<td width="70%" valign="top" style="padding:30px;">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+
+<tr>
+<td>
+<span style="color:#2563eb;font-size:22px;font-weight:bold;">
+☎ ERPWALE SUPPORT AIR
+</span>
+</td>
+</tr>
+
+<tr>
+<td style="padding-top:15px;border-bottom:1px dashed #cbd5e1;">
+&nbsp;
+</td>
+</tr>
+
+</table>
+
+<br>
+
+<table width="100%" cellpadding="8" cellspacing="0">
+
+<tr>
+<td width="50%">
+<div style="font-size:11px;color:#6b7280;">
+TICKET NUMBER
+</div>
+
+<div style="font-size:22px;font-weight:bold;color:#2563eb;">
+${ticket.ticketNumber}
+</div>
+</td>
+
+<td width="50%">
+<div style="font-size:11px;color:#6b7280;">
+SCHEDULE
+</div>
+
+<div style="font-size:15px;font-weight:bold;color:#111827;">
+${ticket.preferredDate || "-"} | ${ticket.preferredTime || "-"}
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div style="font-size:11px;color:#6b7280;">
+CATEGORY
+</div>
+
+<div style="font-size:15px;color:#111827;">
+${ticket.category || "-"}
+</div>
+</td>
+
+<td>
+<div style="font-size:11px;color:#6b7280;">
+SUB CATEGORY
+</div>
+
+<div style="font-size:15px;color:#111827;">
+${ticket.subCategory || "-"}
+</div>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+<div style="font-size:11px;color:#6b7280;">
+CONTACT PERSON
+</div>
+
+<div style="font-size:15px;font-weight:bold;color:#111827;">
+${contact.name || contact.contactPerson || "-"}
+<span style="font-weight:normal;">
+(${contact.mobile || "-"})
+</span>
+</div>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+<div style="font-size:11px;color:#6b7280;">
+EMAIL
+</div>
+
+<div style="font-size:15px;color:#111827;">
+${contact.email || "-"}
+</div>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+<div style="font-size:11px;color:#6b7280;">
+DESCRIPTION
+</div>
+
+<div style="font-size:15px;color:#111827;">
+${ticket.description || "-"}
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div style="font-size:11px;color:#6b7280;">
+PRIORITY
+</div>
+
+<div style="font-size:15px;color:#111827;">
+${ticket.priority || "-"}
+</div>
+</td>
+
+<td>
+<div style="font-size:11px;color:#6b7280;">
+STATUS
+</div>
+
+<div style="font-size:15px;color:#111827;">
+${ticket.status || "Open"}
+</div>
+</td>
+</tr>
+
+</table>
+
+</td>
+
+<td width="30%" valign="top"
+style="
+padding:30px;
+border-left:2px dashed #d1d5db;
+background:#f8fafc;
+">
+
+<div style="
+font-size:12px;
+font-weight:bold;
+color:#2563eb;
+margin-bottom:10px;
+">
+🤖 TICKET ROUTING INSIGHT
+</div>
+
+<p style="
+font-size:13px;
+line-height:22px;
+color:#4b5563;
+margin:0;
+">
+Your ticket has been prioritized and routed to our
+<strong>${ticket.category || "Support"} Specialist</strong>
+based on your category and sub-category selection.
+</p>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+<tr>
+<td align="center" style="padding:20px;">
+
+<a href="${process.env.FRONTEND_URL}/ticket/${ticket._id}"
+style="
+background:#2563eb;
+color:#ffffff;
+text-decoration:none;
+padding:12px 24px;
+border-radius:6px;
+display:inline-block;
+font-weight:bold;
+">
+View Ticket
+</a>
+
+</td>
+</tr>
+
+<tr>
+<td style="
+background:#f3f4f6;
+padding:20px;
+text-align:center;
+font-size:12px;
+color:#6b7280;
+">
+
+ERPWALE Support Team<br>
+support@erpwale.com
+
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
+`
     });
 
     console.log("Ticket email sent successfully");
