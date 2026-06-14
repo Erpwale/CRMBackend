@@ -84,8 +84,21 @@ console.log(contact);
 
     console.log("Ticket email sent successfully");
   } catch (err) {
-    console.error("Email Error:", err);
+  console.error("========== EMAIL ERROR ==========");
+  console.error("Error Object:", err);
+  console.error("Message:", err.message);
+
+  if (err.response) {
+    console.error("Status:", err.response.status);
+    console.error("Response Data:", err.response.data);
   }
+
+  if (err.stack) {
+    console.error("Stack Trace:", err.stack);
+  }
+
+  console.error("================================");
+}
 };
 
 module.exports = sendTicketMail;
