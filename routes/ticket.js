@@ -295,7 +295,7 @@ router.post("/create", authMiddleware, async (req, res) => {
     // If company is inactive create Lead
    if (company.status !== "Active") {
   const lead = await Lead.create({
-    createdBy: req.user.name || "support",
+    createdBy:  "support",
     source: "Support Ticket",
 
     interest: category || "Support",
