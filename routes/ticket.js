@@ -306,7 +306,7 @@ router.post("/create", authMiddleware, async (req, res) => {
         preferredDate,
         preferredTime,
         customerId,
-        status: "New",
+        status: "Untouched",
         remarks:
           "Ticket creation failed because company is not active.",
       });
