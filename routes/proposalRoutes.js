@@ -360,167 +360,267 @@ router.post(
     const html = `
       <!DOCTYPE html>
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Ticket Raised Successfully - Tally Support</title>
-
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@600&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s ease-out 0.2s forwards;
-        }
-        
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .animate-float {
-            animation: float 4s ease-in-out infinite;
-        }
-
-        .perforated-border-y {
-            background-image: linear-gradient(to right, transparent 50%, rgba(195, 198, 215, 0.5) 50%);
-            background-size: 20px 2px;
-            background-repeat: repeat-x;
-        }
-
-        .perforated-border-x {
-            background-image: linear-gradient(to bottom, transparent 50%, rgba(195, 198, 215, 0.5) 50%);
-            background-size: 2px 20px;
-            background-repeat: repeat-y;
-        }
-    </style>
+html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERPWALE Support Ticket</title>
 </head>
-<body class="bg-background text-on-surface font-body-lg text-body-lg min-h-screen flex antialiased">
-<!-- SideNavBar -->
 
-<!-- Main Content Wrapper -->
+<body style="margin:0;padding:0;background:#f7f9fb;font-family:Arial,Helvetica,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f7f9fb;">
+<tr>
+<td align="center" style="padding:30px 15px;">
+
+<table width="800" cellpadding="0" cellspacing="0" border="0"
+style="background:#ffffff;border-radius:16px;border:1px solid #e5e7eb;">
+
+<tr>
+<td align="center" style="padding:30px 20px;">
+
+<img
+src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6lSDqdHdCIpHyN128Dvv0sQOoTf7fdxw8fHDRlRPkNFJLGXom7PMTCf27l_kOgohJuxB1uj7UY4mlIpcR-8ZOtvvcIBsMXPQYBYTinjzT7OZMX6p0FnzbTMQdKL2Mk0OWg5-btLXG3B-fMEPk60ezd4ydMo9bLAOG7-mB0I0-Y4f7fTMFjAh3HuOq-_jAeQaw_ExxjU9j-X18M570zI2xq4h5ZXcm9VFcp4OCKXE2YN0zZtX0YTw2nq4RrOnRI9j8LOi8kSE0Eq0M"
+width="220"
+style="display:block;border:none;max-width:220px;"
+alt="Support Journey Begins">
+
+<h2 style="margin:25px 0 10px;color:#111827;font-size:32px;">
+Your Support Journey Begins!
+</h2>
+
+<p style="margin:0;color:#2563eb;font-size:20px;font-weight:bold;">
+Ticket Confirmed
+</p>
+
+</td>
+</tr>
+
+<tr>
+<td style="padding:0 30px 30px 30px;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+style="
+background:#ffffff;
+border:1px solid #d1d5db;
+border-radius:16px;
+">
+
+<tr>
+
+<td width="70%"
+valign="top"
+style="padding:30px;">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+
+<tr>
+<td>
+<span style="
+color:#2563eb;
+font-size:22px;
+font-weight:bold;
+">
+☎ ERPWALE SUPPORT AIR
+</span>
+</td>
+</tr>
+
+<tr>
+<td style="
+padding-top:15px;
+border-bottom:1px dashed #cbd5e1;
+">
+&nbsp;
+</td>
+</tr>
+
+</table>
+
+<br>
+
+<table width="100%" cellpadding="8" cellspacing="0">
+
+<tr>
+<td width="50%">
+<div style="font-size:11px;color:#6b7280;">
+TICKET NUMBER
+</div>
+
+<div style="
+font-size:22px;
+font-weight:bold;
+color:#2563eb;
+">
+#TLY-8821-250626
+</div>
+</td>
+
+<td width="50%">
+<div style="font-size:11px;color:#6b7280;">
+SCHEDULE
+</div>
+
+<div style="
+font-size:15px;
+font-weight:bold;
+color:#111827;
+">
+Oct 25, 2023 | 10:30 AM
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div style="font-size:11px;color:#6b7280;">
+CATEGORY
+</div>
+
+<div style="font-size:15px;color:#111827;">
+Technical Support
+</div>
+</td>
+
+<td>
+<div style="font-size:11px;color:#6b7280;">
+SUB CATEGORY
+</div>
+
+<div style="font-size:15px;color:#111827;">
+Database Latency
+</div>
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+<div style="font-size:11px;color:#6b7280;">
+CONTACT PERSON
+</div>
+
+<div style="
+font-size:15px;
+font-weight:bold;
+color:#111827;
+">
+Rajesh Kumar
+<span style="font-weight:normal;">
+(+91 9876543210)
+</span>
+</div>
+</td>
+</tr>
+
+</table>
+
+</td>
+
+<td width="30%"
+valign="top"
+style="
+padding:30px;
+border-left:2px dashed #d1d5db;
+background:#f8fafc;
+">
+
+<div style="
+font-size:12px;
+font-weight:bold;
+color:#2563eb;
+margin-bottom:10px;
+">
+🤖 TICKET ROUTING INSIGHT
+</div>
+
+<p style="
+font-size:13px;
+line-height:22px;
+color:#4b5563;
+margin:0;
+">
+Your ticket has been prioritized and routed to our
+<strong>Technical Specialist</strong>
+based on your category and sub-category selection.
+</p>
+
+<br><br>
+
+<div style="
+font-family:monospace;
+font-size:18px;
+letter-spacing:3px;
+text-align:center;
+color:#111827;
+">
+|||| ||| |||| || |||| |||
+</div>
+
+<div style="
+font-size:11px;
+letter-spacing:2px;
+text-align:center;
+margin-top:10px;
+color:#6b7280;
+">
+#TLY-8821-250626
+</div>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+<tr>
+<td align="center" style="padding:20px;">
+
+<a href="{{PDF_LINK}}"
+style="
+background:#2563eb;
+color:#ffffff;
+text-decoration:none;
+padding:12px 24px;
+border-radius:6px;
+display:inline-block;
+font-weight:bold;
+">
+View Proposal
+</a>
+
+</td>
+</tr>
+
+<tr>
+<td style="
+background:#f3f4f6;
+padding:20px;
+text-align:center;
+font-size:12px;
+color:#6b7280;
+">
+
+ERPWALE Support Team<br>
+support@erpwale.com
+
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
 
 
-<!-- Main Canvas -->
-<main class="flex-1 flex flex-col items-center justify-center p-margin-mobile md:p-gutter overflow-y-auto w-full z-10">
-<div class="w-full max-w-5xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 pt-4 pb-12">
-<!-- Hero Illustration -->
-<div class="w-full lg:w-1/3 flex justify-center lg:justify-end fade-in-up" style="animation-delay: 0.1s;">
-<img alt="Support Journey Begins" class="w-64 h-64 md:w-80 md:h-80 object-contain drop-shadow-2xl animate-float mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6lSDqdHdCIpHyN128Dvv0sQOoTf7fdxw8fHDRlRPkNFJLGXom7PMTCf27l_kOgohJuxB1uj7UY4mlIpcR-8ZOtvvcIBsMXPQYBYTinjzT7OZMX6p0FnzbTMQdKL2Mk0OWg5-btLXG3B-fMEPk60ezd4ydMo9bLAOG7-mB0I0-Y4f7fTMFjAh3HuOq-_jAeQaw_ExxjU9j-X18M570zI2xq4h5ZXcm9VFcp4OCKXE2YN0zZtX0YTw2nq4RrOnRI9j8LOi8kSE0Eq0M"/>
-</div>
-<!-- Boarding Pass Container -->
-<div class="w-full lg:w-2/3 flex flex-col items-center fade-in-up" style="animation-delay: 0.3s;">
-<div class="text-center lg:text-left w-full mb-6">
-<h2 class="font-display-lg text-headline-lg-mobile md:text-headline-lg font-bold text-on-surface mb-2 tracking-tight">Your Support Journey Begins!</h2>
-<p class="font-title-md text-title-md text-primary font-semibold">Ticket Confirmed.</p>
-</div>
-<!-- The Boarding Pass Card -->
-<div class="relative bg-surface-container-lowest rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] border border-outline/10 flex flex-col md:flex-row w-full max-w-3xl overflow-hidden group hover:-translate-y-1 hover:shadow-[0_25px_60px_-15px_rgba(37,99,235,0.15)] transition-all duration-500">
-<!-- Main Body -->
-<div class="flex-1 p-6 md:p-8 flex flex-col justify-between relative">
-<!-- Airline/Brand Header -->
-<div class="flex justify-between items-start mb-8 pb-6 perforated-border-y bg-bottom bg-no-repeat">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[28px]">support_agent</span>
-<span class="font-label-caps text-label-caps tracking-widest text-on-surface uppercase font-bold">ERPWale Support Air</span>
-</div>
-<span class="material-symbols-outlined text-outline/30 text-[32px] transform rotate-45">flight</span>
-</div>
-<!-- Details Grid -->
-<div class="grid grid-cols-2 gap-y-6 gap-x-4 mb-4">
-<div>
-<span class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1">Ticket Number</span>
-<span class="font-title-md text-[22px] text-primary font-bold">#TLY-8821-250626</span>
-</div>
-<div>
-<span class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1">Schedule</span>
-<span class="font-body-lg text-body-lg text-on-surface font-semibold">Oct 25, 2023 | 10:30 AM</span>
-</div>
-<div>
-<span class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1">Category</span>
-<span class="font-body-lg text-[15px] text-on-surface">Technical Support </span>
-</div>
-<div>
-<span class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1">Sub-Category</span>
-<span class="font-body-lg text-[15px] text-on-surface">Database Latency</span>
-</div>
-<div class="col-span-2">
-<span class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1">Contact Person</span>
-<span class="font-body-lg text-[15px] text-on-surface font-medium">Rajesh Kumar <span class="text-on-surface-variant font-normal ml-1">(+91 98765 43210)</span></span>
-</div>
-</div>
-</div>
-
-<!-- Perforation / Divider (Desktop) -->
-<div class="hidden md:flex relative items-center justify-center mx-6">
-  <div class="h-full border-l-2 border-dashed border-gray-300"></div>
-  <div class="absolute -top-4 w-8 h-8 bg-white rounded-full border border-gray-300 shadow-sm"></div>
-  <div class="absolute -bottom-4 w-8 h-8 bg-white rounded-full border border-gray-300 shadow-sm"></div>
-</div>
-<!-- Perforation / Divider (Mobile) -->
-<div class="flex md:hidden relative items-center my-6">
-  
-  <!-- Horizontal Dashed Line -->
-  <div class="w-full border-t-2 border-dashed border-gray-300"></div>
-
-  <!-- Left Circle -->
-  <div class="absolute -left-4 w-8 h-8 bg-white rounded-full border border-gray-300 shadow-sm"></div>
-
-  <!-- Right Circle -->
-  <div class="absolute -right-4 w-8 h-8 bg-white rounded-full border border-gray-300 shadow-sm"></div>
-
-</div>
-<!-- Stub / Barcode Section -->
-<div class="w-full md:w-64 bg-surface-container-low/50 p-6 md:p-8 flex flex-col items-center justify-center relative">
-<div class="w-full mb-10">
-<div class="flex items-center gap-2 mb-2">
-<span class="material-symbols-outlined text-primary text-[18px]">smart_toy</span>
-<span class="font-label-caps text-[11px] text-on-surface uppercase tracking-wider font-bold">Ticket Routing Insight</span>
-</div>
-<p class="font-body-sm text-[13px] leading-relaxed text-on-surface-variant">
-        Your ticket has been prioritized and routed to our <span class="text-on-surface font-semibold">Technical Specialist</span> based on your category and sub-category selection.
-    </p>
-</div>
-<!-- Simulated Barcode -->
-<div class="w-full h-16 flex justify-between items-end gap-[2px] opacity-70">
-<div class="w-1 h-full bg-on-surface"></div>
-<div class="w-2 h-full bg-on-surface"></div>
-<div class="w-1 h-full bg-on-surface"></div>
-<div class="w-3 h-full bg-on-surface"></div>
-<div class="w-1 h-full bg-on-surface"></div>
-<div class="w-2 h-full bg-on-surface"></div>
-<div class="w-1 h-full bg-on-surface"></div>
-<div class="w-4 h-full bg-on-surface"></div>
-<div class="w-1 h-full bg-on-surface"></div>
-<div class="w-2 h-full bg-on-surface"></div>
-<div class="w-1 h-full bg-on-surface"></div>
-<div class="w-2 h-full bg-on-surface"></div>
-<div class="w-1 h-full bg-on-surface"></div>
-<div class="w-3 h-full bg-on-surface"></div>
-<div class="w-1 h-full bg-on-surface"></div>
-<div class="w-1 h-full bg-on-surface"></div>
-</div>
-<div class="font-label-caps text-[10px] mt-2 text-on-surface-variant tracking-widest">#TLY-8821-250626</div>
-</div>
-</div>
-<!-- Action Buttons -->
-
-</div>
-</div>
-</div>
-</main>
-
-</body></html>
     `;
 
     try {
