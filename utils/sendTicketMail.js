@@ -53,7 +53,7 @@ style="background:#ffffff;border-radius:16px;border:1px solid #e5e7eb;">
 <td align="center" style="padding:30px 20px;">
 
 <img
-src="YOUR_LOGO_URL"
+src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6lSDqdHdCIpHyN128Dvv0sQOoTf7fdxw8fHDRlRPkNFJLGXom7PMTCf27l_kOgohJuxB1uj7UY4mlIpcR-8ZOtvvcIBsMXPQYBYTinjzT7OZMX6p0FnzbTMQdKL2Mk0OWg5-btLXG3B-fMEPk60ezd4ydMo9bLAOG7-mB0I0-Y4f7fTMFjAh3HuOq-_jAeQaw_ExxjU9j-X18M570zI2xq4h5ZXcm9VFcp4OCKXE2YN0zZtX0YTw2nq4RrOnRI9j8LOi8kSE0Eq0M"
 width="220"
 style="display:block;border:none;max-width:220px;"
 alt="Support Journey Begins">
