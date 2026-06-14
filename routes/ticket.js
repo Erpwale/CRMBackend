@@ -292,40 +292,47 @@ router.post("/create", authMiddleware, async (req, res) => {
     }
 
     // If company is inactive create Lead
-    if (company.status !== "live") {
-      const lead = await Lead.create({
-        companyId,
-        tallySerialNo,
-        category,
-        subCategory,
-        priority,
-        description,
-        contactPerson,
-        contactId,
-        contactNumber,
-        preferredDate,
-        preferredTime,
-        customerId,
-        status: "Untouched",
-        remarks:
-          "Ticket creation failed because company is not active.",
-      });
+   if (company.status !== "Active") {
+  const lead = await Lead.create({
+    createdBy: req.user.name || req.user.email,
+    source: "Support Ticket",
 
-      // Send failure mail
-      await sendTicketFailedMail({
-        companyName: company.companyName,
-        contactPerson,
-        contactId,
-      });
+    interest: category || "Support",
 
-      return res.status(200).json({
-        success: false,
-        message:
-          "Company is not active. Lead created instead of ticket.",
-        lead,
-      });
-    }
+    contactName: contactPerson,
 
+    mobile: contactNumber,
+
+    email: contactId,
+
+    serialNo: tallySerialNo,
+
+    details: description,
+
+    remark: [
+      {
+        text: `Ticket creation failed because company "${company.companyName}" is not active.`,
+        addedBy: req.user.name || "System",
+      },
+    ],
+
+    status: "Untouched",
+  });
+
+  await sendTicketFailedMail({
+    companyName: company.companyName,
+    contactPerson,
+    contactId,
+  });
+
+  return res.status(200).json({
+    success: false,
+    message:
+      "Company is not active. Lead created successfully instead of ticket.",
+    lead,
+  });
+}
+     
     // Generate Ticket Number
     const ticketNumber = await generateTicketNumber();
 
