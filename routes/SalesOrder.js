@@ -211,38 +211,45 @@ router.post("/", async (req, res) => {
     }
 
     // ✅ 3. CHECK ACTIVE ANNUAL SUPPORT COVER
-    if (proposal.businessLine === "Annual Support Cover") {
+   // ✅ 3. CHECK ACTIVE ANNUAL SUPPORT COVER
+if (proposal.businessLine === "Annual Support Cover") {
 
-      const licenseNo =
-        proposal.products?.[0]?.amcDetails?.licenseNo;
+  const licenseNo =
+    proposal.products?.[0]?.amcDetails?.licenseNo;
 
-      if (licenseNo) {
+  if (licenseNo) {
 
-        const existingOrders = await SalesOrder.find({
-          businessLine: "Annual Support Cover",
-          "products.amcDetails.licenseNo": licenseNo
+    const existingOrders = await SalesOrder.find({
+      businessLine: "Annual Support Cover",
+      "products.amcDetails.licenseNo": licenseNo
+    });
+
+    const today = new Date();
+
+    for (const order of existingOrders) {
+
+      const periodTo =
+        order.products?.[0]?.amcDetails?.periodTo;
+
+      if (!periodTo) continue;
+
+      const expiryDate = new Date(periodTo);
+
+      // Allow renewal only within 45 days before expiry
+      const renewalAllowedDate = new Date(expiryDate);
+      renewalAllowedDate.setDate(
+        renewalAllowedDate.getDate() - 45
+      );
+
+      if (today < renewalAllowedDate) {
+        return res.status(400).json({
+          success: false,
+          message: `AMC renewal can be created only within 45 days of expiry. AMC expires on ${expiryDate.toLocaleDateString()}`
         });
-
-        const today = new Date();
-
-        for (const order of existingOrders) {
-
-          const periodTo =
-            order.products?.[0]?.amcDetails?.periodTo;
-
-          if (!periodTo) continue;
-
-          const expiryDate = new Date(periodTo);
-
-          if (expiryDate >= today) {
-            return res.status(400).json({
-              success: false,
-              message: `Existing AMC Period is Not expired`
-            });
-          }
-        }
       }
     }
+  }
+}
 
     // ✅ 4. CREATE SALES ORDER DATA
     const salesOrderData = {
