@@ -51,6 +51,7 @@ router.post("/send-bill-request", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const requests = await BillRequest.find()
+    .populate("salesOrderId")
       .sort({ createdAt: -1 });
 
     res.json({
