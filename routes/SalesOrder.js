@@ -237,7 +237,7 @@ router.post("/", async (req, res) => {
           if (expiryDate >= today) {
             return res.status(400).json({
               success: false,
-              message: `Annual Support Cover already exists for License No ${licenseNo} till ${periodTo}`
+              message: `Existing AMC Period is Not expired`
             });
           }
         }
