@@ -153,7 +153,10 @@ billRequestCount: {
   type: Number,
   default: 0,
 },
-
+status: {
+  type: String,
+  default: "Active" // Active, Cancelled
+},
 latestBillRequestStatus: {
   type: String,
   default: "",
