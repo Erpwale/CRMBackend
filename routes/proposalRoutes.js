@@ -640,34 +640,34 @@ const pdfBuffer = Buffer.from(await pdfResponse.arrayBuffer());
   },
 ];
 
-// if (req.files?.length) {
-//   req.files.forEach((file) => {
-//     attachments.push({
-//       name: file.originalname,
-//       content: file.buffer.toString("base64"),
-//       mime_type: file.mimetype,
-//     });
-//   });
-// }
+if (req.files?.length) {
+  req.files.forEach((file) => {
+    attachments.push({
+      name: file.originalname,
+      content: file.buffer.toString("base64"),
+      mime_type: file.mimetype,
+    });
+  });
+}
 const response = await client.sendMail({
   from: {
     address: "support@erpwale.com",
     name: "Support-ERPWALE ",
   },
 
-  // to: toArray.map((email) => ({
-  //   email_address: { address: email },
-  // })),
-  "to": 
-    [
-        {
-        "email_address": 
-            {
-                "address": "deepalimore609@gmail.com",
-                "name": "ERPWale"
-            }
-        }
-    ],
+  to: toArray.map((email) => ({
+    email_address: { address: email },
+  })),
+  // "to": 
+  //   [
+  //       {
+  //       "email_address": 
+  //           {
+  //               "address": "deepalimore609@gmail.com",
+  //               "name": "ERPWale"
+  //           }
+  //       }
+  //   ],
 
   cc: ccArray.map((email) => ({
     email_address: { address: email },
@@ -675,7 +675,7 @@ const response = await client.sendMail({
 
   subject,
   htmlbody: html,
-  // attachments,
+  attachments,
 });
 
       console.log("✅ Mail Sent:", response);
