@@ -47,4 +47,41 @@ router.post("/send-bill-request", async (req, res) => {
   }
 });
 
+
+router.get("/", async (req, res) => {
+  try {
+    const requests = await BillRequest.find()
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: requests,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+
+router.get("/sales-order/:salesOrderId", async (req, res) => {
+  try {
+    const requests = await BillRequest.find({
+      salesOrderId: req.params.salesOrderId,
+    }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: requests,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
 module.exports = router;
