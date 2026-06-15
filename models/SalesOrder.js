@@ -149,6 +149,15 @@ invoiceAmount: { type: Number, default: 0 },
 
 receivedAmount: { type: Number, default: 0 },
 pendingAmount: { type: Number, default: 0 },
+billRequestCount: {
+  type: Number,
+  default: 0,
+},
+
+latestBillRequestStatus: {
+  type: String,
+  default: "",
+},
 },
 { timestamps: true }
 );
