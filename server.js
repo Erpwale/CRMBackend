@@ -67,6 +67,7 @@ app.use("/api/message", require("./routes/Message"));
 app.use("/api/workbench", require("./routes/workTracker"));
 app.use("/api/bank", require("./routes/customerbank"));
 app.use("/api/leads", require("./routes/Lead.js"));
+app.use("/api/bill-request", require("./routes/BillRequest"));
 app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
