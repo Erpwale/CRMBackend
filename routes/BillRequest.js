@@ -17,6 +17,19 @@ router.post("/send-bill-request", async (req, res) => {
       });
     }
 
+    // Prevent duplicate request
+    const existingRequest = await BillRequest.findOne({
+      salesOrderId,
+      status: { $in: ["Pending", "Approved"] },
+    });
+
+    if (existingRequest) {
+      return res.status(400).json({
+        success: false,
+        message: "Bill request already exists for this order",
+      });
+    }
+
     const request = await BillRequest.create({
       salesOrderId: order._id,
       orderNo: order.orderNo,
