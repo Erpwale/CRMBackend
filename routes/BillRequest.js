@@ -85,4 +85,35 @@ router.get("/sales-order/:salesOrderId", async (req, res) => {
   }
 });
 
+router.put("/:id/update-sale-bill", async (req, res) => {
+  try {
+    const { saleBillNo, saleBillDate } = req.body;
+
+    const request = await BillRequest.findById(req.params.id);
+
+    if (!request) {
+      return res.status(404).json({
+        success: false,
+        message: "Bill Request not found",
+      });
+    }
+
+    request.saleBillNo = saleBillNo;
+    request.saleBillDate = saleBillDate;
+
+    await request.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Sale Bill updated successfully",
+      data: request,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
 module.exports = router;

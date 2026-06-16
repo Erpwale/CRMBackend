@@ -35,6 +35,13 @@ const billRequestSchema = new mongoose.Schema(
     approvedBy: String,
 
     approvedDate: Date,
+    saleBillNo: {
+  type: String,
+},
+
+saleBillDate: {
+  type: Date,
+},
   },
   { timestamps: true }
 );
