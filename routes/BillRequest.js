@@ -98,15 +98,20 @@ router.put("/:id/update-sale-bill", async (req, res) => {
       });
     }
 
-    request.saleBillNo = saleBillNo;
-    request.saleBillDate = saleBillDate;
-
-    await request.save();
+    const salesOrder = await SalesOrder.findByIdAndUpdate(
+      request.salesOrderId,
+      {
+        invoiceNo: saleBillNo,
+        invoiceDate: saleBillDate,
+        isBill: true,
+      },
+      { new: true }
+    );
 
     res.status(200).json({
       success: true,
-      message: "Sale Bill updated successfully",
-      data: request,
+      message: "Invoice updated successfully",
+      data: salesOrder,
     });
   } catch (err) {
     res.status(500).json({
