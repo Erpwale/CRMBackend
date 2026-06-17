@@ -101,7 +101,34 @@ resolvedBy: {
       type: String,
       default: "open",
     },
+rescheduleHistory: [
+  {
+    oldDate: {
+      type: Date,
+      default: null,
+    },
 
+    newDate: {
+      type: Date,
+      required: true,
+    },
+
+    reason: {
+      type: String,
+      default: "",
+    },
+
+    rescheduledBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+
+    rescheduledAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+],
     // ✅ INSIDE MAIN OBJECT
     statusHistory: [
       {
