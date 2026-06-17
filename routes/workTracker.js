@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const WorkBench = require("../models/workTrackerSchema");
+const Ticket = require("../models/TicketSchema");
 
 
 const getTodayRecord = async (userId) => {
