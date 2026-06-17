@@ -148,4 +148,59 @@ router.get("/timer/:id", async (req, res) => {
   }
 });
 
+
+router.post("/ticket/start-work/:id", async (req, res) => {
+  try {
+    const ticket = await Ticket.findById(req.params.id);
+
+    if (!ticket) {
+      return res.status(404).json({
+        success: false,
+        message: "Ticket not found",
+      });
+    }
+
+    ticket.workStartedAt = new Date();
+    ticket.isWorking = true;
+
+    await ticket.save();
+
+    res.json({
+      success: true,
+      message: "Work started",
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.post("/ticket/stop-work/:id", async (req, res) => {
+  try {
+    const ticket = await Ticket.findById(req.params.id);
+
+    if (!ticket?.workStartedAt) {
+      return res.status(400).json({
+        success: false,
+        message: "Work not started",
+      });
+    }
+
+    const workedSeconds = Math.floor(
+      (new Date() - ticket.workStartedAt) / 1000
+    );
+
+    ticket.totalWorkSeconds += workedSeconds;
+    ticket.workStartedAt = null;
+    ticket.isWorking = false;
+
+    await ticket.save();
+
+    res.json({
+      success: true,
+      totalWorkSeconds: ticket.totalWorkSeconds,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
 module.exports = router;
