@@ -67,7 +67,20 @@ resolvedAt: {
   type: Date,
   default: null,
 },
+  workStartedAt: {
+  type: Date,
+  default: null,
+},
 
+totalWorkSeconds: {
+  type: Number,
+  default: 0,
+},
+
+isWorking: {
+  type: Boolean,
+  default: false,
+},
 resolvedBy: {
   type: mongoose.Schema.Types.ObjectId,
   ref: "User",

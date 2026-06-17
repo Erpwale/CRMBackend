@@ -35,20 +35,7 @@ const workBenchSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  workStartedAt: {
-  type: Date,
-  default: null,
-},
-
-totalWorkSeconds: {
-  type: Number,
-  default: 0,
-},
-
-isWorking: {
-  type: Boolean,
-  default: false,
-},
+  
 
   history: [
     {
