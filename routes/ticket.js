@@ -375,35 +375,29 @@ router.post("/create", authMiddleware, async (req, res) => {
     });
   }
 });
-router.get(
-  "/all",
-  async (req, res) => {
+router.get("/all", async (req, res) => {
+  try {
+    console.log("GET /all called");
 
-    try {
-      console.log("all")
+    const tickets = await Ticket.find()
+      .sort({ createdAt: -1 });
 
-      const tickets = await Ticket.find()
-       .sort({ createdAt: -1 });
-      console.log(tickets);
-      
-      res.status(200).json({
-        success: true,
-        count: tickets.length,
-        tickets
-      });
+    console.log("Tickets:", tickets.length);
 
-    } catch (error) {
+    res.status(200).json({
+      success: true,
+      count: tickets.length,
+      tickets,
+    });
+  } catch (error) {
+    console.log("ALL TICKETS ERROR:", error);
 
-      console.log(error);
-
-      res.status(500).json({
-        success: false,
-        message: error.message
-      });
-
-    }
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
-);
+});
 router.put("/assign-ticket/:ticketId", async (req, res) => {
   try {
 
