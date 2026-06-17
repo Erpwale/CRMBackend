@@ -344,6 +344,17 @@ router.get(
     }
   }
 );
+router.get("/tickets/unassigned", async (req, res) => {
+  const tickets = await Ticket.find({
+    assignedTo: null,
+    status: { $ne: "resolved" },
+  }).sort({ createdAt: -1 });
+
+  res.json({
+    success: true,
+    data: tickets,
+  });
+});
 // router.get(
 //   "/company-tickets",
   
@@ -484,7 +495,66 @@ router.get(
 //     }
 //   }
 // );
+router.post("/adopt/:ticketId", async (req, res) => {
+  try {
+    const { ticketId } = req.params;
+    const { supportId } = req.body;
 
+    const ticket = await Ticket.findById(ticketId);
+
+    if (!ticket) {
+      return res.status(404).json({
+        success: false,
+        message: "Ticket not found",
+      });
+    }
+
+    if (ticket.assignedTo) {
+      return res.status(400).json({
+        success: false,
+        message: "Ticket already assigned",
+      });
+    }
+
+    const supportUser = await User.findById(supportId);
+
+    if (!supportUser) {
+      return res.status(404).json({
+        success: false,
+        message: "Support user not found",
+      });
+    }
+
+    ticket.assignedTo = supportId;
+    ticket.assignedAt = new Date();
+    ticket.status = "assigned";
+
+    await ticket.save();
+
+    await User.findByIdAndUpdate(
+      supportId,
+      {
+        $inc: {
+          activeTickets: 1,
+        },
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Ticket adopted successfully",
+      ticket,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 router.get("/support-persons", async (req, res) => {
 
   try {
