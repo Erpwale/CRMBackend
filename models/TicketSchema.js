@@ -81,6 +81,17 @@ isWorking: {
   type: Boolean,
   default: false,
 },
+followupDate: Date,
+
+followupBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+},
+
+isRescheduled: {
+  type: Boolean,
+  default: false,
+},
 resolvedBy: {
   type: mongoose.Schema.Types.ObjectId,
   ref: "User",

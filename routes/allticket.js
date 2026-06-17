@@ -410,6 +410,54 @@ router.post("/ticket/stop-work/:id", async (req, res) => {
     console.log(err);
   }
 });
+router.put("/reschedule/:id", async (req, res) => {
+  try {
+    const { followupDate, followupTime, reason } = req.body;
+
+    const ticket = await Ticket.findById(req.params.id);
+
+    if (!ticket) {
+      return res.status(404).json({
+        success: false,
+        message: "Ticket not found",
+      });
+    }
+
+    // Stop timer if running
+    if (ticket.isWorking && ticket.workStartedAt) {
+      const workedSeconds = Math.floor(
+        (new Date() - ticket.workStartedAt) / 1000
+      );
+
+      ticket.totalWorkSeconds += workedSeconds;
+      ticket.isWorking = false;
+      ticket.workStartedAt = null;
+    }
+
+    ticket.status = "On Hold";
+
+    ticket.followupDate = new Date(
+      `${followupDate}T${followupTime}:00`
+    );
+
+    ticket.isRescheduled = true;
+
+    ticket.rescheduleHistory.push({
+      newDate: ticket.followupDate,
+      reason,
+      rescheduledAt: new Date(),
+    });
+
+    await ticket.save();
+
+    res.json({
+      success: true,
+      ticket,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 // router.get(
 //   "/company-tickets",
   
