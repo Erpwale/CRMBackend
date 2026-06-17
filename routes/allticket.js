@@ -367,6 +367,21 @@ router.post("/ticket/start-work/:id", async (req, res) => {
       });
     }
 
+    // Check if same support person already has a running ticket
+    const activeTicket = await Ticket.findOne({
+      assignedTo: ticket.assignedTo,
+      isWorking: true,
+      _id: { $ne: ticket._id },
+    });
+
+    if (activeTicket) {
+      return res.status(400).json({
+        success: false,
+        message: `Please stop Ticket ${activeTicket.ticketNumber} first`,
+      });
+    }
+
+    // Start work
     ticket.workStartedAt = new Date();
     ticket.isWorking = true;
 
@@ -376,8 +391,14 @@ router.post("/ticket/start-work/:id", async (req, res) => {
       success: true,
       message: "Work started",
     });
+
   } catch (err) {
     console.log(err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 });
 
