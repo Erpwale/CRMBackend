@@ -4,6 +4,8 @@ const { authMiddleware, adminOnly } = require("../middleware/auth");
 const router = express.Router();
 const Contact = require("../models/Contact");
 const User  = require("../models/User");
+const Lead  = require("../models/Lead");
+const Ticket  = require("../models/TicketSchema");
 const SalesOrder  = require("../models/SalesOrder");
 
 // CREATE COMPANY
@@ -496,4 +498,54 @@ router.get("/search", async (req, res) => {
     res.status(500).json({ message: "Error searching companies" });
   }
 });
+
+router.get(
+  "/customer-details/:companyName",
+  async (req, res) => {
+    try {
+      const { companyName } = req.params;
+
+      // Find company by name
+      const company = await Company.findOne({
+        companyName,
+      });
+
+      if (!company) {
+        return res.status(404).json({
+          success: false,
+          message: "Company not found",
+        });
+      }
+
+      const companyId = company._id;
+
+      // Fetch all related data using companyId
+      const leads = await Lead.find({ companyId });
+
+      const tickets = await Ticket.find({ companyId });
+
+      const salesOrders = await SalesOrder.find({
+        companyId,
+      });
+
+      // const licenses = await TallyLicense.find({
+      //   companyId,
+      // });
+
+      res.json({
+        success: true,
+        company,
+        leads,
+        tickets,
+        salesOrders,
+        // licenses,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+);
 module.exports = router;
