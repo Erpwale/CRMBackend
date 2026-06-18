@@ -421,28 +421,29 @@ router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
 // GET SINGLE COMPANY
 router.get("/company/:id", authMiddleware, async (req, res) => {
   try {
+    
     const company = await Company.findById(req.params.id)
       .populate("createdBy", "name email role lastName firstName");
 
     if (!company) {
       return res.status(404).json({ message: "Company not found" });
     }
+    const companyId = company._id;
 
-     // Primary Contact
+    // Primary Contact
     const primaryContact = await Contact.findOne({
-      companyId: req.params.id,
+      companyId:companyId,
       primary: true,
     }).select("name email mobile designation");
-
-    // All Contacts
+       
     const contacts = await Contact.find({
-      companyId: req.params.id,
+      companyId: companyId,
     }).select("name email mobile designation primary");
 
 
     // Sales Orders
     const salesOrders = await SalesOrder.find({
-      companyId: req.params.id,
+      companyId:companyId,
       isBill: true,
       isOutstanding: false,
     })
@@ -451,7 +452,6 @@ router.get("/company/:id", authMiddleware, async (req, res) => {
     res.json({
       ...company.toObject(),
       primaryContact,
-      contacts,
       salesOrders,
     });
   } catch (err) {
@@ -525,6 +525,16 @@ router.get(
       }
 
       const companyId = company._id;
+      
+          const contacts = await Contact.find({
+      companyId: req.params.id,
+    }).select("name email mobile designation primary");
+
+  const primaryContact = await Contact.findOne({
+      companyId:companyId,
+      primary: true,
+    }).select("name email mobile designation");
+
 
       // Fetch all related data using companyId
       const leads = await Lead.find({ companyId });
