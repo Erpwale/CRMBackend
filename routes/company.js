@@ -525,7 +525,7 @@ router.get(
       }
 
       const companyId = company._id;
-      
+
           const contacts = await Contact.find({
       companyId: req.params.id,
     }).select("name email mobile designation primary");
@@ -555,6 +555,8 @@ router.get(
         leads,
         tickets,
         salesOrders,
+        primaryContact,
+        contacts
         // licenses,
       });
     } catch (error) {
