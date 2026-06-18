@@ -6,12 +6,10 @@ const SalesOrder=require("../models/SalesOrder")
 // ➕ CREATE DEAL
 router.post("/add", async (req, res) => {
   try {
-    // Check Annual Support Cover
     if (req.body.businessLine === "Annual Support Cover") {
       const licenseNo =
         req.body.products?.[0]?.amcDetails?.licenseNo;
-      console.log(licenseNo);
-      
+
       if (licenseNo) {
         const existingAMC = await SalesOrder.findOne({
           businessLine: "Annual Support Cover",
@@ -19,13 +17,11 @@ router.post("/add", async (req, res) => {
           isBill: true,
           isOutstanding: false,
         });
-        console.log(existingAMC);
-        
 
         if (existingAMC) {
           return res.status(400).json({
             success: false,
-            message: `Annual Support Cover already exists for License No ${licenseNo}.`,
+            message: `Annual Support Cover already exists for License No ${licenseNo}`,
           });
         }
       }
