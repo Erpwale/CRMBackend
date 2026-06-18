@@ -527,7 +527,7 @@ router.get(
       const companyId = company._id;
 
           const contacts = await Contact.find({
-      companyId: req.params.id,
+      companyId:companyId,
     }).select("name email mobile designation primary");
 
   const primaryContact = await Contact.findOne({
