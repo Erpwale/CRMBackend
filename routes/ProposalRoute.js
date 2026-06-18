@@ -3,7 +3,8 @@ const router = express.Router();
 const { chromium } = require("playwright");
 const path = require("path");
 const fs = require("fs");
-const Proposal= require("../models/Proposal")
+const Proposal= require("../models/Proposal");
+const SalesOrder= require("../models/SalesOrder");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 
 const headerBase64 = fs.readFileSync(
@@ -293,38 +294,51 @@ router.post("/add", authMiddleware, async (req, res) => {
   try {
     console.log("REQ BODY:", req.body.bankDetails);
 
-    // ✅ STEP 1: Get values
     const subtotal = req.body.subtotal || 0;
     const totalGST = req.body.gstTotal || 0;
 
-    // ✅ STEP 2: Calculate total & roundOff (ADD HERE)
     const totalBeforeRound = subtotal + totalGST;
     const roundedTotal = Math.round(totalBeforeRound);
     const roundOff = +(roundedTotal - totalBeforeRound).toFixed(2);
 
-    // ✅ STEP 3: Create data object
     const data = {
       ...req.body,
-
       cgst: +(totalGST / 2).toFixed(2),
       sgst: +(totalGST / 2).toFixed(2),
-
-      // ✅ ADD THESE TWO
       roundOff,
       total: roundedTotal,
-
       uid: req.user._id,
       userName: req.user.username,
       email: req.user.email,
       mobile: req.user.mobile
     };
-    console.log("FULL BODY 👉", req.body);
-console.log("PRICE LEVEL 👉", req.body.priceLevel);
 
-    console.log("RoundOff:", roundOff); // 🔍 debug
+    // ✅ AMC validation
+    if (data.businessLine === "Annual Support Cover") {
+      const licenseNo =
+        data.products?.[0]?.amcDetails?.licenseNo;
+
+      if (licenseNo) {
+        const existingAMC = await SalesOrder.findOne({
+          businessLine: "Annual Support Cover",
+          "products.amcDetails.licenseNo": licenseNo,
+          isBill: true,
+          isOutstanding: false,
+        });
+
+        if (existingAMC) {
+          return res.status(400).json({
+            success: false,
+            message: `Annual Support Cover already exists for License No ${licenseNo}`,
+          });
+        }
+      }
+    }
 
     if (!data.companyName) {
-      return res.status(400).json({ message: "Company name is required" });
+      return res.status(400).json({
+        message: "Company name is required"
+      });
     }
 
     const newProposal = new Proposal(data);
@@ -335,8 +349,6 @@ console.log("PRICE LEVEL 👉", req.body.priceLevel);
         type: "CREATE",
         data: savedData,
       });
-    } else {
-      console.log("❌ Socket not initialized or companyId missing");
     }
 
     res.status(201).json({
@@ -346,10 +358,11 @@ console.log("PRICE LEVEL 👉", req.body.priceLevel);
 
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Error saving data" });
+    res.status(500).json({
+      message: "Error saving data"
+    });
   }
 });
-
 router.get("/my-opportunities", authMiddleware, async (req, res) => {
   try {
     const { companyName } = req.query;
