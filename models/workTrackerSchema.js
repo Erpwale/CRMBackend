@@ -11,7 +11,7 @@ const workBenchSchema = new mongoose.Schema({
   currentStatus: {
     type: String,
     enum: ["work", "bench"],
-    default: "bench",
+    default: "work",
   },
 
   benchReason: {
