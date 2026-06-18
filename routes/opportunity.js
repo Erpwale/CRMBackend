@@ -10,7 +10,8 @@ router.post("/add", async (req, res) => {
     if (req.body.businessLine === "Annual Support Cover") {
       const licenseNo =
         req.body.products?.[0]?.amcDetails?.licenseNo;
-
+      console.log(licenseNo);
+      
       if (licenseNo) {
         const existingAMC = await SalesOrder.findOne({
           businessLine: "Annual Support Cover",
@@ -18,6 +19,8 @@ router.post("/add", async (req, res) => {
           isBill: true,
           isOutstanding: false,
         });
+        console.log(existingAMC);
+        
 
         if (existingAMC) {
           return res.status(400).json({
