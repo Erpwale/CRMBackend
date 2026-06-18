@@ -6,6 +6,8 @@ const SalesOrder=require("../models/SalesOrder")
 // ➕ CREATE DEAL
 router.post("/add", async (req, res) => {
   try {
+    console.log("inside it");
+    
     if (req.body.businessLine === "Annual Support Cover") {
       const licenseNo =
         req.body.products?.[0]?.amcDetails?.licenseNo;
