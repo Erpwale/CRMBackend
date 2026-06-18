@@ -428,11 +428,17 @@ router.get("/company/:id", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Company not found" });
     }
 
-    // Primary Contact
+     // Primary Contact
     const primaryContact = await Contact.findOne({
       companyId: req.params.id,
       primary: true,
     }).select("name email mobile designation");
+
+    // All Contacts
+    const contacts = await Contact.find({
+      companyId: req.params.id,
+    }).select("name email mobile designation primary");
+
 
     // Sales Orders
     const salesOrders = await SalesOrder.find({
@@ -445,6 +451,7 @@ router.get("/company/:id", authMiddleware, async (req, res) => {
     res.json({
       ...company.toObject(),
       primaryContact,
+      contacts,
       salesOrders,
     });
   } catch (err) {
