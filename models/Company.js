@@ -64,7 +64,29 @@ const companySchema = new mongoose.Schema(
 },
 { timestamps: true }
 );
+companySchema.pre("save", async function (next) {
+  if (!this.isNew || this.companyId) return next();
 
+  try {
+    const lastCompany = await mongoose
+      .model("Company")
+      .findOne({ companyId: /^DP-\d+$/ })
+      .sort({ companyId: -1 });
+
+    let nextNumber = 100;
+
+    if (lastCompany?.companyId) {
+      nextNumber =
+        parseInt(lastCompany.companyId.split("-")[1]) + 1;
+    }
+
+    this.companyId = `DP-${nextNumber}`;
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 
 module.exports = mongoose.model("Company", companySchema);

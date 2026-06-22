@@ -180,7 +180,8 @@ const { authMiddleware } = require("../middleware/auth.js");
 //     res.status(500).json({ message: err.message });
 //   }
 // });
-
+const TALLY_URL =
+  "https://antarctic-whacky-hastiness.ngrok-free.dev";
 
 
 
