@@ -7,9 +7,25 @@ const Product = require("../models/Product");
 // =====================
 // ADD PRODUCT
 // =====================
-router.post("/add", async (req, res) => {
+const multer = require("multer");
+
+const storage = multer.memoryStorage();
+
+const upload = multer({
+  storage,
+});
+
+router.post("/add", upload.single("image"), async (req, res) => {
   try {
-    const product = await Product.create(req.body);
+    const product = await Product.create({
+      productName: req.body.productName,
+      description: req.body.description,
+      category: req.body.category,
+      pricingType: req.body.pricingType,
+      price: req.body.price,
+      features: JSON.parse(req.body.features || "[]"),
+      image: req.file ? req.file.originalname : "",
+    });
 
     res.status(201).json({
       success: true,
