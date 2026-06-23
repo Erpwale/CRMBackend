@@ -765,19 +765,21 @@ router.put("/users/:id", async (req, res) => {
       });
     }
 
-  const updateData = { ...req.body };
+    const updateData = { ...req.body };
 
-delete updateData.password;
-delete updateData.confirmPassword;
+    delete updateData.password;
+    delete updateData.confirmPassword;
 
-Object.assign(user, updateData);
+    Object.assign(user, updateData);
 
-if (req.body.password && req.body.password.trim() !== "") {
-  user.password = await bcrypt.hash(
-    req.body.password,
-    10
-  );
-}
+    // Password changed
+    if (req.body.password && req.body.password.trim() !== "") {
+      user.password = await bcrypt.hash(req.body.password, 10);
+
+      // Reset 2FA
+      user.twoFactorSecret = null;
+      user.isTwoFactorEnabled = false;
+    }
 
     await user.save();
 
