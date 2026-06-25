@@ -1,5 +1,5 @@
 const SalesOrder = require("../models/SalesOrder");
-const { createSalesVoucher } = require("./tallySalesVoucher");
+const { createSalesVoucher } = require("./tallyService");
 
 async function syncPendingOrders() {
 
