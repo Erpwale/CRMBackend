@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const SalesOrder = require("../models/SalesOrder.js")
 const opp = require("../models/Proposal"); // import model
 const generatePDF = require("../utils/generateInvoice.js");
+const {
+  createSalesVoucher
+} = require("../services/tallySalesVoucher");
 /* ✅ VALIDATION FUNCTION */
 const fs = require("fs");
 const path = require("path");
@@ -319,7 +322,26 @@ if (proposal.businessLine === "Annual Support Cover") {
     // ✅ 5. SAVE SALES ORDER
     const order = new SalesOrder(salesOrderData);
     await order.save();
+try {
 
+    const tallyResponse = await createSalesVoucher(order);
+
+    console.log("Tally Response:", tallyResponse);
+
+} catch (err) {
+
+    console.error("Tally Error:", err.response?.data || err.message);
+
+    // Optional:
+    // await SalesOrder.findByIdAndDelete(order._id);
+
+    return res.status(500).json({
+        success: false,
+        message: "Sales Order saved but Tally voucher creation failed.",
+        error: err.message
+    });
+
+}
     // ✅ 6. UPDATE PROPOSAL STATUS
     await opp.findOneAndUpdate(
       { proposalId: opid },

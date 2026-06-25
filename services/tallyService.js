@@ -1,146 +1,373 @@
-const express = require("express");
-const router = express.Router();
 const axios = require("axios");
-const SalesOrder = require("../models/SalesOrder");
 
-const MIDDLEWARE_URL = "https://antarctic-whacky-hastiness.ngrok-free.dev/tally";
+const createSalesVoucher = async (order) => {
+  try {
 
-// 🔥 Convert SalesOrder → Tally XML
-const buildXML = (order) => {
+    // Convert Date
+    const voucherDate = new Date(order.orderDate)
+      .toISOString()
+      .slice(0, 10)
+      .replace(/-/g, "");
 
-  const formatDate = (input) => {
-    if (!input) return "20260425";
-    const d = new Date(input);
-    if (isNaN(d.getTime())) return "20260425";
+      let inventoryXML = "";
 
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
+for (const product of order.products) {
 
-    return `${yyyy}${mm}${dd}`;
-  };
+inventoryXML += `
 
-  const date = formatDate(order.orderDate);
+<ALLINVENTORYENTRIES.LIST>
 
-  const products = order.products || [];
+<STOCKITEMNAME>${product.name}</STOCKITEMNAME>
 
-  // 🔥 MULTIPLE ITEMS FROM YOUR SCHEMA
-  const inventoryEntries = products.map(p => `
-    <INVENTORYENTRIES.LIST>
-      <STOCKITEMNAME>${p.name}</STOCKITEMNAME>
-      <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-      <RATE>${p.rate}/Nos</RATE>
-      <AMOUNT>${p.totalValue}</AMOUNT>
-      <ACTUALQTY>${p.qty} Nos</ACTUALQTY>
-      <BILLEDQTY>${p.qty} Nos</BILLEDQTY>
-    </INVENTORYENTRIES.LIST>
-  `).join("");
+<ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
 
-  // 🔥 GST LEDGERS (ONLY IF EXISTS)
-  const gstEntries = `
-    ${order.cgst > 0 ? `
-    <ALLLEDGERENTRIES.LIST>
-      <LEDGERNAME>CGST</LEDGERNAME>
-      <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-      <AMOUNT>${order.cgst}</AMOUNT>
-    </ALLLEDGERENTRIES.LIST>` : ""}
+<ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>
 
-    ${order.sgst > 0 ? `
-    <ALLLEDGERENTRIES.LIST>
-      <LEDGERNAME>SGST</LEDGERNAME>
-      <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-      <AMOUNT>${order.sgst}</AMOUNT>
-    </ALLLEDGERENTRIES.LIST>` : ""}
-  `;
+<ISAUTONEGATE>No</ISAUTONEGATE>
 
-  return `
-<ENVELOPE>
- <HEADER>
-  <TALLYREQUEST>Import Data</TALLYREQUEST>
-  <TYPE>Data</TYPE>
-  <ID>Vouchers</ID>
- </HEADER>
+<ISCONFIGURABLE>No</ISCONFIGURABLE>
 
- <BODY>
-  <IMPORTDATA>
-   <REQUESTDESC>
-    <REPORTNAME>All Masters</REPORTNAME>
-   </REQUESTDESC>
+<STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>
 
-   <REQUESTDATA>
-    <DATA>
-     <TALLYMESSAGE xmlns:UDF="TallyUDF">
+<CONTENTNEGISPOS>No</CONTENTNEGISPOS>
 
-      <VOUCHER VCHTYPE="Sales" ACTION="Create">
+<DESCRIPTION>${product.description || ""}</DESCRIPTION>
 
-        <DATE>20260101</DATE>
-        <EFFECTIVEDATE>20260101</EFFECTIVEDATE>
-        <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
-        <VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
+<ACTUALQTY>${product.qty} Nos</ACTUALQTY>
 
-        <PARTYNAME>${order.companyName}</PARTYNAME>
-        <PERSISTEDVIEW>Invoice Voucher View</PERSISTEDVIEW>
-        <ISINVOICE>Yes</ISINVOICE>
+<BILLEDQTY>${product.qty} Nos</BILLEDQTY>
 
-        <!-- 🔹 PARTY -->
-        <ALLLEDGERENTRIES.LIST>
-          <LEDGERNAME>${order.companyName}</LEDGERNAME>
-          <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
-          <AMOUNT>-${order.net}</AMOUNT>
-        </ALLLEDGERENTRIES.LIST>
+<RATE>${product.rate}/Nos</RATE>
 
-        <!-- 🔥 ITEMS -->
-        ${inventoryEntries}
+<AMOUNT>${product.totalValue}</AMOUNT>
 
-        <!-- 🔥 GST -->
-        ${gstEntries}
+<GSTOVRDNTYPEOFSUPPLY>Services</GSTOVRDNTYPEOFSUPPLY>
 
-      </VOUCHER>
+<GSTHSNNAME>${product.hsn}</GSTHSNNAME>
 
-     </TALLYMESSAGE>
-    </DATA>
-   </REQUESTDATA>
-  </IMPORTDATA>
- </BODY>
-</ENVELOPE>
+<GSTHSNINFERAPPLICABILITY>As per Masters/Company</GSTHSNINFERAPPLICABILITY>
+
+<GSTRATEINFERAPPLICABILITY>As per Masters/Company</GSTRATEINFERAPPLICABILITY>
+
+<ACCOUNTINGALLOCATIONS.LIST>
+
+<LEDGERNAME>Sales A/c</LEDGERNAME>
+
+<ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+
+<AMOUNT>${product.totalValue}</AMOUNT>
+
+</ACCOUNTINGALLOCATIONS.LIST>
+
+<BATCHALLOCATIONS.LIST>
+
+<GODOWNNAME>Main Location</GODOWNNAME>
+
+<BATCHNAME>Primary Batch</BATCHNAME>
+
+<DESTINATIONGODOWNNAME>Main Location</DESTINATIONGODOWNNAME>
+
+<INDENTNO></INDENTNO>
+
+<ORDERNO></ORDERNO>
+
+<TRACKINGNUMBER></TRACKINGNUMBER>
+
+<DYNAMICCSTISCLEARED>No</DYNAMICCSTISCLEARED>
+
+<ACTUALQTY>${product.qty} Nos</ACTUALQTY>
+
+<BILLEDQTY>${product.qty} Nos</BILLEDQTY>
+
+<AMOUNT>${product.totalValue}</AMOUNT>
+
+</BATCHALLOCATIONS.LIST>
+
+<RATEDETAILS.LIST>
+
+<GSTRATEDUTYHEAD>CGST</GSTRATEDUTYHEAD>
+
+<GSTRATE>${product.gst/2}</GSTRATE>
+
+</RATEDETAILS.LIST>
+
+<RATEDETAILS.LIST>
+
+<GSTRATEDUTYHEAD>SGST/UTGST</GSTRATEDUTYHEAD>
+
+<GSTRATE>${product.gst/2}</GSTRATE>
+
+</RATEDETAILS.LIST>
+
+<RATEDETAILS.LIST>
+
+<GSTRATEDUTYHEAD>IGST</GSTRATEDUTYHEAD>
+
+<GSTRATE>0</GSTRATE>
+
+</RATEDETAILS.LIST>
+
+</ALLINVENTORYENTRIES.LIST>
+
 `;
+
+}
+
+    const xml = `
+<ENVELOPE>
+
+<HEADER>
+<TALLYREQUEST>Import Data</TALLYREQUEST>
+</HEADER>
+
+<BODY>
+
+<IMPORTDATA>
+
+<REQUESTDESC>
+
+<REPORTNAME>Vouchers</REPORTNAME>
+
+<STATICVARIABLES>
+
+<SVCURRENTCOMPANY>Airgital</SVCURRENTCOMPANY>
+
+</STATICVARIABLES>
+
+</REQUESTDESC>
+
+<REQUESTDATA>
+
+<TALLYMESSAGE xmlns:UDF="TallyUDF">
+
+<VOUCHER
+VCHTYPE="Sales"
+ACTION="Create"
+OBJVIEW="Accounting Voucher View">
+
+<DATE>${voucherDate}</DATE>
+
+<VCHSTATUSDATE>${voucherDate}</VCHSTATUSDATE>
+
+<VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
+
+<PARTYNAME>${order.companyName}</PARTYNAME>
+
+<PARTYLEDGERNAME>${order.companyName}</PARTYLEDGERNAME>
+
+<PARTYMAILINGNAME>${order.companyName}</PARTYMAILINGNAME>
+
+<BASICBUYERNAME>${order.companyName}</BASICBUYERNAME>
+
+<CONSIGNEEMAILINGNAME>${order.companyName}</CONSIGNEEMAILINGNAME>
+
+<BASICBASEPARTYNAME>${order.companyName}</BASICBASEPARTYNAME>
+
+<CMPGSTREGISTRATIONTYPE>Regular</CMPGSTREGISTRATIONTYPE>
+
+<CMPGSTSTATE>${order.state}</CMPGSTSTATE>
+
+<PERSISTEDVIEW>Accounting Voucher View</PERSISTEDVIEW>
+
+
+<VOUCHERNUMBER>${order.orderNo}</VOUCHERNUMBER>
+
+<VCHENTRYMODE>As Voucher</VCHENTRYMODE>
+
+<VOUCHERTYPEORIGNAME>Sales</VOUCHERTYPEORIGNAME>
+
+<NUMBERINGSTYLE>Auto Retain</NUMBERINGSTYLE>
+
+<ISOPTIONAL>No</ISOPTIONAL>
+
+<ISINVOICE>No</ISINVOICE>
+
+<ISDELETED>No</ISDELETED>
+
+<ISCANCELLED>No</ISCANCELLED>
+
+<ISPOSTDATED>No</ISPOSTDATED>
+
+<NARRATION>${order.narration || ""}</NARRATION>
+
+
+<ALLLEDGERENTRIES.LIST>
+
+<OLDAUDITENTRYIDS.LIST TYPE="Number">
+<OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
+</OLDAUDITENTRYIDS.LIST>
+
+<APPROPRIATEFOR>&#4; Not Applicable</APPROPRIATEFOR>
+
+<LEDGERNAME>${order.companyName}</LEDGERNAME>
+
+<GSTCLASS>&#4; Not Applicable</GSTCLASS>
+
+<ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+
+<LEDGERFROMITEM>No</LEDGERFROMITEM>
+
+<REMOVEZEROENTRIES>No</REMOVEZEROENTRIES>
+
+<ISPARTYLEDGER>Yes</ISPARTYLEDGER>
+
+<GSTOVERRIDDEN>No</GSTOVERRIDDEN>
+
+<ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>
+
+<CONTENTNEGISPOS>No</CONTENTNEGISPOS>
+
+<ISLASTDEEMEDPOSITIVE>Yes</ISLASTDEEMEDPOSITIVE>
+
+<AMOUNT>-${Number(order.net).toFixed(2)}</AMOUNT>
+
+<VATEXPAMOUNT>-${Number(order.net).toFixed(2)}</VATEXPAMOUNT>
+
+<BILLALLOCATIONS.LIST>
+
+<NAME>${order.orderNo}</NAME>
+
+<BILLTYPE>New Ref</BILLTYPE>
+
+<AMOUNT>-${Number(order.net).toFixed(2)}</AMOUNT>
+
+</BILLALLOCATIONS.LIST>
+
+</ALLLEDGERENTRIES.LIST>
+
+
+
+
+<ALLLEDGERENTRIES.LIST>
+
+<OLDAUDITENTRYIDS.LIST TYPE="Number">
+<OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
+</OLDAUDITENTRYIDS.LIST>
+
+<LEDGERNAME>Sales A/c</LEDGERNAME>
+
+<GSTCLASS>&#4; Not Applicable</GSTCLASS>
+
+<ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+
+<LEDGERFROMITEM>No</LEDGERFROMITEM>
+
+<REMOVEZEROENTRIES>No</REMOVEZEROENTRIES>
+
+<ISPARTYLEDGER>No</ISPARTYLEDGER>
+
+<GSTOVERRIDDEN>No</GSTOVERRIDDEN>
+
+<ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>
+
+<CONTENTNEGISPOS>No</CONTENTNEGISPOS>
+
+<ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>
+
+<AMOUNT>${Number(order.net).toFixed(2)}</AMOUNT>
+
+<VATEXPAMOUNT>${Number(order.net).toFixed(2)}</VATEXPAMOUNT>
+
+<RATEDETAILS.LIST>
+<GSTRATEDUTYHEAD>CGST</GSTRATEDUTYHEAD>
+</RATEDETAILS.LIST>
+
+<RATEDETAILS.LIST>
+<GSTRATEDUTYHEAD>SGST/UTGST</GSTRATEDUTYHEAD>
+</RATEDETAILS.LIST>
+
+<RATEDETAILS.LIST>
+<GSTRATEDUTYHEAD>IGST</GSTRATEDUTYHEAD>
+</RATEDETAILS.LIST>
+
+<RATEDETAILS.LIST>
+<GSTRATEDUTYHEAD>Cess</GSTRATEDUTYHEAD>
+</RATEDETAILS.LIST>
+
+<RATEDETAILS.LIST>
+<GSTRATEDUTYHEAD>State Cess</GSTRATEDUTYHEAD>
+</RATEDETAILS.LIST>
+
+</ALLLEDGERENTRIES.LIST>
+${inventoryXML}
+${order.cgst > 0 ? `
+<ALLLEDGERENTRIES.LIST>
+
+<LEDGERNAME>Output CGST 9%</LEDGERNAME>
+
+<ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+
+<AMOUNT>${Number(order.cgst).toFixed(2)}</AMOUNT>
+
+</ALLLEDGERENTRIES.LIST>
+` : ""}
+
+${order.sgst > 0 ? `
+<ALLLEDGERENTRIES.LIST>
+
+<LEDGERNAME>Output SGST 9%</LEDGERNAME>
+
+<ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+
+<AMOUNT>${Number(order.sgst).toFixed(2)}</AMOUNT>
+
+</ALLLEDGERENTRIES.LIST>
+` : ""}
+
+${order.igst > 0 ? `
+<ALLLEDGERENTRIES.LIST>
+
+<LEDGERNAME>Output IGST 18%</LEDGERNAME>
+
+<ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+
+<AMOUNT>${Number(order.igst).toFixed(2)}</AMOUNT>
+
+</ALLLEDGERENTRIES.LIST>
+` : ""}
+${Number(order.roundoff) !== 0 ? `
+
+<ALLLEDGERENTRIES.LIST>
+
+<LEDGERNAME>Round Off</LEDGERNAME>
+
+<ISDEEMEDPOSITIVE>${order.roundoff < 0 ? "Yes" : "No"}</ISDEEMEDPOSITIVE>
+
+<AMOUNT>${Number(order.roundoff).toFixed(2)}</AMOUNT>
+
+</ALLLEDGERENTRIES.LIST>
+
+` : ""}
+</VOUCHER>
+
+</TALLYMESSAGE>
+
+</REQUESTDATA>
+
+</IMPORTDATA>
+
+</BODY>
+
+</ENVELOPE>
+
+`;
+
+  const response = await axios.post(
+   "https://antarctic-whacky-hastiness.ngrok-free.dev",
+    xml,
+    {
+        headers: {
+            "Content-Type": "application/xml"
+        }
+    }
+);
+
+return response.data;
+  } catch (err) {
+    throw err;
+  }
 };
 
-// 🔥 API: Push order to Tally
-router.post("/push-to-tally/:id", async (req, res) => {
-  try {
-    const order = await SalesOrder.findById(req.params.id);
-
-    if (!order) {
-      return res.status(404).json({ msg: "Order not found" });
-    }
-
-    const xml = buildXML(order);
-
-    const response = await axios.post(
-      MIDDLEWARE_URL,
-       xml,
-      {
-        headers: {
-            "Content-Type": "application/xml",
-
-          "ngrok-skip-browser-warning": "true"
-        }
-      }
-    );
-
-    res.json({
-      success: true,
-      tallyResponse: response.data
-    });
-
-  } catch (err) {
-     console.log(err)
-    res.status(500).json({
-      error: err.message
-     
-    });
-  }
-});
-
-module.exports = router;
+module.exports = {
+  createSalesVoucher
+};
