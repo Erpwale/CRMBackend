@@ -53,7 +53,7 @@ tallySyncedAt: {
 tallyError: {
   type: String,
   default: ""
-}
+},
   terms: {
     type: [String],
     default: []
