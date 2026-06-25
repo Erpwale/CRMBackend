@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
     if (
   !companyId ||
   !companyName ||
-  !pan ||
+  
   !contactEmail ||
   !address1 ||
   !state ||
