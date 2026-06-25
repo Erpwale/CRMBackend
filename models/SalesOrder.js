@@ -39,21 +39,7 @@ const productSchema = new mongoose.Schema({
   discount: { type: Number, default: 0 },
   subtotal: { type: Number, default: 0 },
   totalValue: Number,
-tallyStatus: {
-  type: String,
-  enum: ["Pending", "Synced", "Failed"],
-  default: "Pending"
-},
 
-tallySyncedAt: {
-  type: Date,
-  default: null
-},
-
-tallyError: {
-  type: String,
-  default: ""
-},
   terms: {
     type: [String],
     default: []
