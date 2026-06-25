@@ -352,25 +352,48 @@ router.post("/check-duplicate", async (req, res) => {
   }
 });
 router.put("/ledger/:id", async (req, res) => {
-  console.log("UPDATE HIT");
-  console.log("ID:", req.params.id);
-  console.log("BODY:", req.body);
-
   try {
+
     const updated = await Ledger.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { returnDocument: "after" }
+      {
+        new: true,
+        runValidators: true,
+      }
     );
 
-    console.log("UPDATED:", updated);
+    if (!updated) {
+      return res.status(404).json({
+        message: "Ledger not found",
+      });
+    }
+
+    // ✅ Socket
+    if (global.io) {
+
+      global.io.to(updated.companyId.toString()).emit(
+        "ledgerUpdated",
+        {
+          type: "UPDATE",
+          data: updated,
+        }
+      );
+
+      console.log("✅ Ledger UPDATE emitted");
+
+    }
 
     res.json(updated);
+
   } catch (err) {
+
     console.log(err);
+
     res.status(500).json({
       error: err.message,
     });
+
   }
 });
 router.get("/company/:companyId", async (req, res) => {
