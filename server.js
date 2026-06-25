@@ -59,7 +59,7 @@ app.use("/api/sales-order", require("./routes/SalesOrder"));
 app.use("/api/sales-Voucher", require("./routes/salesvoucherConfig"));
 app.use("/api/recipt", require("./routes/receipt.js"));
 app.use("/api/globalcompany", require("./routes/gloabalcompany"));
-app.use("/api/tally", require("./services/tallyService"));
+// app.use("/api/tally", require("./services/tallyService"));
 app.use("/api/ticket", require("./routes/ticket"));
 app.use("/api/tickets", require("./routes/ticketcontact"));
 app.use("/api/alltickets", require("./routes/allticket"));
