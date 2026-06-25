@@ -302,6 +302,79 @@ const existing =
       msme,
     });
 
+      // ===========================
+    // SEND TO TALLY
+    // ===========================
+
+    const xml = `
+<ENVELOPE>
+  <HEADER>
+    <TALLYREQUEST>Import Data</TALLYREQUEST>
+  </HEADER>
+
+  <BODY>
+    <IMPORTDATA>
+      <REQUESTDESC>
+        <REPORTNAME>All Masters</REPORTNAME>
+      </REQUESTDESC>
+
+      <REQUESTDATA>
+
+        <TALLYMESSAGE xmlns:UDF="TallyUDF">
+
+          <LEDGER NAME="${companyName}" ACTION="Create">
+
+            <NAME>${companyName}</NAME>
+
+            <PARENT>Sundry Debtors</PARENT>
+
+            <MAILINGNAME>${companyName}</MAILINGNAME>
+
+            <ADDRESS.LIST TYPE="String">
+              <ADDRESS>${address1 || ""}</ADDRESS>
+              <ADDRESS>${address2 || ""}</ADDRESS>
+              <ADDRESS>${address3 || ""}</ADDRESS>
+            </ADDRESS.LIST>
+
+            <STATENAME>${state}</STATENAME>
+
+            <PINCODE>${pincode}</PINCODE>
+
+            <LEDGERCONTACT>${contactName}</LEDGERCONTACT>
+
+            <LEDGERPHONE>${contactMobile || ""}</LEDGERPHONE>
+
+            <EMAIL>${contactEmail}</EMAIL>
+
+            <INCOMETAXNUMBER>${pan || ""}</INCOMETAXNUMBER>
+
+            <GSTREGISTRATIONTYPE>${gstType}</GSTREGISTRATIONTYPE>
+
+            <PARTYGSTIN>${gstin || ""}</PARTYGSTIN>
+
+          </LEDGER>
+
+        </TALLYMESSAGE>
+
+      </REQUESTDATA>
+
+    </IMPORTDATA>
+  </BODY>
+</ENVELOPE>`;
+
+    const tallyResponse = await axios.post(
+      "  https://antarctic-whacky-hastiness.ngrok-free.dev",
+      xml,
+      {
+        headers: {
+          "Content-Type": "application/xml",
+        },
+      }
+    );
+
+    console.log("Tally Response:", tallyResponse.data);
+
+
     // ✅ SOCKET EMIT (CREATE)
 const companyRoom = companyId.toString();
 
