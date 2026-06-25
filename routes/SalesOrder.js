@@ -322,7 +322,7 @@ if (proposal.businessLine === "Annual Support Cover") {
     // ✅ 5. SAVE SALES ORDER
     const order = new SalesOrder(salesOrderData);
     await order.save();
-    console.log(xml);
+    
 try {
 
     const tallyResponse = await createSalesVoucher(order);
