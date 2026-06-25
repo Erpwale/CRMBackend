@@ -145,7 +145,7 @@ VCHTYPE="Sales"
 ACTION="Create"
 OBJVIEW="Accounting Voucher View">
 
-<DATE>${voucherDate}</DATE>
+<DATE>01-04-2026</DATE>
 
 <VCHSTATUSDATE>${voucherDate}</VCHSTATUSDATE>
 
