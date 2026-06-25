@@ -161,6 +161,21 @@ latestBillRequestStatus: {
   type: String,
   default: "",
 },
+tallyStatus: {
+  type: String,
+  enum: ["Pending", "Synced", "Failed"],
+  default: "Pending"
+},
+
+tallySyncedAt: {
+  type: Date,
+  default: null
+},
+
+tallyError: {
+  type: String,
+  default: ""
+},
 },
 { timestamps: true }
 );
