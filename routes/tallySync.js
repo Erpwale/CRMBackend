@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const SalesOrder = require("../models/SalesOrder");
-const { createSalesVoucher } = require("../services/tallySalesVoucher");
+const { createSalesVoucher } = require("../services/tallyService");
 
 router.post("/sync", async (req, res) => {
 
