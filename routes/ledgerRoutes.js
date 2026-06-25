@@ -1,7 +1,7 @@
 
 const express = require("express");
 const Ledger = require("../models/Ledger");
-const Ledger = require("axios");
+const axios = require("axios");
 
 
 const router = express.Router();
