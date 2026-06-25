@@ -562,6 +562,60 @@ router.get("/sales-order", async (req, res) => {
   }
 });
 
+// by company wise
+// router.get("/addon-orders", async (req, res) => {
+//   try {
+//     const SalesOrder = require("../models/SalesOrder");
+
+//     const companies = await SalesOrder.aggregate([
+//       {
+//         $project: {
+//           companyName: 1,
+//           balance: 1,
+//           orders: {
+//             $filter: {
+//               input: "$orders",
+//               as: "order",
+//               cond: {
+//                 $eq: ["$$order.businessLine", "Add-on Modules"]
+//               }
+//             }
+//           }
+//         }
+//       },
+//       {
+//         $match: {
+//           "orders.0": { $exists: true }
+//         }
+//       }
+//     ]);
+
+//     res.status(200).json(companies);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({
+//       success: false,
+//       message: err.message,
+//     });
+//   }
+// });
+
+
+router.get("/addon-orders", async (req, res) => {
+  try {
+    const orders = await SalesOrder.find({
+      businessLine: "Add-on Modules",
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
 router.get("/invoice-pdf", async (req, res) => {
   try {
       const { ordid } = req.query;
