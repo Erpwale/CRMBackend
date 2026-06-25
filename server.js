@@ -85,7 +85,7 @@ syncPendingOrders();
 setInterval(async () => {
   console.log("Checking pending Tally sync...");
   await syncPendingOrders();
-}, 4 * 60 * 60 * 1000); // 4 hours
+}, 60 * 1000); // 4 hours
 app.use("/api/resources", require("./routes/resource"));
 app.use("/api/training",  require("./routes/trainingRoutes"));
 global.io = io; // ✅ ADD THIS
