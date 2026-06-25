@@ -71,11 +71,21 @@ app.use("/api/bill-request", require("./routes/BillRequest"));
 app.use("/api/CancelOrder", require("./routes/CancelOrder"));
 app.use("/api/products", require("./routes/Product") );
 app.use("/api/knowledge", require("./routes/KnowledgeArticle"));
+app.use("/api/tally", require("./routes/tallySync"));
 app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
 );
+const syncPendingOrders = require("./services/tallyAutoSync");
 
+// Run once when server starts
+syncPendingOrders();
+
+// Then run every 4 hours
+setInterval(async () => {
+  console.log("Checking pending Tally sync...");
+  await syncPendingOrders();
+}, 4 * 60 * 60 * 1000); // 4 hours
 app.use("/api/resources", require("./routes/resource"));
 app.use("/api/training",  require("./routes/trainingRoutes"));
 global.io = io; // ✅ ADD THIS

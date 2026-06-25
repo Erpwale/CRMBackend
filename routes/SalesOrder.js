@@ -325,24 +325,21 @@ if (proposal.businessLine === "Annual Support Cover") {
     
 try {
 
-    const tallyResponse = await createSalesVoucher(order);
+    await createSalesVoucher(order);
 
-    console.log("Tally Response:", tallyResponse);
+    order.tallyStatus = "Synced";
+    order.tallySyncedAt = new Date();
+    order.tallyError = "";
 
 } catch (err) {
 
-    console.error("Tally Error:", err.response?.data || err.message);
+    order.tallyStatus = "Pending";
+    order.tallyError = err.message;
 
-    // Optional:
-    // await SalesOrder.findByIdAndDelete(order._id);
-
-    return res.status(500).json({
-        success: false,
-        message: "Sales Order saved but Tally voucher creation failed.",
-        error: err.message
-    });
-
+    console.log("Tally Offline");
 }
+
+await order.save();
     // ✅ 6. UPDATE PROPOSAL STATUS
     await opp.findOneAndUpdate(
       { proposalId: opid },
