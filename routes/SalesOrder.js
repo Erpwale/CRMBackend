@@ -6,7 +6,7 @@ const opp = require("../models/Proposal"); // import model
 const generatePDF = require("../utils/generateInvoice.js");
 const {
   createSalesVoucher
-} = require("../services/tallySalesVoucher");
+} = require("../services/tallyService.js");
 /* ✅ VALIDATION FUNCTION */
 const fs = require("fs");
 const path = require("path");
