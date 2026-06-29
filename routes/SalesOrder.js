@@ -718,6 +718,7 @@ order.products.forEach(item => {
   gstMap[gst].sgst += (item.gstValue || 0) / 2;
 });
 const bank = await BankAccount.find();
+console.log(bank)
     const html=`
     
     <!DOCTYPE html>
