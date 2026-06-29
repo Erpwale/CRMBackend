@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const SalesOrder = require("../models/SalesOrder.js")
 const opp = require("../models/Proposal"); // import model
 const generatePDF = require("../utils/generateInvoice.js");
+const BankAccount = require("../models/BankAccount.js")
 const {
   createSalesVoucher
 } = require("../services/tallyService.js");
@@ -716,6 +717,7 @@ order.products.forEach(item => {
   gstMap[gst].cgst += (item.gstValue || 0) / 2;
   gstMap[gst].sgst += (item.gstValue || 0) / 2;
 });
+const bank = await BankAccount.find();
     const html=`
     
     <!DOCTYPE html>
@@ -1395,19 +1397,23 @@ ${Object.keys(gstMap).map((gst) => {
                     <div class="footer-right">
                         <div class="bank-details">
                             <strong>Company's Bank Details</strong>
-                           ${order.bankDetails ? `
+                          ${bank ? `
 <table>
     <tr>
         <td>Bank Name</td>
-        <td>: <strong>${order.bankDetails.bankName}</strong></td>
+        <td>: <strong>${bank.bankName}</strong></td>
     </tr>
     <tr>
         <td>A/c No.</td>
-        <td>: ${order.bankDetails.accountNumber}</td>
+        <td>: ${bank.accountNumber}</td>
     </tr>
     <tr>
-        <td>Branch & IFSC</td>
-        <td>: ${order.bankDetails.branch} & ${order.bankDetails.ifsc}</td>
+        <td>Branch</td>
+        <td>: ${bank.branchName}</td>
+    </tr>
+    <tr>
+        <td>IFSC</td>
+        <td>: ${bank.isfcode}</td>
     </tr>
 </table>
 ` : ''}
