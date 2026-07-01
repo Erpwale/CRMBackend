@@ -11,107 +11,7 @@ const createSalesVoucher = async (order) => {
 
       let inventoryXML = "";
 
-for (const product of order.products) {
 
-inventoryXML += `
-
-<ALLINVENTORYENTRIES.LIST>
-
-<STOCKITEMNAME>${product.name}</STOCKITEMNAME>
-
-<ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-
-<ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>
-
-<ISAUTONEGATE>No</ISAUTONEGATE>
-
-<ISCONFIGURABLE>No</ISCONFIGURABLE>
-
-<STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>
-
-<CONTENTNEGISPOS>No</CONTENTNEGISPOS>
-
-<DESCRIPTION>${product.description || ""}</DESCRIPTION>
-
-<ACTUALQTY>${product.qty} Nos</ACTUALQTY>
-
-<BILLEDQTY>${product.qty} Nos</BILLEDQTY>
-
-<RATE>${product.rate}/Nos</RATE>
-
-<AMOUNT>${product.totalValue}</AMOUNT>
-
-<GSTOVRDNTYPEOFSUPPLY>Services</GSTOVRDNTYPEOFSUPPLY>
-
-<GSTHSNNAME>${product.hsn}</GSTHSNNAME>
-
-<GSTHSNINFERAPPLICABILITY>As per Masters/Company</GSTHSNINFERAPPLICABILITY>
-
-<GSTRATEINFERAPPLICABILITY>As per Masters/Company</GSTRATEINFERAPPLICABILITY>
-
-<ACCOUNTINGALLOCATIONS.LIST>
-
-<LEDGERNAME>Sales A/c</LEDGERNAME>
-
-<ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-
-<AMOUNT>${product.totalValue}</AMOUNT>
-
-</ACCOUNTINGALLOCATIONS.LIST>
-
-<BATCHALLOCATIONS.LIST>
-
-<GODOWNNAME>Main Location</GODOWNNAME>
-
-<BATCHNAME>Primary Batch</BATCHNAME>
-
-<DESTINATIONGODOWNNAME>Main Location</DESTINATIONGODOWNNAME>
-
-<INDENTNO></INDENTNO>
-
-<ORDERNO></ORDERNO>
-
-<TRACKINGNUMBER></TRACKINGNUMBER>
-
-<DYNAMICCSTISCLEARED>No</DYNAMICCSTISCLEARED>
-
-<ACTUALQTY>${product.qty} Nos</ACTUALQTY>
-
-<BILLEDQTY>${product.qty} Nos</BILLEDQTY>
-
-<AMOUNT>${product.totalValue}</AMOUNT>
-
-</BATCHALLOCATIONS.LIST>
-
-<RATEDETAILS.LIST>
-
-<GSTRATEDUTYHEAD>CGST</GSTRATEDUTYHEAD>
-
-<GSTRATE>${product.gst/2}</GSTRATE>
-
-</RATEDETAILS.LIST>
-
-<RATEDETAILS.LIST>
-
-<GSTRATEDUTYHEAD>SGST/UTGST</GSTRATEDUTYHEAD>
-
-<GSTRATE>${product.gst/2}</GSTRATE>
-
-</RATEDETAILS.LIST>
-
-<RATEDETAILS.LIST>
-
-<GSTRATEDUTYHEAD>IGST</GSTRATEDUTYHEAD>
-
-<GSTRATE>0</GSTRATE>
-
-</RATEDETAILS.LIST>
-
-</ALLINVENTORYENTRIES.LIST>
-
-`;
-
-}
 const companyName = order.companyName;
 const addressLine1 = order.address1 || "";
 const addressLine2 = order.address2 || "";
@@ -124,7 +24,7 @@ const invoiceNo = order.invoiceNo || order.orderNo;
 const salesOrderNo = order.orderNo;
 const narration = order.narration || "";
 const salesPerson = order.userName|| "";
-
+const subtotal=order.subtotal|| "";
 const grossTotal = order.grossTotal|| "";
 const cgst = order.cgst|| "";
 const sgst = order.sgst|| "";
@@ -409,14 +309,14 @@ const xml=`
         <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>
         <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>
         <AMOUNT>${product.subtotal}</AMOUNT>
-        `)}
+        `).join("")}
         <SERVICETAXDETAILS.LIST>        </SERVICETAXDETAILS.LIST>
         <CATEGORYALLOCATIONS.LIST>
          <CATEGORY>Primary Cost Category</CATEGORY>
          <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
          <COSTCENTREALLOCATIONS.LIST>
           <NAME>${salesPerson}</NAME>
-          <AMOUNT>${product.subtotal}</AMOUNT>
+          <AMOUNT>${subtotal}</AMOUNT>
          </COSTCENTREALLOCATIONS.LIST>
         </CATEGORYALLOCATIONS.LIST>
         <BANKALLOCATIONS.LIST>        </BANKALLOCATIONS.LIST>
@@ -718,8 +618,11 @@ console.log("=======================================");
 
 return response.data;
   } catch (err) {
+    console.error("Error creating XML:");
+    console.error(err);
+    console.error(err.stack);
     throw err;
-  }
+}
 };
 
 module.exports = {
