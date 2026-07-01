@@ -264,31 +264,7 @@ ${order.products.map(product => `
 
     </BATCHALLOCATIONS.LIST>
 
-    <ACCOUNTINGALLOCATIONS.LIST>
-
-        <LEDGERNAME>Sales A/c</LEDGERNAME>
-
-        <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-
-        <AMOUNT>${Number(product.totalValue).toFixed(2)}</AMOUNT>
-
-        <CATEGORYALLOCATIONS.LIST>
-
-            <CATEGORY>Primary Cost Category</CATEGORY>
-
-            <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-
-            <COSTCENTREALLOCATIONS.LIST>
-
-                <NAME>CRM Sales</NAME>
-
-                <AMOUNT>${Number(product.totalValue).toFixed(2)}</AMOUNT>
-
-            </COSTCENTREALLOCATIONS.LIST>
-
-        </CATEGORYALLOCATIONS.LIST>
-
-    </ACCOUNTINGALLOCATIONS.LIST>
+    
 
     <RATEDETAILS.LIST>
 
