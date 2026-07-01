@@ -123,10 +123,7 @@ const invoiceNo = order.invoiceNo || order.orderNo;
 const salesOrderNo = order.orderNo;
 const narration = order.narration || "";
 
-const voucherDate = new Date(order.orderDate)
-  .toISOString()
-  .slice(0, 10)
-  .replace(/-/g, "");
+
 
     const xml = `
 <ENVELOPE>
