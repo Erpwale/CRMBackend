@@ -28,6 +28,7 @@ const subtotal=order.subtotal|| "";
 const grossTotal = order.grossTotal|| "";
 const cgst = order.cgst|| "";
 const sgst = order.sgst|| "";
+const roundoff=order.roundoff||"";
 
 
 
@@ -77,7 +78,7 @@ const xml=`
       <PARTYNAME>${companyName}</PARTYNAME>
       <GSTREGISTRATION TAXTYPE="GST" TAXREGISTRATION="">${state} Registration</GSTREGISTRATION>
       <PARTYLEDGERNAME>${companyName}</PARTYLEDGERNAME>
-      <VOUCHERNUMBER>8</VOUCHERNUMBER>
+      <VOUCHERNUMBER${salesOrderNo}/VOUCHERNUMBER>
       <BASICBUYERNAME>${companyName}</BASICBUYERNAME>
       <CMPGSTREGISTRATIONTYPE>${gstType}</CMPGSTREGISTRATIONTYPE>
       <REFERENCE>${invoiceNo}</REFERENCE>
@@ -316,7 +317,7 @@ const xml=`
          <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
          <COSTCENTREALLOCATIONS.LIST>
           <NAME>${salesPerson}</NAME>
-          <AMOUNT>${subtotal}</AMOUNT>
+          <AMOUNT>${grossTotal}</AMOUNT>
          </COSTCENTREALLOCATIONS.LIST>
         </CATEGORYALLOCATIONS.LIST>
         <BANKALLOCATIONS.LIST>        </BANKALLOCATIONS.LIST>
@@ -412,7 +413,7 @@ const xml=`
        <SERVICETAXDETAILS.LIST>       </SERVICETAXDETAILS.LIST>
        <BANKALLOCATIONS.LIST>       </BANKALLOCATIONS.LIST>
        <BILLALLOCATIONS.LIST>
-        <NAME>8</NAME>
+        <NAME${salesOrderNo}/NAME>
         <BILLTYPE>New Ref</BILLTYPE>
         <TDSDEDUCTEEISSPECIALRATE>No</TDSDEDUCTEEISSPECIALRATE>
         <AMOUNT>-${grossTotal}</AMOUNT>
@@ -550,6 +551,25 @@ const xml=`
        <ADVANCETAXDETAILS.LIST>       </ADVANCETAXDETAILS.LIST>
        <TAXTYPEALLOCATIONS.LIST>       </TAXTYPEALLOCATIONS.LIST>
       </LEDGERENTRIES.LIST>
+        <LEDGERENTRIES.LIST>
+    <OLDAUDITENTRYIDS.LIST TYPE="Number">
+        <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
+    </OLDAUDITENTRYIDS.LIST>
+
+    <LEDGERNAME>Round Off</LEDGERNAME>
+
+    <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+    <LEDGERFROMITEM>No</LEDGERFROMITEM>
+    <ISPARTYLEDGER>No</ISPARTYLEDGER>
+
+    <AMOUNT>${roundoff}</AMOUNT>
+</LEDGERENTRIES.LIST>
+
+
+
+
+
+      
       <GST.LIST>
        <PURPOSETYPE>GST</PURPOSETYPE>
        <STAT.LIST>
