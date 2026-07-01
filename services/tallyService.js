@@ -317,6 +317,157 @@ ${order.products.map(product => `
 </ALLINVENTORYENTRIES.LIST>
 
 `).join("")}
+<!-- Party Ledger -->
+
+<LEDGERENTRIES.LIST>
+
+    <LEDGERNAME>${companyName}</LEDGERNAME>
+
+    <ISPARTYLEDGER>Yes</ISPARTYLEDGER>
+
+    <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+
+    <AMOUNT>-${Number(order.grossTotal).toFixed(2)}</AMOUNT>
+
+    <BILLALLOCATIONS.LIST>
+
+        <NAME>${order.orderNo}</NAME>
+
+        <BILLTYPE>New Ref</BILLTYPE>
+
+        <AMOUNT>-${Number(order.grossTotal).toFixed(2)}</AMOUNT>
+
+    </BILLALLOCATIONS.LIST>
+
+</LEDGERENTRIES.LIST>
+
+<!-- Sales Ledger -->
+
+<LEDGERENTRIES.LIST>
+
+    <LEDGERNAME>Sales A/c</LEDGERNAME>
+
+    <ISPARTYLEDGER>No</ISPARTYLEDGER>
+
+    <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+
+    <AMOUNT>${Number(order.net).toFixed(2)}</AMOUNT>
+
+</LEDGERENTRIES.LIST>
+
+<!-- CGST -->
+
+${order.cgst > 0 ? `
+
+<LEDGERENTRIES.LIST>
+
+    <LEDGERNAME>Output CGST 9%</LEDGERNAME>
+
+    <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+
+    <AMOUNT>${Number(order.cgst).toFixed(2)}</AMOUNT>
+
+</LEDGERENTRIES.LIST>
+
+` : ""}
+
+<!-- SGST -->
+
+${order.sgst > 0 ? `
+
+<LEDGERENTRIES.LIST>
+
+    <LEDGERNAME>Output SGST 9%</LEDGERNAME>
+
+    <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+
+    <AMOUNT>${Number(order.sgst).toFixed(2)}</AMOUNT>
+
+</LEDGERENTRIES.LIST>
+
+` : ""}
+
+<!-- IGST -->
+
+${order.igst > 0 ? `
+
+<LEDGERENTRIES.LIST>
+
+    <LEDGERNAME>Output IGST 18%</LEDGERNAME>
+
+    <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+
+    <AMOUNT>${Number(order.igst).toFixed(2)}</AMOUNT>
+
+</LEDGERENTRIES.LIST>
+
+` : ""}
+
+<!-- Round Off -->
+
+${Number(order.roundoff) !== 0 ? `
+
+<LEDGERENTRIES.LIST>
+
+    <LEDGERNAME>Round Off</LEDGERNAME>
+
+    <ISDEEMEDPOSITIVE>${order.roundoff < 0 ? "Yes" : "No"}</ISDEEMEDPOSITIVE>
+
+    <AMOUNT>${Number(order.roundoff).toFixed(2)}</AMOUNT>
+
+</LEDGERENTRIES.LIST>
+
+` : ""}
+
+<!-- Sales Order Reference -->
+
+<INVOICEORDERLIST.LIST>
+
+    <BASICORDERDATE>${voucherDate}</BASICORDERDATE>
+
+    <ORDERTYPE>Sales Order</ORDERTYPE>
+
+    <BASICPURCHASEORDERNO>${order.orderNo}</BASICPURCHASEORDERNO>
+
+</INVOICEORDERLIST.LIST>
+
+<!-- GST Summary -->
+
+<GST.LIST>
+
+    <PURPOSETYPE>GST</PURPOSETYPE>
+
+</GST.LIST>
+
+<!-- Empty Lists -->
+
+<EWAYBILLDETAILS.LIST></EWAYBILLDETAILS.LIST>
+
+<INVOICEEXPORTLIST.LIST></INVOICEEXPORTLIST.LIST>
+
+<ATTENDANCEENTRIES.LIST></ATTENDANCEENTRIES.LIST>
+
+<ORIGINVOICEDETAILS.LIST></ORIGINVOICEDETAILS.LIST>
+
+<INVOICEINDENTLIST.LIST></INVOICEINDENTLIST.LIST>
+
+<INVOICEDELNOTES.LIST></INVOICEDELNOTES.LIST>
+
+<GSTBUYERADDRESS.LIST></GSTBUYERADDRESS.LIST>
+
+<GSTCONSIGNEEADDRESS.LIST></GSTCONSIGNEEADDRESS.LIST>
+
+</VOUCHER>
+
+</TALLYMESSAGE>
+
+</REQUESTDATA>
+
+</IMPORTDATA>
+
+</BODY>
+
+</ENVELOPE>
 `;
 
 
