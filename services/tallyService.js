@@ -112,6 +112,21 @@ inventoryXML += `
 `;
 
 }
+const companyName = order.companyName;
+const addressLine1 = order.address1 || "";
+const addressLine2 = order.address2 || "";
+const addressLine3 = order.address3 || "";
+const gstin = order.gstin || "";
+const state = order.state || "";
+const pincode = order.pincode || "";
+const invoiceNo = order.invoiceNo || order.orderNo;
+const salesOrderNo = order.orderNo;
+const narration = order.narration || "";
+
+const voucherDate = new Date(order.orderDate)
+  .toISOString()
+  .slice(0, 10)
+  .replace(/-/g, "");
 
     const xml = `
 <ENVELOPE>
@@ -155,9 +170,9 @@ inventoryXML += `
             </BASICBUYERADDRESS.LIST>
 
             <!-- Voucher Dates -->
-            <DATE>${voucherDate}</DATE>
-            <REFERENCEDATE>${voucherDate}</REFERENCEDATE>
-            <EFFECTIVEDATE>${voucherDate}</EFFECTIVEDATE>
+            <DATE>20260701</DATE>
+            <REFERENCEDATE>20260701</REFERENCEDATE>
+            <EFFECTIVEDATE>20260701</EFFECTIVEDATE>
 
             <!-- Party Information -->
             <PARTYNAME>${companyName}</PARTYNAME>
