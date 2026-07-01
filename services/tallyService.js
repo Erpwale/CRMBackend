@@ -210,9 +210,7 @@ const narration = order.narration || "";
             <!-- Narration -->
             <NARRATION>${narration}</NARRATION>
 
-            <!-- Inventory entries will come here -->
-
-            ${inventoryXML}
+         
 <!-- Inventory Items -->
 
 ${order.products.map(product => `
