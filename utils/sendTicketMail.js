@@ -30,7 +30,10 @@ console.log(contact);
             name: contact.contactPerson || contact.name,
           },
         },
-        {
+        
+      ],
+      cc: [
+         {
           email_address: {
             address: "support@erpwale.com" ,
             name: "New Ticket" 
