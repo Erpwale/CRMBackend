@@ -36,7 +36,7 @@ console.log(contact);
          {
           email_address: {
             address: "support@erpwale.com" ,
-            name: "New Ticket" 
+            name: "Support Team" 
           },
         },
       ],
