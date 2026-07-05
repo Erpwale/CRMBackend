@@ -19,9 +19,10 @@ console.log(contact);
 
     await client.sendMail({
       from: {
-        address: "noreply@erpwale.com",
+        address: "support@erpwale.com",
         name: "ERPWale Support",
       },
+
       to: [
         {
           email_address: {
@@ -29,7 +30,14 @@ console.log(contact);
             name: contact.contactPerson || contact.name,
           },
         },
+        {
+          email_address: {
+            address: "support@erpwale.com" ,
+            name: "New Ticket" 
+          },
+        },
       ],
+
       subject: `Ticket Created - ${ticket.ticketNumber}`,
     htmlbody: `
 <!DOCTYPE html>
