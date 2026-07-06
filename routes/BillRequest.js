@@ -121,7 +121,7 @@ router.put("/:id/update-sale-bill", async (req, res) => {
       { new: true }
     );
       // Update Bill Request Status
-    request.status = "Approve";
+    request.status = "Approved";
     await BillRequest.save();
 
     res.status(200).json({
