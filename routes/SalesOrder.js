@@ -647,8 +647,11 @@ const companyData = await globalcompany.findOne();
 const formatDate = (date) => {
   if (!date) return "";
 
-  const [year, month, day] = date.toString().split("-");
-  return `${day}/${month}/${year}`;
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "2-digit",
+  });
 };
 const company = {
   companyName: companyData?.companyName || "",
@@ -1175,14 +1178,14 @@ text-align: center
                        <div>&nbsp;</div>
                     </div>
                    <div>Buyer's PO No.
-                        <div>${order.buyerPONumber}</div>
+                        <div><strong>${order.buyerPONumber}</strong></div>
                     
                    </div>
                    
                     
                     <div>Dated
 
-                            <div><div>${formatDate(order.buyerPODate)}</div></div>
+                            <div><strong>${formatDate(order.buyerPODate)}</strong></div>
                     </div>
                     
                     
