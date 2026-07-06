@@ -644,7 +644,12 @@ router.get("/invoice-pdf", async (req, res) => {
       const { ordid } = req.query;
     console.log({ordid});
 const companyData = await globalcompany.findOne();
+const formatDate = (date) => {
+  if (!date) return "";
 
+  const [year, month, day] = date.toString().split("-");
+  return `${day}/${month}/${year}`;
+};
 const company = {
   companyName: companyData?.companyName || "",
   gstin: companyData?.gstin || "",
@@ -1159,7 +1164,7 @@ text-align: center
                     </div>
                     <div>Dated
 
-                        <div><strong>20-Apr-26</strong></div>
+                        <div><strong>${formatDate(order.orderDate)}</strong></div>
                     </div>
                     
                     
@@ -1170,14 +1175,14 @@ text-align: center
                        <div>&nbsp;</div>
                     </div>
                    <div>Buyer's PO No.
-                        <div>&nbsp;</div>
+                        <div>${order.buyerPONumber}</div>
                     
                    </div>
                    
                     
                     <div>Dated
 
-                            <div>&nbsp;</div>
+                            <div><div>${formatDate(order.buyerPODate)}</div></div>
                     </div>
                     
                     
