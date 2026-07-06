@@ -41,7 +41,15 @@ const leadSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+companyId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Company",
+},
 
+companyName: {
+  type: String,
+  required: true,
+},
   remark: [
   {
     text: String,
