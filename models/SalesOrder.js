@@ -112,7 +112,15 @@ contactName: String,
   // 🔹 Order Info
   orderNo: String,
   orderDate: String,
+buyerPONumber: {
+  type: String,
+  default: "",
+},
 
+buyerPODate: {
+  type: String, // or Date if you want to store it as a Date object
+  default: "",
+},
   userName: String,
   salesTeam: String,
 

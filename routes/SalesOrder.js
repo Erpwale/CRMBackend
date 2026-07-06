@@ -287,6 +287,8 @@ if (proposal.businessLine === "Annual Support Cover") {
 
       orderNo: req.body.orderNo,
       orderDate: req.body.orderDate,
+      buyerPONumber: req.body.buyerPONumber,
+      buyerPODate: req.body.buyerPODate,
       userName: req.body.userName,
       salesTeam: req.body.salesTeam,
 
