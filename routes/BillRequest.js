@@ -122,7 +122,7 @@ router.put("/:id/update-sale-bill", async (req, res) => {
     );
       // Update Bill Request Status
     request.status = "Approved";
-    await BillRequest.save();
+    await request.save();
 
     res.status(200).json({
       success: true,
