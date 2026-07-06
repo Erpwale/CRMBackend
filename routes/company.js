@@ -498,6 +498,7 @@ router.get("/search", async (req, res) => {
       ],
     })
       .populate("primaryContact") // optional
+      .populate("createdBy", "firstName lastName") // <-- populate user
       .limit(10);
 
     res.json({ data: companies });
