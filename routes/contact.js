@@ -225,7 +225,9 @@ router.get("/:companyId", authMiddleware, async (req, res) => {
 
     const contacts = await Contact.find({
       companyId: req.params.companyId
-    }).sort({ _id: -1 }); // 🔥 latest first
+    })
+       .populate("companyId", "companyName") // Fetch only companyName
+    .sort({ _id: -1 }); // 🔥 latest first
 
     res.json({
       success: true,
