@@ -2293,12 +2293,22 @@ ${Object.keys(gstMap).map((gst) => {
     `
        const pdf = await generatePDF(html);
 
-    res.set({
-      "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename=invoice.pdf"
-    });
+const productName =
+  order.products?.[0]?.name || "Product";
 
-    res.send(pdf);
+const safeProductName = productName
+  .replace(/[^\w\s-]/g, "")
+  .trim()
+  .replace(/\s+/g, "_");
+
+const fileName = `Proforma_${safeProductName}.pdf`;
+
+res.set({
+  "Content-Type": "application/pdf",
+  "Content-Disposition": `inline; filename="${fileName}"`,
+});
+
+res.send(pdf);
 
   } catch (err) {
     console.log(err);
