@@ -679,7 +679,7 @@ router.get("/developers", async (req, res) => {
   try {
     const developers = await User.find(
       {
-        role: "Devloper",
+        department: "Devloper",
       },
       {
         password: 0,
