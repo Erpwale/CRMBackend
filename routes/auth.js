@@ -107,6 +107,8 @@ router.post("/register", async (req, res) => {
       "Sales Manager",
       "Support Manager",
       "Accounts Manager",
+      "Devloper Manager",
+
       "HR Manager"
     ];
 
