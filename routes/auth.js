@@ -675,7 +675,26 @@ router.get("/fix-users", async (req, res) => {
     });
   }
 });
+router.get("/developers", async (req, res) => {
+  try {
+    const developers = await User.find(
+      {
+        role: "Devloper",
+      },
+      {
+        password: 0,
+        confirmPassword: 0,
+      }
+    ).sort({ firstName: 1 });
 
+    res.status(200).json(developers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to fetch developers",
+    });
+  }
+});
 router.post(
   "/logout",
   authMiddleware,
