@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema(
 
     team: {
       type: String,
-      required: true,
+      // required: true,
       trim: true
     },
 
