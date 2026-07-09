@@ -1,5 +1,37 @@
 const mongoose = require("mongoose");
 const Counter = require("./Counter")
+const attachmentSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    default: "",
+  },
+
+  fileName: {
+    type: String,
+    default: "",
+  },
+
+  filePath: {
+    type: String,
+    default: "",
+  },
+
+  fileType: {
+    type: String,
+    default: "",
+  },
+
+  fileSize: {
+    type: Number,
+    default: 0,
+  },
+
+  uploadedAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 
 const productSchema = new mongoose.Schema({
   name: String,
@@ -94,6 +126,18 @@ proposalStatus: {
   businessLine: String,
 
   products: [productSchema],
+  attachments: [attachmentSchema],
+  developer: {
+  id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
+  name: {
+    type: String,
+    default: "",
+  },
+},
 
   discount: Number,
   grossTotal: Number,

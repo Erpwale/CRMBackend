@@ -3,8 +3,9 @@ const express = require("express");
 const router = express.Router();
 const Deal = require("../models/opportunityModel.js");
 const SalesOrder=require("../models/SalesOrder")
+const upload = require("../middleware/Smallcustmization.js");
 // ➕ CREATE DEAL
-router.post("/add", async (req, res) => {
+router.post("/add", upload.array("attachments"), async (req, res) => {
   try {
     console.log("inside it");
     
@@ -27,6 +28,21 @@ router.post("/add", async (req, res) => {
           });
         }
       }
+    }
+const attachmentData = JSON.parse(
+      req.body.attachmentData || "[]"
+    );
+
+    body.attachments = [];
+
+    if (req.files && req.files.length > 0) {
+      body.attachments = req.files.map((file, index) => ({
+        title: attachmentData[index]?.title || "",
+        fileName: file.originalname,
+        filePath: file.path.replace(/\\/g, "/"),
+        fileType: file.mimetype,
+        fileSize: file.size,
+      }));
     }
 
     const deal = new Deal(req.body);
