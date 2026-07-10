@@ -6,7 +6,7 @@ const fs = require("fs");
 const Proposal= require("../models/Proposal");
 const SalesOrder= require("../models/SalesOrder");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
-
+const upload = require("../middleware/Smallcustmization.js");
 const headerBase64 = fs.readFileSync(
   path.join(__dirname, "../assets/header.jpg"),
   { encoding: "base64" }
@@ -290,28 +290,50 @@ res.setHeader("Content-Disposition", "inline; filename=proposal.pdf");
   }
 });
 
-router.post("/add", authMiddleware, async (req, res) => {
+router.post(
+  "/add",
+  authMiddleware,
+  upload.array("attachments"),
+  async (req, res) => {
   try {
-    console.log("REQ BODY:", req.body.bankDetails);
+   const body = JSON.parse(req.body.payload);
 
-    const subtotal = req.body.subtotal || 0;
-    const totalGST = req.body.gstTotal || 0;
+console.log("BODY:", body);
+console.log("FILES:", req.files);
 
-    const totalBeforeRound = subtotal + totalGST;
-    const roundedTotal = Math.round(totalBeforeRound);
-    const roundOff = +(roundedTotal - totalBeforeRound).toFixed(2);
+const subtotal = body.subtotal || 0;
+const totalGST = body.gstTotal || 0;
 
-    const data = {
-      ...req.body,
-      cgst: +(totalGST / 2).toFixed(2),
-      sgst: +(totalGST / 2).toFixed(2),
-      roundOff,
-      total: roundedTotal,
-      uid: req.user._id,
-      userName: req.user.username,
-      email: req.user.email,
-      mobile: req.user.mobile
-    };
+const totalBeforeRound = subtotal + totalGST;
+const roundedTotal = Math.round(totalBeforeRound);
+const roundOff = +(roundedTotal - totalBeforeRound).toFixed(2);
+
+const data = {
+  ...body,
+  cgst: +(totalGST / 2).toFixed(2),
+  sgst: +(totalGST / 2).toFixed(2),
+  roundOff,
+  total: roundedTotal,
+  uid: req.user._id,
+  userName: req.user.username,
+  email: req.user.email,
+  mobile: req.user.mobile,
+};
+const attachmentData = JSON.parse(
+  req.body.attachmentData || "[]"
+);
+
+data.attachments = [];
+
+if (req.files && req.files.length > 0) {
+  data.attachments = req.files.map((file, index) => ({
+    title: attachmentData[index]?.title || "",
+    fileName: file.originalname,
+    filePath: file.path.replace(/\\/g, "/"),
+    fileType: file.mimetype,
+    fileSize: file.size,
+  }));
+}
 
     // ✅ AMC validation
     if (data.businessLine === "Annual Support Cover") {

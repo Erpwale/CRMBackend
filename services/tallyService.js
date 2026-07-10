@@ -623,9 +623,9 @@ const xml=`
 fs.writeFileSync("salesVoucher.xml", xml);
 
 // Print XML in console
-console.log("========== SALES VOUCHER XML ==========");
+
 // console.log(xml);
-console.log("=======================================");
+
   const response = await axios.post(
    "https://antarctic-whacky-hastiness.ngrok-free.dev",
     xml,
