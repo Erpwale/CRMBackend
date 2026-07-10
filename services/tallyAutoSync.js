@@ -7,7 +7,7 @@ async function syncPendingOrders() {
         tallyStatus: "Pending"
     });
 
-    console.log("Pending Orders:", pending.length);
+    // console.log("Pending Orders:", pending.length);
 
     for (const order of pending) {
 
@@ -20,12 +20,12 @@ async function syncPendingOrders() {
             order.tallyError = "";
 
             await order.save();
-
-            console.log("Synced:", order.orderNo);
+// 
+            // console.log("Synced:", order.orderNo);
 
         } catch (err) {
 
-            console.log("Still Pending:", order.orderNo);
+            // console.log("Still Pending:", order.orderNo);
 
             order.tallyError = err.message;
 
