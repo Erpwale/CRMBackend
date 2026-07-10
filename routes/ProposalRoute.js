@@ -365,7 +365,7 @@ if (req.files && req.files.length > 0) {
 
     const newProposal = new Proposal(data);
     const savedData = await newProposal.save();
-
+    console.log(savedData);
     if (global.io) {
       global.io.emit("opportunityUpdated", {
         type: "CREATE",
