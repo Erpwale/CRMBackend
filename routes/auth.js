@@ -537,7 +537,19 @@ router.get("/me", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Error fetching user" });
   }
 });
+// Backend
+router.get("/support-managers", authMiddleware, async (req, res) => {
+  try {
+    const managers = await User.find(
+      { role: "Support Manager" },
+      { _id: 1, name: 1 } // only required fields
+    );
 
+    res.json(managers);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 router.get("/teams", async (req, res) => {
 
   try {
