@@ -542,7 +542,12 @@ router.get("/support-managers", authMiddleware, async (req, res) => {
   try {
     const managers = await User.find(
       { role: "Support Manager" },
-      { _id: 1, name: 1 } // only required fields
+      {
+        _id: 1,
+        firstName: 1,
+        lastName: 1,
+        username: 1,
+      }
     );
 
     res.json(managers);
