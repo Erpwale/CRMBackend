@@ -77,14 +77,13 @@ router.post("/create", async (req, res) => {
       let tdsAmount = 0;
 
       if (hasTAN) {
-        const allowedTDS = [2, 10];
+      tdsPercent = Number(item.tdsPercent || 0);
 
-        if (item.tdsPercent && !allowedTDS.includes(Number(item.tdsPercent))) {
-          return res.status(400).json({
-            message: "TDS must be either 2% or 10%",
-          });
-        }
-
+if (tdsPercent < 0 || tdsPercent > 100) {
+  return res.status(400).json({
+    message: "Invalid TDS Percentage",
+  });
+}
         tdsPercent = Number(item.tdsPercent || 0);
 
         // ✅ APPLY ON PENDING (IMPORTANT FIX)
@@ -149,7 +148,7 @@ router.post("/create", async (req, res) => {
         pendingAfter,
       });
     }
-
+console.log(req.body.salesOrders);
     // 🔥 CREATE RECEIPT
     const receipt = await Receipt.create({
       receiptNo: await generateReceiptNo(),
