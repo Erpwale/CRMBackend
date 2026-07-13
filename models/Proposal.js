@@ -98,6 +98,10 @@ const proposalSchema = new mongoose.Schema({
   type: [String],
   default: []
 },
+tallyReleaseNo: {
+  type: String,
+  default: ""
+},
 statusDetails: {
   statusDate: {
     type: String,
@@ -161,6 +165,7 @@ proposalStatus: {
     branch: String,
     holderName:String,
   },
+
 
   uid: {
     type: mongoose.Schema.Types.ObjectId,
