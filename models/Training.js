@@ -2,34 +2,30 @@ const mongoose = require("mongoose");
 
 const trainingSchema = new mongoose.Schema(
   {
-    title: {
-      type: String,
-      required: true,
+    sessionTitle: String,
+
+    trainer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
 
-    short: {
+    trainerImage: {
       type: String,
-      required: true,
+      default: "",
     },
 
-    description: {
-      type: String,
-      required: true,
-    },
+    duration: Number,
+    startDateTime: Date,
+    maxParticipants: Number,
+    meetingLink: String,
+    agenda: String,
 
-    date: {
-      type: String,
-      required: true,
-    },
-
-    image: {
-      type: String,
-      required: true,
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Training", trainingSchema);

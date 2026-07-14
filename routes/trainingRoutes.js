@@ -28,30 +28,59 @@ const upload = multer({
 // CREATE TRAINING
 router.post(
   "/create",
-  upload.single("image"),
+  authMiddleware,
+  upload.single("trainerImage"),
   async (req, res) => {
     try {
-      const newTraining = new Training({
-        title: req.body.title,
-        short: req.body.short,
-        description: req.body.description,
-        date: req.body.date,
-        image: req.file.path,
+      const {
+        sessionTitle,
+        trainer,
+        duration,
+        startDateTime,
+        maxParticipants,
+        meetingLink,
+        agenda,
+      } = req.body;
+
+      if (!sessionTitle || !trainer || !duration || !startDateTime) {
+        return res.status(400).json({
+          message: "Please fill all required fields.",
+        });
+      }
+
+      const trainerUser = await User.findOne({
+        _id: trainer,
+        role: "Support Executive",
       });
 
-      await newTraining.save();
+      if (!trainerUser) {
+        return res.status(404).json({
+          message: "Trainer not found.",
+        });
+      }
+
+      const training = await Training.create({
+        sessionTitle,
+        trainer,
+        trainerImage: req.file ? req.file.filename : "",
+        duration,
+        startDateTime,
+        maxParticipants,
+        meetingLink,
+        agenda,
+        createdBy: req.user.id,
+      });
 
       res.status(201).json({
         success: true,
-        message: "Training Created Successfully",
-        data: newTraining,
+        message: "Training scheduled successfully.",
+        training,
       });
-    } catch (error) {
-      console.log(error);
-
+    } catch (err) {
+      console.log(err);
       res.status(500).json({
         success: false,
-        message: "Server Error",
+        message: err.message,
       });
     }
   }
