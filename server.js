@@ -71,6 +71,7 @@ app.use("/api/bill-request", require("./routes/BillRequest"));
 app.use("/api/CancelOrder", require("./routes/CancelOrder"));
 app.use("/api/products", require("./routes/Product") );
 app.use("/api/knowledge", require("./routes/KnowledgeArticle"));
+app.use("/api/training", require("./routes/trainingRoutes.js"));
 app.use("/api/tally", require("./routes/tallySync"));
 app.use(
   "/uploads",
