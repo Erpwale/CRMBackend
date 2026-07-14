@@ -15,7 +15,7 @@ const upload = multer({
 });
 const client = new SendMailClient({
   url: "https://api.zeptomail.in/v1.1/email",
-  token: process.env.ZEPTO_TOKEN,
+  token: process.env.ZEPTO_TOKEN_PROPOSEL,
 });
 
 dns.setDefaultResultOrder("ipv4first");
@@ -343,7 +343,7 @@ const finalSubject =
   subject && subject.trim()
     ? subject
     : defaultSubject;
-    console.log("➡️ Sending mail...", to);
+    console.log("➡️ Sending mail...", finalSubject);
     const pdfLink = `https://crmbackend-ozmq.onrender.com/api/Proposel/proposal/${proposalId}`;
 
     // Convert TO emails
