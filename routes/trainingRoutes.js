@@ -90,13 +90,15 @@ router.post(
 router.get("/latest", async (req, res) => {
   try {
     const training = await Training.findOne({
-      isActive: true,
-    }).sort({ trainingDate: -1 }); // or createdAt: -1
+      startDateTime: { $gte: new Date() },
+    })
+      .populate("trainer", "name")
+      .sort({ startDateTime: 1 }); // nearest upcoming training
 
     if (!training) {
       return res.status(404).json({
         success: false,
-        message: "No training found",
+        message: "No upcoming training found",
       });
     }
 
@@ -108,7 +110,7 @@ router.get("/latest", async (req, res) => {
     console.error(err);
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: err.message,
     });
   }
 });
