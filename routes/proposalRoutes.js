@@ -15,7 +15,7 @@ const upload = multer({
 });
 const client = new SendMailClient({
   url: "https://api.zeptomail.in/v1.1/email",
-  token: process.env.ZEPTO_TOKEN_PROPOSEL,
+  token: process.env.ZEPTO_TOKEN,
 });
 
 dns.setDefaultResultOrder("ipv4first");
