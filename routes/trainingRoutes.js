@@ -86,7 +86,32 @@ router.post(
     }
   }
 );
+// Latest training
+router.get("/latest", async (req, res) => {
+  try {
+    const training = await Training.findOne({
+      isActive: true,
+    }).sort({ trainingDate: -1 }); // or createdAt: -1
 
+    if (!training) {
+      return res.status(404).json({
+        success: false,
+        message: "No training found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: training,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+});
 
 // GET ALL TRAININGS
 router.get("/", async (req, res) => {
