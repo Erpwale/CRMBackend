@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const TicketFeedback = require("../models/TicketFeedback");
-const Ticket = require("../models/Ticket");
+const Ticket = require("../models/TicketSchema");
 
 // Submit Feedback
 router.post("/submit", async (req, res) => {
