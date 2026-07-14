@@ -656,7 +656,7 @@ if (req.files?.length) {
 }
 const response = await client.sendMail({
   from: {
-   address: "noreply@erpwale.com",
+   address: "support@erpwale.com",
     name: "Support-ERPWALE ",
   },
 
