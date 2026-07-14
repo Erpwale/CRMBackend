@@ -4,6 +4,7 @@ const multer = require("multer");
 const path = require("path");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Training = require("../models/Training");
+const User = require("../models/User");
 
 
 // IMAGE STORAGE
