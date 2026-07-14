@@ -337,12 +337,12 @@ router.post(
         message: "Proposal not found",
       });
     }
-const defaultSubject = `Proposal Sending`;
+const defaultSubject = "Proposal Sending";
 
-const finalSubject =
-  subject && subject.trim()
-    ? subject
-    : defaultSubject;
+const finalSubject = subject?.trim()
+  ? `${defaultSubject} - ${subject.trim()}`
+  : defaultSubject;
+
     console.log("➡️ Sending mail...", finalSubject);
     const pdfLink = `https://crmbackend-ozmq.onrender.com/api/Proposel/proposal/${proposalId}`;
 
