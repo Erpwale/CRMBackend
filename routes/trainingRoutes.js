@@ -86,77 +86,7 @@ router.post(
     }
   }
 );
-// user regisretaion for training
 
-router.post("/register", async (req, res) => {
-  try {
-    const {
-      trainingId,
-      fullName,
-      email,
-      companyName,
-      serialNumber,
-      participantCount,
-    } = req.body;
-
-    // Find training
-    const training = await Training.findById(trainingId);
-
-    if (!training) {
-      return res.status(404).json({
-        success: false,
-        message: "Training not found",
-      });
-    }
-
-    // Count already registered participants
-    const registrations = await TrainingRegistration.find({
-      trainingId,
-    });
-
-    const currentParticipants = registrations.reduce(
-      (total, reg) => total + Number(reg.participantCount || 1),
-      0
-    );
-
-    const requestedParticipants = Number(participantCount);
-
-    // Check max participants
-    if (
-      currentParticipants + requestedParticipants >
-      training.maxParticipants
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: `Only ${
-          training.maxParticipants - currentParticipants
-        } seat(s) are available.`,
-      });
-    }
-
-    // Save registration
-    const registration = await TrainingRegistration.create({
-      trainingId,
-      fullName,
-      email,
-      companyName,
-      serialNumber,
-      participantCount,
-    });
-
-    res.status(201).json({
-      success: true,
-      message: "Registration successful",
-      data: registration,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
-});
 
 // Latest training
 router.get("/latest", async (req, res) => {
