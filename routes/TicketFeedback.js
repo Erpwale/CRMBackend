@@ -67,9 +67,16 @@ router.get("/:ticketId", async (req, res) => {
       ticketId: req.params.ticketId,
     });
 
+    if (!feedback) {
+      return res.json({
+        success: true,
+        feedback: null,
+      });
+    }
+
     res.json({
       success: true,
-      data: feedback,
+      feedback,
     });
   } catch (err) {
     res.status(500).json({
@@ -78,5 +85,4 @@ router.get("/:ticketId", async (req, res) => {
     });
   }
 });
-
 module.exports = router;
