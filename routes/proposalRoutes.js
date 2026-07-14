@@ -327,13 +327,7 @@ router.post(
       console.log("BODY RECEIVED:", req.body);
   console.log("CONTENT TYPE:", req.headers["content-type"]);
     const { to, cc, subject, content, proposalId } = req.body;
-const defaultSubject = `Proposal - ${proposal.companyName}`;
 
-const finalSubject =
-  subject && subject.trim()
-    ? subject
-    : defaultSubject;
-    console.log("➡️ Sending mail...", to);
 
     const proposal = await opp.findOne({ proposalId });
 
@@ -343,7 +337,13 @@ const finalSubject =
         message: "Proposal not found",
       });
     }
+const defaultSubject = `Proposal Sending`;
 
+const finalSubject =
+  subject && subject.trim()
+    ? subject
+    : defaultSubject;
+    console.log("➡️ Sending mail...", to);
     const pdfLink = `https://crmbackend-ozmq.onrender.com/api/Proposel/proposal/${proposalId}`;
 
     // Convert TO emails
