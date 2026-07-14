@@ -678,7 +678,7 @@ const response = await client.sendMail({
     email_address: { address: email },
   })),
 
-    subject: finalSubject,,
+    subject: finalSubject,
   htmlbody: html,
   attachments,
 });
