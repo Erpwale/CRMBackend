@@ -356,7 +356,28 @@ if (req.files && req.files.length > 0) {
         }
       }
     }
+if (data.businessLine === "Add-on Modules") {
+  const tallySerial = data.tallySerials?.[0];
 
+  if (tallySerial) {
+    for (const product of data.products) {
+      const existingAddon = await SalesOrder.findOne({
+        businessLine: "Add-on Modules",
+        tallySerials: tallySerial,
+        isBill: true,
+        isOutstanding: false,
+        "products.name": product.name,
+      });
+
+      if (existingAddon) {
+        return res.status(400).json({
+          success: false,
+          message: `${product.name} already exists for Tally Serial No ${tallySerial}`,
+        });
+      }
+    }
+  }
+}
     if (!data.companyName) {
       return res.status(400).json({
         message: "Company name is required"
