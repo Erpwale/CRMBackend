@@ -555,6 +555,23 @@ router.get("/support-managers", authMiddleware, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+router.get("/support-person", authMiddleware, async (req, res) => {
+  try {
+    const managers = await User.find(
+      { role: "Support Executive" },
+      {
+        _id: 1,
+        firstName: 1,
+        lastName: 1,
+        username: 1,
+      }
+    );
+
+    res.json(managers);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 router.get("/teams", async (req, res) => {
 
   try {
