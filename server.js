@@ -73,6 +73,7 @@ app.use("/api/products", require("./routes/Product") );
 app.use("/api/knowledge", require("./routes/KnowledgeArticle"));
 app.use("/api/training", require("./routes/trainingRoutes.js"));
 app.use("/api/tally", require("./routes/tallySync"));
+app.use("/api/ticket-feedback", require("./routes/TicketFeedback"));
 app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
