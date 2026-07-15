@@ -1,6 +1,7 @@
 // User Registration for Training
 const WorkshopRegistration = require("../models/WorkshopRegistration");
 const Training = require("../models/Training");
+const express = require("express");
 const router = express.Router();
 router.post("/register", async (req, res) => {
   try {
