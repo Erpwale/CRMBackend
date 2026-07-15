@@ -624,7 +624,7 @@ fs.writeFileSync("salesVoucher.xml", xml);
 
 // Print XML in console
 
-// console.log(xml);
+console.log(xml);
 
   const response = await axios.post(
    "https://antarctic-whacky-hastiness.ngrok-free.dev",
@@ -638,9 +638,9 @@ fs.writeFileSync("salesVoucher.xml", xml);
 
 return response.data;
   } catch (err) {
-    // console.error("Error creating XML:");
-    // console.error(err);
-    // console.error(err.stack);
+    console.error("Error creating XML:");
+    console.error(err);
+    console.error(err.stack);
     throw err;
 }
 };
