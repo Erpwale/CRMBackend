@@ -65,6 +65,7 @@ app.use("/api/tickets", require("./routes/ticketcontact"));
 app.use("/api/alltickets", require("./routes/allticket"));
 app.use("/api/message", require("./routes/Message"));
 app.use("/api/workbench", require("./routes/workTracker"));
+app.use("/api/workshop", require("./routes/workshopregistration"));
 app.use("/api/bank", require("./routes/customerbank"));
 app.use("/api/leads", require("./routes/Lead.js"));
 app.use("/api/bill-request", require("./routes/BillRequest"));
