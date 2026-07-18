@@ -16,6 +16,8 @@ const upload = multer({
 });
 
 router.post("/add", upload.single("image"), async (req, res) => {
+  console.log( req.body.description);
+  
   try {
     const product = await Product.create({
       productName: req.body.productName,
