@@ -28,8 +28,8 @@ const productSchema = new mongoose.Schema(
 
     pricingType: {
       type: String,
-      enum: ["monthly", "one-time"],
-      default: "monthly",
+      enum: ["Yearly", "one-time"],
+      default: "Yearly",
     },
 
     price: {
