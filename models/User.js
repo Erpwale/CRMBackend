@@ -78,26 +78,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-transferHistory: [
-  {
-    previousUser: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    newUser: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    transferredBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    transferredAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-],
+
     monthlyTargets: {
       type: [monthlyTargetSchema],
       required: function () {
