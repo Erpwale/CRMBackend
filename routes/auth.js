@@ -524,6 +524,54 @@ router.get("/users", authMiddleware, async (req, res) => {
     });
   }
 });
+router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
+  try {
+    const { companyId } = req.params;
+    const { userId } = req.body;
+
+    // Only Admin
+    if (req.user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+
+    const company = await Company.findById(companyId);
+
+    if (!company) {
+      return res.status(404).json({
+        success: false,
+        message: "Company not found",
+      });
+    }
+
+    // Save transfer history
+    company.transferHistory.push({
+      previousUser: company.createdBy,
+      newUser: userId,
+      transferredBy: req.user.id,
+    });
+
+    // Update current sales person
+    company.createdBy = userId;
+
+    await company.save();
+
+    res.json({
+      success: true,
+      message: "Company transferred successfully",
+      company,
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+});
 router.get("/users/sales", authMiddleware, async (req, res) => {
   try {
     if (req.user.role !== "admin") {
