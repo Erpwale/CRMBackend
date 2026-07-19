@@ -524,6 +524,25 @@ router.get("/users", authMiddleware, async (req, res) => {
     });
   }
 });
+router.get("/users/sales", authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({
+        message: "Access denied",
+      });
+    }
+
+    const users = await User.find({
+      department: "Sales",
+    }).select("-password");
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching sales users",
+    });
+  }
+});
 router.get("/me", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
