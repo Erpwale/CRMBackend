@@ -12,6 +12,22 @@ router.post("/send-bill-request", async (req, res) => {
       invoiceNo,
       invoiceDate,
     } = req.body;
+    if (!invoiceNo || !invoiceDate) {
+  return res.status(400).json({
+    success: false,
+    message: "Invoice number and invoice date are required",
+  });
+}
+
+// Check duplicate invoice number
+const existingInvoice = await BillRequest.findOne({ invoiceNo });
+
+if (existingInvoice) {
+  return res.status(400).json({
+    success: false,
+    message: "Invoice number already exists",
+  });
+}
 
     const order = await SalesOrder.findById(salesOrderId);
 
