@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-
 const billRequestSchema = new mongoose.Schema(
   {
     salesOrderId: {
@@ -35,13 +33,17 @@ const billRequestSchema = new mongoose.Schema(
     approvedBy: String,
 
     approvedDate: Date,
-    saleBillNo: {
-  type: String,
-},
 
-saleBillDate: {
-  type: Date,
-},
+    invoiceNo: {
+      type: String,
+      unique: true,   // Prevent duplicate invoice numbers
+    
+      trim: true,
+    },
+
+    invoiceDate: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

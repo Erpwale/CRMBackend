@@ -6,7 +6,12 @@ const BillRequest = require("../models/BillRequest");
 
 router.post("/send-bill-request", async (req, res) => {
   try {
-    const { salesOrderId, userName } = req.body;
+    const {
+      salesOrderId,
+      userName,
+      invoiceNo,
+      invoiceDate,
+    } = req.body;
 
     const order = await SalesOrder.findById(salesOrderId);
 
@@ -17,7 +22,7 @@ router.post("/send-bill-request", async (req, res) => {
       });
     }
 
-    // Prevent duplicate request
+    // Prevent duplicate bill request
     const existingRequest = await BillRequest.findOne({
       salesOrderId,
       status: { $in: ["Pending", "Approved"] },
@@ -30,12 +35,28 @@ router.post("/send-bill-request", async (req, res) => {
       });
     }
 
+    // Prevent duplicate invoice number
+    if (invoiceNo) {
+      const existingInvoice = await BillRequest.findOne({
+        invoiceNo,
+      });
+
+      if (existingInvoice) {
+        return res.status(400).json({
+          success: false,
+          message: "Invoice number already exists",
+        });
+      }
+    }
+
     const request = await BillRequest.create({
       salesOrderId: order._id,
       orderNo: order.orderNo,
       companyId: order.companyId,
       companyName: order.companyName,
       requestedBy: userName,
+      invoiceNo,
+      invoiceDate,
     });
 
     await SalesOrder.findByIdAndUpdate(order._id, {
@@ -51,6 +72,14 @@ router.post("/send-bill-request", async (req, res) => {
       data: request,
     });
   } catch (err) {
+    // Handle duplicate key error from MongoDB
+    if (err.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "Invoice number already exists",
+      });
+    }
+
     console.log(err);
 
     res.status(500).json({
