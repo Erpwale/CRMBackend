@@ -6,28 +6,7 @@ const BillRequest = require("../models/BillRequest");
 
 router.post("/send-bill-request", async (req, res) => {
   try {
-    const {
-      salesOrderId,
-      userName,
-      invoiceNo,
-      invoiceDate,
-    } = req.body;
-    if (!invoiceNo || !invoiceDate) {
-  return res.status(400).json({
-    success: false,
-    message: "Invoice number and invoice date are required",
-  });
-}
-
-// Check duplicate invoice number
-const existingInvoice = await BillRequest.findOne({ invoiceNo });
-
-if (existingInvoice) {
-  return res.status(400).json({
-    success: false,
-    message: "Invoice number already exists",
-  });
-}
+    const { salesOrderId, userName } = req.body;
 
     const order = await SalesOrder.findById(salesOrderId);
 
@@ -38,7 +17,7 @@ if (existingInvoice) {
       });
     }
 
-    // Prevent duplicate bill request
+    // Prevent duplicate request
     const existingRequest = await BillRequest.findOne({
       salesOrderId,
       status: { $in: ["Pending", "Approved"] },
@@ -51,28 +30,12 @@ if (existingInvoice) {
       });
     }
 
-    // Prevent duplicate invoice number
-    if (invoiceNo) {
-      const existingInvoice = await BillRequest.findOne({
-        invoiceNo,
-      });
-
-      if (existingInvoice) {
-        return res.status(400).json({
-          success: false,
-          message: "Invoice number already exists",
-        });
-      }
-    }
-
     const request = await BillRequest.create({
       salesOrderId: order._id,
       orderNo: order.orderNo,
       companyId: order.companyId,
       companyName: order.companyName,
       requestedBy: userName,
-      invoiceNo,
-      invoiceDate,
     });
 
     await SalesOrder.findByIdAndUpdate(order._id, {
@@ -88,14 +51,6 @@ if (existingInvoice) {
       data: request,
     });
   } catch (err) {
-    // Handle duplicate key error from MongoDB
-    if (err.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: "Invoice number already exists",
-      });
-    }
-
     console.log(err);
 
     res.status(500).json({
@@ -149,6 +104,14 @@ router.put("/:id/update-sale-bill", async (req, res) => {
   try {
     const { saleBillNo, saleBillDate } = req.body;
 
+    // Validate required fields
+    if (!saleBillNo || !saleBillDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Invoice number and invoice date are required",
+      });
+    }
+
     const request = await BillRequest.findById(req.params.id);
 
     if (!request) {
@@ -158,6 +121,28 @@ router.put("/:id/update-sale-bill", async (req, res) => {
       });
     }
 
+    // Check duplicate invoice number (ignore current request)
+    const existingInvoice = await BillRequest.findOne({
+      invoiceNo: saleBillNo,
+      _id: { $ne: req.params.id },
+    });
+
+    if (existingInvoice) {
+      return res.status(400).json({
+        success: false,
+        message: "Invoice number already exists",
+      });
+    }
+
+    // Update BillRequest
+    request.invoiceNo = saleBillNo;
+    request.invoiceDate = saleBillDate;
+    request.status = "Approved";
+    request.approvedDate = new Date();
+
+    await request.save();
+
+    // Update SalesOrder
     const salesOrder = await SalesOrder.findByIdAndUpdate(
       request.salesOrderId,
       {
@@ -167,9 +152,6 @@ router.put("/:id/update-sale-bill", async (req, res) => {
       },
       { new: true }
     );
-      // Update Bill Request Status
-    request.status = "Approved";
-    await request.save();
 
     res.status(200).json({
       success: true,
@@ -177,6 +159,13 @@ router.put("/:id/update-sale-bill", async (req, res) => {
       data: salesOrder,
     });
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "Invoice number already exists",
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: err.message,
