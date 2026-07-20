@@ -55,7 +55,7 @@ router.post("/start-work/:id", async (req, res) => {
 
       // Save completed bench session
       record.history.push({
-        status: "bench",
+        status: "work",
         reason: record.benchReason,
         remark: record.benchRemark,
         startTime: record.benchStartTime,
