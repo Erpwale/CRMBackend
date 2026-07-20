@@ -796,87 +796,157 @@ router.get("/developers", async (req, res) => {
     });
   }
 });
-router.post(
-  "/logout",
-  authMiddleware,
-  async (req, res) => {
+async function getTodayRecord(userId) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-    try {
+  let record = await WorkBench.findOne({
+    userId,
+    date: today,
+  });
 
-      const user = await User.findById(
-        req.user.id
+  if (!record) {
+    record = await WorkBench.create({
+      userId,
+      date: today,
+      currentStatus: "work",
+      workStartTime: new Date(),
+      totalWorkSeconds: 0,
+      totalBenchSeconds: 0,
+      history: [],
+    });
+  }
+
+  return record;
+}
+
+router.post("/logout", authMiddleware, async (req, res) => {
+  try {
+    const now = new Date();
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const forwarded = req.headers["x-forwarded-for"];
+
+    const ip = forwarded
+      ? forwarded.split(",")[0].trim()
+      : req.socket.remoteAddress;
+
+    const geo = geoip.lookup(ip);
+
+    const reason = req.body.reason || "LOGOUT";
+
+    const record = await getTodayRecord(user._id);
+
+    // Close Work Session
+    if (
+      record.currentStatus === "work" &&
+      record.workStartTime
+    ) {
+      const duration = Math.floor(
+        (now - record.workStartTime) / 1000
       );
 
-      const forwarded =
-        req.headers["x-forwarded-for"];
+      record.totalWorkSeconds += duration;
 
-      const ip = forwarded
-        ? forwarded.split(",")[0].trim()
-        : req.socket.remoteAddress;
-const geo = geoip.lookup(ip);
+      record.history.push({
+        status: "work",
+        startTime: record.workStartTime,
+        endTime: now,
+        durationSeconds: duration,
+      });
 
-console.log("IP:", ip);
-console.log("Location:", geo);
-      // Logout reason
-      const reason = req.body.reason;
+      record.workStartTime = null;
+    }
 
-      let description =
-        `${user.username} logged out from CRM`;
+    // Close Bench Session
+    if (
+      record.currentStatus === "bench" &&
+      record.benchStartTime
+    ) {
+      const duration = Math.floor(
+        (now - record.benchStartTime) / 1000
+      );
 
-      // Auto inactivity logout
-      if (reason === "INACTIVE") {
+      record.totalBenchSeconds += duration;
 
-        description =
-          `${user.username} was automatically logged out due to inactivity`;
+      record.history.push({
+        status: "bench",
+        reason: record.benchReason,
+        remark: record.benchRemark,
+        startTime: record.benchStartTime,
+        endTime: now,
+        durationSeconds: duration,
+      });
 
-      }
+      record.benchStartTime = null;
+    }
 
-      await history.create({
+    // Auto Logout -> Move to Bench
+    if (reason === "INACTIVE") {
+      record.currentStatus = "bench";
+      record.benchReason = "Auto Logout";
+      record.benchRemark = "User inactive for 15 minutes";
+      record.benchStartTime = now;
+    }
 
-        userId: user._id,
+    record.logoutTime = now;
 
-        username: user.username,
+    await record.save();
 
-        role: user.role,
+    let description = `${user.username} logged out from CRM`;
 
-        action: "LOGOUT",
+    if (reason === "INACTIVE") {
+      description = `${user.username} was automatically logged out due to inactivity`;
+    }
 
-        module: "AUTH",
+    await History.create({
+      userId: user._id,
+      username: user.username,
+      role: user.role,
+      action: reason === "INACTIVE" ? "AUTO LOGOUT" : "LOGOUT",
+      module: "AUTH",
+      details: description,
 
-        details: description,
+      ipAddress: ip,
 
-        ipAddress: ip,
-         location: geo
+      location: geo
         ? `${geo.city || ""}, ${geo.region || ""}, ${geo.country || ""}`
         : "Unknown",
 
       coordinates: geo
         ? {
             lat: geo.ll[0],
-            lng: geo.ll[1]
+            lng: geo.ll[1],
           }
         : null,
 
-        logoutTime: new Date()
+      logoutTime: now,
+    });
 
-      });
+    res.status(200).json({
+      success: true,
+      message:
+        reason === "INACTIVE"
+          ? "Auto Logout Successful"
+          : "Logout Successful",
+    });
+  } catch (error) {
+    console.log(error);
 
-      res.status(200).json({
-        message: "Logout successful"
-      });
-
-    } catch (error) {
-
-      console.log(error);
-
-      res.status(500).json({
-        message: "Server Error"
-      });
-
-    }
-
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
   }
-);
+});
+
 router.put("/users/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);

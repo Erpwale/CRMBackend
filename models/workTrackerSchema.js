@@ -48,7 +48,10 @@ const workBenchSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-
+logoutTime: {
+  type: Date,
+  default: null,
+},
   history: [
     {
       status: String,

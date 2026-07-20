@@ -81,4 +81,68 @@ router.post("/register", async (req, res) => {
   }
 });
 
+
+router.post("/logout/:id", async (req, res) => {
+  try {
+    const record = await getTodayRecord(req.params.id);
+
+    const now = new Date();
+
+    if (
+      record.currentStatus === "work" &&
+      record.workStartTime
+    ) {
+      const duration = Math.floor(
+        (now - record.workStartTime) / 1000
+      );
+
+      record.totalWorkSeconds += duration;
+
+      record.history.push({
+        status: "work",
+        startTime: record.workStartTime,
+        endTime: now,
+        durationSeconds: duration,
+      });
+
+      record.workStartTime = null;
+    }
+
+    if (
+      record.currentStatus === "bench" &&
+      record.benchStartTime
+    ) {
+      const duration = Math.floor(
+        (now - record.benchStartTime) / 1000
+      );
+
+      record.totalBenchSeconds += duration;
+
+      record.history.push({
+        status: "bench",
+        reason: record.benchReason,
+        remark: record.benchRemark,
+        startTime: record.benchStartTime,
+        endTime: now,
+        durationSeconds: duration,
+      });
+
+      record.benchStartTime = null;
+    }
+
+    record.logoutTime = now;
+
+    await record.save();
+
+    res.json({
+      success: true,
+      message: "Logout recorded",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 module.exports = router;
