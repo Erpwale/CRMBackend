@@ -4,14 +4,29 @@ const workBenchSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true,
   },
 
-  date: String,
+  date: {
+    type: String,
+    required: true,
+  },
 
   currentStatus: {
     type: String,
     enum: ["work", "bench"],
     default: "work",
+  },
+
+  // Current session start times
+  workStartTime: {
+    type: Date,
+    default: null,
+  },
+
+  benchStartTime: {
+    type: Date,
+    default: null,
   },
 
   benchReason: {
@@ -24,8 +39,6 @@ const workBenchSchema = new mongoose.Schema({
     default: "",
   },
 
-  statusStartedAt: Date,
-
   totalWorkSeconds: {
     type: Number,
     default: 0,
@@ -35,7 +48,6 @@ const workBenchSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  
 
   history: [
     {
@@ -47,6 +59,6 @@ const workBenchSchema = new mongoose.Schema({
       durationSeconds: Number,
     },
   ],
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("WorkBench", workBenchSchema);

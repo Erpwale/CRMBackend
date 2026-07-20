@@ -27,8 +27,9 @@ const getTodayRecord = async (userId) => {
     record = await WorkBench.create({
       userId,
       date,
-      currentStatus: "bench",
-      statusStartedAt: new Date(),
+     currentStatus: "work",
+workStartTime: new Date(),
+benchStartTime: null,
       totalWorkSeconds: 0,
       totalBenchSeconds: 0,
     });
@@ -47,10 +48,9 @@ router.post("/start-work/:id", async (req, res) => {
     const now = new Date();
 
     if (record.currentStatus === "bench") {
-      const duration = Math.floor(
-        (now - record.statusStartedAt) / 1000
-      );
-
+     const duration = Math.floor(
+  (now - record.benchStartTime) / 1000
+);
       record.totalBenchSeconds += duration;
 
       // Save completed bench session
@@ -58,7 +58,7 @@ router.post("/start-work/:id", async (req, res) => {
         status: "bench",
         reason: record.benchReason,
         remark: record.benchRemark,
-        startTime: record.statusStartedAt,
+        startTime: record.benchStartTime,
         endTime: now,
         durationSeconds: duration,
       });
@@ -67,7 +67,8 @@ router.post("/start-work/:id", async (req, res) => {
     record.currentStatus = "work";
     record.benchReason = "";
     record.benchRemark = "";
-    record.statusStartedAt = now;
+record.workStartTime = now;
+record.benchStartTime = null;
 
     await record.save();
 
@@ -91,15 +92,15 @@ router.post("/start-bench/:id", async (req, res) => {
   const now = new Date();
 
   if (record.currentStatus === "work") {
-    const duration = Math.floor(
-      (now - record.statusStartedAt) / 1000
-    );
+const duration = Math.floor(
+  (now - record.workStartTime) / 1000
+);
 
     record.totalWorkSeconds += duration;
 
     record.history.push({
-      status: "work",
-      startTime: record.statusStartedAt,
+      status: "bench",
+      startTime: record.workStartTime,
       endTime: now,
       durationSeconds: duration,
     });
@@ -108,7 +109,8 @@ router.post("/start-bench/:id", async (req, res) => {
   record.currentStatus = "bench";
   record.benchReason = reason;
   record.benchRemark = remark;
-  record.statusStartedAt = now;
+  record.benchStartTime = now;
+record.workStartTime = null;
 
   await record.save();
 
@@ -122,25 +124,39 @@ router.get("/timer/:id", async (req, res) => {
     const record = await getTodayRecord(req.params.id);
 
     const now = new Date();
+let workSeconds = record.totalWorkSeconds;
+let benchSeconds = record.totalBenchSeconds;
 
-    const currentSeconds = Math.floor(
-      (now - record.statusStartedAt) / 1000
-    );
+if (
+  record.currentStatus === "work" &&
+  record.workStartTime
+) {
+  workSeconds += Math.floor(
+    (now - record.workStartTime) / 1000
+  );
+}
 
-    let workSeconds = record.totalWorkSeconds;
-    let benchSeconds = record.totalBenchSeconds;
+if (
+  record.currentStatus === "bench" &&
+  record.benchStartTime
+) {
+  benchSeconds += Math.floor(
+    (now - record.benchStartTime) / 1000
+  );
+}
 
-    if (record.currentStatus === "work") {
-      workSeconds += currentSeconds;
-    } else {
-      benchSeconds += currentSeconds;
-    }
+   res.json({
+  status: record.currentStatus,
 
-    res.json({
-      status: record.currentStatus,
-      workSeconds,
-      benchSeconds,
-    });
+  workStartTime: record.workStartTime,
+  benchStartTime: record.benchStartTime,
+
+  totalWorkSeconds: record.totalWorkSeconds,
+  totalBenchSeconds: record.totalBenchSeconds,
+
+  workSeconds,
+  benchSeconds,
+});
   } catch (err) {
     res.status(400).json({
       success: false,
@@ -149,5 +165,65 @@ router.get("/timer/:id", async (req, res) => {
   }
 });
 
+router.post("/login/:id", async (req, res) => {
+  try {
+    const record = await getTodayRecord(req.params.id);
+
+    const now = new Date();
+
+    // If already working, do nothing
+    if (record.currentStatus === "work" && record.workStartTime) {
+      return res.json({
+        success: true,
+        message: "Work session already running",
+        data: record,
+      });
+    }
+
+    // If user was on bench, close bench session
+    if (
+      record.currentStatus === "bench" &&
+      record.benchStartTime
+    ) {
+      const duration = Math.floor(
+        (now - record.benchStartTime) / 1000
+      );
+
+      record.totalBenchSeconds += duration;
+
+      record.history.push({
+        status: "bench",
+        reason: record.benchReason,
+        remark: record.benchRemark,
+        startTime: record.benchStartTime,
+        endTime: now,
+        durationSeconds: duration,
+      });
+    }
+
+    // Start Work
+    record.currentStatus = "work";
+    record.workStartTime = now;
+    record.benchStartTime = null;
+    record.benchReason = "";
+    record.benchRemark = "";
+
+    await record.save();
+
+    res.json({
+      success: true,
+      message: "Work started successfully",
+      data: record,
+    });
+
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
 
 module.exports = router;
