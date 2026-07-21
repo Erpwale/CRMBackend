@@ -831,24 +831,23 @@ router.get("/developers", async (req, res) => {
   }
 });
 async function getTodayRecord(userId) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = new Date().toLocaleDateString("en-US");
 
-  let record = await WorkBench.findOne({
-    userId,
-    date: today,
-  });
-
+let record = await WorkBench.findOne({
+  userId,
+  date: today,
+});
+  
   if (!record) {
-    record = await WorkBench.create({
-      userId,
-      date: today,
-      currentStatus: "work",
-      workStartTime: new Date(),
-      totalWorkSeconds: 0,
-      totalBenchSeconds: 0,
-      history: [],
-    });
+   record = await WorkBench.create({
+  userId,
+  date: today, // "7/21/2026"
+  currentStatus: "work",
+  workStartTime: new Date(),
+  totalWorkSeconds: 0,
+  totalBenchSeconds: 0,
+  history: [],
+});
   }
 
   return record;
