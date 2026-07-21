@@ -4,6 +4,9 @@ const router = express.Router();
 const sendNotification = require("../utils/sendNotification");
 
 router.post("/test", async (req, res) => {
+  console.log("✅ Test API called");
+  console.log(req.body);
+
   try {
     const { userId } = req.body;
 
