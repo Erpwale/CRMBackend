@@ -389,67 +389,67 @@ console.log("Location:", geo);
 
 const blacklistedTokens = [];
 
-router.post("/logout", async (req, res) => {
-  try {
-    const authHeader = req.headers.authorization;
-    const token = authHeader?.split(" ")[1];
+// router.post("/logout", async (req, res) => {
+//   try {
+//     const authHeader = req.headers.authorization;
+//     const token = authHeader?.split(" ")[1];
 
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Token missing",
-      });
-    }
+//     if (!token) {
+//       return res.status(401).json({
+//         success: false,
+//         message: "Token missing",
+//       });
+//     }
 
-    // Decode token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id; // change if your token uses _id or userId
+//     // Decode token
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     const userId = decoded.id; // change if your token uses _id or userId
 
-    const record = await getTodayRecord(userId);
+//     const record = await getTodayRecord(userId);
 
-    const now = new Date();
+//     const now = new Date();
 
-    // User was working
-    if (record.currentStatus === "work" && record.workStartTime) {
-      const duration = Math.floor(
-        (now - record.workStartTime) / 1000
-      );
+//     // User was working
+//     if (record.currentStatus === "work" && record.workStartTime) {
+//       const duration = Math.floor(
+//         (now - record.workStartTime) / 1000
+//       );
 
-      record.totalWorkSeconds += duration;
+//       record.totalWorkSeconds += duration;
 
-      record.history.push({
-        status: "work",
-        startTime: record.workStartTime,
-        endTime: now,
-        durationSeconds: duration,
-      });
-    }
+//       record.history.push({
+//         status: "work",
+//         startTime: record.workStartTime,
+//         endTime: now,
+//         durationSeconds: duration,
+//       });
+//     }
 
-    // Start inactive bench
-    record.currentStatus = "bench";
-    record.benchReason = "Inactive";
-    record.benchRemark = "Inactive for last 15 minutes. Auto logout.";
-    record.benchStartTime = now;
-    record.workStartTime = null;
+//     // Start inactive bench
+//     record.currentStatus = "bench";
+//     record.benchReason = "Inactive";
+//     record.benchRemark = "Inactive for last 15 minutes. Auto logout.";
+//     record.benchStartTime = now;
+//     record.workStartTime = null;
 
-    await record.save();
+//     await record.save();
 
-    blacklistedTokens.push(token);
+//     blacklistedTokens.push(token);
 
-    return res.status(200).json({
-      success: true,
-      message: "Logout successful",
-    });
+//     return res.status(200).json({
+//       success: true,
+//       message: "Logout successful",
+//     });
 
-  } catch (error) {
-    console.log(error);
+//   } catch (error) {
+//     console.log(error);
 
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// });
 // ✅ Verify 2FA Token
 router.post("/verify-2fa", async (req, res) => {
   try {
