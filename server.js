@@ -28,6 +28,14 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("✅ User connected:", socket.id);
 
+
+    socket.on("join", (userId) => {
+    socket.join(userId.toString());
+    console.log("👤 Joined user room:", userId);
+  });
+
+
+
   socket.on("joinCompany", (companyId) => {
     socket.join(companyId);
     console.log("📌 Joined company room:", companyId);
@@ -76,6 +84,8 @@ app.use("/api/training", require("./routes/trainingRoutes.js"));
 app.use("/api/tally", require("./routes/tallySync"));
 app.use("/api/ticket-feedback", require("./routes/TicketFeedback"));
 app.use("/api/histor", require("./routes/history"));
+app.use("/api/notifications", require("./routes/notification"));
+app.use("/api/test", require("./routes/test"));
 app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
