@@ -55,7 +55,7 @@ router.post("/start-work/:id", async (req, res) => {
 
       // Save completed bench session
       record.history.push({
-        status: "work",
+        status: "bench",
         reason: record.benchReason,
         remark: record.benchRemark,
         startTime: record.benchStartTime,
@@ -99,7 +99,7 @@ const duration = Math.floor(
     record.totalWorkSeconds += duration;
 
     record.history.push({
-      status: "bench",
+      status: "work",
       startTime: record.workStartTime,
       endTime: now,
       durationSeconds: duration,
