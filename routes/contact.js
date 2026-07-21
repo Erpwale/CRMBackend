@@ -146,6 +146,28 @@ if (global.io) {
   console.log("❌ Socket not initialized");
 }
 
+const currentUser = req.user || req.customer;
+
+await saveHistory({
+  req,
+  user: {
+    _id: currentUser._id,
+    username:
+      currentUser.username ||
+      currentUser.name ||
+      currentUser.companyName,
+    role: req.user ? req.user.role : "Customer",
+  },
+  module: "Contact",
+  action: "CREATE",
+  recordId: contact._id,
+  recordName: contact.name,
+  details: `${
+    currentUser.username ||
+    currentUser.name ||
+    currentUser.companyName
+  } created contact ${contact.name}`,
+});
     res.status(201).json({
       success: true,
       message: "Contact created successfully",

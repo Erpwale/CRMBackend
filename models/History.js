@@ -1,63 +1,61 @@
 const mongoose = require("mongoose");
 
-const historySchema = new mongoose.Schema({
+const historySchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
 
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
+    username: String,
+
+    role: String,
+
+    module: {
+      type: String,
+      required: true,
+    },
+
+    action: {
+      type: String,
+      required: true,
+    },
+
+    recordId: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+
+    recordName: String,
+
+    details: String,
+
+    changes: [
+      {
+        field: String,
+        oldValue: mongoose.Schema.Types.Mixed,
+        newValue: mongoose.Schema.Types.Mixed,
+      },
+    ],
+
+    ipAddress: String,
+
+    browser: String,
+
+    location: String,
+
+    coordinates: {
+      lat: Number,
+      lng: Number,
+    },
+
+    loginTime: Date,
+
+    logoutTime: Date,
   },
-
-  username: {
-    type: String
-  },
-
-  role: {
-    type: String
-  },
-
-  action: {
-    type: String,
-    required: true
-  },
-
-  module: {
-    type: String
-  },
-
-  details: {
-    type: String
-  },
-
-
-ipAddress: {
-  type: String
-},
-
-location: {
-  type: String
-},
-
-coordinates: {
-  lat: Number,
- lng: Number
-},
-  loginTime: {
-    type: Date
-  },
-
-  logoutTime: {
-    type: Date
-  },
-
-  createdAt: {
-    type: Date,
-    default: Date.now
+  {
+    timestamps: true,
   }
-
-});
-
-module.exports = mongoose.model(
-  "History",
-  historySchema
 );
+
+module.exports = mongoose.model("History", historySchema);

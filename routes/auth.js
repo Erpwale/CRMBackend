@@ -828,6 +828,7 @@ router.post("/logout", authMiddleware, async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
+        success: false,
         message: "User not found",
       });
     }
@@ -844,11 +845,20 @@ router.post("/logout", authMiddleware, async (req, res) => {
 
     const record = await getTodayRecord(user._id);
 
+    if (!record) {
+      return res.status(404).json({
+        success: false,
+        message: "Attendance record not found",
+      });
+    }
+
+    // Save current status before changing anything
+    const previousStatus = record.currentStatus;
+
+    // ==========================
     // Close Work Session
-    if (
-      record.currentStatus === "work" &&
-      record.workStartTime
-    ) {
+    // ==========================
+    if (record.workStartTime) {
       const duration = Math.floor(
         (now - record.workStartTime) / 1000
       );
@@ -865,11 +875,10 @@ router.post("/logout", authMiddleware, async (req, res) => {
       record.workStartTime = null;
     }
 
+    // ==========================
     // Close Bench Session
-    if (
-      record.currentStatus === "bench" &&
-      record.benchStartTime
-    ) {
+    // ==========================
+    if (record.benchStartTime) {
       const duration = Math.floor(
         (now - record.benchStartTime) / 1000
       );
@@ -888,12 +897,19 @@ router.post("/logout", authMiddleware, async (req, res) => {
       record.benchStartTime = null;
     }
 
-    // Auto Logout -> Move to Bench
-    if (reason === "INACTIVE") {
+    // ==========================
+    // Auto Logout
+    // ==========================
+    if (reason === "INACTIVE" && previousStatus === "work") {
       record.currentStatus = "bench";
       record.benchReason = "Auto Logout";
       record.benchRemark = "User inactive for 15 minutes";
       record.benchStartTime = now;
+    }
+
+    // Normal Logout
+    if (reason !== "INACTIVE") {
+      record.currentStatus = "offline";
     }
 
     record.logoutTime = now;
@@ -910,6 +926,7 @@ router.post("/logout", authMiddleware, async (req, res) => {
       userId: user._id,
       username: user.username,
       role: user.role,
+
       action: reason === "INACTIVE" ? "AUTO LOGOUT" : "LOGOUT",
       module: "AUTH",
       details: description,
@@ -930,7 +947,7 @@ router.post("/logout", authMiddleware, async (req, res) => {
       logoutTime: now,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message:
         reason === "INACTIVE"
@@ -938,9 +955,9 @@ router.post("/logout", authMiddleware, async (req, res) => {
           : "Logout Successful",
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Server Error",
     });
