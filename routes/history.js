@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const History = require("../models/History");
-const authMiddleware = require("../middleware/auth");
-
+const { authMiddleware } = require("../middleware/auth");
 
 // Get All History
 router.get("/", authMiddleware, async (req, res) => {
