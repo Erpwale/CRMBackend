@@ -8,7 +8,7 @@ const { authMiddleware, adminOnly } = require("../middleware/auth");
 const router = express.Router();
 const geoip = require("geoip-lite");
 const history = require("../models/History")
-
+const WorkBench = require("../models/workTrackerSchema");
 router.post("/register", async (req, res) => {
   try {
   const {
@@ -391,28 +391,62 @@ const blacklistedTokens = [];
 
 router.post("/logout", async (req, res) => {
   try {
-
-    const authHeader =
-      req.headers.authorization;
-
+    const authHeader = req.headers.authorization;
     const token = authHeader?.split(" ")[1];
 
-    if (token) {
-      blacklistedTokens.push(token);
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Token missing",
+      });
     }
+
+    // Decode token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id; // change if your token uses _id or userId
+
+    const record = await getTodayRecord(userId);
+
+    const now = new Date();
+
+    // User was working
+    if (record.currentStatus === "work" && record.workStartTime) {
+      const duration = Math.floor(
+        (now - record.workStartTime) / 1000
+      );
+
+      record.totalWorkSeconds += duration;
+
+      record.history.push({
+        status: "work",
+        startTime: record.workStartTime,
+        endTime: now,
+        durationSeconds: duration,
+      });
+    }
+
+    // Start inactive bench
+    record.currentStatus = "bench";
+    record.benchReason = "Inactive";
+    record.benchRemark = "Inactive for last 15 minutes. Auto logout.";
+    record.benchStartTime = now;
+    record.workStartTime = null;
+
+    await record.save();
+
+    blacklistedTokens.push(token);
 
     return res.status(200).json({
       success: true,
-      message: "Logout successful"
+      message: "Logout successful",
     });
 
   } catch (error) {
-
     console.log(error);
 
     return res.status(500).json({
       success: false,
-      message: "Logout failed"
+      message: error.message,
     });
   }
 });
