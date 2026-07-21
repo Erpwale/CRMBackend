@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const History = require("../models/History");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middleware/auth");
 
 
 // Get All History
