@@ -106,7 +106,7 @@ router.get("/cancel-orders", async (req, res) => {
 });
 
 
-router.put("/refund-processed/:id", authMiddleware, async (req, res) => {,
+router.put("/refund-processed/:id", authMiddleware, async (req, res) => {
      try {
       const order =
         await CancelOrder.findByIdAndUpdate(
