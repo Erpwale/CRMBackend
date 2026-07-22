@@ -3,7 +3,8 @@
 const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product");
-
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
 // =====================
 // ADD PRODUCT
 // =====================
