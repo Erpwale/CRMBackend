@@ -1,7 +1,7 @@
 
 const express = require("express");
 const router = express.Router();
-
+const logActivity = require("../utils/Activitylog");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Ticket= require("../models/TicketSchema")
 const TicketMessage= require("../models/ticketMessageSchema")
@@ -29,7 +29,15 @@ router.post(
         senderType: "customer",
         message: description,
       });
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "CUSTOMER_TICKET",
+  action: "CREATE",
+  description: `Created customer ticket (${category})`,
+  recordId: ticket._id,
+  recordName: ticket.ticketNumber || ticket._id.toString(),
+});
       res.status(201).json({
         success: true,
         ticket,
@@ -58,7 +66,18 @@ router.post(
           senderType,
           message,
         });
-
+        const ticket = await Ticket.findById(req.params.ticketId);
+await logActivity({
+  req,
+  userId: senderId,
+  module: "CUSTOMER_TICKET",
+  action: "REPLY",
+  description: `${senderType} replied to ticket ${
+    ticket?.ticketNumber || req.params.ticketId
+  }`,
+  recordId: ticket?._id || req.params.ticketId,
+  recordName: ticket?.ticketNumber || req.params.ticketId,
+});
       res.status(201).json({
         success: true,
         message: newMessage,

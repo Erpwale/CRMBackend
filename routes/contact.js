@@ -148,7 +148,15 @@ if (global.io) {
 }
 
 const currentUser = req.user || req.customer;
-
+await logActivity({
+  req,
+  userId: currentUser._id,
+  module: "CONTACT",
+  action: "CREATE",
+  description: `Created contact ${contact.name}`,
+  recordId: contact._id,
+  recordName: contact.name,
+});
 await saveHistory({
   req,
   user: {
@@ -223,6 +231,15 @@ router.put(
           message: "User not found",
         });
       }
+      await logActivity({
+  req,
+  userId: updatedUser._id,
+  module: "CUSTOMER",
+  action: "ACCEPT_TERMS",
+  description: `${updatedUser.name} accepted Terms & Conditions`,
+  recordId: updatedUser._id,
+  recordName: updatedUser.name,
+});
 
       return res.status(200).json({
         success: true,
@@ -316,6 +333,15 @@ if (primary) {
       req.body,
       { new: true }
     );
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "CONTACT",
+  action: "UPDATE",
+  description: `Updated contact ${updated.name}`,
+  recordId: updated._id,
+  recordName: updated.name,
+});
     // ---------- SOCKET (🔥 ADD THIS) ----------
     const companyRoom = companyId.toString();
 

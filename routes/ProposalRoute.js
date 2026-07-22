@@ -7,6 +7,8 @@ const Proposal= require("../models/Proposal");
 const SalesOrder= require("../models/SalesOrder");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const upload = require("../middleware/Smallcustmization.js");
+const logActivity = require("../utils/Activitylog");
+
 const headerBase64 = fs.readFileSync(
   path.join(__dirname, "../assets/header.jpg"),
   { encoding: "base64" }
@@ -387,6 +389,15 @@ if (data.businessLine === "Add-on Modules") {
     const newProposal = new Proposal(data);
     const savedData = await newProposal.save();
     console.log("savedata",savedData);
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PROPOSAL",
+  action: "CREATE",
+  description: `Created proposal ${savedData.proposalId} for ${savedData.companyName}`,
+  recordId: savedData._id,
+  recordName: savedData.proposalId,
+});
     if (global.io) {
       global.io.emit("opportunityUpdated", {
         type: "CREATE",
@@ -421,7 +432,7 @@ router.get("/my-opportunities", authMiddleware, async (req, res) => {
   }
 });
 
-router.put("/status/:id", async (req, res) => {
+router.put("/status/:id", authMiddleware, async (req, res) => {
   try {
     const { statusDetails } = req.body;
 
@@ -430,13 +441,22 @@ router.put("/status/:id", async (req, res) => {
       { statusDetails },
       { new: true }
     );
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PROPOSAL",
+  action: "STATUS_UPDATE",
+  description: `Updated proposal ${updated.proposalId} status to ${updated.statusDetails?.status}`,
+  recordId: updated._id,
+  recordName: updated.proposalId,
+});
 
     res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
-router.put("/status/:id", async (req, res) => {
+router.put("/status/:id", authMiddleware, async (req, res) => {
   try {
     const { statusDetails } = req.body;
 
@@ -456,6 +476,15 @@ router.put("/status/:id", async (req, res) => {
       { statusDetails },
       { new: true }
     );
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PROPOSAL",
+  action: "STATUS_UPDATE",
+  description: `Updated proposal ${updated.proposalId} status to ${updated.statusDetails?.status}`,
+  recordId: updated._id,
+  recordName: updated.proposalId,
+});
 
     // ✅ SOCKET EMIT
     if (global.io) {
@@ -574,7 +603,15 @@ router.put(
             "Opportunity not found",
         });
       }
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PROPOSAL",
+  action: "UPDATE",
+  description: `Updated proposal ${updatedOpportunity.proposalId}`,
+  recordId: updatedOpportunity._id,
+  recordName: updatedOpportunity.proposalId,
+});
       // ✅ SOCKET EMIT
       if (global.io) {
 

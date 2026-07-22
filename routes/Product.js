@@ -15,8 +15,12 @@ const upload = multer({
   storage,
 });
 
-router.post("/add", upload.single("image"), async (req, res) => {
-  console.log( "log",req.body);
+router.post(
+  "/add",
+  authMiddleware,
+  upload.single("image"),
+  async (req, res) => {
+      console.log( "log",req.body);
   
   try {
     const product = await Product.create({
@@ -28,6 +32,15 @@ router.post("/add", upload.single("image"), async (req, res) => {
       features: JSON.parse(req.body.features || "[]"),
       image: req.file ? req.file.originalname : "",
     });
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PRODUCT",
+  action: "CREATE",
+  description: `Created product ${product.productName}`,
+  recordId: product._id,
+  recordName: product.productName,
+});
 
     res.status(201).json({
       success: true,
@@ -95,8 +108,8 @@ router.get("/:id", async (req, res) => {
 // =====================
 // UPDATE PRODUCT
 // =====================
-router.put("/update/:id", async (req, res) => {
-  try {
+router.put("/update/:id", authMiddleware, async (req, res) => {
+    try {
     const product = await Product.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -105,6 +118,15 @@ router.put("/update/:id", async (req, res) => {
         runValidators: true,
       }
     );
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PRODUCT",
+  action: "UPDATE",
+  description: `Updated product ${product.productName}`,
+  recordId: product._id,
+  recordName: product.productName,
+});
 
     if (!product) {
       return res.status(404).json({
@@ -129,8 +151,8 @@ router.put("/update/:id", async (req, res) => {
 // =====================
 // TEMP DELETE PRODUCT
 // =====================
-router.delete("/delete/:id", async (req, res) => {
-  try {
+router.delete("/delete/:id", authMiddleware, async (req, res) => {
+    try {
     const product = await Product.findByIdAndUpdate(
       req.params.id,
       {
@@ -139,7 +161,15 @@ router.delete("/delete/:id", async (req, res) => {
       },
       { new: true }
     );
-
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PRODUCT",
+  action: "DELETE",
+  description: `Deleted product ${product.productName}`,
+  recordId: product._id,
+  recordName: product.productName,
+});
     if (!product) {
       return res.status(404).json({
         success: false,
@@ -162,8 +192,8 @@ router.delete("/delete/:id", async (req, res) => {
 // =====================
 // RESTORE PRODUCT
 // =====================
-router.put("/restore/:id", async (req, res) => {
-  try {
+router.put("/restore/:id", authMiddleware, async (req, res) => {
+    try {
     const product = await Product.findByIdAndUpdate(
       req.params.id,
       {
@@ -172,6 +202,16 @@ router.put("/restore/:id", async (req, res) => {
       },
       { new: true }
     );
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PRODUCT",
+  action: "RESTORE",
+  description: `Restored product ${product.productName}`,
+  recordId: product._id,
+  recordName: product.productName,
+});
+
 
     res.status(200).json({
       success: true,

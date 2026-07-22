@@ -23,7 +23,15 @@ router.post("/create", authMiddleware, async (req, res) => {
       ...req.body,
       createdBy: req.user?.id,
     });
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "CALL_BOOKING",
+  action: "CREATE",
+  description: `Created call booking for contact ${contactNumber}`,
+  recordId: support._id,
+  recordName: contactNumber,
+});
     res.status(201).json({
       success: true,
       message: "Support created",
@@ -95,7 +103,15 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
       req.body,
       { new: true }
     );
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "CALL_BOOKING",
+  action: "UPDATE",
+  description: `Updated call booking for ${updated.contactNumber}`,
+  recordId: updated._id,
+  recordName: updated.contactNumber,
+});
     res.json({
       success: true,
       message: "Updated successfully",
@@ -112,7 +128,15 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
 router.delete("/delete/:id", authMiddleware, async (req, res) => {
   try {
     await Support.findByIdAndDelete(req.params.id);
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "CALL_BOOKING",
+  action: "DELETE",
+  description: `Deleted call booking for ${support.contactNumber}`,
+  recordId: support._id,
+  recordName: support.contactNumber,
+});
     res.json({
       success: true,
       message: "Deleted successfully",

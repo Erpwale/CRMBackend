@@ -5,7 +5,7 @@ const path = require("path");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Training = require("../models/Training");
 const User = require("../models/User");
-
+const logActivity = require("../utils/Activitylog");
 
 // IMAGE STORAGE
 const storage = multer.diskStorage({
@@ -71,6 +71,16 @@ router.post(
         agenda,
         createdBy: req.user.id,
       });
+      await logActivity({
+  req,
+  userId: req.user.id,
+  module: "TRAINING",
+  action: "CREATE",
+  description: `Created training session "${training.sessionTitle}"`,
+  recordId: training._id,
+  recordName: training.sessionTitle,
+});
+
 
       res.status(201).json({
         success: true,

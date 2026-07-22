@@ -1042,9 +1042,7 @@ router.get("/activity/:userId", authMiddleware, async (req, res) => {
   try {
     const activities = await Activity.find({
       userId: req.params.userId,
-    })
-      .populate("userId", "firstName lastName username email")
-      .sort({ createdAt: -1 });
+    }).populate("userId", "firstName lastName username email").sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,

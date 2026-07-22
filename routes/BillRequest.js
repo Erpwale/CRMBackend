@@ -3,9 +3,9 @@ const router = express.Router();
 
 const SalesOrder = require("../models/SalesOrder");
 const BillRequest = require("../models/BillRequest");
-
-router.post("/send-bill-request", async (req, res) => {
-  try {
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
+router.post("/send-bill-request", authMiddleware, async (req, res) => {  try {
     const { salesOrderId, userName } = req.body;
 
     const order = await SalesOrder.findById(salesOrderId);
@@ -44,6 +44,15 @@ router.post("/send-bill-request", async (req, res) => {
       },
       latestBillRequestStatus: "Pending",
     });
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "BILL_REQUEST",
+  action: "CREATE",
+  description: `Bill request created for Order ${order.orderNo}`,
+  recordId: request._id,
+  recordName: order.orderNo,
+});
 
     res.status(201).json({
       success: true,
@@ -100,8 +109,8 @@ router.get("/sales-order/:salesOrderId", async (req, res) => {
   }
 });
 
-router.put("/:id/update-sale-bill", async (req, res) => {
-  try {
+router.put("/:id/update-sale-bill", authMiddleware, async (req, res) => {
+    try {
     const { saleBillNo, saleBillDate } = req.body;
 
     // Validate required fields
@@ -152,7 +161,15 @@ router.put("/:id/update-sale-bill", async (req, res) => {
       },
       { new: true }
     );
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "BILL_REQUEST",
+  action: "APPROVE",
+  description: `Approved bill request for Order ${request.orderNo}`,
+  recordId: request._id,
+  recordName: request.orderNo,
+});
     res.status(200).json({
       success: true,
       message: "Invoice updated successfully",

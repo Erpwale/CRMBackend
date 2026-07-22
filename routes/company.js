@@ -122,7 +122,15 @@ router.post("/create-company", authMiddleware, async (req, res) => {
     // ✅ STEP 3: LINK CONTACT TO COMPANY
     company.primaryContact = contact._id;
     await company.save();
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "COMPANY",
+  action: "CREATE",
+  description: `Created company ${company.companyName}`,
+  recordId: company._id,
+  recordName: company.companyName,
+});
     // ✅ RESPONSE
     res.status(201).json({
       message: "Company created successfully",
@@ -237,7 +245,15 @@ console.log(req.body);
     // ✅ LINK CONTACT TO COMPANY (important)
     updatedCompany.primaryContact = contact._id;
     await updatedCompany.save();
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "COMPANY",
+  action: "UPDATE",
+  description: `Updated company ${updatedCompany.companyName}`,
+  recordId: updatedCompany._id,
+  recordName: updatedCompany.companyName,
+});
     // ✅ SOCKET EMIT
     const companyId = updatedCompany._id.toString();
     global.io.to(companyId).emit("companyUpdated", updatedCompany);
@@ -450,7 +466,15 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
     company.createdBy = userId;
 
     await company.save();
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "COMPANY",
+  action: "TRANSFER",
+  description: `Transferred company ${company.companyName} to ${newUser.firstName} ${newUser.lastName}`,
+  recordId: company._id,
+  recordName: company.companyName,
+});
     res.json({
       success: true,
       message: "Company transferred successfully",

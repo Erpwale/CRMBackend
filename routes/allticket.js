@@ -9,6 +9,8 @@ const fs = require("fs");
 const path = require("path");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Ticket= require("../models/TicketSchema")
+const logActivity = require("../utils/Activitylog");
+
 // const generateTicketNumber = async () => {
 
 //   const now = new Date();
@@ -386,7 +388,15 @@ router.post("/ticket/start-work/:id", async (req, res) => {
     ticket.isWorking = true;
 
     await ticket.save();
-
+await logActivity({
+  req,
+  userId: ticket.assignedTo,
+  module: "TICKET",
+  action: "START_WORK",
+  description: `Started work on ticket ${ticket.ticketNumber}`,
+  recordId: ticket._id,
+  recordName: ticket.ticketNumber,
+});
     res.json({
       success: true,
       message: "Work started",
@@ -422,7 +432,15 @@ router.post("/ticket/stop-work/:id", async (req, res) => {
     ticket.isWorking = false;
 
     await ticket.save();
-
+await logActivity({
+  req,
+  userId: ticket.assignedTo,
+  module: "TICKET",
+  action: "STOP_WORK",
+  description: `Stopped work on ticket ${ticket.ticketNumber}`,
+  recordId: ticket._id,
+  recordName: ticket.ticketNumber,
+});
     res.json({
       success: true,
       totalWorkSeconds: ticket.totalWorkSeconds,
@@ -470,7 +488,15 @@ router.put("/reschedule/:id", async (req, res) => {
     });
 
     await ticket.save();
-
+await logActivity({
+  req,
+  userId: ticket.assignedTo,
+  module: "TICKET",
+  action: "RESCHEDULE",
+  description: `Rescheduled ticket ${ticket.ticketNumber}`,
+  recordId: ticket._id,
+  recordName: ticket.ticketNumber,
+});
     res.json({
       success: true,
       ticket,
@@ -663,6 +689,15 @@ router.post("/adopt/:ticketId", async (req, res) => {
         },
       }
     );
+    await logActivity({
+  req,
+  userId: supportId,
+  module: "TICKET",
+  action: "ASSIGN",
+  description: `Ticket ${ticket.ticketNumber} assigned to ${supportUser.firstName} ${supportUser.lastName}`,
+  recordId: ticket._id,
+  recordName: ticket.ticketNumber,
+});
 
     res.status(200).json({
       success: true,

@@ -4,7 +4,7 @@ const Activity = require("../models/activityModel");
 const Contact = require("../models/Contact");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const { io } = require("../server");
-
+const logActivity = require("../utils/Activitylog");
 
 router.post("/create", authMiddleware, async (req, res) => {
   try {
@@ -94,7 +94,15 @@ if (activityDetails.length < 100 || activityDetails.length > 450) {
       } else {
   console.log("❌ Socket not initialized");
       }
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "ACTIVITY",
+  action: "CREATE",
+  description: `Created ${type} activity for ${contact.name}`,
+  recordId: activity._id,
+  recordName: regarding,
+});
     // ✅ response
     res.status(201).json({
       success: true,
@@ -215,7 +223,15 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
     activity.nextFollowupDate = nextFollowupDate || activity.nextFollowupDate;
 
     await activity.save();
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "ACTIVITY",
+  action: "UPDATE",
+  description: `Updated ${activity.type} activity`,
+  recordId: activity._id,
+  recordName: activity.regarding,
+});
     // 🔥🔥🔥 REAL-TIME EMIT
     const companyId = activity.companyId.toString();
     io.to(companyId).emit("activityUpdated", activity);

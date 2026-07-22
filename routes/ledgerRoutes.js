@@ -2,7 +2,8 @@
 const express = require("express");
 const Ledger = require("../models/Ledger");
 const axios = require("axios");
-
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ const router = express.Router();
 
 /* ================= CREATE LEDGER ================= */
 
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
   try {
     const {
       companyId,
@@ -302,7 +303,15 @@ const existing =
       tan,
       msme,
     });
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "LEDGER",
+  action: "CREATE",
+  description: `Created ledger for ${companyName}`,
+  recordId: ledger._id,
+  recordName: companyName,
+});
       // ===========================
     // SEND TO TALLY
     // ===========================
@@ -425,8 +434,7 @@ router.post("/check-duplicate", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.put("/ledger/:id", async (req, res) => {
-  try {
+router.put("/ledger/:id", authMiddleware, async (req, res) => {  try {
 
     const updated = await Ledger.findByIdAndUpdate(
       req.params.id,
@@ -442,6 +450,15 @@ router.put("/ledger/:id", async (req, res) => {
         message: "Ledger not found",
       });
     }
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "LEDGER",
+  action: "UPDATE",
+  description: `Updated ledger for ${updated.companyName}`,
+  recordId: updated._id,
+  recordName: updated.companyName,
+});
 
     // ✅ Socket
     if (global.io) {

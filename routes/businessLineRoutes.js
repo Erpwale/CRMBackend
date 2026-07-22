@@ -2,9 +2,10 @@
 const express = require("express");
 const router = express.Router();
 const BusinessLine = require("../models/BusinessLine");
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
 
-router.post("/create", async (req, res) => {
-  try {
+router.post("/create", authMiddleware, async (req, res) => {  try {
     let { businessLine, priceLevels } = req.body;
 
     // ✅ Normalize input
@@ -108,6 +109,15 @@ router.post("/create", async (req, res) => {
       }
 
       await existing.save();
+      await logActivity({
+  req,
+  userId: req.user.id,
+  module: "BUSINESS_LINE",
+  action: "UPDATE",
+  description: `Updated business line ${existing.businessLine}`,
+  recordId: existing._id,
+  recordName: existing.businessLine,
+});
 
       return res.json({
         message: "Updated existing Business Line ✅",
@@ -122,7 +132,15 @@ router.post("/create", async (req, res) => {
     });
 
     await newData.save();
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "BUSINESS_LINE",
+  action: "CREATE",
+  description: `Created business line ${newData.businessLine}`,
+  recordId: newData._id,
+  recordName: newData.businessLine,
+});
     res.status(201).json({
       message: "Business Line created successfully ✅",
       data: newData,
@@ -212,8 +230,8 @@ router.get("/:id", async (req, res) => {
 
 
 // UPDATE
-router.put("/update/:id", async (req, res) => {
-  try {
+router.put("/update/:id", authMiddleware, async (req, res) => {
+    try {
     const { businessLine, priceLevels } = req.body;
 
     const updated = await BusinessLine.findByIdAndUpdate(
@@ -221,7 +239,15 @@ router.put("/update/:id", async (req, res) => {
       { businessLine, priceLevels },
       { new: true }
     );
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "BUSINESS_LINE",
+  action: "UPDATE",
+  description: `Updated business line ${updated.businessLine}`,
+  recordId: updated._id,
+  recordName: updated.businessLine,
+});
     res.json({
       message: "Updated successfully",
       data: updated,
@@ -231,8 +257,7 @@ router.put("/update/:id", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.patch("/status/:id", async (req, res) => {
-  try {
+router.patch("/status/:id", authMiddleware, async (req, res) => {  try {
     const { status } = req.body;
 
     const updated = await BusinessLine.findByIdAndUpdate(
@@ -244,7 +269,15 @@ router.patch("/status/:id", async (req, res) => {
     if (!updated) {
       return res.status(404).json({ message: "Not found" });
     }
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "BUSINESS_LINE",
+  action: "STATUS_CHANGE",
+  description: `Changed status of ${updated.businessLine} to ${status}`,
+  recordId: updated._id,
+  recordName: updated.businessLine,
+});
     res.json({
       message: `Status updated to ${status}`,
       data: updated,
@@ -256,10 +289,18 @@ router.patch("/status/:id", async (req, res) => {
 });
 
 // DELETE
-router.delete("/delete/:id", async (req, res) => {
-  try {
+router.delete("/delete/:id", authMiddleware, async (req, res) => {
+    try {
     await BusinessLine.findByIdAndDelete(req.params.id);
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "BUSINESS_LINE",
+  action: "DELETE",
+  description: `Deleted business line ${businessLine.businessLine}`,
+  recordId: businessLine._id,
+  recordName: businessLine.businessLine,
+});
     res.json({ message: "Deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });

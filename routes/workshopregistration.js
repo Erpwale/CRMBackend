@@ -3,8 +3,11 @@ const WorkshopRegistration = require("../models/WorkshopRegistration");
 const Training = require("../models/Training");
 const express = require("express");
 const router = express.Router();
-router.post("/register", async (req, res) => {
-  try {
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
+
+router.post("/register", authMiddleware, async (req, res) => {
+    try {
     const {
       trainingId,
       fullName,
@@ -66,6 +69,15 @@ router.post("/register", async (req, res) => {
       serialNumber,
       participantCount: requestedParticipants,
     });
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "TRAINING_REGISTRATION",
+  action: "CREATE",
+  description: `Registered ${fullName} for training "${training.sessionTitle}"`,
+  recordId: registration._id,
+  recordName: training.sessionTitle,
+});
 
     res.status(201).json({
       success: true,

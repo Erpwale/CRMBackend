@@ -3,10 +3,11 @@
 const express = require("express");
 const router = express.Router();
 const KnowledgeArticle = require("../models/KnowledgeArticle");
-
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
 // Create Article
-router.post("/create", async (req, res) => {
-  try {
+router.post("/create", authMiddleware, async (req, res) => {
+    try {
     const words = req.body.content?.split(" ").length || 0;
     const readTime = Math.ceil(words / 200);
 
@@ -18,7 +19,15 @@ router.post("/create", async (req, res) => {
           ? new Date()
           : null,
     });
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "KNOWLEDGE_BASE",
+  action: "CREATE",
+  description: `Created knowledge article "${article.title}"`,
+  recordId: article._id,
+  recordName: article.title,
+});
     res.status(201).json({
       success: true,
       message: "Article created successfully",
@@ -81,8 +90,8 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update Article
-router.put("/update/:id", async (req, res) => {
-  try {
+router.put("/update/:id", authMiddleware, async (req, res) => {
+    try {
     const words = req.body.content?.split(" ").length || 0;
     const readTime = Math.ceil(words / 200);
 
@@ -97,6 +106,15 @@ router.put("/update/:id", async (req, res) => {
           new: true,
         }
       );
+      await logActivity({
+  req,
+  userId: req.user.id,
+  module: "KNOWLEDGE_BASE",
+  action: "UPDATE",
+  description: `Updated knowledge article "${article.title}"`,
+  recordId: article._id,
+  recordName: article.title,
+});
 
     res.status(200).json({
       success: true,
@@ -112,8 +130,7 @@ router.put("/update/:id", async (req, res) => {
 });
 
 // Publish Article
-router.put("/publish/:id", async (req, res) => {
-  try {
+router.put("/publish/:id", authMiddleware, async (req, res) => {  try {
     const article =
       await KnowledgeArticle.findByIdAndUpdate(
         req.params.id,
@@ -125,7 +142,15 @@ router.put("/publish/:id", async (req, res) => {
           new: true,
         }
       );
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "KNOWLEDGE_BASE",
+  action: "PUBLISH",
+  description: `Published knowledge article "${article.title}"`,
+  recordId: article._id,
+  recordName: article.title,
+});
     res.status(200).json({
       success: true,
       message: "Article published successfully",
@@ -140,16 +165,24 @@ router.put("/publish/:id", async (req, res) => {
 });
 
 // Delete Article
-router.delete("/delete/:id", async (req, res) => {
-  try {
+router.delete("/delete/:id", authMiddleware, async (req, res) => {  try {
     await KnowledgeArticle.findByIdAndDelete(
       req.params.id
     );
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "KNOWLEDGE_BASE",
+  action: "DELETE",
+  description: `Deleted knowledge article "${article.title}"`,
+  recordId: article._id,
+  recordName: article.title,
+});
     res.status(200).json({
       success: true,
       message: "Article deleted successfully",
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,

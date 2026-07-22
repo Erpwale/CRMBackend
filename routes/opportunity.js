@@ -4,9 +4,10 @@ const router = express.Router();
 const Deal = require("../models/opportunityModel.js");
 const SalesOrder=require("../models/SalesOrder")
 const upload = require("../middleware/Smallcustmization.js");
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
 // ➕ CREATE DEAL
-router.post("/add", upload.array("attachments"), async (req, res) => {
-  try {
+router.post("/add", authMiddleware, upload.array("attachments"), async (req, res) => {  try {
     console.log("inside it");
     
     if (req.body.businessLine === "Annual Support Cover") {
@@ -47,7 +48,15 @@ const attachmentData = JSON.parse(
 
     const deal = new Deal(req.body);
     await deal.save();
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "OPPORTUNITY",
+  action: "CREATE",
+  description: `Created opportunity ${deal.opportunityName || deal.companyName}`,
+  recordId: deal._id,
+  recordName: deal.opportunityName || deal.companyName,
+});
     res.status(201).json({
       success: true,
       message: "Opportunity created successfully",
@@ -63,13 +72,22 @@ const attachmentData = JSON.parse(
 });
 
 // ✏️ UPDATE DEAL
-router.put("/:id", async (req, res) => {
-  try {
+router.put("/:id", authMiddleware, async (req, res) => {
+    try {
     const updated = await Deal.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "OPPORTUNITY",
+  action: "UPDATE",
+  description: `Updated opportunity ${updated.opportunityName || updated.companyName}`,
+  recordId: updated._id,
+  recordName: updated.opportunityName || updated.companyName,
+});
 
     res.json({
       message: "Opportunity updated",

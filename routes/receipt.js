@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const SalesOrder = require("../models/SalesOrder.js")
 const Receipt = require("../models/Receipt");   // 🔥 MISSING
 const Company = require("../models/Ledger");   // 🔥 MISSING
-
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
 const generateReceiptNo = async () => {
   const last = await Receipt.findOne().sort({ createdAt: -1 });
 
@@ -36,8 +37,7 @@ router.get("/next-receipt-no", async (req, res) => {
   }
 });
 
-router.post("/create", async (req, res) => {
-  try {
+router.post("/create", authMiddleware, async (req, res) => {  try {
     const { companyName, salesOrders, paymentMode, utrNumber,remainingAmount } = req.body;
 
     let totalReceived = 0;
@@ -160,7 +160,15 @@ console.log(req.body.salesOrders);
       paymentMode,
       utrNumber,
     });
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "RECEIPT",
+  action: "CREATE",
+  description: `Created receipt ${receipt.receiptNo} for ${companyName}`,
+  recordId: receipt._id,
+  recordName: receipt.receiptNo,
+});
     return res.json({
       message: "✅ Receipt created successfully",
       data: receipt,

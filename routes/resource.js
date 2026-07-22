@@ -4,7 +4,8 @@ const multer = require("multer");
 const path = require("path");
 
 const Resource = require("../models/Resource");
-
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
 // Multer Setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -29,8 +30,12 @@ const upload = multer({
 });
 
 // CREATE RESOURCE
-router.post("/create", upload.array("files", 10), async (req, res) => {
-  try {
+router.post(
+  "/create",
+  authMiddleware,
+  upload.array("files", 10),
+  async (req, res) => {
+      try {
     const {
       title,
       category,
@@ -62,7 +67,15 @@ const files = req.files?.map((file) => ({
       isPinned,
       status,
     });
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "RESOURCE",
+  action: "CREATE",
+  description: `Created resource "${resource.title}"`,
+  recordId: resource._id,
+  recordName: resource.title,
+});
     res.status(201).json({
       success: true,
       message: "Resource uploaded successfully",
@@ -98,10 +111,18 @@ router.get("/", async (req, res) => {
 });
 
 // DELETE RESOURCE
-router.delete("/:id", async (req, res) => {
-  try {
+router.delete("/:id", authMiddleware, async (req, res) => {
+    try {
     await Resource.findByIdAndDelete(req.params.id);
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "RESOURCE",
+  action: "DELETE",
+  description: `Deleted resource "${resource.title}"`,
+  recordId: resource._id,
+  recordName: resource.title,
+});
     res.json({
       success: true,
       message: "Resource deleted successfully",
@@ -115,14 +136,26 @@ router.delete("/:id", async (req, res) => {
 });
 
 // UPDATE RESOURCE
-router.put("/:id", upload.array("files", 10), async (req, res) => {
-  try {
+router.put(
+  "/:id",
+  authMiddleware,
+  upload.array("files", 10),
+  async (req, res) => {
+      try {
     const updated = await Resource.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "RESOURCE",
+  action: "UPDATE",
+  description: `Updated resource "${updated.title}"`,
+  recordId: updated._id,
+  recordName: updated.title,
+});
     res.json({
       success: true,
       data: updated,

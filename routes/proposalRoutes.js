@@ -9,7 +9,7 @@ const dns = require("dns");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const { SendMailClient } = require("zeptomail");
 const multer = require("multer");
-
+const logActivity = require("../utils/Activitylog");
 const upload = multer({
   storage: multer.memoryStorage(),
 });
@@ -61,6 +61,7 @@ await opp.findOneAndUpdate(
   { proposalStatus: true }
 );
 
+
  if (global.io) {
       global.io.emit("ProposelUpdated", {
         type: "CREATE",
@@ -70,7 +71,15 @@ await opp.findOneAndUpdate(
     } else {
       console.log("❌ Socket not initialized or companyId missing");
     }
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PROPOSAL_DOCUMENT",
+  action: "CREATE",
+  description: `Created proposal document "${saved.documentTitle}"`,
+  recordId: saved._id,
+  recordName: saved.documentTitle,
+});
     res.status(201).json({
       success: true,
       message: "Proposal created",
@@ -148,8 +157,8 @@ router.get("/:id", async (req, res) => {
 
 
 // ✅ UPDATE Proposal
-router.put("/update/:id", async (req, res) => {
-  try {
+router.put("/update/:id", authMiddleware, async (req, res) => {
+    try {
     const { documentTitle, user, mailStatus } = req.body;
 
     const updated = await Proposal.findByIdAndUpdate(
@@ -157,7 +166,15 @@ router.put("/update/:id", async (req, res) => {
       { documentTitle, user, mailStatus },
       { new: true }
     );
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PROPOSAL_DOCUMENT",
+  action: "UPDATE",
+  description: `Updated proposal document "${updated.documentTitle}"`,
+  recordId: updated._id,
+  recordName: updated.documentTitle,
+});
     res.json({
       success: true,
       message: "Proposal updated",
@@ -170,10 +187,17 @@ router.put("/update/:id", async (req, res) => {
 
 
 // ✅ DELETE Proposal
-router.delete("/delete/:id", async (req, res) => {
-  try {
+router.delete("/delete/:id", authMiddleware, async (req, res) => {  try {
     await Proposal.findByIdAndDelete(req.params.id);
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PROPOSAL_DOCUMENT",
+  action: "DELETE",
+  description: `Deleted proposal document "${proposal.documentTitle}"`,
+  recordId: proposal._id,
+  recordName: proposal.documentTitle,
+});
     res.json({
       success: true,
       message: "Proposal deleted",
@@ -321,6 +345,7 @@ router.get("/proposal/title/:documentTitle", async (req, res) => {
 
 router.post(
   "/send-mail",
+  authMiddleware,
   upload.array("attachments"),
   async (req, res) => {
   try {
@@ -682,6 +707,15 @@ const response = await client.sendMail({
   htmlbody: html,
   attachments,
 });
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PROPOSAL_DOCUMENT",
+  action: "SEND_MAIL",
+  description: `Sent proposal "${proposal.documentTitle}" to ${to}`,
+  recordId: proposal._id,
+  recordName: proposal.documentTitle,
+});
 
       console.log("✅ Mail Sent:", response);
 
@@ -742,8 +776,7 @@ const response = await client.sendMail({
   }
 });
 
-router.put("/update-mail-status", async (req, res) => {
-  try {
+router.put("/update-mail-status", authMiddleware, async (req, res) => {  try {
     console.log("Update staus",req.body)
     const { proposalId, status } = req.body;
     console.log("RAW proposalId:", proposalId);
@@ -775,7 +808,15 @@ console.log("Converted:", num);
 //         data: proposal,
 //       });
 //     }
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "PROPOSAL_DOCUMENT",
+  action: "MAIL_STATUS_UPDATE",
+  description: `Changed mail status of "${proposal.documentTitle}" to ${status}`,
+  recordId: proposal._id,
+  recordName: proposal.documentTitle,
+});
     res.json({
       success: true,
       mailStatus: proposal.mailStatus,

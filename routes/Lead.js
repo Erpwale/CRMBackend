@@ -2,12 +2,21 @@ const express = require("express");
 const router = express.Router();
 const Lead = require("../models/Lead");
 const sendNotification = require("../utils/sendNotification");
-
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
 // CREATE LEAD
-router.post("/create", async (req, res) => {
-  try {
+router.post("/create", authMiddleware, async (req, res) => {
+    try {
     const lead = await Lead.create(req.body);
-
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "LEAD",
+  action: "CREATE",
+  description: `Created lead ${lead.companyName}`,
+  recordId: lead._id,
+  recordName: lead.companyName,
+});
     res.status(201).json({
       success: true,
       message: "Lead created successfully",
@@ -67,7 +76,7 @@ router.get("/:id", async (req, res) => {
 
 
 // UPDATE LEAD
-router.put("/:id", async (req, res) => {
+router.put("/:id", authMiddleware, async (req, res) => {
   try {
     const { status, remark, addedBy } = req.body;
 
@@ -100,7 +109,17 @@ router.put("/:id", async (req, res) => {
         message: "Lead not found",
       });
     }
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "LEAD",
+  action: "UPDATE",
+  description: remark
+    ? `Added remark to lead ${lead.companyName}`
+    : `Updated lead ${lead.companyName}`,
+  recordId: lead._id,
+  recordName: lead.companyName,
+});
     res.json({
       success: true,
       data: lead,
@@ -115,8 +134,8 @@ router.put("/:id", async (req, res) => {
 
 
 // DELETE LEAD
-router.delete("/:id", async (req, res) => {
-  try {
+router.delete("/:id", authMiddleware, async (req, res) => {
+    try {
     const lead = await Lead.findByIdAndDelete(req.params.id);
 
     if (!lead) {
@@ -125,6 +144,15 @@ router.delete("/:id", async (req, res) => {
         message: "Lead not found",
       });
     }
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "LEAD",
+  action: "DELETE",
+  description: `Deleted lead ${lead.companyName}`,
+  recordId: lead._id,
+  recordName: lead.companyName,
+});
 
     res.status(200).json({
       success: true,

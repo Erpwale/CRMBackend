@@ -3,9 +3,10 @@ const router = express.Router();
 
 const SalesOrder = require("../models/SalesOrder");
 const CancelOrder = require("../models/CancelOrder");
-
-router.post("/cancel-order", async (req, res) => {
-  try {
+const logActivity = require("../utils/Activitylog");
+const { authMiddleware } = require("../middleware/auth");
+router.post("/cancel-order", authMiddleware, async (req, res) => {
+    try {
     const {
       salesOrderId,
       cancelReason,
@@ -35,7 +36,15 @@ router.post("/cancel-order", async (req, res) => {
     order.cancelledBy = cancelledBy;
 
     await order.save();
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "CANCEL_ORDER",
+  action: "CANCEL",
+  description: `Cancelled Sales Order ${order.orderNo}`,
+  recordId: order._id,
+  recordName: order.orderNo,
+});
     // Create Cancel Order Entry
  await CancelOrder.create({
   salesOrderId: order._id,
@@ -53,7 +62,15 @@ router.post("/cancel-order", async (req, res) => {
   cancelReason,
   cancelledBy,
 });
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "CANCEL_ORDER",
+  action: "CREATE",
+  description: `Created cancellation request for Order ${cancelOrder.orderNo}`,
+  recordId: cancelOrder._id,
+  recordName: cancelOrder.orderNo,
+});
     return res.status(200).json({
       success: true,
       message: "Order Cancelled Successfully",
@@ -89,10 +106,8 @@ router.get("/cancel-orders", async (req, res) => {
 });
 
 
-router.put(
-  "/refund-processed/:id",
-  async (req, res) => {
-    try {
+router.put("/refund-processed/:id", authMiddleware, async (req, res) => {,
+     try {
       const order =
         await CancelOrder.findByIdAndUpdate(
           req.params.id,
@@ -103,7 +118,15 @@ router.put(
             new: true,
           }
         );
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "CANCEL_ORDER",
+  action: "REFUND_PROCESSED",
+  description: `Refund processed for Order ${order.orderNo}`,
+  recordId: order._id,
+  recordName: order.orderNo,
+});
       res.status(200).json({
         success: true,
         message: "Refund Updated",

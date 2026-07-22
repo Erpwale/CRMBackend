@@ -5,6 +5,7 @@ const SalesOrder = require("../models/SalesOrder.js")
 const opp = require("../models/Proposal"); // import model
 const generatePDF = require("../utils/generateInvoice.js");
 const BankAccount = require("../models/BankAccount.js")
+const logActivity = require("../utils/Activitylog");
 const {
   createSalesVoucher
 } = require("../services/tallyService.js");
@@ -189,8 +190,8 @@ const TALLY_URL =
 
 
 
-router.post("/", async (req, res) => {
-  try {
+router.post("/", authMiddleware, async (req, res) => {
+    try {
     const { opid, partyName } = req.body;
 
     // ✅ 1. FETCH PROPOSAL
@@ -325,6 +326,15 @@ if (proposal.businessLine === "Annual Support Cover") {
     // ✅ 5. SAVE SALES ORDER
     const order = new SalesOrder(salesOrderData);
     await order.save();
+    await logActivity({
+  req,
+  userId: req.user.id,
+  module: "SALES_ORDER",
+  action: "CREATE",
+  description: `Created Sales Order ${order.orderNo} for ${order.companyName}`,
+  recordId: order._id,
+  recordName: order.orderNo,
+});
     
 try {
 
@@ -2367,7 +2377,7 @@ router.get("/:id", async (req, res) => {
 /* ✅ UPDATE */
 /* ========================= */
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authMiddleware, async (req, res) => {
   try {
     const error = validate(req.body);
     if (error) return res.status(400).json({ message: error });
@@ -2381,6 +2391,15 @@ router.put("/:id", async (req, res) => {
     if (!updated) {
       return res.status(404).json({ message: "Not found" });
     }
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "SALES_ORDER",
+  action: "UPDATE",
+  description: `Updated Sales Order ${updated.orderNo}`,
+  recordId: updated._id,
+  recordName: updated.orderNo,
+});
 
     res.json({
       success: true,
@@ -2396,10 +2415,18 @@ router.put("/:id", async (req, res) => {
 /* ✅ DELETE */
 /* ========================= */
 
-router.delete("/:id", async (req, res) => {
-  try {
+router.delete("/:id", authMiddleware, async (req, res) => {
+    try {
     const deleted = await SalesOrder.findByIdAndDelete(req.params.id);
-
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "SALES_ORDER",
+  action: "DELETE",
+  description: `Deleted Sales Order ${order.orderNo}`,
+  recordId: order._id,
+  recordName: order.orderNo,
+});
     if (!deleted) {
       return res.status(404).json({ message: "Not found" });
     }
