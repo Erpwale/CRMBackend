@@ -9,7 +9,7 @@ const router = express.Router();
 const geoip = require("geoip-lite");
 // const Activity = require("../models/Activity");
 const WorkBench = require("../models/workTrackerSchema");
-const logActivity = require("../utils/logActivity");
+const logActivity = require("../utils/Activitylog");
 router.post("/register", async (req, res) => {
   try {
   const {
