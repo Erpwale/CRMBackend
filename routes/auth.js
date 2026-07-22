@@ -7,7 +7,7 @@ const User = require("../models/User");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const router = express.Router();
 const geoip = require("geoip-lite");
-// const Activity = require("../models/Activity");
+const Activity = require("../models/activityModel");
 const WorkBench = require("../models/workTrackerSchema");
 const logActivity = require("../utils/Activitylog");
 router.post("/register", async (req, res) => {
@@ -1038,34 +1038,28 @@ router.put("/users/:id/status", async (req, res) => {
   }
 });
 
-router.get(
-  "/activity/:userId",
-  authMiddleware,
-  async (req, res) => {
+router.get("/activity/:userId", authMiddleware, async (req, res) => {
+  try {
+    const activities = await Activity.find({
+      userId: req.params.userId,
+    })
+      .populate("userId", "firstName lastName username email")
+      .sort({ createdAt: -1 });
 
-    try {
+    res.status(200).json({
+      success: true,
+      count: activities.length,
+      activities,
+    });
+  } catch (error) {
+    console.error(error);
 
-      const { userId } = req.params;
-
-     const activities = await Activity.find({
-  userId: req.params.userId,
-}).sort({ createdAt: -1 });
-        
-
-      res.status(200).json(activities);
-
-    } catch (error) {
-
-      console.log(error);
-
-      res.status(500).json({
-        message: "Server Error"
-      });
-
-    }
-
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
   }
-);
+});
 
 
 
