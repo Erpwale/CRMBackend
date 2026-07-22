@@ -7,8 +7,9 @@ const User = require("../models/User");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const router = express.Router();
 const geoip = require("geoip-lite");
-const history = require("../models/History")
+const Activity = require("../models/Activity");
 const WorkBench = require("../models/workTrackerSchema");
+const logActivity = require("../utils/logActivity");
 router.post("/register", async (req, res) => {
   try {
   const {
@@ -210,7 +211,14 @@ router.post("/register", async (req, res) => {
 });
 
     await newUser.save();
-
+await logActivity({
+  req,
+  userId: newUser._id,
+  module: "USER",
+  action: "CREATE",
+  description: `User ${newUser.username} created`,
+  recordId: newUser._id,
+});
     res.status(201).json({
       message: "User registered successfully",
       user: newUser
@@ -282,48 +290,6 @@ console.log("Location:", geo);
     // SAVE LOGIN HISTORY
     // =========================
 
-    await history.create({
-
-      userId: user._id,
-
-      username: user.username,
-
-      role: user.role,
-
-      action: "LOGIN",
-
-      module: "AUTH",
-
-      details: `${user.username} logged into CRM`,
-
-      ipAddress: ip,
-
-      location: geo
-        ? `${geo.city || ""}, ${geo.region || ""}, ${geo.country || ""}`
-        : "Unknown",
-
-      coordinates: geo
-        ? {
-            lat: geo.ll[0],
-            lng: geo.ll[1]
-          }
-        : null,
-
-      // browser:
-      //   `${browser.name || ""} ${browser.version || ""}`,
-
-      // operatingSystem:
-      //   `${os.name || ""} ${os.version || ""}`,
-
-      // deviceName:
-      //   device.model || "Desktop",
-
-      // deviceType:
-      //   device.type || "Desktop",
-
-      loginTime: new Date()
-
-    });
 
     // =========================
     // TEMP TOKEN
@@ -369,7 +335,13 @@ console.log("Location:", geo);
     // =========================
     // VERIFY 2FA
     // =========================
-
+await logActivity({
+  req,
+  userId: user._id,
+  module: "AUTH",
+  action: "LOGIN",
+  description: `${user.username} logged in`,
+});
     return res.json({
       require2FAVerification: true,
       tempToken
@@ -591,7 +563,14 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
     company.createdBy = userId;
 
     await company.save();
-
+   await logActivity({
+  req,
+  userId: req.user.id,
+  module: "COMPANY",
+  action: "TRANSFER",
+  description: `Company transferred to user ${userId}`,
+  recordId: company._id,
+});
     res.json({
       success: true,
       message: "Company transferred successfully",
@@ -955,31 +934,17 @@ router.post("/logout", authMiddleware, async (req, res) => {
       description = `${user.username} was automatically logged out due to inactivity`;
     }
 
-    await History.create({
-      userId: user._id,
-      username: user.username,
-      role: user.role,
-
-      action: reason === "INACTIVE" ? "AUTO LOGOUT" : "LOGOUT",
-      module: "AUTH",
-      details: description,
-
-      ipAddress: ip,
-
-      location: geo
-        ? `${geo.city || ""}, ${geo.region || ""}, ${geo.country || ""}`
-        : "Unknown",
-
-      coordinates: geo
-        ? {
-            lat: geo.ll[0],
-            lng: geo.ll[1],
-          }
-        : null,
-
-      logoutTime: now,
-    });
-
+   
+await logActivity({
+  req,
+  userId: user._id,
+  module: "AUTH",
+  action: reason === "INACTIVE" ? "AUTO_LOGOUT" : "LOGOUT",
+  description:
+    reason === "INACTIVE"
+      ? `${user.username} auto logged out`
+      : `${user.username} logged out`,
+});
     return res.status(200).json({
       success: true,
       message:
@@ -1082,9 +1047,9 @@ router.get(
 
       const { userId } = req.params;
 
-      const activities = await history.find({
-        userId
-      })
+     const activities = await Activity.find({
+  userId: req.params.userId,
+}).sort({ createdAt: -1 });
         .sort({ createdAt: -1 });
 
       res.status(200).json(activities);
@@ -1108,7 +1073,7 @@ router.get("/last-login/:id", async (req, res) => {
   try {
     console.log("User Id:", req.params.id);
 
-    const lastLogin = await history.findOne({
+    const lastLogin = await Activity.findOne({
       userId: req.params.id,
       action: "LOGIN"
     }).sort({ createdAt: -1 });
