@@ -1050,7 +1050,7 @@ router.get(
      const activities = await Activity.find({
   userId: req.params.userId,
 }).sort({ createdAt: -1 });
-        .sort({ createdAt: -1 });
+        
 
       res.status(200).json(activities);
 
