@@ -23,6 +23,8 @@ router.post("/create", authMiddleware, async (req, res) => {
       data: lead,
     });
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({
       success: false,
       message: error.message,
