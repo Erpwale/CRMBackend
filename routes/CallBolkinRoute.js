@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Support = require("../models/callBooking");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
-
+const logActivity = require("../utils/Activitylog")
 // ✅ CREATE
 router.post("/create", authMiddleware, async (req, res) => {
   try {
