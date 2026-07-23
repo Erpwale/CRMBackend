@@ -13,7 +13,6 @@ const {
 const fs = require("fs");
 const path = require("path");
 const Ledger = require("../models/Ledger.js");
-const logActivity=require("../utils/Activitylog")
 const logoPath = path.join(__dirname, "../assets/erplogo.jpeg");
 const erpstamp = path.join(__dirname, "../assets/erpstamp.png");
 const logoBase64 = fs.readFileSync(logoPath, "base64");
