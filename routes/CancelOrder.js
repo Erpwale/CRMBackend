@@ -67,9 +67,9 @@ await logActivity({
   userId: req.user.id,
   module: "CANCEL_ORDER",
   action: "CREATE",
-  description: `Created cancellation request for Order ${cancelOrder.orderNo}`,
-  recordId: cancelOrder._id,
-  recordName: cancelOrder.orderNo,
+  description: `Created cancellation request for Order ${CancelOrder.orderNo}`,
+  recordId: CancelOrder._id,
+  recordName: CancelOrder.orderNo,
 });
     return res.status(200).json({
       success: true,
