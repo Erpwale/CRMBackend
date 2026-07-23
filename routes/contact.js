@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { io } = require("../server");
 const saveHistory = require("../utils/saveHistory");
-
+const logActivity = require("../utils/Activitylog")
 
 // CREATE CONTACT
 router.post("/create", authMiddleware, async (req, res) => {
