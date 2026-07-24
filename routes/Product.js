@@ -24,15 +24,24 @@ router.post(
       console.log( "log",req.body);
   
   try {
-    const product = await Product.create({
-      productName: req.body.productName,
-      description: req.body.description,
-      category: req.body.category,
-      pricingType: req.body.pricingType,
-      price: req.body.price,
-      features: JSON.parse(req.body.features || "[]"),
-      image: req.file ? req.file.originalname : "",
-    });
+  const product = await Product.create({
+  productName: req.body.productName,
+  description: req.body.description,
+  category: req.body.category,
+  pricingType: req.body.pricingType,
+  price: Number(req.body.price),
+
+  features: JSON.parse(
+    req.body.features ||
+      '{"topFeatures":[],"includedFeatures":[]}'
+  ),
+
+  specifications: JSON.parse(
+    req.body.specifications || "[]"
+  ),
+
+  image: req.file ? req.file.originalname : "",
+});
     await logActivity({
   req,
   userId: req.user.id,
