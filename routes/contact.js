@@ -379,7 +379,10 @@ router.post("/customer-login", async (req, res) => {
         message: "Customer not found",
       });
     }
-
+console.log("Request Body:", req.body);
+console.log("Password from request:", password);
+console.log("Customer:", customer);
+console.log("Customer Password:", customer.password);
     // CHECK PASSWORD
     const isMatch = await bcrypt.compare(
       password,
