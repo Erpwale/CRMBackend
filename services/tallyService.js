@@ -493,7 +493,7 @@ const json = {
 
 // Print XML in console
 
-// console.log(xml);
+console.log(json);
 
   const response = await axios.post(
    "https://antarctic-whacky-hastiness.ngrok-free.dev",
@@ -504,7 +504,7 @@ const json = {
         }
     }
 );
-console.log(response)
+console.log("response:",response)
 // return response.data;
   } catch (err) {
     console.error("Error creating XML:");
