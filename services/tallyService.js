@@ -497,7 +497,7 @@ fs.writeFileSync("salesVoucher.json", json);
 
   const response = await axios.post(
    "https://antarctic-whacky-hastiness.ngrok-free.dev",
-    xml,
+    json,
     {
         headers: {
             "Content-Type": "application/json"
