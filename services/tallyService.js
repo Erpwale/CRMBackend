@@ -504,7 +504,7 @@ fs.writeFileSync("salesVoucher.json", json);
         }
     }
 );
-
+console.log(response)
 return response.data;
   } catch (err) {
     console.error("Error creating XML:");
