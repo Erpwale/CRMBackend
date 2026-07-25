@@ -42,6 +42,8 @@ router.post(
         meetingLink,
         agenda,
       } = req.body;
+      console.log(req.body);
+      
 
       if (!sessionTitle || !trainer || !duration || !startDateTime) {
         return res.status(400).json({
