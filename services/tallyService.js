@@ -47,7 +47,7 @@ const xml=`
    </REQUESTDESC>
    <REQUESTDATA>
     <TALLYMESSAGE xmlns:UDF="TallyUDF">
-     <VOUCHER REMOTEID="e4bff212-f722-4649-b301-8f1354493d45-00000015" VCHKEY="e4bff212-f722-4649-b301-8f1354493d45-0000b47b:00000008" VCHTYPE="Sales" ACTION="Create" OBJVIEW="Invoice Voucher View">
+     <VOUCHER  VCHTYPE="Sales" ACTION="Create" OBJVIEW="Invoice Voucher View">
       <ADDRESS.LIST TYPE="String">
        <ADDRESS>${addressLine1}</ADDRESS>
        <ADDRESS>${addressLine2}</ADDRESS>
