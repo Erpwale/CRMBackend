@@ -33,8 +33,12 @@ const roundoff=order.roundoff||"";
 
 
 const json = {
+      static_variables: {
+    svCurrentCompany: "YOUR COMPANY NAME",
+    svVchImportFormat: "JSONEX"
+  },
 
-    "tallymessage": [
+    tallymessage: [
         {
             "metadata": {
                 "type": "Voucher", 
@@ -70,7 +74,7 @@ const json = {
             ], 
             "date": "20260401", 
             "vchstatusdate": "20260401", 
-            "guid": "e4bff212-f722-4649-b301-8f1354493d45-0000004a", 
+  
             "gstregistrationtype": "Regular", 
             "vatdealertype": "Regular", 
             "statename": "Maharashtra", 
@@ -245,9 +249,9 @@ const json = {
             "uaeeinvisbillprepaidamtovrdn": false, 
             "resetirnqrcode": false, 
             "isvchexchanged": false, 
-            "alterid": " 72", 
-            "masterid": " 74", 
-            "voucherkey": "198049531953224", 
+         
+            
+            
             "voucherretainkey": "1", 
             "vouchernumberseries": "Default", 
             "allinventoryentries": [
@@ -496,11 +500,15 @@ const json = {
 console.log(json);
 
   const response = await axios.post(
-   "https://antarctic-whacky-hastiness.ngrok-free.dev",
+    "https://antarctic-whacky-hastiness.ngrok-free.dev",
     json,
     {
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Version": "1",
+            "TallyRequest": "Import",
+            "Type": "Data",
+            "Id": "Vouchers"
         }
     }
 );
