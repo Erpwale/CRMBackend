@@ -518,7 +518,7 @@ console.log(json);
         }
     }
 );
-console.log("response:",response)
+console.log(response.data.data.import_result);
 // return response.data;
   } catch (err) {
     console.error("Error creating XML:");
