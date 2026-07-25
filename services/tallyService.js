@@ -622,9 +622,9 @@ fs.writeFileSync("salesVoucher.xml", xml);
 
 return response.data;
   } catch (err) {
-    // console.error("Error creating XML:");
-    // console.error(err);
-    // console.error(err.stack);
+    console.error("Error creating XML:");
+    console.error(err);
+    console.error(err.stack);
     throw err;
 }
 };
