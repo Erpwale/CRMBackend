@@ -489,7 +489,7 @@ const json = {
 
 
 // Save XML to file
-fs.writeFileSync("salesVoucher.xml", json);
+fs.writeFileSync("salesVoucher.json", json);
 
 // Print XML in console
 
