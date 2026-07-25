@@ -33,10 +33,16 @@ const roundoff=order.roundoff||"";
 
 
 const json = {
-      static_variables: {
-    svCurrentCompany: "Airgital",
-    svVchImportFormat: "JSONEX"
-  },
+     "static_variables": [
+        {
+            "name": "svVchImportFormat",
+            "value": "jsonex"
+        },
+    {
+            "name": "svCurrentCompany",
+            "value": "Airgital"
+        }
+    ],
 
     tallymessage: [
         {
