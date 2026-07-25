@@ -32,579 +32,464 @@ const roundoff=order.roundoff||"";
 
 
 
-const xml=`
-<ENVELOPE>
- <HEADER>
-  <TALLYREQUEST>Import Data</TALLYREQUEST>
- </HEADER>
- <BODY>
-  <IMPORTDATA>
-   <REQUESTDESC>
-    <REPORTNAME>Vouchers</REPORTNAME>
-    <STATICVARIABLES>
-     <SVCURRENTCOMPANY>Airgital</SVCURRENTCOMPANY>
-    </STATICVARIABLES>
-   </REQUESTDESC>
-   <REQUESTDATA>
-    <TALLYMESSAGE xmlns:UDF="TallyUDF">
-     <VOUCHER  VCHTYPE="Sales" ACTION="Create" OBJVIEW="Invoice Voucher View">
-      <ADDRESS.LIST TYPE="String">
-       <ADDRESS>${addressLine1}</ADDRESS>
-       <ADDRESS>${addressLine2}</ADDRESS>
-       <ADDRESS>${addressLine3}</ADDRESS>
-      </ADDRESS.LIST>
-      <BASICBUYERADDRESS.LIST TYPE="String">
-       <BASICBUYERADDRESS>${addressLine1}</BASICBUYERADDRESS>
-       <BASICBUYERADDRESS>${addressLine2}</BASICBUYERADDRESS>
-       <BASICBUYERADDRESS>${addressLine3}</BASICBUYERADDRESS>
-      </BASICBUYERADDRESS.LIST>
-      <OLDAUDITENTRYIDS.LIST TYPE="Number">
-       <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
-      </OLDAUDITENTRYIDS.LIST>
+const json = {
 
-
-      <DATE>20260701</DATE>
-      <REFERENCEDATE>20260701</REFERENCEDATE>
-      <VCHSTATUSDATE>20260701</VCHSTATUSDATE>
-
-      <GUID>e4bff212-f722-4649-b301-8f1354493d45-00000015</GUID>
-      <GSTREGISTRATIONTYPE>${gstType}</GSTREGISTRATIONTYPE>
-      <VATDEALERTYPE>${gstType}</VATDEALERTYPE>
-      <STATENAME>${state}</STATENAME>
-      <COUNTRYOFRESIDENCE>India</COUNTRYOFRESIDENCE>
-      <PARTYGSTIN>${gstin}</PARTYGSTIN>
-      <PLACEOFSUPPLY>${state}</PLACEOFSUPPLY>
-      <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
-      <PARTYNAME>${companyName}</PARTYNAME>
-      <GSTREGISTRATION TAXTYPE="GST" TAXREGISTRATION="">${state} Registration</GSTREGISTRATION>
-      <PARTYLEDGERNAME>${companyName}</PARTYLEDGERNAME>
-      <VOUCHERNUMBER>${salesOrderNo}</VOUCHERNUMBER>
-      <BASICBUYERNAME>${companyName}</BASICBUYERNAME>
-      <CMPGSTREGISTRATIONTYPE>${gstType}</CMPGSTREGISTRATIONTYPE>
-      <REFERENCE>${invoiceNo}</REFERENCE>
-      <PARTYMAILINGNAME>${companyName}</PARTYMAILINGNAME>
-      <PARTYPINCODE>${pincode}</PARTYPINCODE>
-      <CONSIGNEEGSTIN>${gstin}</CONSIGNEEGSTIN>
-      <CONSIGNEEMAILINGNAME>${companyName}</CONSIGNEEMAILINGNAME>
-      <CONSIGNEEPINCODE>${pincode}</CONSIGNEEPINCODE>
-      <CONSIGNEESTATENAME>${state}</CONSIGNEESTATENAME>
-      <CMPGSTSTATE>${state}</CMPGSTSTATE>
-      <CONSIGNEECOUNTRYNAME>India</CONSIGNEECOUNTRYNAME>
-      <BASICBASEPARTYNAME>${companyName}</BASICBASEPARTYNAME>
-      <NUMBERINGSTYLE>Auto Retain</NUMBERINGSTYLE>
-      <CSTFORMISSUETYPE>&#4; Not Applicable</CSTFORMISSUETYPE>
-      <CSTFORMRECVTYPE>&#4; Not Applicable</CSTFORMRECVTYPE>
-      <FBTPAYMENTTYPE>Default</FBTPAYMENTTYPE>
-      <PERSISTEDVIEW>Invoice Voucher View</PERSISTEDVIEW>
-      <VCHSTATUSTAXADJUSTMENT>Default</VCHSTATUSTAXADJUSTMENT>
-      <VCHSTATUSVOUCHERTYPE>Sales</VCHSTATUSVOUCHERTYPE>
-      <VCHSTATUSTAXUNIT>${state} Registration</VCHSTATUSTAXUNIT>
-      <VCHGSTCLASS>&#4; Not Applicable</VCHGSTCLASS>
-      <COSTCENTRENAME>${salesPerson}</COSTCENTRENAME>
-      <VCHENTRYMODE>Item Invoice</VCHENTRYMODE>
-      <DIFFACTUALQTY>No</DIFFACTUALQTY>
-      <ISMSTFROMSYNC>No</ISMSTFROMSYNC>
-      <ISDELETED>No</ISDELETED>
-      <ISSECURITYONWHENENTERED>No</ISSECURITYONWHENENTERED>
-      <ASORIGINAL>No</ASORIGINAL>
-      <AUDITED>No</AUDITED>
-      <ISCOMMONPARTY>No</ISCOMMONPARTY>
-      <FORJOBCOSTING>No</FORJOBCOSTING>
-      <ISOPTIONAL>No</ISOPTIONAL>
-      <EFFECTIVEDATE>20260701</EFFECTIVEDATE>
-      <USEFOREXCISE>No</USEFOREXCISE>
-      <ISFORJOBWORKIN>No</ISFORJOBWORKIN>
-      <ALLOWCONSUMPTION>No</ALLOWCONSUMPTION>
-      <USEFORINTEREST>No</USEFORINTEREST>
-      <USEFORGAINLOSS>No</USEFORGAINLOSS>
-      <USEFORGODOWNTRANSFER>No</USEFORGODOWNTRANSFER>
-      <USEFORCOMPOUND>No</USEFORCOMPOUND>
-      <USEFORSERVICETAX>No</USEFORSERVICETAX>
-      <ISREVERSECHARGEAPPLICABLE>No</ISREVERSECHARGEAPPLICABLE>
-      <ISSYSTEM>No</ISSYSTEM>
-      <ISFETCHEDONLY>No</ISFETCHEDONLY>
-      <ISGSTOVERRIDDEN>No</ISGSTOVERRIDDEN>
-      <ISCANCELLED>No</ISCANCELLED>
-      <ISONHOLD>No</ISONHOLD>
-      <ISSUMMARY>No</ISSUMMARY>
-      <ISECOMMERCESUPPLY>No</ISECOMMERCESUPPLY>
-      <ISBOENOTAPPLICABLE>No</ISBOENOTAPPLICABLE>
-      <ISGSTSECSEVENAPPLICABLE>No</ISGSTSECSEVENAPPLICABLE>
-      <IGNOREEINVVALIDATION>No</IGNOREEINVVALIDATION>
-      <CMPGSTISOTHTERRITORYASSESSEE>No</CMPGSTISOTHTERRITORYASSESSEE>
-      <PARTYGSTISOTHTERRITORYASSESSEE>No</PARTYGSTISOTHTERRITORYASSESSEE>
-      <IRNJSONEXPORTED>No</IRNJSONEXPORTED>
-      <IRNCANCELLED>No</IRNCANCELLED>
-      <IGNOREGSTCONFLICTINMIG>No</IGNOREGSTCONFLICTINMIG>
-      <ISOPBALTRANSACTION>No</ISOPBALTRANSACTION>
-      <IGNOREGSTFORMATVALIDATION>No</IGNOREGSTFORMATVALIDATION>
-      <ISELIGIBLEFORITC>Yes</ISELIGIBLEFORITC>
-      <IGNOREGSTOPTIONALUNCERTAIN>No</IGNOREGSTOPTIONALUNCERTAIN>
-      <UPDATESUMMARYVALUES>No</UPDATESUMMARYVALUES>
-      <ISEWAYBILLAPPLICABLE>No</ISEWAYBILLAPPLICABLE>
-      <ISDELETEDRETAINED>No</ISDELETEDRETAINED>
-      <ISNULL>No</ISNULL>
-      <ISEXCISEVOUCHER>No</ISEXCISEVOUCHER>
-      <EXCISETAXOVERRIDE>No</EXCISETAXOVERRIDE>
-      <USEFORTAXUNITTRANSFER>No</USEFORTAXUNITTRANSFER>
-      <ISEXER1NOPOVERWRITE>No</ISEXER1NOPOVERWRITE>
-      <ISEXF2NOPOVERWRITE>No</ISEXF2NOPOVERWRITE>
-      <ISEXER3NOPOVERWRITE>No</ISEXER3NOPOVERWRITE>
-      <IGNOREPOSVALIDATION>No</IGNOREPOSVALIDATION>
-      <EXCISEOPENING>No</EXCISEOPENING>
-      <USEFORFINALPRODUCTION>No</USEFORFINALPRODUCTION>
-      <ISTDSOVERRIDDEN>No</ISTDSOVERRIDDEN>
-      <ISTCSOVERRIDDEN>No</ISTCSOVERRIDDEN>
-      <ISTDSTCSCASHVCH>No</ISTDSTCSCASHVCH>
-      <INCLUDEADVPYMTVCH>No</INCLUDEADVPYMTVCH>
-      <ISSUBWORKSCONTRACT>No</ISSUBWORKSCONTRACT>
-      <ISVATOVERRIDDEN>No</ISVATOVERRIDDEN>
-      <IGNOREORIGVCHDATE>No</IGNOREORIGVCHDATE>
-      <ISVATPAIDATCUSTOMS>No</ISVATPAIDATCUSTOMS>
-      <ISDECLAREDTOCUSTOMS>No</ISDECLAREDTOCUSTOMS>
-      <VATADVANCEPAYMENT>No</VATADVANCEPAYMENT>
-      <VATADVPAY>No</VATADVPAY>
-      <ISCSTDELCAREDGOODSSALES>No</ISCSTDELCAREDGOODSSALES>
-      <ISVATRESTAXINV>No</ISVATRESTAXINV>
-      <ISSERVICETAXOVERRIDDEN>No</ISSERVICETAXOVERRIDDEN>
-      <ISISDVOUCHER>No</ISISDVOUCHER>
-      <ISEXCISEOVERRIDDEN>No</ISEXCISEOVERRIDDEN>
-      <ISEXCISESUPPLYVCH>No</ISEXCISESUPPLYVCH>
-      <GSTNOTEXPORTED>No</GSTNOTEXPORTED>
-      <IGNOREGSTINVALIDATION>No</IGNOREGSTINVALIDATION>
-      <ISGSTREFUND>No</ISGSTREFUND>
-      <OVRDNEWAYBILLAPPLICABILITY>No</OVRDNEWAYBILLAPPLICABILITY>
-      <ISVATPRINCIPALACCOUNT>No</ISVATPRINCIPALACCOUNT>
-      <VCHSTATUSISVCHNUMUSED>No</VCHSTATUSISVCHNUMUSED>
-      <VCHGSTSTATUSISINCLUDED>No</VCHGSTSTATUSISINCLUDED>
-      <VCHGSTSTATUSISUNCERTAIN>Yes</VCHGSTSTATUSISUNCERTAIN>
-      <VCHGSTSTATUSISEXCLUDED>No</VCHGSTSTATUSISEXCLUDED>
-      <VCHGSTSTATUSISAPPLICABLE>Yes</VCHGSTSTATUSISAPPLICABLE>
-      <VCHGSTSTATUSISGSTR2BRECONCILED>No</VCHGSTSTATUSISGSTR2BRECONCILED>
-      <VCHGSTSTATUSISGSTR2BONLYINPORTAL>No</VCHGSTSTATUSISGSTR2BONLYINPORTAL>
-      <VCHGSTSTATUSISGSTR2BONLYINBOOKS>No</VCHGSTSTATUSISGSTR2BONLYINBOOKS>
-      <VCHGSTSTATUSISGSTR2BMISMATCH>No</VCHGSTSTATUSISGSTR2BMISMATCH>
-      <VCHGSTSTATUSISGSTR2BINDIFFPERIOD>No</VCHGSTSTATUSISGSTR2BINDIFFPERIOD>
-      <VCHGSTSTATUSISRETEFFDATEOVERRDN>No</VCHGSTSTATUSISRETEFFDATEOVERRDN>
-      <VCHGSTSTATUSISOVERRDN>No</VCHGSTSTATUSISOVERRDN>
-      <VCHGSTSTATUSISSTATINDIFFDATE>No</VCHGSTSTATUSISSTATINDIFFDATE>
-      <VCHGSTSTATUSISRETINDIFFDATE>No</VCHGSTSTATUSISRETINDIFFDATE>
-      <VCHGSTSTATUSMAINSECTIONEXCLUDED>No</VCHGSTSTATUSMAINSECTIONEXCLUDED>
-      <VCHGSTSTATUSISBRANCHTRANSFEROUT>No</VCHGSTSTATUSISBRANCHTRANSFEROUT>
-      <VCHGSTSTATUSISSYSTEMSUMMARY>No</VCHGSTSTATUSISSYSTEMSUMMARY>
-      <VCHSTATUSISUNREGISTEREDRCM>No</VCHSTATUSISUNREGISTEREDRCM>
-      <VCHSTATUSISOPTIONAL>No</VCHSTATUSISOPTIONAL>
-      <VCHSTATUSISCANCELLED>No</VCHSTATUSISCANCELLED>
-      <VCHSTATUSISDELETED>No</VCHSTATUSISDELETED>
-      <VCHSTATUSISOPENINGBALANCE>No</VCHSTATUSISOPENINGBALANCE>
-      <VCHSTATUSISFETCHEDONLY>No</VCHSTATUSISFETCHEDONLY>
-      <VCHGSTSTATUSISOPTIONALUNCERTAIN>No</VCHGSTSTATUSISOPTIONALUNCERTAIN>
-      <VCHSTATUSISREACCEPTFORHSNDONE>No</VCHSTATUSISREACCEPTFORHSNDONE>
-      <VCHSTATUSISREACCEPHSNSIXONEDONE>Yes</VCHSTATUSISREACCEPHSNSIXONEDONE>
-      <PAYMENTLINKHASMULTIREF>No</PAYMENTLINKHASMULTIREF>
-      <ISSHIPPINGWITHINSTATE>No</ISSHIPPINGWITHINSTATE>
-      <ISOVERSEASTOURISTTRANS>No</ISOVERSEASTOURISTTRANS>
-      <ISDESIGNATEDZONEPARTY>No</ISDESIGNATEDZONEPARTY>
-      <HASCASHFLOW>No</HASCASHFLOW>
-      <ISPOSTDATED>No</ISPOSTDATED>
-      <USETRACKINGNUMBER>No</USETRACKINGNUMBER>
-      <ISINVOICE>Yes</ISINVOICE>
-      <MFGJOURNAL>No</MFGJOURNAL>
-      <HASDISCOUNTS>No</HASDISCOUNTS>
-      <ASPAYSLIP>No</ASPAYSLIP>
-      <ISCOSTCENTRE>Yes</ISCOSTCENTRE>
-      <ISSTXNONREALIZEDVCH>No</ISSTXNONREALIZEDVCH>
-      <ISEXCISEMANUFACTURERON>No</ISEXCISEMANUFACTURERON>
-      <ISBLANKCHEQUE>No</ISBLANKCHEQUE>
-      <ISVOID>No</ISVOID>
-      <ORDERLINESTATUS>No</ORDERLINESTATUS>
-      <VATISAGNSTCANCSALES>No</VATISAGNSTCANCSALES>
-      <VATISPURCEXEMPTED>No</VATISPURCEXEMPTED>
-      <ISVATRESTAXINVOICE>No</ISVATRESTAXINVOICE>
-      <VATISASSESABLECALCVCH>No</VATISASSESABLECALCVCH>
-      <ISVATDUTYPAID>Yes</ISVATDUTYPAID>
-      <ISDELIVERYSAMEASCONSIGNEE>No</ISDELIVERYSAMEASCONSIGNEE>
-      <ISDISPATCHSAMEASCONSIGNOR>No</ISDISPATCHSAMEASCONSIGNOR>
-      <ISDELETEDVCHRETAINED>No</ISDELETEDVCHRETAINED>
-      <VCHONLYADDLINFOUPDATED>No</VCHONLYADDLINFOUPDATED>
-      <CHANGEVCHMODE>No</CHANGEVCHMODE>
-      <RESETIRNQRCODE>No</RESETIRNQRCODE>
-      <ALTERID> 28</ALTERID>
-      <MASTERID> 21</MASTERID>
-      <VOUCHERKEY>198440373977096</VOUCHERKEY>
-      <VOUCHERRETAINKEY>41</VOUCHERRETAINKEY>
-      <VOUCHERNUMBERSERIES>Default</VOUCHERNUMBERSERIES>
-      <EWAYBILLDETAILS.LIST>      </EWAYBILLDETAILS.LIST>
-      <EXCLUDEDTAXATIONS.LIST>      </EXCLUDEDTAXATIONS.LIST>
-      <OLDAUDITENTRIES.LIST>      </OLDAUDITENTRIES.LIST>
-      <ACCOUNTAUDITENTRIES.LIST>      </ACCOUNTAUDITENTRIES.LIST>
-      <AUDITENTRIES.LIST>      </AUDITENTRIES.LIST>
-      <DUTYHEADDETAILS.LIST>      </DUTYHEADDETAILS.LIST>
-      <GSTADVADJDETAILS.LIST>      </GSTADVADJDETAILS.LIST>
-      <ALLINVENTORYENTRIES.LIST>
-       <BASICUSERDESCRIPTION.LIST TYPE="String">
-        <BASICUSERDESCRIPTION>Prevents transactions like sales, delivery notes, and stock journals&#13;&#10;when issued quantity exceeds available stock. Ensures accurate&#13;&#10;inventory control.</BASICUSERDESCRIPTION>
-       </BASICUSERDESCRIPTION.LIST>
-
-
-       ${order.products.map(product => `
-        
-        <STOCKITEMNAME>${product.name}</STOCKITEMNAME>
-        <GSTOVRDNISREVCHARGEAPPL>&#4; Not Applicable</GSTOVRDNISREVCHARGEAPPL>
-        <GSTOVRDNTAXABILITY>Taxable</GSTOVRDNTAXABILITY>
-        <GSTSOURCETYPE>Stock Item</GSTSOURCETYPE>
-        <GSTITEMSOURCE>${product.name}</GSTITEMSOURCE>
-        <HSNSOURCETYPE>Stock Item</HSNSOURCETYPE>
-        <HSNITEMSOURCE>${product.name}</HSNITEMSOURCE>
-        <GSTOVRDNSTOREDNATURE/>
-        
-        <GSTOVRDNTYPEOFSUPPLY>Services</GSTOVRDNTYPEOFSUPPLY>
-       <GSTRATEINFERAPPLICABILITY>As per Masters/Company</GSTRATEINFERAPPLICABILITY>
-       <GSTHSNINFERAPPLICABILITY>As per Masters/Company</GSTHSNINFERAPPLICABILITY>
-       <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-       <ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>
-       <STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>
-       <CONTENTNEGISPOS>No</CONTENTNEGISPOS>
-       <ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>
-       <ISAUTONEGATE>No</ISAUTONEGATE>
-       <ISCUSTOMSCLEARANCE>No</ISCUSTOMSCLEARANCE>
-       <ISTRACKCOMPONENT>No</ISTRACKCOMPONENT>
-       <ISTRACKPRODUCTION>No</ISTRACKPRODUCTION>
-       <ISPRIMARYITEM>No</ISPRIMARYITEM>
-       <ISSCRAP>No</ISSCRAP>
-       <RATE>${product.rate}/Nos</RATE>
-       <AMOUNT>${product.subtotal}</AMOUNT>
-       <ACTUALQTY> ${product.qty}</ACTUALQTY>
-       <BILLEDQTY> ${product.qty}</BILLEDQTY>
-       <BATCHALLOCATIONS.LIST>
-        <GODOWNNAME>Main Location</GODOWNNAME>
-        <BATCHNAME>Primary Batch</BATCHNAME>
-        <INDENTNO>&#4; Not Applicable</INDENTNO>
-        <ORDERNO>${invoiceNo}</ORDERNO>
-        <TRACKINGNUMBER>&#4; Not Applicable</TRACKINGNUMBER>
-        <DYNAMICCSTISCLEARED>No</DYNAMICCSTISCLEARED>
-        <AMOUNT>${product.subtotal}</AMOUNT>
-        <ACTUALQTY> ${product.qty}</ACTUALQTY>
-        <BILLEDQTY> ${product.qty}</BILLEDQTY>
-        <ORDERDUEDATE JD="46112" P="1-Apr-26">1-Apr-26</ORDERDUEDATE>
-        <ADDITIONALDETAILS.LIST>        </ADDITIONALDETAILS.LIST>
-        <VOUCHERCOMPONENTLIST.LIST>        </VOUCHERCOMPONENTLIST.LIST>
-       </BATCHALLOCATIONS.LIST>
-       <ACCOUNTINGALLOCATIONS.LIST>
-        <OLDAUDITENTRYIDS.LIST TYPE="Number">
-         <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
-        </OLDAUDITENTRYIDS.LIST>
-        <LEDGERNAME>CRM Sales</LEDGERNAME>
-        <GSTCLASS>&#4; Not Applicable</GSTCLASS>
-        <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-        <LEDGERFROMITEM>No</LEDGERFROMITEM>
-        <REMOVEZEROENTRIES>No</REMOVEZEROENTRIES>
-        <ISPARTYLEDGER>No</ISPARTYLEDGER>
-        <GSTOVERRIDDEN>No</GSTOVERRIDDEN>
-        <ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>
-        <STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>
-        <STRDGSTISPARTYLEDGER>No</STRDGSTISPARTYLEDGER>
-        <STRDGSTISDUTYLEDGER>No</STRDGSTISDUTYLEDGER>
-        <CONTENTNEGISPOS>No</CONTENTNEGISPOS>
-        <ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>
-        <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>
-        <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>
-        <AMOUNT>${product.subtotal}</AMOUNT>
-        `).join("")}
-        <SERVICETAXDETAILS.LIST>        </SERVICETAXDETAILS.LIST>
-        <CATEGORYALLOCATIONS.LIST>
-         <CATEGORY>Primary Cost Category</CATEGORY>
-         <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-         <COSTCENTREALLOCATIONS.LIST>
-          <NAME>${salesPerson}</NAME>
-          <AMOUNT>${grossTotal}</AMOUNT>
-         </COSTCENTREALLOCATIONS.LIST>
-        </CATEGORYALLOCATIONS.LIST>
-        <BANKALLOCATIONS.LIST>        </BANKALLOCATIONS.LIST>
-        <BILLALLOCATIONS.LIST>        </BILLALLOCATIONS.LIST>
-        <INTERESTCOLLECTION.LIST>        </INTERESTCOLLECTION.LIST>
-        <OLDAUDITENTRIES.LIST>        </OLDAUDITENTRIES.LIST>
-        <ACCOUNTAUDITENTRIES.LIST>        </ACCOUNTAUDITENTRIES.LIST>
-        <AUDITENTRIES.LIST>        </AUDITENTRIES.LIST>
-        <INPUTCRALLOCS.LIST>        </INPUTCRALLOCS.LIST>
-        <DUTYHEADDETAILS.LIST>        </DUTYHEADDETAILS.LIST>
-        <EXCISEDUTYHEADDETAILS.LIST>        </EXCISEDUTYHEADDETAILS.LIST>
-        <RATEDETAILS.LIST>        </RATEDETAILS.LIST>
-        <SUMMARYALLOCS.LIST>        </SUMMARYALLOCS.LIST>
-        <CENVATDUTYALLOCATIONS.LIST>        </CENVATDUTYALLOCATIONS.LIST>
-        <STPYMTDETAILS.LIST>        </STPYMTDETAILS.LIST>
-        <EXCISEPAYMENTALLOCATIONS.LIST>        </EXCISEPAYMENTALLOCATIONS.LIST>
-        <TAXBILLALLOCATIONS.LIST>        </TAXBILLALLOCATIONS.LIST>
-        <TAXOBJECTALLOCATIONS.LIST>        </TAXOBJECTALLOCATIONS.LIST>
-        <TDSEXPENSEALLOCATIONS.LIST>        </TDSEXPENSEALLOCATIONS.LIST>
-        <VATSTATUTORYDETAILS.LIST>        </VATSTATUTORYDETAILS.LIST>
-        <COSTTRACKALLOCATIONS.LIST>        </COSTTRACKALLOCATIONS.LIST>
-        <REFVOUCHERDETAILS.LIST>        </REFVOUCHERDETAILS.LIST>
-        <INVOICEWISEDETAILS.LIST>        </INVOICEWISEDETAILS.LIST>
-        <VATITCDETAILS.LIST>        </VATITCDETAILS.LIST>
-        <ADVANCETAXDETAILS.LIST>        </ADVANCETAXDETAILS.LIST>
-        <TAXTYPEALLOCATIONS.LIST>        </TAXTYPEALLOCATIONS.LIST>
-       </ACCOUNTINGALLOCATIONS.LIST>
-       <DUTYHEADDETAILS.LIST>       </DUTYHEADDETAILS.LIST>
-       <RATEDETAILS.LIST>
-        <GSTRATEDUTYHEAD>CGST</GSTRATEDUTYHEAD>
-        <GSTRATEVALUATIONTYPE>Based on Value</GSTRATEVALUATIONTYPE>
-        <GSTRATE> 9</GSTRATE>
-       </RATEDETAILS.LIST>
-       <RATEDETAILS.LIST>
-        <GSTRATEDUTYHEAD>SGST/UTGST</GSTRATEDUTYHEAD>
-        <GSTRATEVALUATIONTYPE>Based on Value</GSTRATEVALUATIONTYPE>
-        <GSTRATE> 9</GSTRATE>
-       </RATEDETAILS.LIST>
-       <RATEDETAILS.LIST>
-        <GSTRATEDUTYHEAD>IGST</GSTRATEDUTYHEAD>
-        <GSTRATEVALUATIONTYPE>Based on Value</GSTRATEVALUATIONTYPE>
-        <GSTRATE> 18</GSTRATE>
-       </RATEDETAILS.LIST>
-       <RATEDETAILS.LIST>
-        <GSTRATEDUTYHEAD>Cess</GSTRATEDUTYHEAD>
-        <GSTRATEVALUATIONTYPE>&#4; Not Applicable</GSTRATEVALUATIONTYPE>
-       </RATEDETAILS.LIST>
-       <RATEDETAILS.LIST>
-        <GSTRATEDUTYHEAD>State Cess</GSTRATEDUTYHEAD>
-        <GSTRATEVALUATIONTYPE>Based on Value</GSTRATEVALUATIONTYPE>
-       </RATEDETAILS.LIST>
-       <SUPPLEMENTARYDUTYHEADDETAILS.LIST>       </SUPPLEMENTARYDUTYHEADDETAILS.LIST>
-       <TAXOBJECTALLOCATIONS.LIST>       </TAXOBJECTALLOCATIONS.LIST>
-       <REFVOUCHERDETAILS.LIST>       </REFVOUCHERDETAILS.LIST>
-       <EXCISEALLOCATIONS.LIST>       </EXCISEALLOCATIONS.LIST>
-       <EXPENSEALLOCATIONS.LIST>       </EXPENSEALLOCATIONS.LIST>
-      </ALLINVENTORYENTRIES.LIST>
-      <CONTRITRANS.LIST>      </CONTRITRANS.LIST>
-      <EWAYBILLERRORLIST.LIST>      </EWAYBILLERRORLIST.LIST>
-      <IRNERRORLIST.LIST>      </IRNERRORLIST.LIST>
-      <HARYANAVAT.LIST>      </HARYANAVAT.LIST>
-      <SUPPLEMENTARYDUTYHEADDETAILS.LIST>      </SUPPLEMENTARYDUTYHEADDETAILS.LIST>
-      <INVOICEDELNOTES.LIST>      </INVOICEDELNOTES.LIST>
-      <INVOICEORDERLIST.LIST>
-       <BASICORDERDATE>20260401</BASICORDERDATE>
-       <ORDERTYPE>Sales Order</ORDERTYPE>
-       <BASICPURCHASEORDERNO>${invoiceNo}</BASICPURCHASEORDERNO>
-      </INVOICEORDERLIST.LIST>
-      <INVOICEINDENTLIST.LIST>      </INVOICEINDENTLIST.LIST>
-      <ATTENDANCEENTRIES.LIST>      </ATTENDANCEENTRIES.LIST>
-      <ORIGINVOICEDETAILS.LIST>      </ORIGINVOICEDETAILS.LIST>
-      <INVOICEEXPORTLIST.LIST>      </INVOICEEXPORTLIST.LIST>
-      <LEDGERENTRIES.LIST>
-       <OLDAUDITENTRYIDS.LIST TYPE="Number">
-        <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
-       </OLDAUDITENTRYIDS.LIST>
-       <LEDGERNAME>${companyName}</LEDGERNAME>
-       <GSTCLASS>&#4; Not Applicable</GSTCLASS>
-       <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
-       <LEDGERFROMITEM>No</LEDGERFROMITEM>
-       <REMOVEZEROENTRIES>No</REMOVEZEROENTRIES>
-       <ISPARTYLEDGER>Yes</ISPARTYLEDGER>
-       <GSTOVERRIDDEN>No</GSTOVERRIDDEN>
-       <ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>
-       <STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>
-       <STRDGSTISPARTYLEDGER>No</STRDGSTISPARTYLEDGER>
-       <STRDGSTISDUTYLEDGER>No</STRDGSTISDUTYLEDGER>
-       <CONTENTNEGISPOS>No</CONTENTNEGISPOS>
-       <ISLASTDEEMEDPOSITIVE>Yes</ISLASTDEEMEDPOSITIVE>
-       <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>
-       <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>
-       <AMOUNT>-${grossTotal}</AMOUNT>
-       <SERVICETAXDETAILS.LIST>       </SERVICETAXDETAILS.LIST>
-       <BANKALLOCATIONS.LIST>       </BANKALLOCATIONS.LIST>
-       <BILLALLOCATIONS.LIST>
-        <NAME>${salesOrderNo}</NAME>
-        <BILLTYPE>New Ref</BILLTYPE>
-        <TDSDEDUCTEEISSPECIALRATE>No</TDSDEDUCTEEISSPECIALRATE>
-        <AMOUNT>-${grossTotal}</AMOUNT>
-        <INTERESTCOLLECTION.LIST>        </INTERESTCOLLECTION.LIST>
-        <STBILLCATEGORIES.LIST>        </STBILLCATEGORIES.LIST>
-       </BILLALLOCATIONS.LIST>
-       <INTERESTCOLLECTION.LIST>       </INTERESTCOLLECTION.LIST>
-       <OLDAUDITENTRIES.LIST>       </OLDAUDITENTRIES.LIST>
-       <ACCOUNTAUDITENTRIES.LIST>       </ACCOUNTAUDITENTRIES.LIST>
-       <AUDITENTRIES.LIST>       </AUDITENTRIES.LIST>
-       <INPUTCRALLOCS.LIST>       </INPUTCRALLOCS.LIST>
-       <DUTYHEADDETAILS.LIST>       </DUTYHEADDETAILS.LIST>
-       <EXCISEDUTYHEADDETAILS.LIST>       </EXCISEDUTYHEADDETAILS.LIST>
-       <RATEDETAILS.LIST>       </RATEDETAILS.LIST>
-       <SUMMARYALLOCS.LIST>       </SUMMARYALLOCS.LIST>
-       <CENVATDUTYALLOCATIONS.LIST>       </CENVATDUTYALLOCATIONS.LIST>
-       <STPYMTDETAILS.LIST>       </STPYMTDETAILS.LIST>
-       <EXCISEPAYMENTALLOCATIONS.LIST>       </EXCISEPAYMENTALLOCATIONS.LIST>
-       <TAXBILLALLOCATIONS.LIST>       </TAXBILLALLOCATIONS.LIST>
-       <TAXOBJECTALLOCATIONS.LIST>       </TAXOBJECTALLOCATIONS.LIST>
-       <TDSEXPENSEALLOCATIONS.LIST>       </TDSEXPENSEALLOCATIONS.LIST>
-       <VATSTATUTORYDETAILS.LIST>       </VATSTATUTORYDETAILS.LIST>
-       <COSTTRACKALLOCATIONS.LIST>       </COSTTRACKALLOCATIONS.LIST>
-       <REFVOUCHERDETAILS.LIST>       </REFVOUCHERDETAILS.LIST>
-       <INVOICEWISEDETAILS.LIST>       </INVOICEWISEDETAILS.LIST>
-       <VATITCDETAILS.LIST>       </VATITCDETAILS.LIST>
-       <ADVANCETAXDETAILS.LIST>       </ADVANCETAXDETAILS.LIST>
-       <TAXTYPEALLOCATIONS.LIST>       </TAXTYPEALLOCATIONS.LIST>
-      </LEDGERENTRIES.LIST>
-      <LEDGERENTRIES.LIST>
-       <OLDAUDITENTRYIDS.LIST TYPE="Number">
-        <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
-       </OLDAUDITENTRYIDS.LIST>
-       <RATEOFINVOICETAX.LIST TYPE="Number">
-        <RATEOFINVOICETAX> 9</RATEOFINVOICETAX>
-       </RATEOFINVOICETAX.LIST>
-       <APPROPRIATEFOR>GST</APPROPRIATEFOR>
-       <GSTAPPROPRIATETO>Goods</GSTAPPROPRIATETO>
-       <EXCISEALLOCTYPE>Based on Value</EXCISEALLOCTYPE>
-       <ROUNDTYPE>Normal Rounding</ROUNDTYPE>
-       <LEDGERNAME>Output CGST 9%</LEDGERNAME>
-       <GSTCLASS>&#4; Not Applicable</GSTCLASS>
-       <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-       <LEDGERFROMITEM>No</LEDGERFROMITEM>
-       <REMOVEZEROENTRIES>No</REMOVEZEROENTRIES>
-       <ISPARTYLEDGER>No</ISPARTYLEDGER>
-       <GSTOVERRIDDEN>No</GSTOVERRIDDEN>
-       <ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>
-       <STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>
-       <STRDGSTISPARTYLEDGER>No</STRDGSTISPARTYLEDGER>
-       <STRDGSTISDUTYLEDGER>No</STRDGSTISDUTYLEDGER>
-       <CONTENTNEGISPOS>No</CONTENTNEGISPOS>
-       <ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>
-       <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>
-       <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>
-       <AMOUNT>${cgst}</AMOUNT>
-       <VATEXPAMOUNT>${cgst}</VATEXPAMOUNT>
-       <SERVICETAXDETAILS.LIST>       </SERVICETAXDETAILS.LIST>
-       <BANKALLOCATIONS.LIST>       </BANKALLOCATIONS.LIST>
-       <BILLALLOCATIONS.LIST>       </BILLALLOCATIONS.LIST>
-       <INTERESTCOLLECTION.LIST>       </INTERESTCOLLECTION.LIST>
-       <OLDAUDITENTRIES.LIST>       </OLDAUDITENTRIES.LIST>
-       <ACCOUNTAUDITENTRIES.LIST>       </ACCOUNTAUDITENTRIES.LIST>
-       <AUDITENTRIES.LIST>       </AUDITENTRIES.LIST>
-       <INPUTCRALLOCS.LIST>       </INPUTCRALLOCS.LIST>
-       <DUTYHEADDETAILS.LIST>       </DUTYHEADDETAILS.LIST>
-       <EXCISEDUTYHEADDETAILS.LIST>       </EXCISEDUTYHEADDETAILS.LIST>
-       <RATEDETAILS.LIST>       </RATEDETAILS.LIST>
-       <SUMMARYALLOCS.LIST>       </SUMMARYALLOCS.LIST>
-       <CENVATDUTYALLOCATIONS.LIST>       </CENVATDUTYALLOCATIONS.LIST>
-       <STPYMTDETAILS.LIST>       </STPYMTDETAILS.LIST>
-       <EXCISEPAYMENTALLOCATIONS.LIST>       </EXCISEPAYMENTALLOCATIONS.LIST>
-       <TAXBILLALLOCATIONS.LIST>       </TAXBILLALLOCATIONS.LIST>
-       <TAXOBJECTALLOCATIONS.LIST>       </TAXOBJECTALLOCATIONS.LIST>
-       <TDSEXPENSEALLOCATIONS.LIST>       </TDSEXPENSEALLOCATIONS.LIST>
-       <VATSTATUTORYDETAILS.LIST>       </VATSTATUTORYDETAILS.LIST>
-       <COSTTRACKALLOCATIONS.LIST>       </COSTTRACKALLOCATIONS.LIST>
-       <REFVOUCHERDETAILS.LIST>       </REFVOUCHERDETAILS.LIST>
-       <INVOICEWISEDETAILS.LIST>       </INVOICEWISEDETAILS.LIST>
-       <VATITCDETAILS.LIST>       </VATITCDETAILS.LIST>
-       <ADVANCETAXDETAILS.LIST>       </ADVANCETAXDETAILS.LIST>
-       <TAXTYPEALLOCATIONS.LIST>       </TAXTYPEALLOCATIONS.LIST>
-      </LEDGERENTRIES.LIST>
-      <LEDGERENTRIES.LIST>
-       <OLDAUDITENTRYIDS.LIST TYPE="Number">
-        <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
-       </OLDAUDITENTRYIDS.LIST>
-       <RATEOFINVOICETAX.LIST TYPE="Number">
-        <RATEOFINVOICETAX> 9</RATEOFINVOICETAX>
-       </RATEOFINVOICETAX.LIST>
-       <APPROPRIATEFOR>GST</APPROPRIATEFOR>
-       <GSTAPPROPRIATETO>Goods</GSTAPPROPRIATETO>
-       <EXCISEALLOCTYPE>Based on Value</EXCISEALLOCTYPE>
-       <ROUNDTYPE>Normal Rounding</ROUNDTYPE>
-       <LEDGERNAME>Output SGST 9%</LEDGERNAME>
-       <GSTCLASS>&#4; Not Applicable</GSTCLASS>
-       <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-       <LEDGERFROMITEM>No</LEDGERFROMITEM>
-       <REMOVEZEROENTRIES>No</REMOVEZEROENTRIES>
-       <ISPARTYLEDGER>No</ISPARTYLEDGER>
-       <GSTOVERRIDDEN>No</GSTOVERRIDDEN>
-       <ISGSTASSESSABLEVALUEOVERRIDDEN>No</ISGSTASSESSABLEVALUEOVERRIDDEN>
-       <STRDISGSTAPPLICABLE>No</STRDISGSTAPPLICABLE>
-       <STRDGSTISPARTYLEDGER>No</STRDGSTISPARTYLEDGER>
-       <STRDGSTISDUTYLEDGER>No</STRDGSTISDUTYLEDGER>
-       <CONTENTNEGISPOS>No</CONTENTNEGISPOS>
-       <ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>
-       <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>
-       <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>
-       <AMOUNT>${sgst}</AMOUNT>
-       <VATEXPAMOUNT>${sgst}</VATEXPAMOUNT>
-       <SERVICETAXDETAILS.LIST>       </SERVICETAXDETAILS.LIST>
-       <BANKALLOCATIONS.LIST>       </BANKALLOCATIONS.LIST>
-       <BILLALLOCATIONS.LIST>       </BILLALLOCATIONS.LIST>
-       <INTERESTCOLLECTION.LIST>       </INTERESTCOLLECTION.LIST>
-       <OLDAUDITENTRIES.LIST>       </OLDAUDITENTRIES.LIST>
-       <ACCOUNTAUDITENTRIES.LIST>       </ACCOUNTAUDITENTRIES.LIST>
-       <AUDITENTRIES.LIST>       </AUDITENTRIES.LIST>
-       <INPUTCRALLOCS.LIST>       </INPUTCRALLOCS.LIST>
-       <DUTYHEADDETAILS.LIST>       </DUTYHEADDETAILS.LIST>
-       <EXCISEDUTYHEADDETAILS.LIST>       </EXCISEDUTYHEADDETAILS.LIST>
-       <RATEDETAILS.LIST>       </RATEDETAILS.LIST>
-       <SUMMARYALLOCS.LIST>       </SUMMARYALLOCS.LIST>
-       <CENVATDUTYALLOCATIONS.LIST>       </CENVATDUTYALLOCATIONS.LIST>
-       <STPYMTDETAILS.LIST>       </STPYMTDETAILS.LIST>
-       <EXCISEPAYMENTALLOCATIONS.LIST>       </EXCISEPAYMENTALLOCATIONS.LIST>
-       <TAXBILLALLOCATIONS.LIST>       </TAXBILLALLOCATIONS.LIST>
-       <TAXOBJECTALLOCATIONS.LIST>       </TAXOBJECTALLOCATIONS.LIST>
-       <TDSEXPENSEALLOCATIONS.LIST>       </TDSEXPENSEALLOCATIONS.LIST>
-       <VATSTATUTORYDETAILS.LIST>       </VATSTATUTORYDETAILS.LIST>
-       <COSTTRACKALLOCATIONS.LIST>       </COSTTRACKALLOCATIONS.LIST>
-       <REFVOUCHERDETAILS.LIST>       </REFVOUCHERDETAILS.LIST>
-       <INVOICEWISEDETAILS.LIST>       </INVOICEWISEDETAILS.LIST>
-       <VATITCDETAILS.LIST>       </VATITCDETAILS.LIST>
-       <ADVANCETAXDETAILS.LIST>       </ADVANCETAXDETAILS.LIST>
-       <TAXTYPEALLOCATIONS.LIST>       </TAXTYPEALLOCATIONS.LIST>
-      </LEDGERENTRIES.LIST>
-        <LEDGERENTRIES.LIST>
-    <OLDAUDITENTRYIDS.LIST TYPE="Number">
-        <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
-    </OLDAUDITENTRYIDS.LIST>
-
-    <LEDGERNAME>Round Off</LEDGERNAME>
-
-    <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
-    <LEDGERFROMITEM>No</LEDGERFROMITEM>
-    <ISPARTYLEDGER>No</ISPARTYLEDGER>
-
-    <AMOUNT>${roundoff}</AMOUNT>
-</LEDGERENTRIES.LIST>
-
-
-
-
-
-      
-      <GST.LIST>
-       <PURPOSETYPE>GST</PURPOSETYPE>
-       <STAT.LIST>
-        <PURPOSETYPE>GST</PURPOSETYPE>
-        <STATKEY>2026205Outward Invoice8</STATKEY>
-        <ISFETCHEDONLY>No</ISFETCHEDONLY>
-        <ISDELETED>No</ISDELETED>
-        <TALLYCONTENTUSER.LIST>        </TALLYCONTENTUSER.LIST>
-       </STAT.LIST>
-      </GST.LIST>
-      <STKJRNLADDLCOSTDETAILS.LIST>      </STKJRNLADDLCOSTDETAILS.LIST>
-      <PAYROLLMODEOFPAYMENT.LIST>      </PAYROLLMODEOFPAYMENT.LIST>
-      <ATTDRECORDS.LIST>      </ATTDRECORDS.LIST>
-      <GSTEWAYCONSIGNORADDRESS.LIST>      </GSTEWAYCONSIGNORADDRESS.LIST>
-      <GSTEWAYCONSIGNEEADDRESS.LIST>      </GSTEWAYCONSIGNEEADDRESS.LIST>
-      <TEMPGSTRATEDETAILS.LIST>      </TEMPGSTRATEDETAILS.LIST>
-      <TEMPGSTADVADJUSTED.LIST>      </TEMPGSTADVADJUSTED.LIST>
-      <GSTBUYERADDRESS.LIST>      </GSTBUYERADDRESS.LIST>
-      <GSTCONSIGNEEADDRESS.LIST>      </GSTCONSIGNEEADDRESS.LIST>
-     </VOUCHER>
-    </TALLYMESSAGE>
-   
-
-   </REQUESTDATA>
-  </IMPORTDATA>
- </BODY>
-</ENVELOPE>
-`;
+    "tallymessage": [
+        {
+            "metadata": {
+                "type": "Voucher", 
+                
+                "vchtype": "Sales Order", 
+                "action": "Create", 
+                "objview": "Invoice Voucher View"
+            }, 
+            "address": [
+                {
+                    "metadata": true, 
+                    "type": "String"
+                }, 
+                "ADDRESS LINE 1", 
+                "ADDRESS LINE 2", 
+                "ADDRESS LINE 3"
+            ], 
+            "basicbuyeraddress": [
+                {
+                    "metadata": true, 
+                    "type": "String"
+                }, 
+                "ADDRESS LINE 1", 
+                "ADDRESS LINE 2", 
+                "ADDRESS LINE 3"
+            ], 
+            "oldauditentryids": [
+                {
+                    "metadata": true, 
+                    "type": "Number"
+                }, 
+                "-1"
+            ], 
+            "date": "20260401", 
+            "vchstatusdate": "20260401", 
+            "guid": "e4bff212-f722-4649-b301-8f1354493d45-0000004a", 
+            "gstregistrationtype": "Regular", 
+            "vatdealertype": "Regular", 
+            "statename": "Maharashtra", 
+            "discountformat": "Both Percentage & Amount", 
+            "narration": "NARRATION IF APPLICABLE", 
+            "countryofresidence": "India", 
+            "partygstin": "27AAAAA1111A1A1", 
+            "placeofsupply": "Maharashtra", 
+            "vouchertypename": "Sales Order", 
+            "partyname": "AMBUJA CEMENT PUNE PLANT", 
+            "gstregistration": {
+                "value": "Maharashtra Registration", 
+                "taxtype": "GST", 
+                "taxregistration": ""
+            }, 
+            "partyledgername": "AMBUJA CEMENT PUNE PLANT", 
+            "vouchernumber": "1", 
+            "basicbuyername": "AMBUJA CEMENT PUNE PLANT", 
+            "cmpgstregistrationtype": "Regular", 
+            "reference": "ERP/SO/1/26-27", 
+            "partymailingname": "AMBUJA CEMENT PUNE PLANT", 
+            "partypincode": "411041", 
+            "consigneegstin": "27AAAAA1111A1A1", 
+            "consigneemailingname": "AMBUJA CEMENT PUNE PLANT", 
+            "consigneepincode": "411041", 
+            "consigneestatename": "Maharashtra", 
+            "cmpgststate": "Maharashtra", 
+            "consigneecountryname": "India", 
+            "basicbasepartyname": "AMBUJA CEMENT PUNE PLANT", 
+            "numberingstyle": "Auto Retain", 
+            "cstformissuetype": "\u0004 Not Applicable", 
+            "cstformrecvtype": "\u0004 Not Applicable", 
+            "fbtpaymenttype": "Default", 
+            "persistedview": "Invoice Voucher View", 
+            "vchstatustaxadjustment": "Default", 
+            "vchstatusvouchertype": "Sales Order", 
+            "vchstatustaxunit": "Maharashtra Registration", 
+            "vchgstclass": "\u0004 Not Applicable", 
+            "costcentrename": "CRM Sales Person", 
+            "buyerpinnumber": "AAAAA1111A", 
+            "consigneepinnumber": "AAAAA1111A", 
+            "vouchertypeorigname": "Sales Order", 
+            "diffactualqty": false, 
+            "ismstfromsync": false, 
+            "isdeleted": false, 
+            "issecurityonwhenentered": false, 
+            "asoriginal": false, 
+            "audited": false, 
+            "iscommonparty": false, 
+            "forjobcosting": false, 
+            "isoptional": false, 
+            "effectivedate": "20260401", 
+            "useforexcise": false, 
+            "isforjobworkin": false, 
+            "allowconsumption": false, 
+            "useforinterest": false, 
+            "useforgainloss": false, 
+            "useforgodowntransfer": false, 
+            "useforcompound": false, 
+            "useforservicetax": false, 
+            "isreversechargeapplicable": false, 
+            "issystem": false, 
+            "isfetchedonly": false, 
+            "isgstoverridden": false, 
+            "iscancelled": false, 
+            "isonhold": false, 
+            "issummary": false, 
+            "isecommercesupply": false, 
+            "isboenotapplicable": false, 
+            "isgstsecsevenapplicable": false, 
+            "ignoreeinvvalidation": false, 
+            "cmpgstisothterritoryassessee": false, 
+            "partygstisothterritoryassessee": false, 
+            "irnjsonexported": false, 
+            "irncancelled": false, 
+            "ignoregstconflictinmig": false, 
+            "isopbaltransaction": false, 
+            "ignoregstformatvalidation": false, 
+            "iseligibleforitc": true, 
+            "ignoregstoptionaluncertain": false, 
+            "isgstrefund": false, 
+            "isewaybillexcluded": false, 
+            "isbuyerpeppolregistered": false, 
+            "isvatoverridden": false, 
+            "iseinvoverridden": false, 
+            "updatesummaryvalues": false, 
+            "isewaybillapplicable": false, 
+            "isdeletedretained": false, 
+            "isnull": false, 
+            "isexcisevoucher": false, 
+            "excisetaxoverride": false, 
+            "usefortaxunittransfer": false, 
+            "isexer1nopoverwrite": false, 
+            "isexf2nopoverwrite": false, 
+            "isexer3nopoverwrite": false, 
+            "ignoreposvalidation": false, 
+            "exciseopening": false, 
+            "useforfinalproduction": false, 
+            "istdsoverridden": false, 
+            "istcsoverridden": false, 
+            "istdstcscashvch": false, 
+            "includeadvpymtvch": false, 
+            "issubworkscontract": false, 
+            "ignoreorigvchdate": false, 
+            "isvatpaidatcustoms": false, 
+            "isdeclaredtocustoms": false, 
+            "vatadvancepayment": false, 
+            "vatadvpay": false, 
+            "iscstdelcaredgoodssales": false, 
+            "isvatrestaxinv": false, 
+            "isservicetaxoverridden": false, 
+            "isisdvoucher": false, 
+            "isexciseoverridden": false, 
+            "isexcisesupplyvch": false, 
+            "gstnotexported": false, 
+            "ignoregstinvalidation": false, 
+            "ovrdnewaybillapplicability": false, 
+            "isvatprincipalaccount": false, 
+            "vchstatusisvchnumused": false, 
+            "vchgststatusisincluded": false, 
+            "vchgststatusisuncertain": false, 
+            "vchgststatusisexcluded": false, 
+            "vchgststatusisapplicable": false, 
+            "vchgststatusisgstr2breconciled": false, 
+            "vchgststatusisgstr2bonlyinportal": false, 
+            "vchgststatusisgstr2bonlyinbooks": false, 
+            "vchgststatusisgstr2bmismatch": false, 
+            "vchgststatusisgstr2bindiffperiod": false, 
+            "vchgststatusisreteffdateoverrdn": false, 
+            "vchgststatusisoverrdn": false, 
+            "vchgststatusisstatindiffdate": false, 
+            "vchgststatusisretindiffdate": false, 
+            "vchgststatusmainsectionexcluded": false, 
+            "vchgststatusisbranchtransferout": false, 
+            "vchgststatusissystemsummary": false, 
+            "vchstatusisunregisteredrcm": false, 
+            "vchstatusisoptional": false, 
+            "vchstatusiscancelled": false, 
+            "vchstatusisdeleted": false, 
+            "vchstatusisopeningbalance": false, 
+            "vchstatusisfetchedonly": false, 
+            "vchgststatusisoptionaluncertain": false, 
+            "vchstatusisreacceptforhsndone": false, 
+            "vchstatusisreaccephsnsixonedone": false, 
+            "paymentlinkhasmultiref": false, 
+            "isshippingwithinstate": false, 
+            "isoverseastouristtrans": false, 
+            "isdesignatedzoneparty": false, 
+            "hascashflow": false, 
+            "ispostdated": false, 
+            "usetrackingnumber": false, 
+            "isinvoice": false, 
+            "mfgjournal": false, 
+            "hasdiscounts": true, 
+            "aspayslip": false, 
+            "iscostcentre": true, 
+            "isstxnonrealizedvch": false, 
+            "isexcisemanufactureron": false, 
+            "isblankcheque": false, 
+            "isvoid": false, 
+            "orderlinestatus": false, 
+            "vatisagnstcancsales": false, 
+            "vatispurcexempted": false, 
+            "isvatrestaxinvoice": false, 
+            "vatisassesablecalcvch": false, 
+            "isvatdutypaid": true, 
+            "isdeliverysameasconsignee": false, 
+            "isdispatchsameasconsignor": false, 
+            "isdeletedvchretained": false, 
+            "vchonlyaddlinfoupdated": false, 
+            "changevchmode": false, 
+            "uaeeinvisbillprepaidamtovrdn": false, 
+            "resetirnqrcode": false, 
+            "isvchexchanged": false, 
+            "alterid": " 72", 
+            "masterid": " 74", 
+            "voucherkey": "198049531953224", 
+            "voucherretainkey": "1", 
+            "vouchernumberseries": "Default", 
+            "allinventoryentries": [
+                {
+                    "basicuserdescription": [
+                        {
+                            "metadata": true, 
+                            "type": "String"
+                        }, 
+                        "Prevents transactions like sales, delivery notes, and stock journals\r\nwhen issued quantity exceeds available stock. Ensures accurate\r\ninventory control."
+                    ], 
+                    "stockitemname": "Negative Stock Blocking", 
+                    "gstovrdnisrevchargeappl": "\u0004 Not Applicable", 
+                    "gstovrdntaxability": "Taxable", 
+                    "gstsourcetype": "Stock Item", 
+                    "gstitemsource": "Negative Stock Blocking", 
+                    "hsnsourcetype": "Stock Item", 
+                    "hsnitemsource": "Negative Stock Blocking", 
+                    "gstovrdntypeofsupply": "Services", 
+                    "gstrateinferapplicability": "As per Masters/Company", 
+                    "gsthsninferapplicability": "As per Masters/Company", 
+                    "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
+                    "isdeemedpositive": false, 
+                    "isrcmapplicable": false, 
+                    "isgstassessablevalueoverridden": false, 
+                    "strdisgstapplicable": false, 
+                    "contentnegispos": false, 
+                    "islastdeemedpositive": false, 
+                    "isautonegate": false, 
+                    "iscustomsclearance": false, 
+                    "istrackcomponent": false, 
+                    "istrackproduction": false, 
+                    "isprimaryitem": false, 
+                    "isscrap": false, 
+                    "rate": "1800.00/Nos", 
+                    "discount": " 10", 
+                    "amount": "1620.00", 
+                    "discountamount": "180.00", 
+                    "actualqty": " 1 Nos", 
+                    "billedqty": " 1 Nos", 
+                    "batchallocations": [
+                        {
+                            "godownname": "Main Location", 
+                            "batchname": "Primary Batch", 
+                            "indentno": "\u0004 Not Applicable", 
+                            "orderno": "ERP/SO/1/26-27", 
+                            "trackingnumber": "\u0004 Not Applicable", 
+                            "dynamiccstiscleared": false, 
+                            "amount": "1620.00", 
+                            "batchdiscountamount": "180.00", 
+                            "actualqty": " 1 Nos", 
+                            "billedqty": " 1 Nos", 
+                            "orderduedate": "1-Apr-26"
+                        }
+                    ], 
+                    "accountingallocations": [
+                        {
+                            "oldauditentryids": [
+                                {
+                                    "metadata": true, 
+                                    "type": "Number"
+                                }, 
+                                "-1"
+                            ], 
+                            "ledgername": "CRM Sales", 
+                            "gstclass": "\u0004 Not Applicable", 
+                            "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
+                            "isdeemedpositive": false, 
+                            "ledgerfromitem": false, 
+                            "removezeroentries": false, 
+                            "isrcmapplicable": false, 
+                            "issystem": false, 
+                            "ispartyledger": false, 
+                            "gstoverridden": false, 
+                            "isgstassessablevalueoverridden": false, 
+                            "strdisgstapplicable": false, 
+                            "strdgstispartyledger": false, 
+                            "strdgstisdutyledger": false, 
+                            "contentnegispos": false, 
+                            "islastdeemedpositive": false, 
+                            "iscapvattaxaltered": false, 
+                            "iscapvatnotclaimed": false, 
+                            "amount": "1620.00", 
+                            "categoryallocations": [
+                                {
+                                    "category": "Primary Cost Category", 
+                                    "isdeemedpositive": false, 
+                                    "costcentreallocations": [
+                                        {
+                                            "name": "CRM Sales Person", 
+                                            "amount": "1620.00"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ], 
+                    "ratedetails": [
+                        {
+                            "gstratedutyhead": "CGST", 
+                            "gstratevaluationtype": "Based on Value", 
+                            "gstrate": " 9"
+                        }, 
+                        {
+                            "gstratedutyhead": "SGST/UTGST", 
+                            "gstratevaluationtype": "Based on Value", 
+                            "gstrate": " 9"
+                        }, 
+                        {
+                            "gstratedutyhead": "IGST", 
+                            "gstratevaluationtype": "Based on Value", 
+                            "gstrate": " 18"
+                        }, 
+                        {
+                            "gstratedutyhead": "Cess", 
+                            "gstratevaluationtype": "\u0004 Not Applicable"
+                        }, 
+                        {
+                            "gstratedutyhead": "State Cess", 
+                            "gstratevaluationtype": "Based on Value"
+                        }
+                    ]
+                }
+            ], 
+            "ledgerentries": [
+                {
+                    "oldauditentryids": [
+                        {
+                            "metadata": true, 
+                            "type": "Number"
+                        }, 
+                        "-1"
+                    ], 
+                    "ledgername": "AMBUJA CEMENT PUNE PLANT", 
+                    "gstclass": "\u0004 Not Applicable", 
+                    "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
+                    "isdeemedpositive": true, 
+                    "ledgerfromitem": false, 
+                    "removezeroentries": false, 
+                    "isrcmapplicable": false, 
+                    "issystem": false, 
+                    "ispartyledger": true, 
+                    "gstoverridden": false, 
+                    "isgstassessablevalueoverridden": false, 
+                    "strdisgstapplicable": false, 
+                    "strdgstispartyledger": false, 
+                    "strdgstisdutyledger": false, 
+                    "contentnegispos": false, 
+                    "islastdeemedpositive": true, 
+                    "iscapvattaxaltered": false, 
+                    "iscapvatnotclaimed": false, 
+                    "amount": "-1911.60"
+                }, 
+                {
+                    "oldauditentryids": [
+                        {
+                            "metadata": true, 
+                            "type": "Number"
+                        }, 
+                        "-1"
+                    ], 
+                    "rateofinvoicetax": [
+                        {
+                            "metadata": true, 
+                            "type": "Number"
+                        }, 
+                        " 9"
+                    ], 
+                    "appropriatefor": "GST", 
+                    "gstappropriateto": "Goods", 
+                    "excisealloctype": "Based on Value", 
+                    "roundtype": "Normal Rounding", 
+                    "ledgername": "Output CGST 9%", 
+                    "gstclass": "\u0004 Not Applicable", 
+                    "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
+                    "isdeemedpositive": false, 
+                    "ledgerfromitem": false, 
+                    "removezeroentries": false, 
+                    "isrcmapplicable": false, 
+                    "issystem": false, 
+                    "ispartyledger": false, 
+                    "gstoverridden": false, 
+                    "isgstassessablevalueoverridden": false, 
+                    "strdisgstapplicable": false, 
+                    "strdgstispartyledger": false, 
+                    "strdgstisdutyledger": false, 
+                    "contentnegispos": false, 
+                    "islastdeemedpositive": false, 
+                    "iscapvattaxaltered": false, 
+                    "iscapvatnotclaimed": false, 
+                    "amount": "145.80", 
+                    "vatexpamount": "145.80"
+                }, 
+                {
+                    "oldauditentryids": [
+                        {
+                            "metadata": true, 
+                            "type": "Number"
+                        }, 
+                        "-1"
+                    ], 
+                    "rateofinvoicetax": [
+                        {
+                            "metadata": true, 
+                            "type": "Number"
+                        }, 
+                        " 9"
+                    ], 
+                    "roundtype": "Normal Rounding", 
+                    "ledgername": "Output SGST 9%", 
+                    "gstclass": "\u0004 Not Applicable", 
+                    "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
+                    "isdeemedpositive": false, 
+                    "ledgerfromitem": false, 
+                    "removezeroentries": false, 
+                    "isrcmapplicable": false, 
+                    "issystem": false, 
+                    "ispartyledger": false, 
+                    "gstoverridden": false, 
+                    "isgstassessablevalueoverridden": false, 
+                    "strdisgstapplicable": false, 
+                    "strdgstispartyledger": false, 
+                    "strdgstisdutyledger": false, 
+                    "contentnegispos": false, 
+                    "islastdeemedpositive": false, 
+                    "iscapvattaxaltered": false, 
+                    "iscapvatnotclaimed": false, 
+                    "amount": "145.80", 
+                    "vatexpamount": "145.80"
+                }
+            ]
+        }
+    ]
+}
+;
 
 
 
 
 
 // Save XML to file
-fs.writeFileSync("salesVoucher.xml", xml);
+fs.writeFileSync("salesVoucher.xml", json);
 
 // Print XML in console
 
@@ -615,7 +500,7 @@ fs.writeFileSync("salesVoucher.xml", xml);
     xml,
     {
         headers: {
-            "Content-Type": "application/xml"
+            "Content-Type": "application/json"
         }
     }
 );
