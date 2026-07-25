@@ -489,7 +489,7 @@ const json = {
 
 
 // Save XML to file
-fs.writeFileSync("salesVoucher.json", json);
+// fs.writeFileSync("salesVoucher.json", json);
 
 // Print XML in console
 
@@ -505,7 +505,7 @@ fs.writeFileSync("salesVoucher.json", json);
     }
 );
 console.log(response)
-return response.data;
+// return response.data;
   } catch (err) {
     console.error("Error creating XML:");
     console.error(err);
