@@ -34,7 +34,7 @@ const roundoff=order.roundoff||"";
 
 const json = {
       static_variables: {
-    svCurrentCompany: "YOUR COMPANY NAME",
+    svCurrentCompany: "Airgital",
     svVchImportFormat: "JSONEX"
   },
 
