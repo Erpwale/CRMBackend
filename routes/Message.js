@@ -72,7 +72,7 @@ router.post(
         const ticket = await Ticket.findById(req.params.ticketId);
         
      
-      console.log("assigndata",ticket);
+      console.log("assigndata",ticket.assignedTo);
       
 
 if (ticket?.assignedTo) {
