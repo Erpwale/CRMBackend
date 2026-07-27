@@ -32,7 +32,7 @@ router.post(
         senderType: "customer",
         message: description,
       });
-      console.log(ticket.assignedTo);
+  
       
       if (ticket.assignedTo) {
   await sendNotification({
