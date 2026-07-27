@@ -24,17 +24,22 @@ const io = new Server(server, {
   },
 });
 
-// ✅ Socket connection
+// Store online users
+const onlineUsers = new Map();
+global.onlineUsers = onlineUsers;
+
 io.on("connection", (socket) => {
   console.log("✅ User connected:", socket.id);
 
-
-    socket.on("join", (userId) => {
+  socket.on("join", (userId) => {
     socket.join(userId.toString());
+
+    // ADD THESE 2 LINES
+    onlineUsers.set(userId.toString(), socket.id);
+    socket.userId = userId.toString();
+
     console.log("👤 Joined user room:", userId);
   });
-
-
 
   socket.on("joinCompany", (companyId) => {
     socket.join(companyId);
@@ -43,8 +48,15 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("❌ User disconnected:", socket.id);
+
+    // ADD THIS
+    if (socket.userId) {
+      onlineUsers.delete(socket.userId);
+    }
   });
 });
+// ✅ Socket connection
+
 
 // ✅ MongoDB
 mongoose.connect(process.env.MONGO_URI)

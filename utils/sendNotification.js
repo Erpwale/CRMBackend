@@ -16,11 +16,19 @@ const sendNotification = async ({
       link,
     });
 
-    if (global.io) {
-      global.io.to(userId.toString()).emit(
-        "newNotification",
-        notification
-      );
+    // Send only if user is online
+    if (
+      global.io &&
+      global.onlineUsers &&
+      global.onlineUsers.has(userId.toString())
+    ) {
+      global.io
+        .to(userId.toString())
+        .emit("newNotification", notification);
+
+      // Mark as delivered
+      notification.isDelivered = true;
+      await notification.save();
     }
 
     return notification;
@@ -28,5 +36,33 @@ const sendNotification = async ({
     console.log(err);
   }
 };
+
+router.get("/sync", authMiddleware, async (req, res) => {
+  try {
+    const notifications = await Notification.find({
+      userId: req.user.id,
+      isDelivered: false,
+    }).sort({ createdAt: 1 });
+
+    await Notification.updateMany(
+      {
+        userId: req.user.id,
+        isDelivered: false,
+      },
+      {
+        $set: {
+          isDelivered: true,
+        },
+      }
+    );
+
+    res.json({
+      success: true,
+      notifications,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 
 module.exports = sendNotification;

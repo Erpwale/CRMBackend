@@ -76,6 +76,8 @@ router.post(
       
 
 if (ticket?.assignedTo) {
+  console.log("sending notification ...");
+  
   await sendNotification({
     userId: ticket.assignedTo,
     title: "New Customer Message",

@@ -36,6 +36,11 @@ const notificationSchema = new mongoose.Schema(
       default: "",
     },
 
+    isDelivered: {
+      type: Boolean,
+      default: false,
+    },
+
     isRead: {
       type: Boolean,
       default: false,
