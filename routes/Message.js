@@ -5,9 +5,6 @@ const logActivity = require("../utils/Activitylog");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Ticket= require("../models/TicketSchema")
 const TicketMessage= require("../models/ticketMessageSchema")
-const sendNotification = require("../utils/sendNotification");
-const User = require("../models/User");
-const Customer = require("../models/Contact");
 
 router.post(
   "/create",
@@ -24,8 +21,7 @@ router.post(
         description,
         customerId: req.user.id,
       });
- console.log("assign to",ticket.assignedTo);
-      
+
       // CREATE FIRST MESSAGE
       await TicketMessage.create({
         ticketId: ticket._id,
@@ -33,18 +29,19 @@ router.post(
         senderType: "customer",
         message: description,
       });
-  
-      console.log("assign to",ticket.assignedTo);
-      
-      if (ticket.assignedTo) {
+
+      const ticketData = await Ticket.findById(ticket._id);
+
+if (ticketData?.assignedTo) {
   await sendNotification({
-    userId: ticket.assignedTo,
-    title: "New Customer Ticket",
-    message: `Customer created ticket ${ticket.ticketNumber}`,
+    userId: ticketData.assignedTo,
+    title: "New Customer Message",
+    message: `Customer sent a new message on Ticket ${ticketData.ticketNumber}.`,
     type: "ticket",
-    link: `/tickets/${ticket._id}`,
+    link: `/tickets/${ticketData._id}`,
   });
 }
+
 await logActivity({
   req,
   userId: req.user.id,
@@ -54,7 +51,6 @@ await logActivity({
   recordId: ticket._id,
   recordName: ticket.ticketNumber || ticket._id.toString(),
 });
-
       res.status(201).json({
         success: true,
         ticket,
@@ -84,8 +80,6 @@ router.post(
           message,
         });
         const ticket = await Ticket.findById(req.params.ticketId);
-        console.log(senderType);
-        
 await logActivity({
   req,
   userId: senderId,
@@ -97,15 +91,6 @@ await logActivity({
   recordId: ticket?._id || req.params.ticketId,
   recordName: ticket?.ticketNumber || req.params.ticketId,
 });
-if (senderType === "support") {
-  await sendNotification({
-    userId: ticket.customerId,
-    title: "💬 Support Replied",
-    message: `Support replied to your ticket ${ticket.ticketNumber}.`,
-    type: "ticket",
-    link: `/customer/tickets/${ticket._id}`,
-  });
-}
       res.status(201).json({
         success: true,
         message: newMessage,
