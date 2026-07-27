@@ -5,6 +5,9 @@ const logActivity = require("../utils/Activitylog");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Ticket= require("../models/TicketSchema")
 const TicketMessage= require("../models/ticketMessageSchema")
+const sendNotification = require("../utils/sendNotification");
+const User = require("../models/User");
+const Customer = require("../models/Customer");
 
 router.post(
   "/create",
@@ -38,6 +41,18 @@ await logActivity({
   recordId: ticket._id,
   recordName: ticket.ticketNumber || ticket._id.toString(),
 });
+if (senderType === "customer") {
+  // supportExecutive should be stored in Ticket
+  if (ticket.assignedTo) {
+    await sendNotification({
+      userId: ticket.assignedTo,
+      title: "New Customer Reply",
+      message: `Customer replied on Ticket ${ticket.ticketNumber}`,
+      type: "ticket",
+      link: `/tickets/${ticket._id}`,
+    });
+  }
+}
       res.status(201).json({
         success: true,
         ticket,
@@ -78,6 +93,15 @@ await logActivity({
   recordId: ticket?._id || req.params.ticketId,
   recordName: ticket?.ticketNumber || req.params.ticketId,
 });
+if (senderType === "support") {
+  await sendNotification({
+    userId: ticket.customerId,
+    title: "💬 Support Replied",
+    message: `Support replied to your ticket ${ticket.ticketNumber}.`,
+    type: "ticket",
+    link: `/customer/tickets/${ticket._id}`,
+  });
+}
       res.status(201).json({
         success: true,
         message: newMessage,
