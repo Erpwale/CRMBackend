@@ -31,6 +31,8 @@ router.post(
       });
 
       const ticketData = await Ticket.findById(ticket._id);
+      console.log("assigndata",ticketData?.assignedTo);
+      
 
 if (ticketData?.assignedTo) {
   await sendNotification({
