@@ -32,16 +32,7 @@ router.post(
         senderType: "customer",
         message: description,
       });
-await logActivity({
-  req,
-  userId: req.user.id,
-  module: "CUSTOMER_TICKET",
-  action: "CREATE",
-  description: `Created customer ticket (${category})`,
-  recordId: ticket._id,
-  recordName: ticket.ticketNumber || ticket._id.toString(),
-});
-if (senderType === "customer") {
+      if (senderType === "customer") {
   // supportExecutive should be stored in Ticket
   if (ticket.assignedTo) {
     await sendNotification({
@@ -53,6 +44,16 @@ if (senderType === "customer") {
     });
   }
 }
+await logActivity({
+  req,
+  userId: req.user.id,
+  module: "CUSTOMER_TICKET",
+  action: "CREATE",
+  description: `Created customer ticket (${category})`,
+  recordId: ticket._id,
+  recordName: ticket.ticketNumber || ticket._id.toString(),
+});
+
       res.status(201).json({
         success: true,
         ticket,
