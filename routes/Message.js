@@ -7,7 +7,7 @@ const Ticket= require("../models/TicketSchema")
 const TicketMessage= require("../models/ticketMessageSchema")
 const sendNotification = require("../utils/sendNotification");
 const User = require("../models/User");
-const Customer = require("../models/Customer");
+const Customer = require("../models/Contact");
 
 router.post(
   "/create",
