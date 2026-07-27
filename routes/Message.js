@@ -32,17 +32,14 @@ router.post(
         senderType: "customer",
         message: description,
       });
-      if (senderType === "customer") {
-  // supportExecutive should be stored in Ticket
-  if (ticket.assignedTo) {
-    await sendNotification({
-      userId: ticket.assignedTo,
-      title: "New Customer Reply",
-      message: `Customer replied on Ticket ${ticket.ticketNumber}`,
-      type: "ticket",
-      link: `/tickets/${ticket._id}`,
-    });
-  }
+      if (ticket.assignedTo) {
+  await sendNotification({
+    userId: ticket.assignedTo,
+    title: "New Customer Ticket",
+    message: `Customer created ticket ${ticket.ticketNumber}`,
+    type: "ticket",
+    link: `/tickets/${ticket._id}`,
+  });
 }
 await logActivity({
   req,
@@ -83,6 +80,8 @@ router.post(
           message,
         });
         const ticket = await Ticket.findById(req.params.ticketId);
+        console.log(senderType);
+        
 await logActivity({
   req,
   userId: senderId,
