@@ -1,6 +1,7 @@
 const Notification = require("../models/Notification");
 const express = require("express");
 const router = express.Router();
+const { authMiddleware, adminOnly } = require("../middleware/auth");
 const sendNotification = async ({
   userId,
   title,
