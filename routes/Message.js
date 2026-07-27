@@ -24,7 +24,8 @@ router.post(
         description,
         customerId: req.user.id,
       });
-
+ console.log("assign to",ticket.assignedTo);
+      
       // CREATE FIRST MESSAGE
       await TicketMessage.create({
         ticketId: ticket._id,
@@ -33,6 +34,7 @@ router.post(
         message: description,
       });
   
+      console.log("assign to",ticket.assignedTo);
       
       if (ticket.assignedTo) {
   await sendNotification({
