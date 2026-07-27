@@ -31,7 +31,7 @@ router.post(
       });
 
       const ticketData = await Ticket.findById(ticket._id);
-      console.log("assigndata",ticketData?.assignedTo);
+      console.log("assigndata",ticketData);
       
 
 if (ticketData?.assignedTo) {
