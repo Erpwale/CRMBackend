@@ -39,32 +39,6 @@ const sendNotification = async ({
   }
 };
 
-router.get("/sync", authMiddleware, async (req, res) => {
-  try {
-    const notifications = await Notification.find({
-      userId: req.user.id,
-      isDelivered: false,
-    }).sort({ createdAt: 1 });
 
-    await Notification.updateMany(
-      {
-        userId: req.user.id,
-        isDelivered: false,
-      },
-      {
-        $set: {
-          isDelivered: true,
-        },
-      }
-    );
-
-    res.json({
-      success: true,
-      notifications,
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
 
 module.exports = sendNotification;
