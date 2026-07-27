@@ -30,19 +30,6 @@ router.post(
         message: description,
       });
 
-      const ticketData = await Ticket.findById(ticket._id);
-      console.log("assigndata",ticketData);
-      
-
-if (ticketData?.assignedTo) {
-  await sendNotification({
-    userId: ticketData.assignedTo,
-    title: "New Customer Message",
-    message: `Customer sent a new message on Ticket ${ticketData.ticketNumber}.`,
-    type: "ticket",
-    link: `/tickets/${ticketData._id}`,
-  });
-}
 
 await logActivity({
   req,
@@ -82,6 +69,21 @@ router.post(
           message,
         });
         const ticket = await Ticket.findById(req.params.ticketId);
+        
+     
+      console.log("assigndata",ticket);
+      
+
+if (ticketData?.assignedTo) {
+  await sendNotification({
+    userId: ticketData.assignedTo,
+    title: "New Customer Message",
+    message: `Customer sent a new message on Ticket ${ticketData.ticketNumber}.`,
+    type: "ticket",
+    link: `/tickets/${ticketData._id}`,
+  });
+}
+
 await logActivity({
   req,
   userId: senderId,
