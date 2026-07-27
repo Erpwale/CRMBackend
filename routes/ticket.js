@@ -14,6 +14,7 @@ const TicketMessage= require("../models/ticketMessageSchema")
 const Counter = require("../models/Ticketcounter")
 const sendTicketMail = require("../utils/sendTicketMail");
 const sendTicketFailedMail = require("../utils/sendTicketFailedMail");
+const sendNotification= require("../utils/sendNotification")
 const generateTicketNumber = async () => {
   const now = new Date();
 
@@ -320,6 +321,15 @@ router.post("/create", authMiddleware, async (req, res) => {
 
     status: "Untouched",
   });
+  if (company.salesPerson) {
+  await sendNotification({
+    userId: company.salesPerson,
+    title: "New Lead Assigned",
+    message: `A new lead has been created for ${company.companyName} from a support ticket.`,
+    type: "lead",
+    link: `/lead/${lead._id}`,
+  });
+}
 
   await sendTicketFailedMail({
     companyName: company.companyName,
@@ -359,6 +369,20 @@ router.post("/create", authMiddleware, async (req, res) => {
 
     // Send Ticket Mail
     await sendTicketMail(ticket);
+    // Notify Admins and Support Managers
+const users = await User.find({
+  role: { $in: ["admin", "Support Manager"] },
+}).select("_id");
+
+for (const user of users) {
+  await sendNotification({
+    userId: user._id,
+    title: "New Support Ticket",
+    message: `Ticket ${ticket.ticketNumber} has been created for ${company.companyName}.`,
+    type: "ticket",
+    link: `/ticket/${ticket._id}`,
+  });
+}
 
     return res.status(201).json({
       success: true,
