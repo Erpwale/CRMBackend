@@ -74,13 +74,13 @@ router.post(
       console.log("assigndata",ticket);
       
 
-if (ticketData?.assignedTo) {
+if (ticket?.assignedTo) {
   await sendNotification({
-    userId: ticketData.assignedTo,
+    userId: ticket.assignedTo,
     title: "New Customer Message",
-    message: `Customer sent a new message on Ticket ${ticketData.ticketNumber}.`,
+    message: `Customer sent a new message on Ticket ${ticket.ticketNumber}.`,
     type: "ticket",
-    link: `/tickets/${ticketData._id}`,
+    link: `/tickets/${ticket._id}`,
   });
 }
 
