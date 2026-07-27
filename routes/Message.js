@@ -5,6 +5,7 @@ const logActivity = require("../utils/Activitylog");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Ticket= require("../models/TicketSchema")
 const TicketMessage= require("../models/ticketMessageSchema")
+const sendNotification= require("../utils/sendNotification")
 
 router.post(
   "/create",
