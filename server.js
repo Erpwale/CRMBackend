@@ -45,6 +45,11 @@ io.on("connection", (socket) => {
     socket.join(companyId);
     console.log("📌 Joined company room:", companyId);
   });
+ // ✅ ADD THIS
+  socket.on("joinTicket", (ticketId) => {
+    socket.join(`ticket-${ticketId}`);
+    console.log("🎫 Joined ticket room:", ticketId);
+  });
 
   socket.on("disconnect", () => {
     console.log("❌ User disconnected:", socket.id);

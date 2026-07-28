@@ -58,52 +58,76 @@ router.post(
   authMiddleware,
   async (req, res) => {
     try {
-      const { message, senderType } =
-        req.body;
- const senderId =
-        req.user?._id || req.customer?._id;
-      const newMessage =
-        await TicketMessage.create({
-          ticketId: req.params.ticketId,
-          senderId,
-          senderType,
-          message,
+      const { message, senderType } = req.body;
+
+      const senderId = req.user?._id || req.customer?._id;
+
+      // Save message
+      const newMessage = await TicketMessage.create({
+        ticketId: req.params.ticketId,
+        senderId,
+        senderType,
+        message,
+      });
+
+      // Populate sender details
+      const populatedMessage = await TicketMessage.findById(newMessage._id)
+        .populate("senderId", "name email");
+
+      // Get ticket
+      const ticket = await Ticket.findById(req.params.ticketId);
+
+      if (!ticket) {
+        return res.status(404).json({
+          success: false,
+          message: "Ticket not found",
         });
-        const ticket = await Ticket.findById(req.params.ticketId);
-        
-     
-      console.log("assigndata",ticket.assignedTo);
-      
+      }
 
-if (ticket?.assignedTo) {
-  console.log("sending notification ...");
-  
-  await sendNotification({
-    userId: ticket.assignedTo,
-    title: "New Customer Message",
-    message: `Customer sent a new message on Ticket ${ticket.ticketNumber}.`,
-    type: "ticket",
-    link: `/tickets/${ticket._id}`,
-  });
-}
+      // ==========================
+      // REALTIME CHAT
+      // ==========================
+      global.io
+        .to(`ticket-${ticket._id}`)
+        .emit("newMessage", populatedMessage);
 
-await logActivity({
-  req,
-  userId: senderId,
-  module: "CUSTOMER_TICKET",
-  action: "REPLY",
-  description: `${senderType} replied to ticket ${
-    ticket?.ticketNumber || req.params.ticketId
-  }`,
-  recordId: ticket?._id || req.params.ticketId,
-  recordName: ticket?.ticketNumber || req.params.ticketId,
-});
+      // ==========================
+      // NOTIFICATION
+      // ==========================
+      if (ticket.assignedTo) {
+        await sendNotification({
+          userId: ticket.assignedTo,
+          title: "New Customer Message",
+          message: `Customer sent a new message on Ticket ${ticket.ticketNumber}.`,
+          type: "ticket",
+          link: `/tickets/${ticket._id}`,
+        });
+      }
+
+      // ==========================
+      // ACTIVITY LOG
+      // ==========================
+      await logActivity({
+        req,
+        userId: senderId,
+        module: "CUSTOMER_TICKET",
+        action: "REPLY",
+        description: `${senderType} replied to ticket ${ticket.ticketNumber}`,
+        recordId: ticket._id,
+        recordName: ticket.ticketNumber,
+      });
+
+      // ==========================
+      // RESPONSE
+      // ==========================
       res.status(201).json({
         success: true,
-        message: newMessage,
+        message: "Reply sent successfully.",
+        data: populatedMessage,
       });
+
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       res.status(500).json({
         success: false,
