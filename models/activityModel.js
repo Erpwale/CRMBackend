@@ -34,7 +34,10 @@ const activitySchema = new mongoose.Schema(
   nextFollowupDate: {
     type: String
   },
-
+notificationSent: {
+  type: Boolean,
+  default: false
+},
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
