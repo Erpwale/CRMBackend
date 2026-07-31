@@ -58,18 +58,18 @@ const json =
                     "metadata": true, 
                     "type": "String"
                 }, 
-                "ADDRESS LINE 1", 
-                "ADDRESS LINE 2", 
-                "ADDRESS LINE 3"
+                addressLine1, 
+                addressLine2, 
+                addressLine3
             ], 
             "basicbuyeraddress": [
                 {
                     "metadata": true, 
                     "type": "String"
                 }, 
-                "ADDRESS LINE 1", 
-                "ADDRESS LINE 2", 
-                "ADDRESS LINE 3"
+                addressLine1, 
+                addressLine2, 
+                addressLine3
             ], 
             "oldauditentryids": [
                 {
@@ -81,14 +81,14 @@ const json =
             "date": "20260701", 
             "vchstatusdate": "20260701", 
             "guid": "e4bff212-f722-4649-b301-8f1354493d45-0000004a", 
-            "gstregistrationtype": "Regular", 
-            "vatdealertype": "Regular", 
-            "statename": "Maharashtra", 
+            "gstregistrationtype": gstType, 
+            "vatdealertype": gstType, 
+            "statename": state, 
             "discountformat": "Both Percentage & Amount", 
-            "narration": "NARRATION IF APPLICABLE", 
+            "narration": narration, 
             "countryofresidence": "India", 
-            "partygstin": "27AAAAA1111A1A1", 
-            "placeofsupply": "Maharashtra", 
+            "partygstin": gstin, 
+            "placeofsupply": state, 
             "vouchertypename": "Sales Order", 
             "partyname": companyName, 
             "gstregistration": {
@@ -99,15 +99,15 @@ const json =
             "partyledgername": companyName, 
             "vouchernumber": "1", 
             "basicbuyername": companyName, 
-            "cmpgstregistrationtype": "Regular", 
-            "reference": "ERP/SO/1/26-27", 
+            "cmpgstregistrationtype": gstType, 
+            "reference": salesOrderNo, 
             "partymailingname": companyName, 
-            "partypincode": "411041", 
-            "consigneegstin": "27AAAAA1111A1A1", 
+            "partypincode": pincode, 
+            "consigneegstin": gstin, 
             "consigneemailingname": companyName, 
-            "consigneepincode": "411041", 
-            "consigneestatename": "Maharashtra", 
-            "cmpgststate": "Maharashtra", 
+            "consigneepincode": pincode, 
+            "consigneestatename": state, 
+            "cmpgststate": state, 
             "consigneecountryname": "India", 
             "basicbasepartyname": companyName, 
             "numberingstyle": "Auto Retain", 
@@ -303,7 +303,7 @@ const json =
                             "godownname": "Main Location", 
                             "batchname": "Primary Batch", 
                             "indentno": "\u0004 Not Applicable", 
-                            "orderno": "ERP/SO/1/26-27", 
+                            "orderno": salesOrderNo, 
                             "trackingnumber": "\u0004 Not Applicable", 
                             "dynamiccstiscleared": false, 
                             "amount": "1620.00", 
