@@ -44,11 +44,13 @@ const json = {
         }
     ],
 
-    tallymessage: [
+    "tallymessage": [
         {
             "metadata": {
                 "type": "Voucher", 
-                
+                "remoteid": "569159c0-0358-442d-9331-a939b922e204-00000003", 
+                "vchkey": "569159c0-0358-442d-9331-a939b922e204-0000b420:00000018", 
+                "senderid": "e4bff212-f722-4649-b301-8f1354493d45-0000004a", 
                 "vchtype": "Sales Order", 
                 "action": "Create", 
                 "objview": "Invoice Voucher View"
@@ -58,18 +60,18 @@ const json = {
                     "metadata": true, 
                     "type": "String"
                 }, 
-               addressLine1, 
-                addressLine2, 
-               addressLine3
+                "ADDRESS LINE 1", 
+                "ADDRESS LINE 2", 
+                "ADDRESS LINE 3"
             ], 
             "basicbuyeraddress": [
                 {
                     "metadata": true, 
                     "type": "String"
                 }, 
-               addressLine1, 
-                addressLine2, 
-               addressLine3
+                "ADDRESS LINE 1", 
+                "ADDRESS LINE 2", 
+                "ADDRESS LINE 3"
             ], 
             "oldauditentryids": [
                 {
@@ -80,36 +82,36 @@ const json = {
             ], 
             "date": "20260401", 
             "vchstatusdate": "20260401", 
-  
-            "gstregistrationtype": gstType, 
-            "vatdealertype": gstType, 
-            "statename":state, 
+            "guid": "e4bff212-f722-4649-b301-8f1354493d45-0000004a", 
+            "gstregistrationtype": "Regular", 
+            "vatdealertype": "Regular", 
+            "statename": "Maharashtra", 
             "discountformat": "Both Percentage & Amount", 
             "narration": "NARRATION IF APPLICABLE", 
             "countryofresidence": "India", 
-            "partygstin":gstin, 
-            "placeofsupply":state, 
+            "partygstin": "27AAAAA1111A1A1", 
+            "placeofsupply": "Maharashtra", 
             "vouchertypename": "Sales Order", 
-            "partyname": companyName, 
+            "partyname": "AMBUJA CEMENT PUNE PLANT", 
             "gstregistration": {
                 "value": "Maharashtra Registration", 
                 "taxtype": "GST", 
                 "taxregistration": ""
             }, 
-            "partyledgername": companyName, 
-      
-            "basicbuyername": companyName, 
-            "cmpgstregistrationtype": gstType, 
-            "reference": salesOrderNo, 
-            "partymailingname": companyName, 
-            "partypincode":pincode, 
-            "consigneegstin":gstin, 
-            "consigneemailingname": companyName, 
-            "consigneepincode":pincode, 
-            "consigneestatename":state, 
-            "cmpgststate":state, 
+            "partyledgername": "AMBUJA CEMENT PUNE PLANT", 
+            "vouchernumber": "1", 
+            "basicbuyername": "AMBUJA CEMENT PUNE PLANT", 
+            "cmpgstregistrationtype": "Regular", 
+            "reference": "ERP/SO/1/26-27", 
+            "partymailingname": "AMBUJA CEMENT PUNE PLANT", 
+            "partypincode": "411041", 
+            "consigneegstin": "27AAAAA1111A1A1", 
+            "consigneemailingname": "AMBUJA CEMENT PUNE PLANT", 
+            "consigneepincode": "411041", 
+            "consigneestatename": "Maharashtra", 
+            "cmpgststate": "Maharashtra", 
             "consigneecountryname": "India", 
-            "basicbasepartyname": companyName, 
+            "basicbasepartyname": "AMBUJA CEMENT PUNE PLANT", 
             "numberingstyle": "Auto Retain", 
             "cstformissuetype": "\u0004 Not Applicable", 
             "cstformrecvtype": "\u0004 Not Applicable", 
@@ -255,9 +257,9 @@ const json = {
             "uaeeinvisbillprepaidamtovrdn": false, 
             "resetirnqrcode": false, 
             "isvchexchanged": false, 
-         
-            
-            
+            "alterid": " 72", 
+            "masterid": " 74", 
+            "voucherkey": "198049531953224", 
             "voucherretainkey": "1", 
             "vouchernumberseries": "Default", 
             "allinventoryentries": [
@@ -303,7 +305,7 @@ const json = {
                             "godownname": "Main Location", 
                             "batchname": "Primary Batch", 
                             "indentno": "\u0004 Not Applicable", 
-                            "orderno": salesOrderNo, 
+                            "orderno": "ERP/SO/1/26-27", 
                             "trackingnumber": "\u0004 Not Applicable", 
                             "dynamiccstiscleared": false, 
                             "amount": "1620.00", 
@@ -391,7 +393,7 @@ const json = {
                         }, 
                         "-1"
                     ], 
-                    "ledgername": companyName, 
+                    "ledgername": "AMBUJA CEMENT PUNE PLANT", 
                     "gstclass": "\u0004 Not Applicable", 
                     "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
                     "isdeemedpositive": true, 
@@ -448,8 +450,8 @@ const json = {
                     "islastdeemedpositive": false, 
                     "iscapvattaxaltered": false, 
                     "iscapvatnotclaimed": false, 
-                    "amount": cgst, 
-                    "vatexpamount": cgst
+                    "amount": "145.80", 
+                    "vatexpamount": "145.80"
                 }, 
                 {
                     "oldauditentryids": [
@@ -485,8 +487,8 @@ const json = {
                     "islastdeemedpositive": false, 
                     "iscapvattaxaltered": false, 
                     "iscapvatnotclaimed": false, 
-                    "amount": sgst, 
-                    "vatexpamount": sgst
+                    "amount": "145.80", 
+                    "vatexpamount": "145.80"
                 }
             ]
         }
