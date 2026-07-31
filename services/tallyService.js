@@ -84,6 +84,7 @@ const inventoryEntries = order.products.map((product) => ({
       amount: product.subtotal.toString(),
       actualqty: `${product.qty} Nos`,
       billedqty: `${product.qty} Nos`,
+       orderduedate: "1-Jul-26"
     },
   ],
 
