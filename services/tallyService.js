@@ -31,6 +31,98 @@ const sgst = order.sgst|| "";
 const roundoff=order.roundoff||"";
 
 
+const ledgerEntries = [
+  {
+    ledgername: companyName,
+    ispartyledger: true,
+    amount: `-${order.grossTotal}`,
+  },
+  {
+    ledgername: `Output CGST ${order.products[0].gst / 2}%`,
+    amount: order.cgst.toString(),
+    vatexpamount: order.cgst.toString(),
+  },
+  {
+    ledgername: `Output SGST ${order.products[0].gst / 2}%`,
+    amount: order.sgst.toString(),
+    vatexpamount: order.sgst.toString(),
+  },
+];
+
+
+const inventoryEntries = order.products.map((product) => ({
+ basicuserdescription: [
+    {
+      metadata: true,
+      type: "String",
+    },
+    ...(product.description
+      ? product.description.split("\n")
+      : []),
+  ],
+
+  stockitemname: product.name,
+
+  gstovrdntaxability: "Taxable",
+  gstovrdntypeofsupply: "Services",
+
+  rate: `${product.rate}/Nos`,
+  discount: product.discount.toString(),
+  amount: product.subtotal.toString(),
+  discountamount: (
+    (product.rate * product.qty * product.discount) / 100
+  ).toString(),
+
+  actualqty: `${product.qty} Nos`,
+  billedqty: `${product.qty} Nos`,
+
+  batchallocations: [
+    {
+      godownname: "Main Location",
+      batchname: "Primary Batch",
+      orderno: salesOrderNo,
+      amount: product.subtotal.toString(),
+      actualqty: `${product.qty} Nos`,
+      billedqty: `${product.qty} Nos`,
+    },
+  ],
+
+  accountingallocations: [
+    {
+      ledgername: "CRM Sales",
+      amount: product.subtotal.toString(),
+      categoryallocations: [
+        {
+          category: "Primary Cost Category",
+          costcentreallocations: [
+            {
+              name: "CRM Sales Person",
+              amount: product.subtotal.toString(),
+            },
+          ],
+        },
+      ],
+    },
+  ],
+
+  ratedetails: [
+    {
+      gstratedutyhead: "CGST",
+      gstratevaluationtype: "Based on Value",
+      gstrate: (product.gst / 2).toString(),
+    },
+    {
+      gstratedutyhead: "SGST/UTGST",
+      gstratevaluationtype: "Based on Value",
+      gstrate: (product.gst / 2).toString(),
+    },
+    {
+      gstratedutyhead: "IGST",
+      gstratevaluationtype: "Based on Value",
+      gstrate: product.gst.toString(),
+    },
+  ],
+}));
 
 const json = 
 {
@@ -260,235 +352,8 @@ const json =
             "voucherkey": "198049531953224", 
             "voucherretainkey": "1", 
             "vouchernumberseries": "Default", 
-            "allinventoryentries": [
-                {
-                    "basicuserdescription": [
-                        {
-                            "metadata": true, 
-                            "type": "String"
-                        }, 
-                        "Prevents transactions like sales, delivery notes, and stock journals\r\nwhen issued quantity exceeds available stock. Ensures accurate\r\ninventory control."
-                    ], 
-                    "stockitemname": "Negative Stock Blocking", 
-                    "gstovrdnisrevchargeappl": "\u0004 Not Applicable", 
-                    "gstovrdntaxability": "Taxable", 
-                    "gstsourcetype": "Stock Item", 
-                    "gstitemsource": "Negative Stock Blocking", 
-                    "hsnsourcetype": "Stock Item", 
-                    "hsnitemsource": "Negative Stock Blocking", 
-                    "gstovrdntypeofsupply": "Services", 
-                    "gstrateinferapplicability": "As per Masters/Company", 
-                    "gsthsninferapplicability": "As per Masters/Company", 
-                    "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
-                    "isdeemedpositive": false, 
-                    "isrcmapplicable": false, 
-                    "isgstassessablevalueoverridden": false, 
-                    "strdisgstapplicable": false, 
-                    "contentnegispos": false, 
-                    "islastdeemedpositive": false, 
-                    "isautonegate": false, 
-                    "iscustomsclearance": false, 
-                    "istrackcomponent": false, 
-                    "istrackproduction": false, 
-                    "isprimaryitem": false, 
-                    "isscrap": false, 
-                    "rate": "1800.00/Nos", 
-                    "discount": " 10", 
-                    "amount": "1620.00", 
-                    "discountamount": "180.00", 
-                    "actualqty": " 1 Nos", 
-                    "billedqty": " 1 Nos", 
-                    "batchallocations": [
-                        {
-                            "godownname": "Main Location", 
-                            "batchname": "Primary Batch", 
-                            "indentno": "\u0004 Not Applicable", 
-                            "orderno": salesOrderNo, 
-                            "trackingnumber": "\u0004 Not Applicable", 
-                            "dynamiccstiscleared": false, 
-                            "amount": "1620.00", 
-                            "batchdiscountamount": "180.00", 
-                            "actualqty": " 1 Nos", 
-                            "billedqty": " 1 Nos", 
-                            "orderduedate": "1-Apr-26"
-                        }
-                    ], 
-                    "accountingallocations": [
-                        {
-                            "oldauditentryids": [
-                                {
-                                    "metadata": true, 
-                                    "type": "Number"
-                                }, 
-                                "-1"
-                            ], 
-                            "ledgername": "CRM Sales", 
-                            "gstclass": "\u0004 Not Applicable", 
-                            "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
-                            "isdeemedpositive": false, 
-                            "ledgerfromitem": false, 
-                            "removezeroentries": false, 
-                            "isrcmapplicable": false, 
-                            "issystem": false, 
-                            "ispartyledger": false, 
-                            "gstoverridden": false, 
-                            "isgstassessablevalueoverridden": false, 
-                            "strdisgstapplicable": false, 
-                            "strdgstispartyledger": false, 
-                            "strdgstisdutyledger": false, 
-                            "contentnegispos": false, 
-                            "islastdeemedpositive": false, 
-                            "iscapvattaxaltered": false, 
-                            "iscapvatnotclaimed": false, 
-                            "amount": "1620.00", 
-                            "categoryallocations": [
-                                {
-                                    "category": "Primary Cost Category", 
-                                    "isdeemedpositive": false, 
-                                    "costcentreallocations": [
-                                        {
-                                            "name": "CRM Sales Person", 
-                                            "amount": "1620.00"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ], 
-                    "ratedetails": [
-                        {
-                            "gstratedutyhead": "CGST", 
-                            "gstratevaluationtype": "Based on Value", 
-                            "gstrate": " 9"
-                        }, 
-                        {
-                            "gstratedutyhead": "SGST/UTGST", 
-                            "gstratevaluationtype": "Based on Value", 
-                            "gstrate": " 9"
-                        }, 
-                        {
-                            "gstratedutyhead": "IGST", 
-                            "gstratevaluationtype": "Based on Value", 
-                            "gstrate": " 18"
-                        }, 
-                        {
-                            "gstratedutyhead": "Cess", 
-                            "gstratevaluationtype": "\u0004 Not Applicable"
-                        }, 
-                        {
-                            "gstratedutyhead": "State Cess", 
-                            "gstratevaluationtype": "Based on Value"
-                        }
-                    ]
-                }
-            ], 
-            "ledgerentries": [
-                {
-                    "oldauditentryids": [
-                        {
-                            "metadata": true, 
-                            "type": "Number"
-                        }, 
-                        "-1"
-                    ], 
-                    "ledgername": companyName, 
-                    "gstclass": "\u0004 Not Applicable", 
-                    "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
-                    "isdeemedpositive": true, 
-                    "ledgerfromitem": false, 
-                    "removezeroentries": false, 
-                    "isrcmapplicable": false, 
-                    "issystem": false, 
-                    "ispartyledger": true, 
-                    "gstoverridden": false, 
-                    "isgstassessablevalueoverridden": false, 
-                    "strdisgstapplicable": false, 
-                    "strdgstispartyledger": false, 
-                    "strdgstisdutyledger": false, 
-                    "contentnegispos": false, 
-                    "islastdeemedpositive": true, 
-                    "iscapvattaxaltered": false, 
-                    "iscapvatnotclaimed": false, 
-                    "amount": "-1911.60"
-                }, 
-                {
-                    "oldauditentryids": [
-                        {
-                            "metadata": true, 
-                            "type": "Number"
-                        }, 
-                        "-1"
-                    ], 
-                    "rateofinvoicetax": [
-                        {
-                            "metadata": true, 
-                            "type": "Number"
-                        }, 
-                        " 9"
-                    ], 
-                    "appropriatefor": "GST", 
-                    "gstappropriateto": "Goods", 
-                    "excisealloctype": "Based on Value", 
-                    "roundtype": "Normal Rounding", 
-                    "ledgername": "Output CGST 9%", 
-                    "gstclass": "\u0004 Not Applicable", 
-                    "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
-                    "isdeemedpositive": false, 
-                    "ledgerfromitem": false, 
-                    "removezeroentries": false, 
-                    "isrcmapplicable": false, 
-                    "issystem": false, 
-                    "ispartyledger": false, 
-                    "gstoverridden": false, 
-                    "isgstassessablevalueoverridden": false, 
-                    "strdisgstapplicable": false, 
-                    "strdgstispartyledger": false, 
-                    "strdgstisdutyledger": false, 
-                    "contentnegispos": false, 
-                    "islastdeemedpositive": false, 
-                    "iscapvattaxaltered": false, 
-                    "iscapvatnotclaimed": false, 
-                    "amount": "145.80", 
-                    "vatexpamount": "145.80"
-                }, 
-                {
-                    "oldauditentryids": [
-                        {
-                            "metadata": true, 
-                            "type": "Number"
-                        }, 
-                        "-1"
-                    ], 
-                    "rateofinvoicetax": [
-                        {
-                            "metadata": true, 
-                            "type": "Number"
-                        }, 
-                        " 9"
-                    ], 
-                    "roundtype": "Normal Rounding", 
-                    "ledgername": "Output SGST 9%", 
-                    "gstclass": "\u0004 Not Applicable", 
-                    "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
-                    "isdeemedpositive": false, 
-                    "ledgerfromitem": false, 
-                    "removezeroentries": false, 
-                    "isrcmapplicable": false, 
-                    "issystem": false, 
-                    "ispartyledger": false, 
-                    "gstoverridden": false, 
-                    "isgstassessablevalueoverridden": false, 
-                    "strdisgstapplicable": false, 
-                    "strdgstispartyledger": false, 
-                    "strdgstisdutyledger": false, 
-                    "contentnegispos": false, 
-                    "islastdeemedpositive": false, 
-                    "iscapvattaxaltered": false, 
-                    "iscapvatnotclaimed": false, 
-                    "amount": "145.80", 
-                    "vatexpamount": "145.80"
-                }
-            ]
+            "allinventoryentries": inventoryEntries, 
+            "ledgerentries": ledgerEntries
         }
     ]
 }
