@@ -32,13 +32,14 @@ const roundoff=order.roundoff||"";
 
 
 
-const json = {
-     "static_variables": [
+const json = 
+{
+"static_variables": [
         {
             "name": "svVchImportFormat",
             "value": "jsonex"
         },
-    {
+        {
             "name": "svCurrentCompany",
             "value": "Airgital"
         }
@@ -48,9 +49,6 @@ const json = {
         {
             "metadata": {
                 "type": "Voucher", 
-                "remoteid": "569159c0-0358-442d-9331-a939b922e204-00000003", 
-                "vchkey": "569159c0-0358-442d-9331-a939b922e204-0000b420:00000018", 
-                "senderid": "e4bff212-f722-4649-b301-8f1354493d45-0000004a", 
                 "vchtype": "Sales Order", 
                 "action": "Create", 
                 "objview": "Invoice Voucher View"
@@ -80,8 +78,8 @@ const json = {
                 }, 
                 "-1"
             ], 
-            "date": "20260401", 
-            "vchstatusdate": "20260401", 
+            "date": "20260701", 
+            "vchstatusdate": "20260701", 
             "guid": "e4bff212-f722-4649-b301-8f1354493d45-0000004a", 
             "gstregistrationtype": "Regular", 
             "vatdealertype": "Regular", 
@@ -92,26 +90,26 @@ const json = {
             "partygstin": "27AAAAA1111A1A1", 
             "placeofsupply": "Maharashtra", 
             "vouchertypename": "Sales Order", 
-            "partyname": "AMBUJA CEMENT PUNE PLANT", 
+            "partyname": "wee", 
             "gstregistration": {
                 "value": "Maharashtra Registration", 
                 "taxtype": "GST", 
                 "taxregistration": ""
             }, 
-            "partyledgername": "AMBUJA CEMENT PUNE PLANT", 
+            "partyledgername": "wee", 
             "vouchernumber": "1", 
-            "basicbuyername": "AMBUJA CEMENT PUNE PLANT", 
+            "basicbuyername": "wee", 
             "cmpgstregistrationtype": "Regular", 
             "reference": "ERP/SO/1/26-27", 
-            "partymailingname": "AMBUJA CEMENT PUNE PLANT", 
+            "partymailingname": "wee", 
             "partypincode": "411041", 
             "consigneegstin": "27AAAAA1111A1A1", 
-            "consigneemailingname": "AMBUJA CEMENT PUNE PLANT", 
+            "consigneemailingname": "wee", 
             "consigneepincode": "411041", 
             "consigneestatename": "Maharashtra", 
             "cmpgststate": "Maharashtra", 
             "consigneecountryname": "India", 
-            "basicbasepartyname": "AMBUJA CEMENT PUNE PLANT", 
+            "basicbasepartyname": "wee", 
             "numberingstyle": "Auto Retain", 
             "cstformissuetype": "\u0004 Not Applicable", 
             "cstformrecvtype": "\u0004 Not Applicable", 
@@ -134,7 +132,7 @@ const json = {
             "iscommonparty": false, 
             "forjobcosting": false, 
             "isoptional": false, 
-            "effectivedate": "20260401", 
+            "effectivedate": "20260701", 
             "useforexcise": false, 
             "isforjobworkin": false, 
             "allowconsumption": false, 
@@ -393,7 +391,7 @@ const json = {
                         }, 
                         "-1"
                     ], 
-                    "ledgername": "AMBUJA CEMENT PUNE PLANT", 
+                    "ledgername": "wee", 
                     "gstclass": "\u0004 Not Applicable", 
                     "gstovrdnistaxonmrpapplicable": "\u0004 Not Applicable", 
                     "isdeemedpositive": true, 
