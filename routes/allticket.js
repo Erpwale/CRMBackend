@@ -10,6 +10,7 @@ const path = require("path");
 const { authMiddleware, adminOnly } = require("../middleware/auth");
 const Ticket= require("../models/TicketSchema")
 const logActivity = require("../utils/Activitylog");
+const WorkBench = require("../models/workTrackerSchema");
 
 // const generateTicketNumber = async () => {
 
@@ -714,28 +715,41 @@ router.post("/adopt/:ticketId", async (req, res) => {
     });
   }
 });
+
+
 router.get("/support-persons", async (req, res) => {
-
   try {
+    const persons = await User.find({
+      role: "Support Executive",
+    });
 
-    const persons = await User.find({role:"Support Executive"});
+    const updatedPersons = await Promise.all(
+      persons.map(async (person) => {
+        // Check if user has an active work session
+        const activeSession = await WorkBench.findOne({
+          userId: person._id,
+          logoutTime: null,
+        });
+
+        return {
+          ...person.toObject(),
+          isAvailable: !!activeSession,
+        };
+      })
+    );
 
     res.status(200).json({
       success: true,
-      persons,
+      persons: updatedPersons,
     });
-
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
       success: false,
       message: "Failed to fetch persons",
     });
-
   }
-
 });
 
 /* ========================= */
