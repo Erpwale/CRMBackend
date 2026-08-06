@@ -145,22 +145,36 @@ router.get("/company/:companyId", authMiddleware, async (req, res) => {
   try {
     const { companyId } = req.params;
 
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const totalActivities = await Activity.countDocuments({ companyId });
+
     const activities = await Activity.find({ companyId })
-     .populate("contactId", "name mobile email")
+      .populate("contactId", "name mobile email")
       .populate("createdBy", "name email")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     res.json({
       success: true,
-      count: activities.length,
-      activities
+      activities,
+      pagination: {
+        total: totalActivities,
+        page,
+        limit,
+        totalPages: Math.ceil(totalActivities / limit),
+        hasNextPage: page < Math.ceil(totalActivities / limit),
+        hasPrevPage: page > 1,
+      },
     });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: "Error fetching activities"
+      message: "Error fetching activities",
     });
   }
 });
