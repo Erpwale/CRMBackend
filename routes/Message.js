@@ -96,16 +96,35 @@ router.post(
       // ==========================
       // NOTIFICATION
       // ==========================
-      if (ticket.assignedTo) {
-        await sendNotification({
-          userId: ticket.assignedTo,
-          title: "New Customer Message",
-          message: `Customer sent a new message on Ticket ${ticket.ticketNumber}.`,
-          type: "ticket",
-          link: `/tickets/${ticket._id}`,
-        });
-      }
-
+      // ==========================
+// NOTIFICATION
+// ==========================
+if (senderType === "customer") {
+  // Notify Support Executive
+  if (ticket.assignedTo) {
+    await sendNotification({
+      userId: ticket.assignedTo,
+      title: "New Customer Message",
+      message: `Customer replied on Ticket ${ticket.ticketNumber}.`,
+      type: "ticket",
+      link: `/tickets/${ticket._id}`,
+    });
+  }
+} else if (
+  senderType === "support" ||
+  senderType === "Support Executive"
+) {
+  // Notify Customer
+  if (ticket.customerId) {
+    await sendNotification({
+      userId: ticket.customerId,
+      title: "Support Executive Replied",
+      message: `Support Executive replied to your ticket ${ticket.ticketNumber}.`,
+      type: "ticket",
+      link: `/customer/tickets/${ticket._id}`,
+    });
+  }
+}
       // ==========================
       // ACTIVITY LOG
       // ==========================
