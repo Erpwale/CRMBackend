@@ -59,6 +59,8 @@ router.post(
   async (req, res) => {
     try {
       const { message, senderType } = req.body;
+      console.log(senderType);
+      
 
       const senderId = req.user?._id || req.customer?._id;
 
