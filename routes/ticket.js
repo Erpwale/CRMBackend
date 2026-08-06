@@ -465,7 +465,13 @@ router.put("/assign-ticket/:ticketId", async (req, res) => {
     supportPerson.activeTickets += 1;
 
     await supportPerson.save();
-
+await sendNotification({
+  userId: supportPersonId,
+  title: "New Ticket Assigned",
+  message: `Ticket ${ticket.ticketNumber} has been assigned to you`,
+  type: "ticket",
+  link: `/TicketDetails/${ticket._id}`,
+});
     res.status(200).json({
       success: true,
       message: "Ticket assigned successfully",
