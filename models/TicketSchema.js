@@ -5,11 +5,13 @@ const ticketSchema = new mongoose.Schema(
     companyId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Company",
+      index:true,
     },
 
     customerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      index: true
     },
 
     tallySerialNo: String,
@@ -34,6 +36,7 @@ const ticketSchema = new mongoose.Schema(
     ticketNumber: {
       type: String,
       unique: true,
+      require:true,
     },
 
     contactNumber: String,

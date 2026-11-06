@@ -319,34 +319,51 @@ const WorkBench = require("../models/workTrackerSchema");
 //     });
 //   }
 // });
-router.get(
-  "/all",
-  async (req, res) => {
 
-    try {
-      console.log("all")
+// Fetch all tickets with pagination
+router.get("/all", authMiddleware, async (req, res) => {
+  try {
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(
+      100,
+      Math.max(1, Number(req.query.limit) || 10)
+    );
 
-      const tickets = await Ticket.find();
-      console.log(tickets);
-      
-      res.status(200).json({
-        success: true,
-        count: tickets.length,
-        tickets
-      });
+    const skip = (page - 1) * limit;
 
-    } catch (error) {
+    const [tickets, total] = await Promise.all([
+      Ticket.find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
 
-      console.log(error);
+      Ticket.countDocuments()
+    ]);
 
-      res.status(500).json({
-        success: false,
-        message: error.message
-      });
+    return res.status(200).json({
+      success: true,
+      data: tickets,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    });
 
-    }
+  } catch (error) {
+    console.error("Get tickets error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch tickets"
+    });
   }
-);
+});
+
+
+
 router.get("/tickets/unassigned", async (req, res) => {
   const tickets = await Ticket.find({
     assignedTo: null,
@@ -717,37 +734,43 @@ router.post("/adopt/:ticketId", async (req, res) => {
 });
 
 
-router.get("/support-persons", async (req, res) => {
+router.get("/support-persons", authMiddleware, async (req, res) => {
   try {
     const persons = await User.find({
-      role: "Support Executive",
-    });
+      role: "Support Executive"
+    })
+      .select("firstName lastName email role")
+      .lean();
 
-    const updatedPersons = await Promise.all(
-      persons.map(async (person) => {
-        // Check if user has an active work session
-        const activeSession = await WorkBench.findOne({
-          userId: person._id,
-          logoutTime: null,
-        });
+    const userIds = persons.map(person => person._id);
 
-        return {
-          ...person.toObject(),
-          isAvailable: !!activeSession,
-        };
-      })
+    const activeSessions = await WorkBench.find({
+      userId: { $in: userIds },
+      logoutTime: null
+    })
+      .select("userId")
+      .lean();
+
+    const activeUserIds = new Set(
+      activeSessions.map(session => String(session.userId))
     );
 
-    res.status(200).json({
-      success: true,
-      persons: updatedPersons,
-    });
-  } catch (error) {
-    console.log(error);
+    const updatedPersons = persons.map(person => ({
+      ...person,
+      isAvailable: activeUserIds.has(String(person._id))
+    }));
 
-    res.status(500).json({
+    return res.json({
+      success: true,
+      persons: updatedPersons
+    });
+
+  } catch (error) {
+    console.error("Support persons error:", error);
+
+    return res.status(500).json({
       success: false,
-      message: "Failed to fetch persons",
+      message: "Failed to fetch persons"
     });
   }
 });
