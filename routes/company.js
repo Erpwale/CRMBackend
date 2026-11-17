@@ -7,7 +7,7 @@ const User  = require("../models/User");
 const Lead  = require("../models/Lead");
 const Ticket  = require("../models/TicketSchema");
 const SalesOrder  = require("../models/SalesOrder");
-const TransferHistory =require("../utils/TransferHistory")
+const TransferHistory =require("../models/TransferHistory")
 // CREATE COMPANY
 router.post("/create-company", authMiddleware, async (req, res) => {
   try {
