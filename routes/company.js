@@ -434,14 +434,15 @@ router.get("/all-companies", authMiddleware, adminOnly, async (req, res) => {
 });
 
 
+
 router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
-  const session = await mongoose.startSession();
+  let session;
 
   try {
     const { companyId } = req.params;
     const { userId, description } = req.body;
 
-    // Admin permission
+    // Admin validation
     if (req.user.role?.toLowerCase() !== "admin") {
       return res.status(403).json({
         success: false,
@@ -449,7 +450,7 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
       });
     }
 
-    // Validate request
+    // Validate IDs
     if (
       !mongoose.Types.ObjectId.isValid(companyId) ||
       !mongoose.Types.ObjectId.isValid(userId)
@@ -460,6 +461,7 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
       });
     }
 
+    // Validate description
     if (
       typeof description !== "string" ||
       !description.trim() ||
@@ -467,15 +469,18 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
     ) {
       return res.status(400).json({
         success: false,
-        message: "Description is required (maximum 1000 characters).",
+        message: "Transfer description is required.",
       });
     }
 
+    session = await mongoose.startSession();
+
     let company;
     let newUser;
-    let oldUserId;
+    let previousUserId;
 
     await session.withTransaction(async () => {
+
       company = await Company.findById(companyId).session(session);
 
       if (!company) {
@@ -484,26 +489,25 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
         throw error;
       }
 
-      // Validate new sales user
-      // Adjust the role condition to match your User schema.
+      // Validate sales user using your actual roles
       newUser = await User.findOne({
         _id: userId,
-        role: { $regex: /^sales$/i },
+        role: { $in: ["Sales Person", "Sales Manager"] },
       }).session(session);
 
       if (!newUser) {
-        const error = new Error("Valid sales user not found.");
+        const error = new Error("Sales user not found.");
         error.statusCode = 404;
         throw error;
       }
 
-      oldUserId = company.createdBy
+      previousUserId = company.createdBy
         ? company.createdBy.toString()
         : null;
 
-      if (oldUserId === userId) {
+      if (previousUserId === userId) {
         const error = new Error(
-          "Company is already assigned to this sales user."
+          "Company is already assigned to this user."
         );
         error.statusCode = 409;
         throw error;
@@ -511,10 +515,10 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
 
       const previousUser = company.createdBy || null;
 
-      // Update company owner
+      // Update company
       company.createdBy = newUser._id;
 
-      // Update existing history
+      // Save company transfer history
       company.transferHistory.push({
         previousUser,
         newUser: newUser._id,
@@ -542,7 +546,7 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
       );
     });
 
-    // Activity logging after successful transaction
+    // Activity log
     try {
       await logActivity({
         req,
@@ -551,14 +555,13 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
         action: "TRANSFER",
         description:
           `Transferred ${company.companyName} (${company.companyId}) ` +
-          `from ${oldUserId || "Unassigned"} to ` +
-          `${newUser.firstName} ${newUser.lastName}. ` +
+          `to ${newUser.firstName} ${newUser.lastName}. ` +
           `Reason: ${description.trim()}`,
         recordId: company._id,
         recordName: company.companyName,
       });
     } catch (logError) {
-      console.error("Transfer activity log failed:", logError);
+      console.error("Activity log failed:", logError);
     }
 
     return res.status(200).json({
@@ -567,7 +570,7 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
       data: {
         companyId: company.companyId,
         companyName: company.companyName,
-        previousUser: oldUserId,
+        previousUser: previousUserId,
         newUser: {
           _id: newUser._id,
           firstName: newUser.firstName,
@@ -582,12 +585,16 @@ router.put("/transfer/:companyId", authMiddleware, async (req, res) => {
 
     return res.status(error.statusCode || 500).json({
       success: false,
-      message: error.message || "Failed to transfer company.",
+      message: error.message || "Transfer failed.",
     });
+
   } finally {
-    await session.endSession();
+    if (session) {
+      await session.endSession();
+    }
   }
 });
+
 
 // GET SINGLE COMPANY
 router.get("/company/:id", authMiddleware, async (req, res) => {
