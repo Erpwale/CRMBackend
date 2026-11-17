@@ -53,26 +53,36 @@ const companySchema = new mongoose.Schema(
     enum: ["live", "not live"],
     default: "not live"
   },
+
 transferHistory: [
   {
     previousUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+
     newUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+
     transferredBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+
+    description: {
+      type: String,
+      trim: true,
+    },
+
     transferredAt: {
       type: Date,
       default: Date.now,
     },
   },
 ],
+
   remark: String,
 
   createdBy: {
