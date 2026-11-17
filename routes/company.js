@@ -530,53 +530,119 @@ router.get("/company/:id", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
-router.get("/search", async (req, res) => {
-  try {
-    const { keyword } = req.query;
 
-    if (!keyword || !keyword.trim()) {
-      return res.json({ data: [] });
+router.get("/search", authMiddleware, async (req, res) => {
+  try {
+    const {
+      keyword = "",
+      serialNo = "",
+      page = 1,
+      limit = 20,
+    } = req.query;
+
+    // Validate pagination
+    const currentPage = Math.max(1, parseInt(page) || 1);
+    const pageSize = Math.min(
+      100,
+      Math.max(1, parseInt(limit) || 20)
+    );
+
+    const skip = (currentPage - 1) * pageSize;
+
+    const conditions = [];
+
+    // Escape regex input
+    const escapeRegex = (value) =>
+      value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    // General keyword search
+    if (keyword.trim()) {
+      const regex = new RegExp(
+        escapeRegex(keyword.trim()),
+        "i"
+      );
+
+      conditions.push({
+        $or: [
+          { companyName: regex },
+          { companyId: regex },
+          { source: regex },
+          { companyType: regex },
+          { businessLine: regex },
+          { businessType: regex },
+          { "address.zone": regex },
+          { "address.sector": regex },
+          { "address.city": regex },
+          { "address.state": regex },
+          { "tallyLicense.srNo": regex },
+        ],
+      });
     }
 
-    const searchRegex = new RegExp(keyword.trim(), "i");
+    // Tally serial number search
+    if (serialNo.trim()) {
+      conditions.push({
+        "tallyLicense.srNo": {
+          $regex: escapeRegex(serialNo.trim()),
+          $options: "i",
+        },
+      });
+    }
 
-    const companies = await Company.find({
-      $or: [
-        { companyName: searchRegex },
-        { source: searchRegex },
-        { companyType: searchRegex },
-        // { businessLine: searchRegex },
-        // { businessType: searchRegex },
-        // { turnover: searchRegex },
-        // { remark: searchRegex },
-        // { us: searchRegex },
+    if (!conditions.length) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a search keyword",
+      });
+    }
 
-        // ✅ Address fields (nested)
-        // { "address.line1": searchRegex },
-        // { "address.zone": searchRegex },
-        // { "address.sector": searchRegex },
-        // { "address.city": searchRegex },
-        // { "address.district": searchRegex },
-        // { "address.state": searchRegex },
-        // { "address.pincode": searchRegex },
-        // { "address.country": searchRegex },
+    const filter =
+      conditions.length === 1
+        ? conditions[0]
+        : { $and: conditions };
 
-        // ✅ Tally License array fields
-        { "tallyLicense.srNo": searchRegex },
-        // { "tallyLicense.licenseType": searchRegex },
-        // { "tallyLicense.location": searchRegex },
-        // { "tallyLicense.name": searchRegex },
-      ],
-    })
-      .populate("primaryContact") // optional
-      .populate("createdBy", "firstName lastName") // <-- populate user
-      .limit(10);
+    // Fetch total count and paginated companies
+    const [companies, total] = await Promise.all([
+      Company.find(filter)
+        .select("-__v")
+        .populate({
+          path: "createdBy",
+          select: "firstName lastName username email role",
+        })
+        .populate({
+          path: "primaryContact",
+        })
+        .sort({ createdAt: -1, _id: -1 })
+        .skip(skip)
+        .limit(pageSize)
+        .lean(),
 
-    res.json({ data: companies });
-  } catch (err) {
-    res.status(500).json({ message: "Error searching companies" });
+      Company.countDocuments(filter),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: companies,
+      pagination: {
+        total,
+        page: currentPage,
+        limit: pageSize,
+        totalPages: Math.ceil(total / pageSize),
+        hasNextPage: currentPage * pageSize < total,
+        hasPrevPage: currentPage > 1,
+      },
+    });
+
+  } catch (error) {
+    console.error("Company search error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to search companies",
+    });
   }
 });
+
 
 router.get(
   "/customer-details/:companyName",
