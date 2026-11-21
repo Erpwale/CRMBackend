@@ -189,5 +189,96 @@ await logActivity({
     });
   }
 });
+router.get("/dashboard", authMiddleware, async (req, res) => {
+  try {
+    // Total approved sales amount
+    const totalSales = await BillRequest.aggregate([
+      {
+        $match: {
+          status: "Approved",
+        },
+      },
+      {
+        $lookup: {
+          from: "salesorders",
+          localField: "salesOrderId",
+          foreignField: "_id",
+          as: "salesOrder",
+        },
+      },
+      { $unwind: "$salesOrder" },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$salesOrder.grandTotal" },
+        },
+      },
+    ]);
+
+    // Pending sales amount
+    const pendingSales = await BillRequest.aggregate([
+      {
+        $match: {
+          status: "Pending",
+        },
+      },
+      {
+        $lookup: {
+          from: "salesorders",
+          localField: "salesOrderId",
+          foreignField: "_id",
+          as: "salesOrder",
+        },
+      },
+      { $unwind: "$salesOrder" },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$salesOrder.grandTotal" },
+        },
+      },
+    ]);
+
+    // Cancelled sales amount
+    const cancelSales = await BillRequest.aggregate([
+      {
+        $match: {
+          status: "Cancelled",
+        },
+      },
+      {
+        $lookup: {
+          from: "salesorders",
+          localField: "salesOrderId",
+          foreignField: "_id",
+          as: "salesOrder",
+        },
+      },
+      { $unwind: "$salesOrder" },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$salesOrder.grandTotal" },
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalSales: totalSales[0]?.total || 0,
+        pendingSales: pendingSales[0]?.total || 0,
+        cancelSales: cancelSales[0]?.total || 0,
+      },
+    });
+  } catch (error) {
+    console.error("Billing Dashboard Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch billing dashboard",
+    });
+  }
+});
 
 module.exports = router;
