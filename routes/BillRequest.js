@@ -240,10 +240,10 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
     ]);
 
     // Cancelled sales amount
-    const cancelSales = await BillRequest.aggregate([
+    const cancelSales = await salesOrder.aggregate([
       {
         $match: {
-          status: "Rejected",
+          status: "Cancelled",
         },
       },
       {
