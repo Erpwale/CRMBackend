@@ -243,7 +243,7 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
     const cancelSales = await BillRequest.aggregate([
       {
         $match: {
-          status: "Cancelled",
+          status: "Rejected",
         },
       },
       {
