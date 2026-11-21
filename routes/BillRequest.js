@@ -189,57 +189,54 @@ await logActivity({
     });
   }
 });
+
 router.get("/dashboard", authMiddleware, async (req, res) => {
   try {
-    // Total approved sales amount
-    const totalSales = await BillRequest.aggregate([
-      {
-        $match: {
-          status: "Approved",
+    const [totalSales, pendingSales, cancelSales] = await Promise.all([
+      // Approved Sales Amount
+      BillRequest.aggregate([
+        {
+          $match: { status: "Approved" }
         },
-      },
-      {
-        $lookup: {
-          from: "salesorders",
-          localField: "salesOrderId",
-          foreignField: "_id",
-          as: "salesOrder",
+        {
+          $lookup: {
+            from: "salesorders",
+            localField: "salesOrderId",
+            foreignField: "_id",
+            as: "salesOrder"
+          }
         },
-      },
-      { $unwind: "$salesOrder" },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$salesOrder.grossTotal" },
-        },
-      },
-    ]);
+        { $unwind: "$salesOrder" },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$salesOrder.grossTotal" }
+          }
+        }
+      ]),
 
-    // Pending sales amount
-    const pendingSales = await BillRequest.aggregate([
-      {
-        $match: {
-          status: "Pending",
+      // Pending Sales Amount
+      BillRequest.aggregate([
+        {
+          $match: { status: "Pending" }
         },
-      },
-      {
-        $lookup: {
-          from: "salesorders",
-          localField: "salesOrderId",
-          foreignField: "_id",
-          as: "salesOrder",
+        {
+          $lookup: {
+            from: "salesorders",
+            localField: "salesOrderId",
+            foreignField: "_id",
+            as: "salesOrder"
+          }
         },
-      },
-      { $unwind: "$salesOrder" },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$salesOrder.grossTotal" },
-        },
-      },
-    ]);
+        { $unwind: "$salesOrder" },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$salesOrder.grossTotal" }
+          }
+        }
+      ]),
 
-    // Cancelled sales amount
       // Cancelled Sales Amount
       SalesOrder.aggregate([
         {
@@ -252,23 +249,26 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
           }
         }
       ])
-    
+    ]);
+
     res.status(200).json({
       success: true,
       data: {
         totalSales: totalSales[0]?.total || 0,
         pendingSales: pendingSales[0]?.total || 0,
-        cancelSales: cancelSales[0]?.total || 0,
-      },
+        cancelSales: cancelSales[0]?.total || 0
+      }
     });
+
   } catch (error) {
     console.error("Billing Dashboard Error:", error);
 
     res.status(500).json({
       success: false,
-      message: "Failed to fetch billing dashboard",
+      message: "Failed to fetch billing dashboard"
     });
   }
 });
+
 
 module.exports = router;
