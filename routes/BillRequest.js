@@ -234,7 +234,7 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
       {
         $group: {
           _id: null,
-          total: { $sum: "$salesOrder.pendingAmount" },
+          total: { $sum: "$salesOrder.grossTotal" },
         },
       },
     ]);
