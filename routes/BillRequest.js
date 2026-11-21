@@ -240,29 +240,19 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
     ]);
 
     // Cancelled sales amount
-    const cancelSales = await SalesOrder.aggregate([
-      {
-        $match: {
-          status: "Cancelled",
+      // Cancelled Sales Amount
+      SalesOrder.aggregate([
+        {
+          $match: { status: "Cancelled" }
         },
-      },
-      {
-        $lookup: {
-          from: "salesorders",
-          localField: "salesOrderId",
-          foreignField: "_id",
-          as: "salesOrder",
-        },
-      },
-      { $unwind: "$salesOrder" },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$salesOrder.grossTotal" },
-        },
-      },
-    ]);
-
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$grossTotal" }
+          }
+        }
+      ])
+    
     res.status(200).json({
       success: true,
       data: {
