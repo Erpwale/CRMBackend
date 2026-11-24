@@ -4,7 +4,9 @@ const Ledger = require("../models/Ledger");
 const axios = require("axios");
 const logActivity = require("../utils/Activitylog");
 const { authMiddleware } = require("../middleware/auth");
-
+const {
+  syncLedgerToTally
+} = require("../services/tallyledgersync");
 const router = express.Router();
 
 /* =====================================================

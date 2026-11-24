@@ -64,9 +64,10 @@ const ledgerSchema = new mongoose.Schema(
       type: Number,
       default: 0, // remaining amount to receive
     },
+
 tallySyncStatus: {
   type: String,
-  enum: ["PENDING", "SYNCED", "FAILED"],
+  enum: ["PENDING", "SYNCING", "SYNCED", "FAILED"],
   default: "PENDING"
 },
 
@@ -78,8 +79,17 @@ tallySyncError: {
 tallySyncedAt: {
   type: Date,
   default: null
-}
-  },
+},
+
+tallyLastAttemptAt: {
+  type: Date,
+  default: null
+},
+
+tallySyncAttempts: {
+  type: Number,
+  default: 0
+}  },
   { timestamps: true }
 );
 

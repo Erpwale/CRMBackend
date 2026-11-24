@@ -15,7 +15,9 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 // ✅ Create HTTP server
 const server = http.createServer(app);
-
+const {
+  startTallySyncWorker
+} = require("./services/tallySyncWorker");
 // ✅ Setup Socket.IO
 const io = new Server(server, {
   cors: {
@@ -67,6 +69,7 @@ io.on("connection", (socket) => {
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
+startTallySyncWorker();
 
 // ✅ Routes
 app.use("/api/auth", require("./routes/auth"));
