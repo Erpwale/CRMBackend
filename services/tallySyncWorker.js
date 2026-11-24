@@ -1,6 +1,6 @@
 
 const Ledger = require("../models/Ledger");
-const { syncLedgerToTally } = require("../utils/tallySync");
+const { syncLedgerToTally } = require("../services/tallySync");
 
 const INTERVAL = 4 * 60 * 60 * 1000; // 4 hours
 const BATCH_SIZE = 20;
