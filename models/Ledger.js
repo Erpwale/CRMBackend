@@ -64,7 +64,21 @@ const ledgerSchema = new mongoose.Schema(
       type: Number,
       default: 0, // remaining amount to receive
     },
+tallySyncStatus: {
+  type: String,
+  enum: ["PENDING", "SYNCED", "FAILED"],
+  default: "PENDING"
+},
 
+tallySyncError: {
+  type: String,
+  default: null
+},
+
+tallySyncedAt: {
+  type: Date,
+  default: null
+}
   },
   { timestamps: true }
 );
